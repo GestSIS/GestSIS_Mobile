@@ -44,6 +44,7 @@ import {
 } from "@ionic/vue";
 
 export default {
+  name: "GsSynchronisation",
   components: {
     IonButtons,
     IonContent,
