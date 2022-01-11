@@ -77,7 +77,6 @@ const validate = () => {
 const addSapeur = () => {
   //TODO:
 };
-
 const saveLocal = () => {
   //TODO:
 };
@@ -276,7 +275,7 @@ const reset = () => {
         <ion-row>
           <ion-col>
             <ion-button
-              block
+              expand="block"
               @click="reset"
               color="light"
               v-if="

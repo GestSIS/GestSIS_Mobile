@@ -7,7 +7,7 @@ export class Intervention {
   en_creation= false;
   date_debut: string;
   date_fin: string;
-  type_int_id: number;
+  type_intervention_id: number;
   objet: string;
   lieu: string;
   loc_id: number;
