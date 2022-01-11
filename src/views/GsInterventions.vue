@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
         </ion-buttons>
         <ion-title>Rapports d'intervention</ion-title>
       </ion-toolbar>
@@ -21,9 +21,9 @@
         >
         <ion-item
           tappable
-          v-for="(i, intervention) in interventions"
+          v-for="intervention in interventions"
           :key="intervention.id"
-          @click="openDetails(i)"
+          @click="openDetails(intervention)"
         >
           <ion-icon
             slot="start"
@@ -50,7 +50,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonMenuButton,
+  IonBackButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -59,6 +59,8 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/vue";
+import { Intervention } from "@/models/intervention";
+import moment from "moment";
 
 export default {
   name: "GsInterventions",
@@ -66,7 +68,7 @@ export default {
     IonButtons,
     IonContent,
     IonHeader,
-    IonMenuButton,
+    IonBackButton,
     IonPage,
     IonTitle,
     IonToolbar,
@@ -77,7 +79,7 @@ export default {
   },
   data() {
     return {
-      interventions: [],
+      interventions: [] as Intervention[],
       icons: {
         add,
       },
@@ -85,10 +87,10 @@ export default {
   },
   methods: {
     formatDate(date: string) {
-      return new Date(date).toLocaleDateString();
-      //TODO: Check .format("dd.MM.yy HH:mm");
+      return moment(date).format("dd.MM.yy HH:mm");
     },
-    openDetails(i: number) {
+    openDetails() {
+      //intervention: Intervention) {
       //TODO:
     },
     create() {

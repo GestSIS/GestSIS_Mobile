@@ -25,11 +25,7 @@
                   icon-start
                   @click="startSync"
                 >
-                  <ion-icon
-                    slot="start"
-                    :md="syncOutline"
-                    :ios="syncOutline"
-                  ></ion-icon
+                  <ion-icon slot="start" name="syncOutline"></ion-icon
                   >Synchroniser maintenant
                 </ion-button>
               </ion-col>
@@ -40,36 +36,36 @@
 
       <ion-grid>
         <ion-row>
-          <ion-col size="6" col-sm-4>
-            <!-- v-if="!user.hasRole('rapport_inter_all')"> -->
-            <div class="tile" @click="showInterventions">
+          <ion-col size="6">
+            <!-- v-if="user.hasRole('rapport_inter_all')"> -->
+            <div class="tile" @click="navigateTo('interventions')">
               <div class="icon">
-                <ion-icon :md="flame" :ios="flame"></ion-icon>
+                <ion-icon name="flame"></ion-icon>
               </div>
               <p class="label">Rapports d'intervention</p>
             </div>
           </ion-col>
-          <ion-col size="6" col-sm-4>
-            <!-- v-if="!user.hasRole('presence_exe_all')"> -->
-            <div class="tile" @click="showExercices">
+          <ion-col size="6">
+            <!-- v-if="user.hasRole('presence_exe_all')"> -->
+            <div class="tile" @click="navigateTo('exercices')">
               <div class="icon">
-                <ion-icon :md="checkbox" :ios="checkbox"></ion-icon>
+                <ion-icon name="checkbox"></ion-icon>
               </div>
               <p class="label">Présences exercices</p>
             </div>
           </ion-col>
-          <ion-col size="6" col-sm-4>
-            <div class="tile" @click="showSync">
+          <ion-col size="6">
+            <div class="tile" @click="navigateTo('synchronisation')">
               <div class="icon">
-                <ion-icon :md="sync" :ios="sync"></ion-icon>
+                <ion-icon name="sync"></ion-icon>
               </div>
               <p class="label">Synchronisation</p>
             </div>
           </ion-col>
-          <ion-col size="6" col-sm-4>
-            <div class="tile" @click="showSettings">
+          <ion-col size="6">
+            <div class="tile" @click="navigateTo('parametres')">
               <div class="icon">
-                <ion-icon :md="settings" :ios="settings"></ion-icon>
+                <ion-icon name="settings"></ion-icon>
               </div>
               <p class="label">Paramètres</p>
             </div>
@@ -80,16 +76,8 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import {
-  flame,
-  flameOutline,
-  checkbox,
-  sync,
-  syncOutline,
-  settings,
-} from "ionicons/icons";
 
+<script setup lang="ts">
 import {
   IonButtons,
   IonContent,
@@ -107,66 +95,20 @@ import {
   IonCardContent,
 } from "@ionic/vue";
 
-export default {
-  name: "GsHome",
-  components: {
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonMenuButton,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonCol,
-    IonRow,
-    IonCard,
-    IonGrid,
-    IonButton,
-    IonIcon,
-    IonCardContent,
-  },
-  setup() {
-    const needSync = () => {
-      return true;
-    };
-    const startSync = () => {
-      return true;
-    };
+import { useIonRouter } from "@ionic/vue";
+const ionRouter = useIonRouter();
+const navigateTo = async (name: string) => {
+  ionRouter.push(name);
+};
 
-    const showExercices = () => {
-      return true;
-    };
-    const showInterventions = () => {
-      return true;
-    };
-    const showSettings = () => {
-      return true;
-    };
-    const showSync = () => {
-      return true;
-    };
-
-    return {
-      needSync,
-      startSync,
-
-      // Methods
-      showExercices,
-      showInterventions,
-      showSettings,
-      showSync,
-
-      // Icons
-      flame,
-      flameOutline,
-      checkbox,
-      sync,
-      syncOutline,
-      settings,
-    };
-  },
+const needSync = () => {
+  return true;
+};
+const startSync = () => {
+  return true;
 };
 </script>
+
 
 <style scoped>
 ion-col > div {
@@ -189,6 +131,7 @@ ion-col > div > p:first-child {
 .tile {
   color: #fff;
   text-align: center;
+  height: 100%;
 }
 .tile .icon {
   padding-top: 5px;

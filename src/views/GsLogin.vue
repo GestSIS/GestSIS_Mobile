@@ -70,6 +70,7 @@ import {
   IonToolbar,
   IonButton,
 } from "@ionic/vue";
+import { Sis } from "@/models/sis";
 
 export default {
   name: "GsInterventions",
@@ -93,7 +94,11 @@ export default {
       account: {
         password: "",
         username: "",
-        sisId: null,
+        sisId: null as any,
+      } as {
+        password: string;
+        username: string;
+        sisId: number;
       },
       listeSis: [
         {
@@ -108,7 +113,7 @@ export default {
           id: 3,
           nom: "Test",
         },
-      ],
+      ] as Sis[],
     };
   },
   methods: {

@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
         </ion-buttons>
         <ion-title>{{ $route.params.id }}</ion-title>
       </ion-toolbar>
@@ -32,29 +32,16 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
+  IonBackButton,
 } from "@ionic/vue";
-
-export default {
-  name: "GsSynchronisation",
-  components: {
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonMenuButton,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-  },
-};
 </script>
 
 <style scoped>

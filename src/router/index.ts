@@ -23,6 +23,11 @@ const routes: Array<RouteRecordRaw> = [
     component : () => import('../views/GsExercices.vue')
   },
   {
+    path: '/exercice',
+    name: 'exercice',
+    component : () => import('../views/GsExercice.vue')
+  },
+  {
     path: '/synchronisation',
     name: 'synchronisation',
     component : () => import('../views/GsSynchronisation.vue')

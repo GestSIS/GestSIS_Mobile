@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
         </ion-buttons>
         <ion-title>{{ $route.params.id }}</ion-title>
       </ion-toolbar>
@@ -37,7 +37,7 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonMenuButton,
+  IonBackButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -49,7 +49,7 @@ export default {
     IonButtons,
     IonContent,
     IonHeader,
-    IonMenuButton,
+    IonBackButton,
     IonPage,
     IonTitle,
     IonToolbar,

@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -19,9 +19,9 @@
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
         <ion-item
           tappable
-          v-for="(i, exercice) in exercices"
+          v-for="exercice in exercices"
           :key="exercice.id"
-          @click="openDetails(i)"
+          @click="openDetails(exercice)"
         >
           <ion-icon
             slot="start"
@@ -43,12 +43,15 @@
 </template>
 
 <script lang="ts">
+import moment from "moment";
+import { Exercice } from "@/models/exercice";
+
 import { add } from "ionicons/icons";
 import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonMenuButton,
+  IonBackButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -63,7 +66,7 @@ export default {
     IonButtons,
     IonContent,
     IonHeader,
-    IonMenuButton,
+    IonBackButton,
     IonPage,
     IonTitle,
     IonToolbar,
@@ -72,8 +75,11 @@ export default {
     IonIcon,
   },
   data() {
+    const sortExercices = (exercices: Exercice[]): Exercice[] => {
+      return exercices.sort((a, b) => moment(b.date).diff(a.date));
+    };
     return {
-      exercices: [],
+      exercices: sortExercices([] as Exercice[]) as Exercice[],
       icons: {
         add,
       },
@@ -81,10 +87,11 @@ export default {
   },
   methods: {
     formatDate(date: string) {
-      return new Date(date).toLocaleDateString();
+      return moment(date).format("DD.MM.yy HH:mm");
       //TODO: Check .format("dd.MM.yy HH:mm");
     },
-    openDetails(i: number) {
+    openDetails() {
+      //_: Exercice) {
       //TODO:
     },
     create() {
