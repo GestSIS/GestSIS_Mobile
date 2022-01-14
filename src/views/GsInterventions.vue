@@ -44,8 +44,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { add } from "ionicons/icons";
+<script lang="ts" setup>
 import {
   IonButtons,
   IonContent,
@@ -59,44 +58,22 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/vue";
-import { Intervention } from "@/models/intervention";
 import moment from "moment";
 
-export default {
-  name: "GsInterventions",
-  components: {
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonBackButton,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonList,
-    IonItem,
-    IonButton,
-    IonIcon,
-  },
-  data() {
-    return {
-      interventions: [] as Intervention[],
-      icons: {
-        add,
-      },
-    };
-  },
-  methods: {
-    formatDate(date: string) {
-      return moment(date).format("dd.MM.yy HH:mm");
-    },
-    openDetails() {
-      //intervention: Intervention) {
-      //TODO:
-    },
-    create() {
-      //TODO:
-    },
-  },
+import { useStore } from "vuex";
+import { computed } from "vue";
+const store = useStore();
+const interventions = computed(() => store.state.interventions);
+
+const formatDate = (date: string) => {
+  return moment(date).format("dd.MM.yy HH:mm");
+};
+const openDetails = () => {
+  //intervention: Intervention) {
+  //TODO:
+};
+const create = () => {
+  //TODO:
 };
 </script>
 

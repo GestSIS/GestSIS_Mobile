@@ -27,14 +27,24 @@
             slot="start"
             :name="exercice.en_creation ? 'create' : 'sync'"
           ></ion-icon>
-          {{ exercice.objet }} –
-          {{ formatDate(exercice.date_debut) }}
           <p>
-            {{
-              exercice.en_creation
-                ? "En cours d'édition"
-                : "Validé, en attente de synchronisation"
-            }}
+            <!-- TODO: See if display can be improved -->
+            <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
+            {{ exercice.description }} –
+            {{ formatDate(exercice.date_debut) }}
+            <br />
+            <span class="details statut">
+              {{
+                exercice.en_creation
+                  ? "En cours d'édition"
+                  : "Validé, en attente de synchronisation"
+              }}</span
+            >
+            <br />
+            <span class="details">
+              {{ getFormattedLocalite(exercice.localite_id) }} -
+              {{ getFormattedCategorie(exercice.exercice_categorie_id) }}
+            </span>
           </p>
         </ion-item>
       </ion-list>
@@ -42,11 +52,10 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import moment from "moment";
-import { Exercice } from "@/models/exercice";
+import { Exercice } from "@/models/bundle";
 
-import { add } from "ionicons/icons";
 import {
   IonButtons,
   IonContent,
@@ -60,46 +69,41 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-export default {
-  name: "GsExercices",
-  components: {
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonBackButton,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonList,
-    IonItem,
-    IonIcon,
-  },
-  data() {
-    const sortExercices = (exercices: Exercice[]): Exercice[] => {
-      return exercices.sort((a, b) => moment(b.date).diff(a.date));
-    };
-    return {
-      exercices: sortExercices([] as Exercice[]) as Exercice[],
-      icons: {
-        add,
-      },
-    };
-  },
-  methods: {
-    formatDate(date: string) {
-      return moment(date).format("DD.MM.yy HH:mm");
-      //TODO: Check .format("dd.MM.yy HH:mm");
-    },
-    openDetails() {
-      //_: Exercice) {
-      //TODO:
-    },
-    create() {
-      //TODO:
-    },
-  },
+import { useStore } from "vuex";
+import { Localite } from "@/models/bundle";
+import { ExerciceCategorie } from "@/models/bundle";
+const store = useStore();
+
+const sortExercices = (exercices: Exercice[]): Exercice[] => {
+  return exercices.sort((a, b) => moment(b.date).diff(a.date));
+};
+const exercices = sortExercices(store.state.exercices);
+const categories: ExerciceCategorie[] = store.state.exerciceCategories;
+const localites: Localite[] = store.state.localites;
+
+const getFormattedLocalite = (localiteId: number) =>
+  localites.find((l) => l.id == localiteId)?.designation;
+const getFormattedCategorie = (categorieid: number) =>
+  categories.find((c) => c.id == categorieid)?.designation;
+
+const formatDate = (date: string) => {
+  return moment(date).format("DD.MM.yy HH:mm");
+  //TODO: Check .format("dd.MM.yy HH:mm");
+};
+const openDetails = () => {
+  //_: Exercice) {
+  //TODO:
+};
+const create = () => {
+  //TODO:
 };
 </script>
 
 <style scoped>
+.details {
+  color: var(--ion-color-medium);
+}
+
+.statut {
+}
 </style>

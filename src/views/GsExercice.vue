@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import moment from "moment";
-import { Presence } from "@/models/presence";
-import { Exercice } from "@/models/exercice";
-import { ExcuseType } from "@/models/excusetype";
+import { PresenceExercice } from "@/models/bundle";
+import { Exercice } from "@/models/bundle";
+import { ExcuseType } from "@/models/bundle";
 import { reactive } from "vue";
 import {
   IonButtons,
@@ -26,8 +26,11 @@ import {
 const exercice = new Exercice();
 exercice.en_creation = true;
 
-const createPresence = (present: boolean, remplace: boolean): Presence => {
-  const presence = new Presence();
+const createPresenceExercice = (
+  present: boolean,
+  remplace: boolean
+): PresenceExercice => {
+  const presence = new PresenceExercice();
   presence.nom = "Test";
   presence.prenom = "georges";
   presence.present = present;
@@ -35,10 +38,10 @@ const createPresence = (present: boolean, remplace: boolean): Presence => {
   return reactive(presence);
 };
 exercice.sapeurs = [
-  createPresence(false, false),
-  createPresence(false, true),
-  createPresence(true, false),
-  createPresence(true, true),
+  createPresenceExercice(false, false),
+  createPresenceExercice(false, true),
+  createPresenceExercice(true, false),
+  createPresenceExercice(true, true),
 ];
 
 const excusesTypes: ExcuseType[] = [
@@ -81,7 +84,7 @@ const saveLocal = () => {
   //TODO:
 };
 
-const selectPresent = async (sapeur: Presence) => {
+const selectPresent = async (sapeur: PresenceExercice) => {
   console.log("Select present");
   sapeur.absent = false;
   sapeur.present = true;
@@ -92,7 +95,7 @@ const selectPresent = async (sapeur: Presence) => {
   saveLocal();
 };
 
-const selectAbsent = async (sapeur: Presence) => {
+const selectAbsent = async (sapeur: PresenceExercice) => {
   console.log("Select absent");
   sapeur.present = false;
   sapeur.absent = true;
@@ -103,7 +106,7 @@ const selectAbsent = async (sapeur: Presence) => {
   saveLocal();
 };
 
-const selectRemplace = async (sapeur: Presence) => {
+const selectRemplace = async (sapeur: PresenceExercice) => {
   console.log("Select remplace");
   sapeur.absent = false;
   sapeur.present = false;
@@ -114,7 +117,7 @@ const selectRemplace = async (sapeur: Presence) => {
   saveLocal();
 };
 
-const selectExcuse = async (sapeur: Presence) => {
+const selectExcuse = async (sapeur: PresenceExercice) => {
   console.log("Select excuse");
   sapeur.present = false;
   sapeur.absent = false;
@@ -142,7 +145,7 @@ const selectExcuse = async (sapeur: Presence) => {
   }
 };
 
-const select = (sapeur: Presence, statut: number) => {
+const select = (sapeur: PresenceExercice, statut: number) => {
   if (statut == null) {
     // Unselect
   }

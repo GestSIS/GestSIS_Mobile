@@ -1,8 +1,7 @@
-import { Presence } from './presence';
-
-class Exercice {
+import { PresenceExercice } from './presence-exercice';
+//TODO: See what to do with class PresenceExercice
+export class Exercice {
   id: number;
-  id_exe_lie: number;
   date: string;
   heure: string;
   en_creation = false;
@@ -12,11 +11,22 @@ class Exercice {
   communications: string;
   description: string;
   duree: number;
-  statut: boolean;
+  statut: number;
   exercice_categorie_id: number;
   localite_id: number;
   presences_completees: boolean;
-  sapeurs: Presence[]
+  sapeurs: Array<{
+    id: number;
+    nom: string;
+    prenom: string;
+    convoque: boolean;
+    present: boolean;
+    remplace: boolean;
+    absent: boolean;
+    excuse: boolean;
+    amende: boolean;
+    excuse_type: string;
+    excuse_type_id: number;
+    presenceStatut: number;
+  }>
 }
-
-export { Exercice}

@@ -52,5 +52,4 @@ export class Intervention {
   vehicules: Array<number> = [];
   materiel: Array<Materiel> = [];
   groupes: Array<number> = [];
-
 }

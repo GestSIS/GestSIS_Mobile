@@ -1,9 +1,15 @@
 <script lang="ts" setup>
 import moment from "moment";
-import { Presence } from "@/models/presence";
-import { Exercice } from "@/models/exercice";
-import { ExcuseType } from "@/models/excusetype";
 import { reactive, ref, computed } from "vue";
+
+import { PresenceExercice } from "@/models/bundle";
+import { Exercice } from "@/models/bundle";
+import { ExcuseType } from "@/models/bundle";
+import { Intervention } from "@/models/bundle";
+import { Sapeur } from "@/models/bundle";
+import { Vehicule } from "@/models/bundle";
+import { Materiel } from "@/models/bundle";
+
 import {
   IonButtons,
   IonContent,
@@ -33,11 +39,6 @@ import {
   actionSheetController,
 } from "@ionic/vue";
 
-import { Intervention } from "@/models/intervention";
-import { Sapeur } from "@/models/sapeur";
-import { Vehicule } from "@/models/vehicule";
-import { Materiel } from "@/models/materiel";
-
 // Data section
 const onlyPendingMissions = ref(true);
 // Switch to sapeurs une fois des groupes sélectionnées ?
@@ -54,12 +55,12 @@ const sapeurs = reactive([] as Sapeur[]);
 const typeInterventions = reactive([]);
 const statsFederales = reactive([]);
 
-const sapeursAvecPresencesIncompletes = computed(() =>
+const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.sapeurs.filter(
     (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
   )
 );
-const sapeursSansPresences = computed(() => {
+const sapeursSansPresenceExercices = computed(() => {
   const sapeursSaisi = intervention.missions.map((mission) => mission.sapeur);
   const sapeursIdPotentiel = new Set(intervention.sapeurs.map((sap) => sap.id));
   const sapeursExistant = new Set(sapeurs.map((sap) => sap.id));
@@ -67,6 +68,17 @@ const sapeursSansPresences = computed(() => {
     (s) => !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
   );
 });
+
+const customPickerOptions = {
+  buttons: [
+    {
+      text: "Vide",
+      handler: () => {
+        intervention.date_fin = null as any;
+      },
+    },
+  ],
+};
 
 // Evenements part
 const openEvent = () => {
@@ -99,13 +111,13 @@ const removeMateriel = () => {
 const changeGroupeStatus = () => {
   // TODO:
 };
-const addPresence = () => {
+const addPresenceExercice = () => {
   // TODO:
 };
-const editPresence = () => {
+const editPresenceExercice = () => {
   // TODO:
 };
-const removePresence = () => {
+const removePresenceExercice = () => {
   // TODO:
 };
 const setCorrectTimezone = () => {
@@ -422,7 +434,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
                     <ion-button
                       ion-button
                       expand="block"
-                      @click="addPresence('ARRIVEE')"
+                      @click="addPresenceExercice('ARRIVEE')"
                       :disabled="!intervention.en_creation"
                     >
                       <ion-icon slot="start" name="log-in"></ion-icon> Arrivée
@@ -431,10 +443,10 @@ const ensureNumericKey = (event: KeyboardEvent) => {
                   <ion-col size="4">
                     <ion-button
                       expand="block"
-                      @click="addPresence('DEPART')"
+                      @click="addPresenceExercice('DEPART')"
                       :disabled="
                         !intervention.en_creation ||
-                        sapeursAvecPresencesIncompletes.length === 0
+                        sapeursAvecPresenceExercicesIncompletes.length === 0
                       "
                     >
                       <ion-icon slot="start" name="log-out"></ion-icon> Départ
@@ -445,13 +457,13 @@ const ensureNumericKey = (event: KeyboardEvent) => {
 
               <!-- Sapeurs dont il manque la présence -->
               <ion-item-group
-                v-for="(sapeur, i) of sapeursSansPresences"
+                v-for="(sapeur, i) of sapeursSansPresenceExercices"
                 :key="i"
               >
                 <ion-item-divider
                   color="light"
                   class="text-orange"
-                  @click="addPresence('ARRIVEE', sapeur.id)"
+                  @click="addPresenceExercice('ARRIVEE', sapeur.id)"
                 >
                   <ion-icon name="warning" item-start></ion-icon>
                   {{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante
@@ -471,12 +483,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
                   v-for="(presence, j) in sapeur.presences"
                   :key="j"
                   :disabled="!intervention.en_creation"
-                  @click="editPresence(i, j)"
+                  @click="editPresenceExercice(i, j)"
                 >
                   {{ formatDate(presence.date_debut, "HH:mm") }} -
                   {{ formatDate(presence.date_fin, "HH:mm") }}
                   <ion-button
-                    @click="removePresence(i, j, $event)"
+                    @click="removePresenceExercice(i, j, $event)"
                     fill="clear"
                     color="dark"
                   >

@@ -70,7 +70,7 @@ import {
   IonToolbar,
   IonButton,
 } from "@ionic/vue";
-import { Sis } from "@/models/sis";
+import { Sis } from "@/models/bundle";
 
 export default {
   name: "GsInterventions",
