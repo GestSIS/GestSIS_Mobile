@@ -3,10 +3,9 @@ import { Exercice, PresenceExercice } from '@/models/bundle';
 
 export default {
   // TODO: Nouvelle api pour simplifier la gestion des présences ???
-  getExercices(exerciceComptableId: number):Promise<Exercice[]> {
-    return Api.api().get('/exercices', {
-      params: { exercice_comptable_id: exerciceComptableId },
-    });
+  getExercices():Promise<Exercice[]> {
+    // TODO: Nouvelle API pour les exercices
+    return Api.api().get('/exercices');
   },
   createExercice(exerciceData: Exercice): Promise<Exercice> {
     return Api.api().post('/exercices', exerciceData);

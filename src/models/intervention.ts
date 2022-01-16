@@ -4,6 +4,7 @@ import { Materiel } from './materiel';
 
 export class Intervention {
   id: number;
+  localUuid: string;
   en_creation= false;
   date_debut: string;
   date_fin: string;

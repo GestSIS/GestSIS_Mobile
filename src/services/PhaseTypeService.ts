@@ -1,8 +1,8 @@
 import Api from '@/http/Request';
-import { Phase } from '@/models/phase';
+import { PhaseType } from '@/models/phasetype';
 
 export default {
-  getPhases(): Promise<Phase[]> {
+  getPhases(): Promise<PhaseType[]> {
     return Api.api().get('/phase-types');
   },
 };
