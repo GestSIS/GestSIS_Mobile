@@ -45,6 +45,7 @@
 </template>
 
 <script lang="ts" setup>
+import useInterventions from "@/store/useInterventions";
 import {
   IonButtons,
   IonContent,
@@ -58,12 +59,12 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/vue";
-import moment from "moment";
 
-import { useStore } from "vuex";
+import moment from "moment";
 import { computed } from "vue";
-const store = useStore();
-const interventions = computed(() => store.state.interventions);
+
+const storeInterventions = useInterventions();
+const interventions = computed(() => storeInterventions.state.liste);
 
 const formatDate = (date: string) => {
   return moment(date).format("dd.MM.yy HH:mm");

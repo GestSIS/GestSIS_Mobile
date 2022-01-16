@@ -51,8 +51,17 @@ export default function useStore() {
     });
   };
 
+  /** Load all modules */
+  const load = () => {
+    modules.forEach((useStoreModule) => {
+      const { load } = useStoreModule();
+      load();
+    });
+  };
+
   return {
     persist,
     reset,
+    load
   };
 }

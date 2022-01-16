@@ -69,17 +69,26 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import { useStore } from "vuex";
-import { Localite } from "@/models/bundle";
-import { ExerciceCategorie } from "@/models/bundle";
-const store = useStore();
+import { Localite, ExerciceCategorie, ExcuseType } from "@/models/bundle";
+import { computed } from "vue";
+import useExercices from "@/store/useExercices";
+import useExcuseTypes from "@/store/useExcuseTypes";
+import useLocalites from "@/store/useLocalites";
+import useExerciceCategories from "@/store/useExerciceCategories";
+
+const exercicesStore = useExercices()
+const categoriesStore = useExerciceCategories()
+const excusesStore = useExcuseTypes()
+const localitesStore = useLocalites()
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
-  return exercices.sort((a, b) => moment(b.date).diff(a.date));
+  return exercices.slice(0).sort((a, b) => moment(b.date).diff(a.date));
 };
-const exercices = sortExercices(store.state.exercices);
-const categories: ExerciceCategorie[] = store.state.exerciceCategories;
-const localites: Localite[] = store.state.localites;
+const exercices = computed(() => sortExercices(exercicesStore.state.liste));
+
+const categories: readonly ExerciceCategorie[] = categoriesStore.state.liste;
+const excuses: readonly ExcuseType[] = excusesStore.state.liste;
+const localites: readonly Localite[] = localitesStore.state.liste;
 
 const getFormattedLocalite = (localiteId: number) =>
   localites.find((l) => l.id == localiteId)?.designation;

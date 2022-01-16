@@ -19,6 +19,6 @@ export default function useExexercices() {
   return {
     ...store,  
     name,
-    state: readonly(state),
+    state//: readonly(state),
   };
 }
