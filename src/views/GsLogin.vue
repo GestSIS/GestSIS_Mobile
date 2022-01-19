@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{ title }}</ion-title>
+        <ion-title>Connexion</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
@@ -11,7 +11,7 @@
           <ion-item>
             <ion-input
               type="email"
-              v-model="account.username"
+              v-model="email"
               name="email"
               placeholder="Adresse e-mail"
             ></ion-input>
@@ -19,12 +19,12 @@
           <ion-item>
             <ion-input
               type="password"
-              v-model="account.password"
+              v-model="password"
               name="password"
               placeholder="Mot de passe"
             ></ion-input>
           </ion-item>
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>SIS</ion-label>
             <ion-select
               name="sis"
@@ -40,7 +40,7 @@
                 >{{ sis.nom }}</ion-select-option
               >
             </ion-select>
-          </ion-item>
+          </ion-item> -->
           <ion-button
             type="submit"
             color="primary"
@@ -55,7 +55,9 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import router from '@/router/index';
+import useAuth from '@/store/useAuth';
 import {
   IonContent,
   IonPage,
@@ -69,58 +71,22 @@ import {
   IonSelect,
   IonToolbar,
   IonButton,
-} from "@ionic/vue";
-import { Sis } from "@/models/bundle";
+} from '@ionic/vue';
+import { ref } from 'vue';
 
-export default {
-  name: "GsInterventions",
-  components: {
-    IonContent,
-    IonPage,
-    IonTitle,
-    IonItem,
-    IonInput,
-    IonList,
-    IonLabel,
-    IonHeader,
-    IonToolbar,
-    IonSelectOption,
-    IonSelect,
-    IonButton,
-  },
-  data() {
-    return {
-      title: "Connexion",
-      account: {
-        password: "",
-        username: "",
-        sisId: null as any,
-      } as {
-        password: string;
-        username: string;
-        sisId: number;
-      },
-      listeSis: [
-        {
-          id: 1,
-          nom: "Haute-Sorne",
-        },
-        {
-          id: 2,
-          nom: "Val-Terbi",
-        },
-        {
-          id: 3,
-          nom: "Test",
-        },
-      ] as Sis[],
-    };
-  },
-  methods: {
-    login() {
-      console.log("login");
-    },
-  },
+const email = ref('');
+const password = ref('');
+const errorMessage = ref('');
+
+const login = async () => {
+  const { login } = useAuth();
+  try {
+    await login(email.value, password.value);
+    console.log("Push accueil")
+    router.push({ name: 'accueil' });
+  } catch (error) {
+    errorMessage.value = error as string;
+  }
 };
 </script>
 

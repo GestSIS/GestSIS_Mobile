@@ -1,3 +1,4 @@
+import useAuth from '@/store/useAuth';
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
@@ -47,6 +48,18 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+// Auth Navigation guard
+const { isLoggedIn } = useAuth();
+router.beforeEach((to, from, next) => {
+  if (to.name != "login" && !isLoggedIn()) {
+    return next({
+      name: 'login',
+    });
+  }
+  console.log("Hohoho")
+  next();
 })
 
 export default router
