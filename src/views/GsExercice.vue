@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import moment from "moment";
 import { PresenceExercice } from "@/models/bundle";
 import { Exercice } from "@/models/bundle";
 import { ExcuseType } from "@/models/bundle";
@@ -22,6 +21,8 @@ import {
   IonRow,
   actionSheetController,
 } from "@ionic/vue";
+import useDateFormatter from "@/tools/useDateFormater";
+const { formatDate } = useDateFormatter();
 
 const exercice = new Exercice();
 exercice.en_creation = true;
@@ -71,9 +72,6 @@ const excusesTypes: ExcuseType[] = [
   },
 ];
 
-const formatDate = (date: string) => {
-  return moment(date).format("DD.MM.yy");
-};
 const validate = () => {
   //TODO:
 };
@@ -179,7 +177,7 @@ const reset = () => {
             ? exercice.communications
             : exercice.categorie
         }}
-        - {{ formatDate(exercice.date) }}
+        - {{ formatDate(exercice.date, "DD.MM.yy") }}
       </h3>
       <!-- <p v-if="exercice.id_exe_lie != null">
         Lié à l'exercice

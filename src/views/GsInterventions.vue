@@ -30,7 +30,7 @@
             :name="intervention.en_creation ? 'create' : 'sync'"
           ></ion-icon>
           {{ intervention.objet }} –
-          {{ formatDate(intervention.date_debut) }}
+          {{ formatDate(intervention.date_debut, "DD.MM.yy HH:mm") }}
           <p>
             {{
               intervention.en_creation
@@ -60,15 +60,13 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import moment from "moment";
 import { computed } from "vue";
+import useDateFormatter from "@/tools/useDateFormater";
+const { formatDate } = useDateFormatter();
 
 const storeInterventions = useInterventions();
 const interventions = computed(() => storeInterventions.state.liste);
 
-const formatDate = (date: string) => {
-  return moment(date).format("dd.MM.yy HH:mm");
-};
 const openDetails = () => {
   //intervention: Intervention) {
   //TODO:

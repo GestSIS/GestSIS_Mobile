@@ -1,10 +1,6 @@
 <script lang="ts" setup>
-import moment from "moment";
 import { reactive, ref, computed } from "vue";
 
-import { PresenceExercice } from "@/models/bundle";
-import { Exercice } from "@/models/bundle";
-import { ExcuseType } from "@/models/bundle";
 import { Intervention } from "@/models/bundle";
 import { Sapeur } from "@/models/bundle";
 import { Vehicule } from "@/models/bundle";
@@ -38,6 +34,9 @@ import {
   IonCheckbox,
   actionSheetController,
 } from "@ionic/vue";
+
+import useDateFormatter from "@/tools/useDateFormater";
+const { formatDate } = useDateFormatter();
 
 // Data section
 const onlyPendingMissions = ref(true);
@@ -139,12 +138,6 @@ const supprimerRapport = () => {
   // TODO:
 };
 
-// Utils
-const formatDate = (date: string, format: string) => {
-  return moment(date).format(format || "DD:MM:yyyy");
-  //  return moment(date).format("dd MMMM HH:mm");
-};
-
 const ensureNumericKey = (event: KeyboardEvent) => {
   const pattern = /[0-9]/;
   if (!pattern.test(event.key)) {
@@ -225,7 +218,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
                 <h4 class="title">{{ event.titre }}</h4>
                 <p class="date">
                   {{ formatDate(event.date) }}
-                  <span *ngIf="event.auteur">par {{ event.auteur }}</span>
+                  <span v-ff="event.auteur">par {{ event.auteur }}</span>
                 </p>
                 <p class="description" v-if="event.description">
                   {{ event.description }}

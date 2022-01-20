@@ -8,27 +8,28 @@ export default function useBasicStore<Type>(
   persistKey: string
 ) {
   /** Persist data in local storage */
-  const persist = async() => {
+  const persist = async () => {
     // Persists by using persistKey
-    persistentStore.set(persistKey, state.liste)
+    persistentStore.set(persistKey, state.liste);
   };
 
   /** Reset local storage */
   const reset = () => {
-    persistentStore.remove(persistKey)
+    persistentStore.remove(persistKey);
     state.liste = [];
   };
 
   /** Load data from local storage */
-  const init = async() => {
+  const init = async () => {
     const data = await persistentStore.get(persistKey);
     state.liste = data || [];
   };
 
   /** Load data from GestSIS API */
-  const load = async () => {
+  const load = async (): Promise<boolean> => {
     state.liste = await loader();
     persist();
+    return Promise.resolve(true);
   };
 
   init();

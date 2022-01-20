@@ -9,25 +9,20 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{ $route.params.id }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong class="capitalize">{{ $route.params.id }}</strong>
-        <p>
-          Explore
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://ionicframework.com/docs/components"
-            >UI Components</a
-          >
-        </p>
-      </div>
+    <ion-content>
+      <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
+      <ion-list>
+        <ion-item
+          button="true"
+          v-for="module in modules"
+          :key="module.name"
+          @click="syncProvider(module)"
+        >
+          <h2>{{ module.name }}</h2>
+          <p>{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</p>
+          <ion-icon :name="getSyncStatusIcon(module)" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -41,7 +36,48 @@ import {
   IonTitle,
   IonToolbar,
   IonBackButton,
+  IonItem,
+  IonList,
+  IonIcon,
+  IonButton
 } from "@ionic/vue";
+
+import useDateFormatter from "@/tools/useDateFormater";
+import useStore from "@/store/useStore";
+const { formatDate } = useDateFormatter();
+const { modules } = useStore();
+
+const enum SyncStatus {
+  Syncing,
+  NeverSync,
+  OK,
+  NeedSync
+}
+
+const getSyncStatusIcon = (module: any): string => {
+  switch (module?.getSyncStatus || SyncStatus.Syncing) {
+    case SyncStatus.Syncing:
+      return 'sync';
+
+    case SyncStatus.NeverSync:
+      return 'alert';
+
+    case SyncStatus.OK:
+      return 'checkmark-circle';
+
+    case SyncStatus.NeedSync:
+      return 'warning';
+    default:
+      return '';
+  }
+}
+
+const syncProvider = async (module: any) => {
+  module.load();
+}
+const syncAll = () => {
+  // TODO: 
+}
 </script>
 
 <style scoped>

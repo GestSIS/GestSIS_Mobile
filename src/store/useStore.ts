@@ -62,6 +62,7 @@ export default function useStore() {
   return {
     persist,
     reset,
-    load
+    load,
+    modules
   };
 }
