@@ -6,60 +6,66 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'login',
-    component : () => import('../views/GsLogin.vue')
+    component: () => import('../views/GsLogin.vue'),
   },
   {
     path: '/',
     name: 'accueil',
-    component : () => import('../views/GsHome.vue')
+    component: () => import('../views/GsHome.vue'),
   },
   {
     path: '/interventions',
     name: 'interventions',
-    component : () => import('../views/GsInterventions.vue')
+    component: () => import('../views/GsInterventions.vue'),
   },
   {
     path: '/intervention',
     name: 'intervention',
-    component : () => import('../views/GsIntervention.vue')
+    component: () => import('../views/GsIntervention.vue'),
   },
   {
     path: '/exercices',
     name: 'exercices',
-    component : () => import('../views/GsExercices.vue')
+    component: () => import('../views/GsExercices.vue'),
   },
   {
     path: '/exercice',
     name: 'exercice',
-    component : () => import('../views/GsExercice.vue')
+    component: () => import('../views/GsExercice.vue'),
   },
   {
     path: '/synchronisation',
     name: 'synchronisation',
-    component : () => import('../views/GsSynchronisation.vue')
+    component: () => import('../views/GsSynchronisation.vue'),
   },
   {
     path: '/parametres',
     name: 'parametres',
-    component : () => import('../views/GsParametres.vue')
+    component: () => import('../views/GsParametres.vue'),
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
 // Auth Navigation guard
 const { isLoggedIn } = useAuth();
 router.beforeEach((to, from, next) => {
-  if (to.name != "login" && !isLoggedIn()) {
+  console.log(isLoggedIn())
+  console.log(to.name)
+  if (to.name != 'login' && !isLoggedIn()) {
     return next({
       name: 'login',
     });
+  } else if (to.name == 'login' && isLoggedIn()) {
+    return next({
+      name: 'accueil',
+    });
   }
-  console.log("Hohoho")
+  console.log('Hohoho');
   next();
-})
+});
 
-export default router
+export default router;

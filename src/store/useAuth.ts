@@ -9,8 +9,8 @@ const { persistentStore } = usePersistentStore();
 const store = useStore();
 
 export enum UserStatus {
-  disconnected,
-  connected,
+  disconnected = 0,
+  connected = 1,
 }
 
 export interface User {
@@ -19,7 +19,7 @@ export interface User {
   accessToken: string | null;
   refreshToken: string | null;
   statut: UserStatus;
-  permissions: string[];
+  permissions: any[];
   sis: any[];
 }
 
@@ -30,12 +30,20 @@ const emptyState = {
   refreshToken: null,
   statut: UserStatus.disconnected,
   permissions: [],
-  sis: []
+  sis: [],
 };
 
 const state: { data: User } = reactive({ data: { ...emptyState } });
 
 const persistKey = 'auth';
+
+/** Load data from local storage */
+const init = async () => {
+  const data = await persistentStore.get(persistKey);
+  state.data = JSON.parse(data) || { ...emptyState };
+};
+
+init();
 
 export default function useAuth() {
   /** Persist data in local storage */
@@ -55,10 +63,11 @@ export default function useAuth() {
     state.data.accessToken = accessToken;
     state.data.refreshToken = refreshToken;
     state.data.sis = availableSis;
+    state.data.permissions = permissions;
     state.data.statut = UserStatus.connected;
 
     Api.setAccessToken(accessToken);
-    persistentStore.set(persistKey, JSON.stringify(state));
+    persistentStore.set(persistKey, JSON.stringify(state.data));
     return Promise.resolve();
   };
 
@@ -71,14 +80,6 @@ export default function useAuth() {
   const isLoggedIn = () => {
     return state.data.statut == UserStatus.connected;
   };
-
-  /** Load data from local storage */
-  const init = async () => {
-    const data = await persistentStore.get(persistKey);
-    state.data = JSON.parse(data) || { ...emptyState };
-  };
-
-  init();
 
   return {
     state,

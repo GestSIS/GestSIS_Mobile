@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <form @submit.prevent="login">
+      <form @submit.prevent="wrappedLogin">
         <ion-list>
           <ion-item>
             <ion-input
@@ -57,7 +57,7 @@
 
 <script lang="ts" setup>
 import router from '@/router/index';
-import useAuth from '@/store/useAuth';
+import useAuth, { UserStatus } from '@/store/useAuth';
 import {
   IonContent,
   IonPage,
@@ -65,24 +65,28 @@ import {
   IonItem,
   IonInput,
   IonList,
-  IonLabel,
   IonHeader,
-  IonSelectOption,
-  IonSelect,
   IonToolbar,
   IonButton,
 } from '@ionic/vue';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 
-const login = async () => {
-  const { login } = useAuth();
+const { login, state } = useAuth();
+
+// If connected redirect to home page
+watchEffect(() => {
+  if (state.data.statut == UserStatus.connected) {
+    router.push({ name: 'accueil' });
+  }
+});
+
+const wrappedLogin = async () => {
   try {
     await login(email.value, password.value);
-    console.log("Push accueil")
     router.push({ name: 'accueil' });
   } catch (error) {
     errorMessage.value = error as string;

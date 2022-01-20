@@ -21,11 +21,9 @@
                 class="hydrated"
                 :class="{ selected: selectedIndex === i }"
               >
-                <ion-icon
+                <!-- <ion-icon
                   slot="start"
-                  :ios="p.iosIcon"
-                  :md="p.mdIcon"
-                ></ion-icon>
+                ></ion-icon> -->
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -37,11 +35,10 @@
   </ion-app>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   IonApp,
   IonContent,
-  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -51,121 +48,42 @@ import {
   IonRouterOutlet,
   IonSplitPane,
 } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
-import { useRoute } from "vue-router";
-import {
-  archiveOutline,
-  archiveSharp,
-  bookmarkOutline,
-  bookmarkSharp,
-  heartOutline,
-  heartSharp,
-  mailOutline,
-  mailSharp,
-  paperPlaneOutline,
-  paperPlaneSharp,
-  trashOutline,
-  trashSharp,
-  warningOutline,
-  warningSharp,
-} from "ionicons/icons";
+import { ref } from "vue";
 
-export default defineComponent({
-  name: "App",
-  components: {
-    IonApp,
-    IonContent,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    IonList,
-    IonListHeader,
-    IonMenu,
-    IonMenuToggle,
-    IonRouterOutlet,
-    IonSplitPane,
+const selectedIndex = ref(0);
+const appPages = [
+  {
+    title: "Login",
+    url: { name: "login" },
   },
-  setup() {
-    const selectedIndex = ref(0);
-    const appPages = [
-      {
-        // TODO: A supprimer, pour tests
-        title: "Login",
-        url: { name: "login" },
-        iosIcon: mailOutline,
-        mdIcon: mailSharp,
-      },
-      {
-        title: "Accueil",
-        url: { name: "accueil" },
-        iosIcon: mailOutline,
-        mdIcon: mailSharp,
-      },
-      {
-        title: "Rapports d'intervention",
-        url: { name: "interventions" },
-        iosIcon: paperPlaneOutline,
-        mdIcon: paperPlaneSharp,
-      },
-      {
-        title: "Présences exercices",
-        url: { name: "exercices" },
-        iosIcon: heartOutline,
-        mdIcon: heartSharp,
-      },
-      {
-        title: "Synchronisation",
-        url: { name: "synchronisation" },
-        iosIcon: archiveOutline,
-        mdIcon: archiveSharp,
-      },
-      {
-        title: "Paramètres",
-        url: { name: "parametres" },
-        iosIcon: trashOutline,
-        mdIcon: trashSharp,
-      },
-    ];
-    const labels = [
-      "Family",
-      "Friends",
-      "Notes",
-      "Work",
-      "Travel",
-      "Reminders",
-    ];
-
-    const path = window.location.pathname.split("folder/")[1];
-    if (path !== undefined) {
-      selectedIndex.value = appPages.findIndex(
-        (page) => page.title.toLowerCase() === path.toLowerCase()
-      );
-    }
-
-    const route = useRoute();
-
-    return {
-      selectedIndex,
-      appPages,
-      labels,
-      archiveOutline,
-      archiveSharp,
-      bookmarkOutline,
-      bookmarkSharp,
-      heartOutline,
-      heartSharp,
-      mailOutline,
-      mailSharp,
-      paperPlaneOutline,
-      paperPlaneSharp,
-      trashOutline,
-      trashSharp,
-      warningOutline,
-      warningSharp,
-      isSelected: (url: string) => (url === route.path ? "selected" : ""),
-    };
+  {
+    title: "Accueil",
+    url: { name: "accueil" },
   },
-});
+  {
+    title: "Rapports d'intervention",
+    url: { name: "interventions" },
+  },
+  {
+    title: "Présences exercices",
+    url: { name: "exercices" },
+  },
+  {
+    title: "Synchronisation",
+    url: { name: "synchronisation" },
+  },
+  {
+    title: "Paramètres",
+    url: { name: "parametres" },
+  },
+];
+
+const path = window.location.pathname.split("folder/")[1];
+if (path !== undefined) {
+  selectedIndex.value = appPages.findIndex(
+    (page) => page.title.toLowerCase() === path.toLowerCase()
+  );
+}
 </script>
 
 <style scoped>
