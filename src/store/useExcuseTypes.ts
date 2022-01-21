@@ -9,7 +9,7 @@ export interface State {
 const state: State = reactive({ liste: [] });
 
 export default function useExcuseTypes() {
-  const name = "Excuses types";
+  const name = 'Excuses types';
   const store = useBasicStore(
     state,
     ExcuseTypeService.getExcuses,
@@ -17,7 +17,7 @@ export default function useExcuseTypes() {
   );
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
   };

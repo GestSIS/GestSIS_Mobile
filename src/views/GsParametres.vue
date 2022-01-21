@@ -8,53 +8,59 @@
         <ion-title>{{ $route.params.id }}</ion-title>
       </ion-toolbar>
     </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item class="hero">
+          <ion-avatar slot="end">
+            <!-- <img v-if="state.data.photo" :src="user.photo" /> -->
+            <ion-icon name="contact"></ion-icon>
+          </ion-avatar>
+          <h2>{{ state.data.pseudo }}</h2>
+          <p>{{ state.data.email }}</p>
+        </ion-item>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{ $route.params.id }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong class="capitalize">{{ $route.params.id }}</strong>
-        <p>
-          Explore
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://ionicframework.com/docs/components"
-            >UI Components</a
-          >
-        </p>
-      </div>
+        <ion-item button="true" @click="wrappedLogout">Déconnexion</ion-item>
+      </ion-list>
     </ion-content>
+
+    <ion-footer>
+      <div padding class="copyright">
+        Version 2.0.0
+        <br />Application créée par Bastien Wermeille
+        <br />support@gestsis.ch
+        <br />
+        {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import useAuth from '@/store/useAuth';
 import {
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
   IonBackButton,
   IonPage,
   IonTitle,
   IonToolbar,
-} from "@ionic/vue";
+  IonList,
+  IonItem,
+  IonIcon,
+  IonAvatar,
+  useIonRouter,
+} from '@ionic/vue';
+import router from '../router';
+const ionRouter = useIonRouter();
+const { state, logout } = useAuth();
 
-export default {
-  name: "GsParametres",
-  components: {
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonBackButton,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-  },
-};
+const wrappedLogout = () => {
+  logout();
+  console.log("Test");
+  ionRouter.navigate('/login')
+}
 </script>
 
 <style scoped>

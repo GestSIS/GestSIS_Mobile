@@ -9,7 +9,7 @@ export interface State {
 const state: State = reactive({ liste: [] });
 
 export default function usePhaseTypes() {
-  const name = "Physes";
+  const name = "Phases";
   const store = useBasicStore(
     state,
     PhaseTypeService.getPhases,

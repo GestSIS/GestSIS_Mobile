@@ -1,49 +1,53 @@
-import { reactive, readonly } from "vue";
-import InterventionService from "@/services/InterventionService";
-import { Intervention } from "@/models/intervention";
+import { reactive, readonly } from 'vue';
+import InterventionService from '@/services/InterventionService';
+import { Intervention } from '@/models/intervention';
 
 export interface State {
-  liste: Intervention[]
+  liste: Intervention[];
 }
-const state: State = reactive({liste:[]});
-const persistKey = 'interventions'
+const state: State = reactive({ liste: [] });
+const persistKey = 'interventions';
 
-export default function useInterventions(){
+export default function useInterventions() {
+  const name = 'Interventions';
   const reset = () => {
     state.liste = [];
-  }
-  const load = async() => {
+  };
+  const load = async () => {
     //TODO: Do not override new and in sync intervention
     const interventions = await InterventionService.getInterventions();
     //TODO: Generate random uuid for each intervention
-    state.liste = interventions.map((i) => ({...i, localUuid : "null" }));
-  }
+    state.liste = interventions.map((i) => ({ ...i, localUuid: 'null' }));
+  };
   const newIntervention = (intervention: Intervention): Intervention => {
-    intervention.localUuid = "null";
+    intervention.localUuid = 'null';
     state.liste.push(intervention);
     return intervention;
-  }
-  const updateIntervention = (intervention: Intervention)=> {
-    state.liste = state.liste.map(i => i.localUuid === intervention.localUuid ? intervention : i)
-  }
-  const persist = async() => {
+  };
+  const updateIntervention = (intervention: Intervention) => {
+    state.liste = state.liste.map((i) =>
+      i.localUuid === intervention.localUuid ? intervention : i
+    );
+  };
+  const persist = async () => {
     //TODO: Persist data
-    persistKey
-  }
-  const sync = async() => {
+    persistKey;
+  };
+  const sync = async () => {
     //TODO: sync data with GestSIS
     // If success for now, clear all interventions
-  }
+  };
 
-  return{
+  return {
     state: readonly(state),
+    name,
     updateIntervention,
     newIntervention,
     reset,
     load,
     persist,
-    sync
-  }
+    sync,
+  };
 }
 
 // export interface State {
@@ -53,7 +57,7 @@ export default function useInterventions(){
 //   localites: Localite[],
 //   groupes: Groupe[],
 //   unites: TypeUnite[],
-  
+
 //   // Specific to exercices
 //   exerciceCategories: ExerciceCategorie[],
 //   excusesType: ExcuseType[],

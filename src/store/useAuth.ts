@@ -1,5 +1,5 @@
 import AuthService from '@/services/AuthService';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { usePersistentStore } from './usePersistentStore';
 import useStore from './useStore';
 import Api from '@/http/Request';
@@ -19,7 +19,7 @@ export interface User {
   accessToken: string | null;
   refreshToken: string | null;
   statut: UserStatus;
-  permissions: any[];
+  permissions: any;
   sis: any[];
 }
 
@@ -29,18 +29,39 @@ const emptyState = {
   accessToken: null,
   refreshToken: null,
   statut: UserStatus.disconnected,
-  permissions: [],
+  permissions: {},
   sis: [],
 };
 
 const state: { data: User } = reactive({ data: { ...emptyState } });
+const activeSisKey = ref<string>('');
+const activePermissions = ref<string[]>([]);
+const lastSync = ref<Date | null>(null);
 
 const persistKey = 'auth';
+const lastSyncSuffixe = 'last_sync';
+
+const selectSis = (sisKey: string) => {
+  if (!sisKey || !(sisKey in state.data.permissions)) {
+    return;
+  }
+  activePermissions.value = state.data.permissions[sisKey];
+  activeSisKey.value = sisKey;
+  Api.setSisKey(sisKey);
+  console.log('Set sis-key' + sisKey);
+};
 
 /** Load data from local storage */
 const init = async () => {
   const data = await persistentStore.get(persistKey);
   state.data = JSON.parse(data) || { ...emptyState };
+  lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
+
+  if (state.data.accessToken != null) {
+    Api.setAccessToken(state.data.accessToken);
+    const sisKeys = Object.keys(state.data.permissions);
+    selectSis(sisKeys[0]);
+  }
 };
 
 init();
@@ -48,7 +69,7 @@ init();
 export default function useAuth() {
   /** Persist data in local storage */
   const login = async (email: string, password: string) => {
-    //TODO: Login request
+    // Login request
     const { accessToken, refreshToken, user } = await AuthService.login({
       email,
       password,
@@ -58,6 +79,16 @@ export default function useAuth() {
     const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
     const availableSis = Object.keys(permissions);
 
+    // TODO: Throw exception if no permissions
+    if (availableSis.length == 0) {
+      throw { message: 'Aucune permission' };
+    }
+
+    // Select first sis
+    const sisKeys = Object.keys(permissions);
+    selectSis(sisKeys[0]);
+
+    // Update state
     state.data.email = email;
     state.data.pseudo = pseudo;
     state.data.accessToken = accessToken;
@@ -67,14 +98,25 @@ export default function useAuth() {
     state.data.statut = UserStatus.connected;
 
     Api.setAccessToken(accessToken);
-    persistentStore.set(persistKey, JSON.stringify(state.data));
+    await persist();
     return Promise.resolve();
+  };
+
+  /** Persist data in local storage */
+  const persist = async () => {
+    persistentStore.set(persistKey, JSON.stringify(state.data));
+    lastSync.value = new Date();
+    persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
   /** Reset local storage */
   const logout = () => {
     store.reset();
     state.data = { ...emptyState };
+    Api.setSisKey('');
+    activePermissions.value = [];
+    activeSisKey.value = '';
+    persist();
   };
 
   const isLoggedIn = () => {
@@ -86,5 +128,8 @@ export default function useAuth() {
     isLoggedIn,
     login,
     logout,
+    selectSis,
+    activeSisKey,
+    activePermissions,
   };
 }

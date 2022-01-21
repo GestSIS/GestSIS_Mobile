@@ -14,12 +14,15 @@
       <ion-list>
         <ion-item
           button="true"
-          v-for="module in modules"
+          v-for="module in loadedModules"
           :key="module.name"
           @click="syncProvider(module)"
         >
-          <h2>{{ module.name }}</h2>
-          <p>{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</p>
+          <div>
+            {{ module.name }}
+            <br />
+            <span class="details">{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</span>
+          </div>
           <ion-icon :name="getSyncStatusIcon(module)" slot="end"></ion-icon>
         </ion-item>
       </ion-list>
@@ -46,6 +49,7 @@ import useDateFormatter from "@/tools/useDateFormater";
 import useStore from "@/store/useStore";
 const { formatDate } = useDateFormatter();
 const { modules } = useStore();
+const loadedModules = modules.map(m => m())
 
 const enum SyncStatus {
   Syncing,
@@ -81,28 +85,19 @@ const syncAll = () => {
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.details {
+  color: var(--ion-color-medium);
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.icon.ion-md-alert, .icon.ion-ios-alert {
+  color: #da0101;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
+.icon.ion-md-checkmark-circle, .icon.ion-ios-checkmark-circle {
+  color: #01af01;
 }
 
-#container a {
-  text-decoration: none;
+.icon.ion-md-warning, .icon.ion-ios-warning {
+  color: #ff8d00;
 }
 </style>
