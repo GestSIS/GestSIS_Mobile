@@ -8,16 +8,17 @@ export class Intervention {
   en_creation= false;
   date_debut: string;
   date_fin: string;
-  type_intervention_id: number;
   objet: string;
   lieu: string;
-  loc_id: number;
   rapport_police: boolean;
-  stat_fed_id: number;
-  chef_inter_sap_id: number;
   nb_personnes_sauvees: number;
   nb_animaux_sauves: number;
   agent: string;
+  
+  type_intervention_id: number;
+  stat_federal_id: number;
+  localite_id: number;
+  sapeur_id: number;
 
   proprietaire: {
       nom: string;

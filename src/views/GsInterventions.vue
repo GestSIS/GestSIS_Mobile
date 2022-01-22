@@ -11,24 +11,18 @@
 
     <ion-content class="ion-padding">
       <ion-button expand="full" @click="create()">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Nouveau
+        <ion-icon slot="start" name="add"></ion-icon>Nouveau
       </ion-button>
 
       <ion-list>
-        <ion-item v-if="!interventions.length"
-          >Aucun rapport d'intervention</ion-item
-        >
+        <ion-item v-if="!interventions.length">Aucun rapport d'intervention</ion-item>
         <ion-item
-          tappable
+          :button="true"
           v-for="intervention in interventions"
           :key="intervention.id"
           @click="openDetails(intervention)"
         >
-          <ion-icon
-            slot="start"
-            :name="intervention.en_creation ? 'create' : 'sync'"
-          ></ion-icon>
+          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'sync'"></ion-icon>
           {{ intervention.objet }} –
           {{ formatDate(intervention.date_debut, "DD.MM.yy HH:mm") }}
           <p>
@@ -58,21 +52,29 @@ import {
   IonItem,
   IonButton,
   IonIcon,
+  useIonRouter,
 } from "@ionic/vue";
 
 import { computed } from "vue";
 import useDateFormatter from "@/tools/useDateFormater";
+import { Intervention } from "@/models/intervention";
+import useActiveIntervention from "@/store/useActiveIntervention";
 const { formatDate } = useDateFormatter();
 
 const storeInterventions = useInterventions();
 const interventions = computed(() => storeInterventions.state.liste);
 
-const openDetails = () => {
+const ionRouter = useIonRouter()
+const openDetails = (intervention: Intervention) => {
   //intervention: Intervention) {
-  //TODO:
+  const { setActiveIntervention } = useActiveIntervention();
+  setActiveIntervention({ ...intervention });
+  ionRouter.navigate({ name: 'intervention' });
 };
+
 const create = () => {
-  //TODO:
+  //TODO: Change to open intervention creation
+  const intervention = storeInterventions.newIntervention(new Intervention());
 };
 </script>
 

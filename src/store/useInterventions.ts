@@ -1,6 +1,7 @@
 import { reactive, readonly } from 'vue';
 import InterventionService from '@/services/InterventionService';
 import { Intervention } from '@/models/intervention';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface State {
   liste: Intervention[];
@@ -13,26 +14,31 @@ export default function useInterventions() {
   const reset = () => {
     state.liste = [];
   };
+
   const load = async () => {
     //TODO: Do not override new and in sync intervention
     const interventions = await InterventionService.getInterventions();
     //TODO: Generate random uuid for each intervention
     state.liste = interventions.map((i) => ({ ...i, localUuid: 'null' }));
   };
+
   const newIntervention = (intervention: Intervention): Intervention => {
-    intervention.localUuid = 'null';
+    intervention.localUuid = uuidv4();
     state.liste.push(intervention);
     return intervention;
   };
+
   const updateIntervention = (intervention: Intervention) => {
     state.liste = state.liste.map((i) =>
       i.localUuid === intervention.localUuid ? intervention : i
     );
   };
+
   const persist = async () => {
-    //TODO: Persist data
+    //TODO: Persist interventions
     persistKey;
   };
+
   const sync = async () => {
     //TODO: sync data with GestSIS
     // If success for now, clear all interventions

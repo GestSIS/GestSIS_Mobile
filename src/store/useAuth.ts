@@ -67,7 +67,7 @@ const init = async () => {
 init();
 
 export default function useAuth() {
-  /** Persist data in local storage */
+  /** Log in */
   const login = async (email: string, password: string) => {
     // Login request
     const { accessToken, refreshToken, user } = await AuthService.login({
@@ -109,7 +109,7 @@ export default function useAuth() {
     persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
-  /** Reset local storage */
+  /** Logout */
   const logout = () => {
     store.reset();
     state.data = { ...emptyState };

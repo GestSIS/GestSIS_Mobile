@@ -3,14 +3,14 @@ import { Intervention } from '@/models/intervention';
 import useInterventions from './useInterventions';
 
 export interface State {
-  activeIntervention: Intervention | null;
+  activeIntervention: Intervention;
 }
-const state: State = reactive({ activeIntervention: null });
+const state: State = reactive({ activeIntervention: new Intervention() });
 const persistKey = 'interventions';
 
 export default function useActiveIntervention() {
   const reset = () => {
-    state.activeIntervention = null;
+    state.activeIntervention = new Intervention();
   };
   const setActiveIntervention = (intervention: Intervention) => {
     state.activeIntervention = intervention;
@@ -24,7 +24,7 @@ export default function useActiveIntervention() {
   };
 
   return {
-    state,
+    state: state.activeIntervention,
     reset,
     setActiveIntervention,
     persist,

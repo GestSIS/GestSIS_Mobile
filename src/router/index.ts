@@ -53,19 +53,17 @@ const router = createRouter({
 // Auth Navigation guard
 const { isLoggedIn } = useAuth();
 router.beforeEach((to, from, next) => {
-  console.log(isLoggedIn())
-  console.log(to.name)
   if (to.name != 'login' && !isLoggedIn()) {
+    // Redirect to login if not logged in
     return next({
       name: 'login',
     });
   } else if (to.name == 'login' && isLoggedIn()) {
+    // Redirect to accueil if logged in
     return next({
       name: 'accueil',
     });
   }
-  console.log('Hohoho : ');
-  console.log(to.name);
   next();
 });
 
