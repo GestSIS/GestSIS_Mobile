@@ -9,7 +9,7 @@
     <div
       :class="['cd-timeline-block', colorMapping[event.type]]"
       v-for="event of evenements"
-      :key="event"
+      :key="event.uuid"
     >
       <div class="cd-timeline-icon positive">
         <ion-icon :name="iconMapping[event.type]"></ion-icon>
@@ -27,8 +27,9 @@
 </template>
 
 <script lang="ts" setup>
+import { v4 as uuidv4 } from 'uuid';
 import useActiveIntervention from '@/store/useActiveIntervention';
-import useDateFormatter from '@/tools/useDateFormater';
+import useDateFormatter from '@/tools/useDateFormatter';
 import {
   IonList,
   IonItem,
@@ -68,6 +69,7 @@ const evenements = computed(() => {
   return [
     // Début intervention
     {
+      uuid: uuidv4(),
       date: state.date_debut,
       type: EventType.Info,
       titre: 'Début de l\'intervention',
@@ -78,6 +80,7 @@ const evenements = computed(() => {
     // Appels
     ...state.appels.map(a => ({
       ...a,
+      uuid: uuidv4(),
       type: EventType.Appel,
       titre: a.nom + ' (' + a.numero + ')',
       description: '',
@@ -87,6 +90,7 @@ const evenements = computed(() => {
     // Début de mission
     ...missions.map(m => ({
       ...m,
+      uuid: uuidv4(),
       date: m.date_debut,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
@@ -95,6 +99,7 @@ const evenements = computed(() => {
     // Fin de mission
     ...missions.filter(m => m.date_fin != null).map(m => ({
       ...m,
+      uuid: uuidv4(),
       date: m.date_fin,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
@@ -102,6 +107,7 @@ const evenements = computed(() => {
     }))
   ].sort((a, b) => moment(a.date).diff(moment(b.date)))
 });
+console.log(evenements.value)
 
 const openEvent = (event: any) => {
   //TODO: implement open event

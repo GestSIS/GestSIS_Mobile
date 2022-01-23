@@ -1,13 +1,13 @@
 <template>
   <div>
-    <ion-segment v-model="presencesSegmentPart">
-      <ion-segment-button value="GROUPES">Groupes</ion-segment-button>
-      <ion-segment-button value="SAPEURS">Sapeurs</ion-segment-button>
+    <ion-segment v-model="activeTab">
+      <ion-segment-button :value="Tab.Groupe">Groupes</ion-segment-button>
+      <ion-segment-button :value="Tab.Sapeur">Sapeurs</ion-segment-button>
     </ion-segment>
   </div>
 
   <div padding-top>
-    <div v-if="presencesSegmentPart == 'GROUPES'">
+    <div v-if="activeTab == Tab.Groupe">
       <ion-list>
         <ion-item
           button
@@ -16,9 +16,9 @@
           @click="changeGroupeStatus(groupe.id)"
           :disabled="!intervention.en_creation"
         >
-          <span>{{ groupe.prefix }}</span>
+          <!-- <span>{{ groupe.prefix }}</span> -->
           {{
-            (groupe.numero ? groupe.numero + " - " : "") +
+            (groupe.no ? groupe.no + " - " : "") +
               groupe.designation
           }}
           <ion-icon
@@ -33,7 +33,7 @@
       </ion-list>
     </div>
 
-    <div v-if="presencesSegmentPart == 'SAPEURS'">
+    <div v-if="activeTab == Tab.Sapeur">
       <ion-grid>
         <ion-row>
           <ion-col size="4">
@@ -98,5 +98,59 @@
 </template>
 
 <script lang="ts" setup>
+import { Sapeur } from '@/models/sapeur';
+import useActiveIntervention from '@/store/useActiveIntervention';
+import useGroupes from '@/store/useGroupes';
+import useSapeurs from '@/store/useSapeurs';
+import useDateFormatter from '@/tools/useDateFormatter';
+import { ref, computed } from 'vue';
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </script>
+const { formatDate } = useDateFormatter();
+
+// Define tabs
+const enum Tab {
+  Groupe,
+  Sapeur
+}
+
+const activeTab = ref(Tab.Groupe);
+
+const { state } = useActiveIntervention();
+const intervention = state;
+
+const moduleSapeur = useSapeurs();
+const moduleGroupe = useGroupes();
+const sapeurs = moduleSapeur.state.liste;
+const groupes = moduleGroupe.state.liste;
+
+
+const sapeursAvecPresenceExercicesIncompletes = computed(() =>
+  intervention.sapeurs.filter(
+    (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
+  )
+);
+
+const sapeursSansPresenceExercices = computed(() => {
+  const sapeursSaisi = intervention.missions.map((mission) => mission.sapeur);
+  const sapeursIdPotentiel = new Set(intervention.sapeurs.map((sap) => sap.id));
+  const sapeursExistant = new Set(sapeurs.map((sap) => sap.id));
+  return sapeursSaisi.filter(
+    (s) => !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
+  );
+});
+
+const changeGroupeStatus = (id: number) => {
+  // TODO:
+};
+const addPresenceExercice = (id: number) => {
+  // TODO:
+};
+const editPresenceExercice = (id: number, sapeur: Sapeur) => {
+  // TODO:
+};
+const removePresenceExercice = (id: number, sapeur: number, sa: number) => {
+  // TODO:
+};
+
+
+</script>

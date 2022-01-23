@@ -6,13 +6,15 @@ export class Intervention {
   id: number;
   localUuid: string;
   en_creation= false;
-  date_debut: string;
-  date_fin: string;
+  date_debut = new Date();
+  date_fin: Date;
   objet: string;
   lieu: string;
+  
+  nb_personnes_sauvees = 0;
+  nb_animaux_sauves = 0;
+
   rapport_police: boolean;
-  nb_personnes_sauvees: number;
-  nb_animaux_sauves: number;
   agent: string;
   
   type_intervention_id: number;
@@ -38,7 +40,7 @@ export class Intervention {
 
   responsables: string; // Utile ?
 
-  description: string;
+  description = '';
   sapeurs: Array<{
     id: number;
     nom: string;

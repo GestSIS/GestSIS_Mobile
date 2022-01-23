@@ -13,7 +13,7 @@
       <!-- <ion-button expand="full" @click="create()">
         <ion-icon slot="start" name="add"></ion-icon>
         Nouveau
-      </ion-button> -->
+      </ion-button>-->
 
       <ion-list>
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
@@ -23,10 +23,7 @@
           :key="exercice.id"
           @click="openDetails(exercice)"
         >
-          <ion-icon
-            slot="start"
-            :name="exercice.en_creation ? 'create' : 'sync'"
-          ></ion-icon>
+          <ion-icon slot="start" :name="exercice.en_creation ? 'create' : 'sync'"></ion-icon>
           <p>
             <!-- TODO: See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
@@ -38,8 +35,8 @@
                 exercice.en_creation
                   ? "En cours d'édition"
                   : "Validé, en attente de synchronisation"
-              }}</span
-            >
+              }}
+            </span>
             <br />
             <span class="details">
               {{ getFormattedLocalite(exercice.localite_id) }} -
@@ -112,7 +109,6 @@ const create = () => {
 .details {
   color: var(--ion-color-medium);
 }
-
 .statut {
 }
 </style>

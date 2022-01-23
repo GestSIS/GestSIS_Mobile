@@ -30,5 +30,16 @@
 </template>
 
 <script lang="ts" setup>
+import useActiveIntervention from '@/store/useActiveIntervention';
+
+const { state } = useActiveIntervention();
+const intervention = state;
+
+const addMission = () => {
+  // TODO:
+};
+const editMission = () => {
+  // TODO:
+};
 
 </script>

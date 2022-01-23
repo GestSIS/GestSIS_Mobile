@@ -14,7 +14,7 @@
     <ion-row>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Début</ion-label>
+          <ion-label position="floating">Début</ion-label>
           <ion-datetime
             displayFormat="DD.MM.YYYY HH:mm"
             pickerFormat="DD MM YYYY HH mm"
@@ -27,7 +27,7 @@
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Fin</ion-label>
+          <ion-label position="floating">Fin</ion-label>
           <ion-datetime
             displayFormat="DD.MM.YYYY HH:mm"
             pickerFormat="DD MM YYYY HH mm"
@@ -46,38 +46,38 @@
     <ion-row>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Type</ion-label>
+          <ion-label position="floating">Type</ion-label>
           <ion-select
             v-model="intervention.type_intervention_id"
             :disabled="!intervention.en_creation"
-            okText
+            :okText="''"
             cancelText="Annuler"
           >
             <ion-select-option
-              v-for="type in typeInterventions"
-              :key="type.id"
-              :value="type.id"
-            >{{ type.designation }}</ion-select-option>
+              v-for="t in typeInterventions"
+              :key="t.id"
+              :value="t.id"
+            >{{ t.designation }}</ion-select-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Objet</ion-label>
+          <ion-label position="floating">Objet</ion-label>
           <ion-input type="text" v-model="intervention.objet" :disabled="!intervention.en_creation"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Lieu du sinistre</ion-label>
+          <ion-label position="floating">Lieu du sinistre</ion-label>
           <ion-input type="text" v-model="intervention.lieu" :disabled="!intervention.en_creation"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>NPA Localité</ion-label>
+          <ion-label position="floating">NPA Localité</ion-label>
           <ion-input
             type="text"
             readonly="true"
             @ionFocus="selectLocalite"
-            :value="getLocaliteFormattedValue(intervention.loc_id)"
+            :value="getLocaliteFormattedValue(intervention.localite_id)"
             :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
@@ -89,7 +89,7 @@
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Statistiques fédérales</ion-label>
+          <ion-label position="floating">Statistiques fédérales</ion-label>
           <ion-select
             v-model="intervention.stat_federal_id"
             :disabled="!intervention.en_creation"
@@ -105,7 +105,7 @@
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Chef d'intervention</ion-label>
+          <ion-label position="floating">Chef d'intervention</ion-label>
           <ion-input
             type="text"
             readonly="true"
@@ -116,7 +116,7 @@
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Nombre de personnes sauvées</ion-label>
+          <ion-label position="floating">Nombre de personnes sauvées</ion-label>
           <ion-input
             type="number"
             :min="0"
@@ -127,7 +127,7 @@
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Nombre d'animaux sauvés</ion-label>
+          <ion-label position="floating">Nombre d'animaux sauvés</ion-label>
           <ion-input
             type="number"
             min="0"
@@ -138,7 +138,7 @@
         </ion-item>
 
         <ion-item v-if="intervention.rapport_police">
-          <ion-label floating>Nom et prénom de l'agent</ion-label>
+          <ion-label position="floating">Nom et prénom de l'agent</ion-label>
           <ion-input type="text" v-model="intervention.agent" :disabled="!intervention.en_creation"></ion-input>
         </ion-item>
       </ion-col>
@@ -150,7 +150,7 @@
     <ion-row>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Nom</ion-label>
+          <ion-label position="floating">Nom</ion-label>
           <ion-input
             type="text"
             v-model="intervention.proprietaire.nom"
@@ -158,7 +158,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>Adresse</ion-label>
+          <ion-label position="floating">Adresse</ion-label>
           <ion-input
             type="text"
             v-model="intervention.proprietaire.adresse"
@@ -166,7 +166,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>Téléphone</ion-label>
+          <ion-label position="floating">Téléphone</ion-label>
           <ion-input
             type="text"
             v-model="intervention.proprietaire.telephone"
@@ -176,7 +176,7 @@
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label floating>Prénom</ion-label>
+          <ion-label position="floating">Prénom</ion-label>
           <ion-input
             type="text"
             v-model="intervention.proprietaire.prenom"
@@ -184,7 +184,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>NPA / Localité</ion-label>
+          <ion-label position="floating">NPA / Localité</ion-label>
           <ion-input
             type="text"
             readonly="true"
@@ -194,13 +194,13 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>E-mail</ion-label>
+          <ion-label position="floating">E-mail</ion-label>
           <ion-input
             type="email"
             v-model="intervention.proprietaire.email"
             :disabled="!intervention.en_creation"
           ></ion-input>
-        </ion-item>getLocaliteFormattedValue( intervention.proprietaire.loc_id )
+        </ion-item>
         <h2>Responsables</h2>
         <ion-textarea v-model="intervention.responsables" :disabled="!intervention.en_creation"></ion-textarea>
 
@@ -214,7 +214,9 @@
 </template>
 
 <script lang="ts" setup>
+import LocaliteService from '@/services/LocaliteService';
 import useActiveIntervention from '@/store/useActiveIntervention';
+import useLocalites from '@/store/useLocalites';
 import usePhaseTypes from '@/store/usePhaseTypes';
 import useSapeurs from '@/store/useSapeurs';
 import useStatsFederal from '@/store/useStatsFederal';
@@ -242,10 +244,12 @@ const moduleSapeur = useSapeurs();
 const moduleType = useTypesIntervention();
 const modulePhase = usePhaseTypes();
 const moduleStatFederal = useStatsFederal();
+const moduleLocalite = useLocalites();
 
 const sapeurs = moduleSapeur.state.liste;
 const typeInterventions = moduleType.state.liste;
 const statsFederales = moduleStatFederal.state.liste;
+const localites = moduleLocalite.state.liste;
 
 const customPickerOptions = {
   buttons: [
@@ -264,15 +268,17 @@ const supprimerRapport = () => {
 const validate = () => {
   // TODO:
 };
-const selectLocalite = () => {
+const selectLocalite = (temp: string) => {
   // TODO:
 };
 const setCorrectTimezone = () => {
   // TODO:
 };
-const getLocaliteFormattedValue = () => {
-  // TODO:
-}; // Param = loc_id
+
+const getLocaliteFormattedValue = (localite_id: number) => {
+  return localites.find(l => l.id == localite_id)?.designation;
+};
+
 const selectChefIntervention = () => {
   // TODO:
 };

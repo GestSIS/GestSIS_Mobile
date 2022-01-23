@@ -21,7 +21,9 @@
           <div>
             {{ module.name }}
             <br />
-            <span class="details">{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</span>
+            <span
+              class="details"
+            >{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</span>
           </div>
           <ion-icon :name="getSyncStatusIcon(module)" slot="end"></ion-icon>
         </ion-item>
@@ -45,7 +47,7 @@ import {
   IonButton
 } from "@ionic/vue";
 
-import useDateFormatter from "@/tools/useDateFormater";
+import useDateFormatter from "@/tools/useDateFormatter";
 import useStore from "@/store/useStore";
 const { formatDate } = useDateFormatter();
 const { modules } = useStore();
@@ -89,15 +91,18 @@ const syncAll = () => {
   color: var(--ion-color-medium);
 }
 
-.icon.ion-md-alert, .icon.ion-ios-alert {
+.icon.ion-md-alert,
+.icon.ion-ios-alert {
   color: #da0101;
 }
 
-.icon.ion-md-checkmark-circle, .icon.ion-ios-checkmark-circle {
+.icon.ion-md-checkmark-circle,
+.icon.ion-ios-checkmark-circle {
   color: #01af01;
 }
 
-.icon.ion-md-warning, .icon.ion-ios-warning {
+.icon.ion-md-warning,
+.icon.ion-ios-warning {
   color: #ff8d00;
 }
 </style>

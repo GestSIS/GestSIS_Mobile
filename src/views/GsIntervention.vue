@@ -90,16 +90,13 @@ import {
 } from "@ionic/vue";
 
 import useActiveIntervention from "@/store/useActiveIntervention";
-import useDateFormatter from "@/tools/useDateFormater";
+import useDateFormatter from "@/tools/useDateFormatter";
 import useMissionTypes from "@/store/useMissionTypes";
 import useSapeurs from "@/store/useSapeurs";
 import useVehicules from "@/store/useVehicules";
 import useMateriels from "@/store/useMateriels";
-import useTypesIntervention from "@/store/useTypesIntervention";
 import usePhaseTypes from "@/store/usePhaseTypes";
-import useStatsFederal from "@/store/useStatsFederal";
 import useGroupes from "@/store/useGroupes";
-const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
 
@@ -119,9 +116,6 @@ const activeTab = ref(Tab.Journal);
 // Data section
 
 // Switch to sapeurs une fois des groupes sélectionnées ?
-
-const presencesSegmentPart = ref("GROUPES");
-
 intervention.en_creation = true;
 
 const moduleMission = useMissionTypes()
@@ -136,21 +130,6 @@ const groupes = reactive([]);
 const vehicules = reactive([] as Vehicule[]);
 const materiels = reactive([] as Materiel[]);
 const sapeurs = reactive([] as Sapeur[]);
-
-const sapeursAvecPresenceExercicesIncompletes = computed(() =>
-  intervention.sapeurs.filter(
-    (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
-  )
-);
-
-const sapeursSansPresenceExercices = computed(() => {
-  const sapeursSaisi = intervention.missions.map((mission) => mission.sapeur);
-  const sapeursIdPotentiel = new Set(intervention.sapeurs.map((sap) => sap.id));
-  const sapeursExistant = new Set(sapeurs.map((sap) => sap.id));
-  return sapeursSaisi.filter(
-    (s) => !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
-  );
-});
 
 // Evenements part
 const openEvent = () => {
@@ -209,14 +188,6 @@ const getSapeurFormattedValue = () => {
 };
 const supprimerRapport = () => {
   // TODO:
-};
-
-const ensureNumericKey = (event: KeyboardEvent) => {
-  const pattern = /[0-9]/;
-  if (!pattern.test(event.key)) {
-    // invalid character, prevent input
-    event.preventDefault();
-  }
 };
 
 //TODO: Test nb personnes sauvé ne peut pas être négatif

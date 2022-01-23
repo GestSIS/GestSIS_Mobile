@@ -20,7 +20,7 @@
           :button="true"
           v-for="intervention in interventions"
           :key="intervention.id"
-          @click="openDetails(intervention)"
+          @click="openDetails(intervention.localUuid)"
         >
           <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'sync'"></ion-icon>
           {{ intervention.objet }} –
@@ -56,7 +56,7 @@ import {
 } from "@ionic/vue";
 
 import { computed } from "vue";
-import useDateFormatter from "@/tools/useDateFormater";
+import useDateFormatter from "@/tools/useDateFormatter";
 import { Intervention } from "@/models/intervention";
 import useActiveIntervention from "@/store/useActiveIntervention";
 const { formatDate } = useDateFormatter();
@@ -65,16 +65,19 @@ const storeInterventions = useInterventions();
 const interventions = computed(() => storeInterventions.state.liste);
 
 const ionRouter = useIonRouter()
-const openDetails = (intervention: Intervention) => {
+const openDetails = (interventionUuid: string) => {
   //intervention: Intervention) {
   const { setActiveIntervention } = useActiveIntervention();
-  setActiveIntervention({ ...intervention });
-  ionRouter.navigate({ name: 'intervention' });
+  const intervention = interventions.value.find(i => i.localUuid == interventionUuid);
+  if (intervention != null) {
+    setActiveIntervention(intervention);
+    ionRouter.navigate({ name: 'intervention' });
+  }
 };
 
 const create = () => {
   //TODO: Change to open intervention creation
-  const intervention = storeInterventions.newIntervention(new Intervention());
+  const intervention = storeInterventions.newIntervention(new Date(), "objet ...", 1, "Adresse à définir");
 };
 </script>
 

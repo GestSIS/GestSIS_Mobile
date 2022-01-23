@@ -22,8 +22,22 @@ export default function useInterventions() {
     state.liste = interventions.map((i) => ({ ...i, localUuid: 'null' }));
   };
 
-  const newIntervention = (intervention: Intervention): Intervention => {
+  const newIntervention = (date: Date, objet: string, localite_id: number, adresse: string): Intervention => {
+    const intervention = new Intervention();
     intervention.localUuid = uuidv4();
+    intervention.en_creation = true;
+    intervention.date_debut = date;
+    intervention.lieu = adresse;
+    intervention.objet = objet;
+
+    intervention.nb_animaux_sauves = 0;
+    intervention.nb_personnes_sauvees = 0;
+
+    intervention.type_intervention_id = null as any;
+    intervention.stat_federal_id = null as any;
+    intervention.localite_id = localite_id;
+    intervention.sapeur_id = null as any;
+
     state.liste.push(intervention);
     return intervention;
   };
@@ -45,7 +59,7 @@ export default function useInterventions() {
   };
 
   return {
-    state: readonly(state),
+    state: state,
     name,
     updateIntervention,
     newIntervention,

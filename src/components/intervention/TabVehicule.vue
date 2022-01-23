@@ -29,5 +29,17 @@
 </template>
 
 <script lang="ts" setup>
+import useActiveIntervention from '@/store/useActiveIntervention';
+import useVehicules from '@/store/useVehicules';
+
+const { state } = useActiveIntervention();
+const intervention = state;
+
+const moduleVehicule = useVehicules();
+const vehicules = moduleVehicule.state.liste;
+
+const changeVehiculeStatut = (id: number) => {
+  // TODO:
+};
 
 </script>

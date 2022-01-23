@@ -21,7 +21,7 @@ import {
   IonRow,
   actionSheetController,
 } from "@ionic/vue";
-import useDateFormatter from "@/tools/useDateFormater";
+import useDateFormatter from "@/tools/useDateFormatter";
 const { formatDate } = useDateFormatter();
 
 const exercice = new Exercice();
@@ -162,9 +162,7 @@ const reset = () => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button
-            :defaultHref="{ name: 'exercices' }"
-          ></ion-back-button>
+          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -194,7 +192,7 @@ const reset = () => {
         v-if="!(exercice.id_exe_lie != null || !exercice.en_creation)"
       >
         Lier un exercice
-      </ion-button> -->
+      </ion-button>-->
       <!-- <ion-button
         block
         @click="unlinkExercice"
@@ -207,10 +205,10 @@ const reset = () => {
         "
       >
         Délier l'exercice
-      </ion-button> -->
+      </ion-button>-->
       <ion-list>
         <ion-row class="sap-item list-header">
-          <ion-col> Sapeur </ion-col>
+          <ion-col>Sapeur</ion-col>
           <ion-col class="col-radio">Présent</ion-col>
           <ion-col class="col-radio">Absent</ion-col>
           <ion-col class="col-radio">Excusé</ion-col>
@@ -226,34 +224,25 @@ const reset = () => {
           >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
-                {{ sapeur.nom }} {{ sapeur.prenom }}<br />
-                <span v-if="sapeur.excuse_type" class="details">{{
-                  sapeur.excuse_type
-                }}</span>
+                {{ sapeur.nom }} {{ sapeur.prenom }}
+                <br />
+                <span v-if="sapeur.excuse_type" class="details">
+                  {{
+                    sapeur.excuse_type
+                  }}
+                </span>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio
-                  :value="1"
-                  :disabled="!exercice.en_creation"
-                ></ion-radio>
+                <ion-radio :value="1" :disabled="!exercice.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio
-                  :value="2"
-                  :disabled="!exercice.en_creation"
-                ></ion-radio>
+                <ion-radio :value="2" :disabled="!exercice.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio
-                  :value="3"
-                  :disabled="!exercice.en_creation"
-                ></ion-radio>
+                <ion-radio :value="3" :disabled="!exercice.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio
-                  :value="4"
-                  :disabled="!exercice.en_creation"
-                ></ion-radio>
+                <ion-radio :value="4" :disabled="!exercice.en_creation"></ion-radio>
               </ion-col>
             </ion-row>
           </ion-radio-group>
@@ -263,13 +252,8 @@ const reset = () => {
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button
-              expand="block"
-              @click="addSapeur"
-              v-if="exercice.en_creation"
-            >
-              <ion-icon slot="start" name="add"></ion-icon>
-              Ajouter une présence
+            <ion-button expand="block" @click="addSapeur" v-if="exercice.en_creation">
+              <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
             </ion-button>
           </ion-col>
         </ion-row>
@@ -286,17 +270,12 @@ const reset = () => {
                 )
               "
             >
-              <ion-icon slot="start" name="refresh"></ion-icon>
-              Réinitialiser
+              <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button
-              expand="block"
-              @click="validate"
-              v-if="exercice.en_creation"
-            >
-              <ion-icon slot="start" name="checkmark-circle"></ion-icon> Valider
+            <ion-button expand="block" @click="validate" v-if="exercice.en_creation">
+              <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
           </ion-col>
         </ion-row>
