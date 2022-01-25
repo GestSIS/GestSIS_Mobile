@@ -11,10 +11,10 @@
       v-for="event of evenements"
       :key="event.uuid"
     >
-      <div class="cd-timeline-icon positive">
+      <div class="cd-timeline-icon positive text-center">
         <ion-icon :name="iconMapping[event.type]"></ion-icon>
       </div>
-      <div class="cd-timeline-content positive" @click="openEvent(event)">
+      <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
         <h4 class="title">{{ event.titre }}</h4>
         <p class="date">
           {{ formatDate(event.date, null) }}
@@ -41,7 +41,7 @@ import moment from 'moment';
 import { computed, ref } from 'vue';
 
 const onlyPendingMissions = ref(true);
-const { formatDate } = useDateFormatter()
+const { formatDate } = useDateFormatter();
 
 enum EventType {
   OngoingMission,
@@ -165,8 +165,5 @@ textarea {
 }
 .item-divider .label {
   font-size: 16px;
-}
-.segment-md .segment-button {
-  font-size: 1.6rem;
 }
 </style>
