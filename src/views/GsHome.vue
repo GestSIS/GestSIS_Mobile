@@ -18,15 +18,8 @@
                 <h2>⚠️ Certains éléments ne sont pas synchronisés.</h2>
               </ion-col>
               <ion-col col-12 col-md-4>
-                <ion-button
-                  ion-button
-                  color="light"
-                  block
-                  icon-start
-                  @click="startSync"
-                >
-                  <ion-icon slot="start" name="syncOutline"></ion-icon
-                  >Synchroniser maintenant
+                <ion-button ion-button color="light" block icon-start @click="startSync">
+                  <ion-icon slot="start" name="syncOutline"></ion-icon>Synchroniser maintenant
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -76,7 +69,6 @@
   </ion-page>
 </template>
 
-
 <script setup lang="ts">
 import {
   IonButtons,
@@ -94,11 +86,11 @@ import {
   IonIcon,
   IonCardContent,
 } from "@ionic/vue";
+import { useRouter } from "vue-router";
 
-import { useIonRouter } from "@ionic/vue";
-const ionRouter = useIonRouter();
+const router = useRouter();
 const navigateTo = async (name: string) => {
-  ionRouter.push(name);
+  router.push(name);
 };
 
 const needSync = () => {

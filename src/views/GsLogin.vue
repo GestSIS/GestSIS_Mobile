@@ -9,12 +9,7 @@
       <form @submit.prevent="wrappedLogin">
         <ion-list>
           <ion-item>
-            <ion-input
-              type="email"
-              v-model="email"
-              name="email"
-              placeholder="Adresse e-mail"
-            ></ion-input>
+            <ion-input type="email" v-model="email" name="email" placeholder="Adresse e-mail"></ion-input>
           </ion-item>
           <ion-item>
             <ion-input
@@ -40,15 +35,8 @@
                 >{{ sis.nom }}</ion-select-option
               >
             </ion-select>
-          </ion-item> -->
-          <ion-button
-            type="submit"
-            color="primary"
-            expand="block"
-            class="ion-margin-top"
-          >
-            Connexion
-          </ion-button>
+          </ion-item>-->
+          <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">Connexion</ion-button>
         </ion-list>
       </form>
     </ion-content>
@@ -56,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import router from '@/router/index';
+import { useRouter } from 'vue-router';
 import useAuth, { UserStatus } from '@/store/useAuth';
 import {
   IonContent,
@@ -69,8 +57,9 @@ import {
   IonToolbar,
   IonButton,
 } from '@ionic/vue';
-import { ref, watchEffect } from 'vue';
+import { ref, watch, watchEffect, computed } from 'vue';
 
+const router = useRouter();
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
@@ -78,8 +67,9 @@ const errorMessage = ref('');
 const { login, state } = useAuth();
 
 // If connected redirect to home page
-watchEffect(() => {
-  if (state.data.statut == UserStatus.connected) {
+const stopRedirect = watchEffect((onInvalidate) => {
+  if (state.data.statut == UserStatus.connected && router.currentRoute.value.name == 'login') {
+    console.log("Trigger, wait !!!");
     router.push({ name: 'accueil' });
   }
 });
@@ -87,6 +77,7 @@ watchEffect(() => {
 const wrappedLogin = async () => {
   try {
     await login(email.value, password.value);
+    console.log("Trigger, wait !!! 2");
     router.push({ name: 'accueil' });
   } catch (error) {
     errorMessage.value = error as string;

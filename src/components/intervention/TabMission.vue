@@ -31,14 +31,16 @@
 
 <script lang="ts" setup>
 import useActiveIntervention from '@/store/useActiveIntervention';
+import useDateFormatter from '@/tools/useDateFormatter';
 
+const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
 
 const addMission = () => {
   // TODO:
 };
-const editMission = () => {
+const editMission = (mission: any) => {
   // TODO:
 };
 

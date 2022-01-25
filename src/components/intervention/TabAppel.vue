@@ -32,14 +32,20 @@
 
 <script lang="ts" setup>
 import useActiveIntervention from '@/store/useActiveIntervention';
+import useDateFormatter from '@/tools/useDateFormatter';
 
+const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
+
 
 const addCall = () => {
   // TODO:
 };
-const editCall = () => {
+const editCall = (call: any) => {
+  // TODO:
+};
+const removeCall = (call: any, event: any) => {
   // TODO:
 };
 

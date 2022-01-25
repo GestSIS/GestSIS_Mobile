@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'interventions' }"></ion-back-button>
+          <ion-back-button defaultHref="interventions"></ion-back-button>
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -33,7 +33,7 @@
       </ion-segment-button>
     </ion-segment>
 
-    <ion-content padding>
+    <ion-content class="padding">
       <div>
         <div v-if="activeTab == Tab.Journal">
           <tab-journal></tab-journal>
@@ -130,65 +130,6 @@ const groupes = reactive([]);
 const vehicules = reactive([] as Vehicule[]);
 const materiels = reactive([] as Materiel[]);
 const sapeurs = reactive([] as Sapeur[]);
-
-// Evenements part
-const openEvent = () => {
-  // TODO:
-};
-const addMission = () => {
-  // TODO:
-};
-const editMission = () => {
-  // TODO:
-};
-const addCall = () => {
-  // TODO:
-};
-const editCall = () => {
-  // TODO:
-};
-const changeVehiculeStatut = () => {
-  // TODO:
-};
-const addMateriel = () => {
-  // TODO:
-};
-const changeMaterielQuantity = () => {
-  // TODO:
-};
-const removeMateriel = () => {
-  // TODO:
-};
-const changeGroupeStatus = () => {
-  // TODO:
-};
-const addPresenceExercice = () => {
-  // TODO:
-};
-const editPresenceExercice = () => {
-  // TODO:
-};
-const removePresenceExercice = () => {
-  // TODO:
-};
-const setCorrectTimezone = () => {
-  // TODO:
-};
-const selectLocalite = () => {
-  // TODO:
-};
-const getLocaliteFormattedValue = () => {
-  // TODO:
-}; // Param = loc_id
-const selectChefIntervention = () => {
-  // TODO:
-};
-const getSapeurFormattedValue = () => {
-  // TODO:
-};
-const supprimerRapport = () => {
-  // TODO:
-};
 
 //TODO: Test nb personnes sauvé ne peut pas être négatif
 </script>

@@ -43,7 +43,7 @@
             <ion-button
               ion-button
               expand="block"
-              @click="addPresenceExercice('ARRIVEE')"
+              @click="addPresenceExercice('ARRIVEE', null)"
               :disabled="!intervention.en_creation"
             >
               <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
@@ -52,7 +52,7 @@
           <ion-col size="4">
             <ion-button
               expand="block"
-              @click="addPresenceExercice('DEPART')"
+              @click="addPresenceExercice('DEPART', null)"
               :disabled="
                 !intervention.en_creation ||
                 sapeursAvecPresenceExercicesIncompletes.length === 0
@@ -142,10 +142,10 @@ const sapeursSansPresenceExercices = computed(() => {
 const changeGroupeStatus = (id: number) => {
   // TODO:
 };
-const addPresenceExercice = (id: number) => {
+const addPresenceExercice = (id: any, other: any) => {
   // TODO:
 };
-const editPresenceExercice = (id: number, sapeur: Sapeur) => {
+const editPresenceExercice = (id: number, sapeur: any) => {
   // TODO:
 };
 const removePresenceExercice = (id: number, sapeur: number, sa: number) => {

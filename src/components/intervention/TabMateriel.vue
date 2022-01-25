@@ -49,10 +49,10 @@ const intervention = state;
 const addMateriel = () => {
   // TODO:
 };
-const changeMaterielQuantity = () => {
+const changeMaterielQuantity = (materiel: any, i: any) => {
   // TODO:
 };
-const removeMateriel = () => {
+const removeMateriel = (i: any, event: any) => {
   // TODO:
 };
 

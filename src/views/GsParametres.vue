@@ -50,16 +50,14 @@ import {
   IonItem,
   IonIcon,
   IonAvatar,
-  useIonRouter,
 } from '@ionic/vue';
-import router from '../router';
-const ionRouter = useIonRouter();
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const { state, logout } = useAuth();
 
 const wrappedLogout = () => {
   logout();
-  console.log("Test");
-  ionRouter.navigate('/login')
+  router.push({ name: 'login' })
 }
 </script>
 

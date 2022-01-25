@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+          <ion-back-button defaultHref="accueil"></ion-back-button>
         </ion-buttons>
         <ion-title>Rapports d'intervention</ion-title>
       </ion-toolbar>
@@ -20,9 +20,9 @@
           :button="true"
           v-for="intervention in interventions"
           :key="intervention.id"
-          @click="openDetails(intervention.localUuid)"
+          @click.prevent="openDetails(intervention.localUuid)"
         >
-          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'sync'"></ion-icon>
+          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
           {{ intervention.objet }} –
           {{ formatDate(intervention.date_debut, "DD.MM.yy HH:mm") }}
           <p>
@@ -52,30 +52,29 @@ import {
   IonItem,
   IonButton,
   IonIcon,
-  useIonRouter,
 } from "@ionic/vue";
 
 import { computed } from "vue";
 import useDateFormatter from "@/tools/useDateFormatter";
-import { Intervention } from "@/models/intervention";
 import useActiveIntervention from "@/store/useActiveIntervention";
+import { useRouter } from "vue-router";
 const { formatDate } = useDateFormatter();
 
 const storeInterventions = useInterventions();
 const interventions = computed(() => storeInterventions.state.liste);
 
-const ionRouter = useIonRouter()
-const openDetails = (interventionUuid: string) => {
-  //intervention: Intervention) {
+const router = useRouter()
+const openDetails = async (interventionUuid: string) => {
+  // intervention: Intervention) {
   const { setActiveIntervention } = useActiveIntervention();
   const intervention = interventions.value.find(i => i.localUuid == interventionUuid);
   if (intervention != null) {
     setActiveIntervention(intervention);
-    ionRouter.navigate({ name: 'intervention' });
+    router.push('intervention');
   }
 };
 
-const create = () => {
+const create = async () => {
   //TODO: Change to open intervention creation
   const intervention = storeInterventions.newIntervention(new Date(), "objet ...", 1, "Adresse à définir");
 };
