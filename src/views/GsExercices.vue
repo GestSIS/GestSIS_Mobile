@@ -72,6 +72,7 @@ import useExercices from "@/store/useExercices";
 import useExcuseTypes from "@/store/useExcuseTypes";
 import useLocalites from "@/store/useLocalites";
 import useExerciceCategories from "@/store/useExerciceCategories";
+import { useRouter } from "vue-router";
 
 const exercicesStore = useExercices()
 const categoriesStore = useExerciceCategories()
@@ -96,9 +97,11 @@ const formatDate = (date: string) => {
   return moment(date).format("DD.MM.yy HH:mm");
   //TODO: Check .format("dd.MM.yy HH:mm");
 };
+
+const router = useRouter();
 const openDetails = () => {
   //_: Exercice) {
-  //TODO:
+  router.push('exercice');
 };
 const create = () => {
   //TODO:

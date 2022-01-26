@@ -25,21 +25,23 @@
     >
       <strong item-start>{{ materiel.quantite }}</strong>
       {{ materiel.nom }}
-      <button
-        ion-button
-        icon-only
-        item-end
-        @click="removeMateriel(i, $event)"
-        clear
-        color="dark"
-      >
+      <ion-button icon-only item-end @click="removeMateriel(i, $event)" clear color="dark">
         <ion-icon name="close"></ion-icon>
-      </button>
+      </ion-button>
     </ion-item>
   </ion-list>
 </template>
 
 <script lang="ts" setup>
+import {
+  IonList,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonButton,
+  IonItem,
+  IonIcon,
+} from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 
 const { state } = useActiveIntervention();

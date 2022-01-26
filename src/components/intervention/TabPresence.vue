@@ -98,6 +98,20 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  IonList,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonButton,
+  IonItem,
+  IonItemGroup,
+  IonItemDivider,
+  IonSegment,
+  IonSegmentButton,
+  IonIcon,
+} from '@ionic/vue';
+
 import { Sapeur } from '@/models/sapeur';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useGroupes from '@/store/useGroupes';

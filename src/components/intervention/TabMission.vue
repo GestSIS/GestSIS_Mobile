@@ -13,8 +13,8 @@
   </ion-grid>
 
   <ion-list>
-    <button
-      ion-item
+    <ion-item
+      button="true"
       v-for="(mission, i) in intervention.missions"
       :key="i"
       @click="editMission(mission)"
@@ -25,11 +25,20 @@
       {{ mission.sapeur.prenom }}
       <p>{{ formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy") }}</p>
       <p>{{ mission.resume }}</p>
-    </button>
+    </ion-item>
   </ion-list>
 </template>
 
 <script lang="ts" setup>
+import {
+  IonList,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonButton,
+  IonItem,
+  IonIcon,
+} from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
 

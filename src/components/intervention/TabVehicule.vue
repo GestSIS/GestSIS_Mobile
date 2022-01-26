@@ -9,7 +9,7 @@
 
   <ion-list>
     <ion-item
-      button
+      button="true"
       v-for="(vehicule, i) in vehicules"
       :key="i"
       @click="changeVehiculeStatut(vehicule.id)"
@@ -29,6 +29,14 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  IonList,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonItem,
+  IonIcon,
+} from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useVehicules from '@/store/useVehicules';
 

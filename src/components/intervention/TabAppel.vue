@@ -13,8 +13,8 @@
   </ion-grid>
 
   <ion-list>
-    <button
-      ion-item
+    <ion-item
+      button="true"
       v-for="(appel, i) in intervention.appels"
       :key="i"
       @click="editCall(appel)"
@@ -26,11 +26,20 @@
       <ion-button @click="removeCall(i, $event)" fill="clear" color="dark">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
-    </button>
+    </ion-item>
   </ion-list>
 </template>
 
 <script lang="ts" setup>
+import {
+  IonList,
+  IonGrid,
+  IonCol,
+  IonRow,
+  IonButton,
+  IonItem,
+  IonIcon,
+} from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
 
