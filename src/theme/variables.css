@@ -196,6 +196,10 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
+  .md body ion-item {
+    --ion-border-color: var(--ion-color-medium-shade);
+  }
+
   .md body {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18,18,18;
@@ -204,7 +208,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-text-color-rgb: 255,255,255;
 
     --ion-border-color: #222222;
-
+    
     --ion-color-step-50: #1e1e1e;
     --ion-color-step-100: #2a2a2a;
     --ion-color-step-150: #363636;

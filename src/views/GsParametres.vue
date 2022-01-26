@@ -9,17 +9,20 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list>
-        <ion-item class="hero">
+      <ion-list lines="none">
+        <ion-item>
           <ion-avatar slot="end">
             <!-- <img v-if="state.data.photo" :src="user.photo" /> -->
             <ion-icon name="contact"></ion-icon>
           </ion-avatar>
-          <h2>{{ state.data.pseudo }}</h2>
-          <p>{{ state.data.email }}</p>
+          <p>
+            <span>{{ state.data.pseudo }}</span>
+            <br />
+            <span>{{ state.data.email }}</span>
+          </p>
         </ion-item>
 
-        <ion-item button="true" @click="wrappedLogout">Déconnexion</ion-item>
+        <ion-button expand="full" @click="wrappedLogout">Déconnexion</ion-button>
       </ion-list>
     </ion-content>
 
@@ -39,6 +42,7 @@
 import useAuth from '@/store/useAuth';
 import {
   IonButtons,
+  IonButton,
   IonContent,
   IonFooter,
   IonHeader,

@@ -43,6 +43,7 @@ const lastSyncSuffixe = 'last_sync';
 
 const selectSis = (sisKey: string) => {
   if (!sisKey || !(sisKey in state.data.permissions)) {
+    console.error("seems invalid key :"+sisKey)
     return;
   }
   activePermissions.value = state.data.permissions[sisKey];
@@ -74,19 +75,15 @@ export default function useAuth() {
       email,
       password,
     });
-
+    
     const userId = user.id;
     const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
     const availableSis = Object.keys(permissions);
-
+    
     // TODO: Throw exception if no permissions
     if (availableSis.length == 0) {
       throw { message: 'Aucune permission' };
     }
-
-    // Select first sis
-    const sisKeys = Object.keys(permissions);
-    selectSis(sisKeys[0]);
 
     // Update state
     state.data.email = email;
@@ -97,6 +94,10 @@ export default function useAuth() {
     state.data.permissions = permissions;
     state.data.statut = UserStatus.connected;
 
+    // Select first sis;
+    selectSis(availableSis[0]);
+
+    // Set access token
     Api.setAccessToken(accessToken);
     await persist();
     return Promise.resolve();

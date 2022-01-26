@@ -15,7 +15,7 @@
         Nouveau
       </ion-button>-->
 
-      <ion-list>
+      <ion-list lines="inset">
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
         <ion-item
           tappable
@@ -27,8 +27,8 @@
           <p>
             <!-- TODO: See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
-            {{ exercice.description }} –
-            {{ formatDate(exercice.date_debut) }}
+            {{ formatDate(exercice.date, null) }} -
+            {{ exercice.designation }}
             <br />
             <span class="details statut">
               {{
@@ -73,6 +73,7 @@ import useExcuseTypes from "@/store/useExcuseTypes";
 import useLocalites from "@/store/useLocalites";
 import useExerciceCategories from "@/store/useExerciceCategories";
 import { useRouter } from "vue-router";
+import useDateFormatter from "@/tools/useDateFormatter";
 
 const exercicesStore = useExercices()
 const categoriesStore = useExerciceCategories()
@@ -93,10 +94,7 @@ const getFormattedLocalite = (localiteId: number) =>
 const getFormattedCategorie = (categorieid: number) =>
   categories.find((c) => c.id == categorieid)?.designation;
 
-const formatDate = (date: string) => {
-  return moment(date).format("DD.MM.yy HH:mm");
-  //TODO: Check .format("dd.MM.yy HH:mm");
-};
+const { formatDate } = useDateFormatter();
 
 const router = useRouter();
 const openDetails = () => {

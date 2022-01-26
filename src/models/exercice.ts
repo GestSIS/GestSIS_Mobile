@@ -9,7 +9,7 @@ export class Exercice {
   complet = false;
   lieu: string;
   communications: string;
-  description: string;
+  designation: string;
   duree: number;
   statut: number;
   exercice_categorie_id: number;
