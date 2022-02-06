@@ -1,13 +1,14 @@
 import { Mission } from './mission';
 import { Appel } from './appel';
 import { Materiel } from './materiel';
+import { DateTime } from 'luxon';
 
 export class Intervention {
   id: number;
   localUuid: string;
   en_creation= false;
-  date_debut = new Date();
-  date_fin: Date;
+  date_debut = DateTime.now().toISO();
+  date_fin: string;
   objet: string;
   lieu: string;
   
@@ -53,7 +54,7 @@ export class Intervention {
 
   missions: Array<Mission> = [];
   appels: Array<Appel> = [];
-  vehicules: Array<number> = [];
-  materiel: Array<Materiel> = [];
-  groupes: Array<number> = [];
+  vehicules: Set<number> = new Set();
+  materiel: Map<number, number> = new Map(); // id_materiel : quantite
+  groupes: Set<number> = new Set();
 }

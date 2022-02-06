@@ -15,13 +15,13 @@
       @click="changeVehiculeStatut(vehicule.id)"
       :disabled="!intervention.en_creation"
     >
-      {{ vehicule.nom }}
+      {{ vehicule.designation }}
       <ion-icon
         slot="end"
         :name="
-          intervention.vehicules.indexOf(vehicule.id) === -1
-            ? 'radio-button-off'
-            : 'checkmark-circle'
+          intervention.vehicules.has(vehicule.id)
+            ? 'checkmark-circle'
+            : 'radio-button-off'
         "
       ></ion-icon>
     </ion-item>
@@ -46,8 +46,12 @@ const intervention = state;
 const moduleVehicule = useVehicules();
 const vehicules = moduleVehicule.state.liste;
 
-const changeVehiculeStatut = (id: number) => {
-  // TODO:
+const changeVehiculeStatut = (vehiculeId: number) => {
+  if (intervention.vehicules.has(vehiculeId)) {
+    intervention.vehicules.delete(vehiculeId);
+  } else {
+    intervention.vehicules.add(vehiculeId);
+  }
 };
 
 </script>

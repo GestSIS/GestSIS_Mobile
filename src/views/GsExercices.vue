@@ -50,7 +50,6 @@
 </template>
 
 <script lang="ts" setup>
-import moment from "moment";
 import { Exercice } from "@/models/bundle";
 
 import {
@@ -74,6 +73,7 @@ import useLocalites from "@/store/useLocalites";
 import useExerciceCategories from "@/store/useExerciceCategories";
 import { useRouter } from "vue-router";
 import useDateFormatter from "@/tools/useDateFormatter";
+import { DateTime } from "luxon";
 
 const exercicesStore = useExercices()
 const categoriesStore = useExerciceCategories()
@@ -81,7 +81,7 @@ const excusesStore = useExcuseTypes()
 const localitesStore = useLocalites()
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
-  return exercices.slice(0).sort((a, b) => moment(b.date).diff(a.date));
+  return exercices.slice(0).sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis());
 };
 const exercices = computed(() => sortExercices(exercicesStore.state.liste));
 

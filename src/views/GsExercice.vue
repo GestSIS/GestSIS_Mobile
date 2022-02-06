@@ -12,9 +12,9 @@
     <ion-content class="ion-padding">
       <h3>
         {{
-          exercice.communications != "-"
-            ? exercice.communications
-            : exercice.categorie
+          exercice.designation != "-"
+            ? exercice.designation
+            : formatCategorie(exercice.exercice_categorie_id)
         }}
         - {{ formatDate(exercice.date, "DD.MM.yy") }}
       </h3>
@@ -116,9 +116,10 @@
 </template>
 
 <script lang="ts" setup>
-import { PresenceExercice } from "@/models/bundle";
-import { Exercice } from "@/models/bundle";
-import { ExcuseType } from "@/models/bundle";
+
+import { ExerciceCategorie, PresenceExercice, Exercice, ExcuseType } from "@/models/bundle";
+import useExerciceCategories from "@/store/useExerciceCategories";
+
 import { reactive } from "vue";
 import {
   IonButtons,
@@ -139,9 +140,19 @@ import {
   actionSheetController,
 } from "@ionic/vue";
 import useDateFormatter from "@/tools/useDateFormatter";
+import useExexercices from "@/store/useExercices";
 const { formatDate } = useDateFormatter();
 
-const exercice = new Exercice();
+const exercicesStore = useExexercices();
+const categoriesStore = useExerciceCategories();
+
+const exercices = exercicesStore.state.liste;
+const categories: readonly ExerciceCategorie[] = categoriesStore.state.liste;
+const formatCategorie = (categorieId: number) => {
+  categories.find(c => c.id == categorieId)?.designation
+}
+
+const exercice = exercices[0];
 exercice.en_creation = true;
 
 const createPresenceExercice = (
@@ -168,6 +179,7 @@ exercice.sapeurs = [
   createPresenceExercice(true, false),
   createPresenceExercice(true, true),
 ];
+
 
 const excusesTypes: ExcuseType[] = [
   {

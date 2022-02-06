@@ -9,16 +9,14 @@ export interface State {
 const state: State = reactive({ liste: [] });
 
 export default function useExexercices() {
-  const name = "Exercices";
-  const store = useBasicStore(
-    state,
-    ExerciceService.getExercices,
-    'exercices'
-  );
+  const name = 'Exercices';
+  const store = useBasicStore(state, ExerciceService.getExercices, 'exercices');
+
+  //TODO: Override load to prevent overriding existing exercices
 
   return {
-    ...store,  
+    ...store,
     name,
-    state//: readonly(state),
+    state, //: readonly(state),
   };
 }

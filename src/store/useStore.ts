@@ -17,52 +17,43 @@ import useVehicules from './useVehicules';
 
 export default function useStore() {
   const modules = [
-    useExexercices,
-    useInterventions,
-    useSapeurs,
-    useLocalites,
-    useGroupes,
-    useUnitesType,
-    useExerciceCategories,
-    useExcuseTypes,
-    useHeureExerciceTypes,
-    useMissionTypes,
-    useTelephones,
-    useStatsFederal,
-    useTypesIntervention,
-    useMateriels,
-    useVehicules,
-    usePhaseTypes,
+    useExexercices(),
+    useInterventions(),
+    useSapeurs(),
+    useLocalites(),
+    useGroupes(),
+    useUnitesType(),
+    useExerciceCategories(),
+    useExcuseTypes(),
+    useHeureExerciceTypes(),
+    useMissionTypes(),
+    useTelephones(),
+    useStatsFederal(),
+    useTypesIntervention(),
+    useMateriels(),
+    useVehicules(),
+    usePhaseTypes(),
   ];
 
   /** Persist all modules */
   const persist = () => {
-    modules.forEach((useStoreModule) => {
-      const { persist } = useStoreModule();
-      persist();
-    });
+    modules.forEach(({ persist }) => persist());
   };
 
   /** Reset all modules */
   const reset = () => {
-    modules.forEach((useStoreModule) => {
-      const { reset } = useStoreModule();
-      reset();
-    });
+    modules.forEach(({ reset }) => reset());
   };
 
   /** Load all modules */
-  const load = () => {
-    modules.forEach((useStoreModule) => {
-      const { load } = useStoreModule();
-      load();
-    });
+  const loadAll = () => {
+    modules.forEach(({ load }) => load());
   };
 
   return {
     persist,
     reset,
-    load,
-    modules
+    loadAll,
+    modules,
   };
 }

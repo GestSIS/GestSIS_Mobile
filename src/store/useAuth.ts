@@ -100,6 +100,11 @@ export default function useAuth() {
     // Set access token
     Api.setAccessToken(accessToken);
     await persist();
+
+    // Load data
+    const store = useStore();
+    store.loadAll();
+
     return Promise.resolve();
   };
 

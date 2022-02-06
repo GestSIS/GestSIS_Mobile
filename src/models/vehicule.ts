@@ -1,4 +1,4 @@
 export class Vehicule {
     id: number;
-    nom: string;
+    designation: string;
 }

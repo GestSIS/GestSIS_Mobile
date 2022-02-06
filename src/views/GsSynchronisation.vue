@@ -10,22 +10,22 @@
     </ion-header>
 
     <ion-content>
-      <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
+      <ion-button expand="full" color="light" @click="loadAll">Tout synchroniser</ion-button>
       <ion-list>
         <ion-item
           button="true"
-          v-for="module in loadedModules"
-          :key="module.name"
-          @click="syncProvider(module)"
+          v-for="{ name, lastSync, syncStatus, load } in modules"
+          :key="name"
+          @click="load"
         >
           <div>
-            {{ module.name }}
+            {{ name }}
             <br />
             <span
               class="details"
-            >{{ module.lastSync ? (formatDate(module.lastSync, 'dd.MM.yyyy H:mm:ss')) : 'Pas encore synchronisé' }}</span>
+            >{{ syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé' }}</span>
           </div>
-          <ion-icon :name="getSyncStatusIcon(module)" slot="end"></ion-icon>
+          <ion-icon :name="getSyncStatusIcon(syncStatus.value)" slot="end"></ion-icon>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -49,41 +49,28 @@ import {
 
 import useDateFormatter from "@/tools/useDateFormatter";
 import useStore from "@/store/useStore";
+import { StoreState } from "@/store/useBasicStore";
 const { formatDate } = useDateFormatter();
-const { modules } = useStore();
-const loadedModules = modules.map(m => m())
+const { modules, loadAll } = useStore();
 
-const enum SyncStatus {
-  Syncing,
-  NeverSync,
-  OK,
-  NeedSync
-}
-
-const getSyncStatusIcon = (module: any): string => {
-  switch (module?.getSyncStatus || SyncStatus.Syncing) {
-    case SyncStatus.Syncing:
+const getSyncStatusIcon = (syncStatus: StoreState): string => {
+  switch (syncStatus || StoreState.Synced) {
+    case StoreState.Syncing:
       return 'sync';
 
-    case SyncStatus.NeverSync:
+    case StoreState.NeedSync:
       return 'alert';
 
-    case SyncStatus.OK:
+    case StoreState.Synced:
       return 'checkmark-circle';
 
-    case SyncStatus.NeedSync:
-      return 'warning';
+    // case StoreState.NeedSync:
+    //   return 'warning';
     default:
-      return '';
+      return 'warning';
   }
 }
 
-const syncProvider = async (module: any) => {
-  module.load();
-}
-const syncAll = () => {
-  // TODO: 
-}
 </script>
 
 <style scoped>

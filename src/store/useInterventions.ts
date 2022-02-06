@@ -2,6 +2,8 @@ import { reactive, readonly } from 'vue';
 import InterventionService from '@/services/InterventionService';
 import { Intervention } from '@/models/intervention';
 import { v4 as uuidv4 } from 'uuid';
+import useBasicStore, { StoreState } from './useBasicStore';
+import { DateTime } from 'luxon';
 
 export interface State {
   liste: Intervention[];
@@ -11,22 +13,32 @@ const persistKey = 'interventions';
 
 export default function useInterventions() {
   const name = 'Interventions';
-  const reset = () => {
-    state.liste = [];
-  };
+  const store = useBasicStore(state, InterventionService.getInterventions, 'interventions');
 
-  const load = async () => {
+  /** Load data from GestSIS API */
+  const load = async (): Promise<boolean> => {
+    store.syncStatus.value = StoreState.Syncing;
     //TODO: Do not override new and in sync intervention
     const interventions = await InterventionService.getInterventions();
     //TODO: Generate random uuid for each intervention
     state.liste = interventions.map((i) => ({ ...i, localUuid: 'null' }));
+
+    store.lastSync.value = DateTime.now().toISO();
+    store.persist();
+    store.syncStatus.value = StoreState.Synced;
+    return Promise.resolve(true);
   };
 
-  const newIntervention = (date: Date, objet: string, localite_id: number, adresse: string): Intervention => {
+  const newIntervention = (
+    date: DateTime,
+    objet: string,
+    localite_id: number,
+    adresse: string
+  ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
     intervention.en_creation = true;
-    intervention.date_debut = date;
+    intervention.date_debut = date.toISO();
     intervention.lieu = adresse;
     intervention.objet = objet;
 
@@ -48,47 +60,12 @@ export default function useInterventions() {
     );
   };
 
-  const persist = async () => {
-    //TODO: Persist interventions
-    persistKey;
-  };
-
-  const sync = async () => {
-    //TODO: sync data with GestSIS
-    // If success for now, clear all interventions
-  };
-
   return {
-    state: state,
+    ...store,
     name,
+    state,
+    load,
     updateIntervention,
     newIntervention,
-    reset,
-    load,
-    persist,
-    sync,
   };
 }
-
-// export interface State {
-//   exercices: Exercice[];
-//   interventions: Intervention[];
-//   sapeurs: Sapeur[];
-//   localites: Localite[],
-//   groupes: Groupe[],
-//   unites: TypeUnite[],
-
-//   // Specific to exercices
-//   exerciceCategories: ExerciceCategorie[],
-//   excusesType: ExcuseType[],
-//   heureExerciceTypes: HeureExerciceType[],
-
-//   // Specific to intervention
-//   missions: Mission[],
-//   telephones: Telephone[],
-//   statFederal: StatFederal[],
-//   typeIntervention: TypeIntervention[],
-//   materiels: Materiel[],
-//   vehicules: Vehicule[],
-//   phases: Phase[],
-// }

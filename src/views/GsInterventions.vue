@@ -58,6 +58,7 @@ import { computed } from "vue";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
+import { DateTime } from "luxon";
 const { formatDate } = useDateFormatter();
 
 const storeInterventions = useInterventions();
@@ -76,7 +77,7 @@ const openDetails = async (interventionUuid: string) => {
 
 const create = async () => {
   //TODO: Change to open intervention creation
-  const intervention = storeInterventions.newIntervention(new Date(), "objet ...", 1, "Adresse à définir");
+  const intervention = storeInterventions.newIntervention(DateTime.now(), "objet ...", 1, "Adresse à définir");
 };
 </script>
 

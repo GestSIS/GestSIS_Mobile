@@ -1,8 +1,8 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export default function useDateFormatter() {
   return {
-    formatDate: (date: string|Date, format: string | null) =>
-      moment(date).format(format || 'DD.MM.yy'),
+    formatDate: (date: string, format: string | null) =>
+    DateTime.fromISO(date).toFormat(format || 'DD.MM.yy'),
   };
 }

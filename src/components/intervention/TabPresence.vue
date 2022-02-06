@@ -24,9 +24,9 @@
           <ion-icon
             slot="end"
             :name="
-              intervention.groupes.indexOf(groupe.id) === -1
-                ? 'radio-button-off'
-                : 'checkmark-circle'
+              intervention.groupes.has(groupe.id)
+                ? 'checkmark-circle'
+                : 'radio-button-off'
             "
           ></ion-icon>
         </ion-item>
@@ -135,7 +135,7 @@ const intervention = state;
 const moduleSapeur = useSapeurs();
 const moduleGroupe = useGroupes();
 const sapeurs = moduleSapeur.state.liste;
-const groupes = moduleGroupe.state.liste;
+const groupes = moduleGroupe.state.liste.filter(g => g.type == 1);
 
 
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
@@ -153,8 +153,12 @@ const sapeursSansPresenceExercices = computed(() => {
   );
 });
 
-const changeGroupeStatus = (id: number) => {
-  // TODO:
+const changeGroupeStatus = (groupeId: number) => {
+  if (intervention.groupes.has(groupeId)) {
+    intervention.groupes.delete(groupeId);
+  } else {
+    intervention.groupes.add(groupeId);
+  }
 };
 const addPresenceExercice = (id: any, other: any) => {
   // TODO:

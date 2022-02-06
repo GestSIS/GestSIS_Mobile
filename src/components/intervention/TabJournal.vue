@@ -37,8 +37,8 @@ import {
   IonCheckbox,
   IonIcon,
 } from '@ionic/vue';
-import moment from 'moment';
 import { computed, ref } from 'vue';
+import { DateTime } from 'luxon';
 
 const onlyPendingMissions = ref(true);
 const { formatDate } = useDateFormatter();
@@ -105,7 +105,7 @@ const evenements = computed(() => {
       description: m.resume,
       auteur: m.sapeur
     }))
-  ].sort((a, b) => moment(a.date).diff(moment(b.date)))
+  ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis())
 });
 console.log(evenements.value)
 
