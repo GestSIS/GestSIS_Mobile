@@ -110,6 +110,4 @@ const create = () => {
 .details {
   color: var(--ion-color-medium);
 }
-.statut {
-}
 </style>

@@ -4,14 +4,13 @@
       <ion-col size="8">
         <h1>Missions</h1>
       </ion-col>
-      <ion-row size="4">
+      <ion-col size="4">
         <ion-button expand="block" @click="addMission()" :disabled="!intervention.en_creation">
           <ion-icon slot="start" name="add"></ion-icon>Nouvelle mission
         </ion-button>
-      </ion-row>
+      </ion-col>
     </ion-row>
   </ion-grid>
-
   <ion-list>
     <ion-item
       button="true"
@@ -38,16 +37,27 @@ import {
   IonButton,
   IonItem,
   IonIcon,
+  modalController
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
+import ModalMission from '../modals/ModalMission.vue';
 
 const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
 
-const addMission = () => {
-  // TODO:
+const addMission = async () => {
+  const modal = await modalController
+    .create({
+      component: ModalMission,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        mission: null
+      },
+    })
+  return modal.present();
+
 };
 const editMission = (mission: any) => {
   // TODO:

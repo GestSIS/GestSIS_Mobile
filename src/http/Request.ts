@@ -1,4 +1,6 @@
+import useAuth from '@/store/useAuth';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
@@ -8,12 +10,16 @@ const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 // import store from '@/store';
 
 const request = {
-  _401interceptor: true,
-  _refreshToken: null,
+  _refreshToken: '',
   _refreshFailed: null,
 
-  setAccessToken: (token:string) => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  _accessTokenValidity: null,
+  
+  setTokens(acccessToken: string, refreshToken: string) {
+    const { exp } = (jwt_decode(acccessToken) as any);
+    this._accessTokenValidity = exp;
+    this._refreshToken = refreshToken;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${acccessToken}`;
   },
 
   setSisKey: (sis_key:string) => {
@@ -67,6 +73,31 @@ const request = {
       },
     });
 
+    api.interceptors.request.use(async (req) => {
+      // Test if expired
+      if (Date.now() < (this._accessTokenValidity || 0) * 1000) {
+        return req
+      }
+
+      // Expired !
+      const response = await this.auth().post('refresh-token', { token: this._refreshToken }) as any;
+      const auth = useAuth();
+
+      // Update store
+      auth.state.data.accessToken = response?.accessToken;
+      auth.state.data.refreshToken = response?.refreshToken;
+      auth.persist();
+
+      // Update axios
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.accessToken}`;
+      if (req.headers?.common) {
+        req.headers['Authorization'] = `Bearer ${response.accessToken}`;
+      }
+      this._refreshToken = response.refreshToken;
+
+      return req;
+    });
+
     api.interceptors.response.use(
       (response: any) => {
         if (response.data.error !== undefined) {
@@ -75,28 +106,6 @@ const request = {
         return response.data?.data || response.data;
       },
       async (error: any) => {
-        if (error.config && error.response && error.response.status === 401) {
-          // Refresh the access token
-          try {
-            //TODO: refresh token
-            // await store.dispatch('refreshToken');
-
-            error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common['Authorization']}`;
-
-            // Retry the original request
-            return axios({
-              method: error.config.method,
-              url: error.config.url,
-              data: error.config.data,
-            }).then((response: any) => {
-              return response.data.data;
-            });
-          } catch (e: any) {
-            // Refresh has failed - reject the original request
-            throw error;
-          }
-        }
-
         return Promise.reject(error);
       }
     );
@@ -105,8 +114,6 @@ const request = {
   },
 
   auth: () => {
-    // console.log("Create auth")
-    // console.log(axios.defaults.headers.common)
     const auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
@@ -124,12 +131,10 @@ const request = {
         return response.data;
       },
       function (error: any) {
-        // console.log(error);
         // Do something with response error
         return Promise.reject(error.response.data);
       }
     );
-    // console.log("Return auth")
     return auth;
   },
 };

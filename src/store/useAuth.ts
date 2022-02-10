@@ -16,8 +16,8 @@ export enum UserStatus {
 export interface User {
   pseudo: string | null;
   email: string | null;
-  accessToken: string | null;
-  refreshToken: string | null;
+  accessToken: string;
+  refreshToken: string;
   statut: UserStatus;
   permissions: any;
   sis: any[];
@@ -26,8 +26,8 @@ export interface User {
 const emptyState = {
   pseudo: null,
   email: null,
-  accessToken: null,
-  refreshToken: null,
+  accessToken: '',
+  refreshToken: '',
   statut: UserStatus.disconnected,
   permissions: {},
   sis: [],
@@ -59,7 +59,7 @@ const init = async () => {
   lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
 
   if (state.data.accessToken != null) {
-    Api.setAccessToken(state.data.accessToken);
+    Api.setTokens(state.data.accessToken, state.data.refreshToken);
     const sisKeys = Object.keys(state.data.permissions);
     selectSis(sisKeys[0]);
   }
@@ -98,7 +98,7 @@ export default function useAuth() {
     selectSis(availableSis[0]);
 
     // Set access token
-    Api.setAccessToken(accessToken);
+    Api.setTokens(accessToken, refreshToken);
     await persist();
 
     // Load data
@@ -135,6 +135,7 @@ export default function useAuth() {
     login,
     logout,
     selectSis,
+    persist,
     activeSisKey,
     activePermissions,
   };

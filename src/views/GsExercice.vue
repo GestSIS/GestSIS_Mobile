@@ -100,7 +100,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="reset" color="light" v-if="!exercice.en_creation">
+            <ion-button expand="block" @click="reset" color="light" v-if="exercice.en_creation">
               <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>

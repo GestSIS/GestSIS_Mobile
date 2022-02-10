@@ -23,14 +23,17 @@
           @click.prevent="openDetails(intervention.localUuid)"
         >
           <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
-          {{ intervention.objet }} –
-          {{ formatDate(intervention.date_debut, "DD.MM.yy HH:mm") }}
           <p>
-            {{
-              intervention.en_creation
-                ? "En cours d'édition"
-                : "Validé, en attente de synchronisation"
-            }}
+            {{ intervention.objet }} –
+            {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
+            <br />
+            <span class="details">
+              {{
+                intervention.en_creation
+                  ? "En cours d'édition"
+                  : "Validé, en attente de synchronisation"
+              }}
+            </span>
           </p>
         </ion-item>
       </ion-list>
@@ -82,4 +85,7 @@ const create = async () => {
 </script>
 
 <style scoped>
+.details {
+  color: var(--ion-color-medium);
+}
 </style>
