@@ -37,30 +37,32 @@ import {
   IonButton,
   IonItem,
   IonIcon,
-  modalController
+  // modalController
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
-import ModalMission from '../modals/ModalMission.vue';
+import { useRouter } from 'vue-router';
 
 const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
+const router = useRouter();
 
 const addMission = async () => {
-  const modal = await modalController
-    .create({
-      component: ModalMission,
-      cssClass: 'my-custom-class',
-      componentProps: {
-        mission: null
-      },
-    })
-  return modal.present();
-
+  // const modal = await modalController
+  //   .create({
+  //     component: InputMission,
+  //     cssClass: 'my-custom-class',
+  //     componentProps: {
+  //       mission: null
+  //     },
+  //   })
+  // return modal.present();
+  router.push({ name: 'mission', params: { mission: null } })
 };
 const editMission = (mission: any) => {
   // TODO:
+  router.push({ name: 'mission', params: { mission } })
 };
 
 </script>

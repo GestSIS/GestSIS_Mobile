@@ -51,6 +51,7 @@ export default function useInterventions() {
     intervention.sapeur_id = null as any;
 
     state.liste.push(intervention);
+    store.persist();
     return intervention;
   };
 

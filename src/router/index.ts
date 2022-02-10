@@ -24,6 +24,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/GsInterventions.vue'),
   },
   {
+    path: '/mission',
+    name: 'mission',
+    props: true,
+    component: () => import('../components/modals/InputMission.vue'),
+  },
+  {
     path: '/exercices',
     name: 'exercices',
     component: () => import('../views/GsExercices.vue'),
@@ -55,18 +61,18 @@ const { isLoggedIn } = useAuth();
 router.beforeEach((to, from, next) => {
   if (to.name != 'login' && !isLoggedIn()) {
     // Redirect to login if not logged in
-    console.log('redirect to login')
+    console.log('redirect to login');
     return next({
       name: 'login',
     });
   } else if (to.name == 'login' && isLoggedIn()) {
     // Redirect to accueil if logged in
-    console.log('redirect to accueil')
+    console.log('redirect to accueil');
     return next({
       name: 'accueil',
     });
   }
-  console.log({to, from})
+  console.log({ to, from });
   next();
 });
 
