@@ -37,8 +37,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/GsExercices.vue'),
   },
   {
-    path: '/exercice',
+    path: '/exercice/:uuid',
     name: 'exercice',
+    props: true,
     component: () => import('../views/GsExercice.vue'),
   },
   {

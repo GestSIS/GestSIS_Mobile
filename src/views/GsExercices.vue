@@ -29,6 +29,7 @@
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}
+            {{ exercice }}
             <br />
             <span class="details statut">
               {{
@@ -98,7 +99,7 @@ const { formatDate } = useDateFormatter();
 
 const router = useRouter();
 const openDetails = (exercice: Exercice) => {
-  router.push('exercice');
+  router.push({ name: 'exercice', params: { uuid: exercice.localUuid } });
 };
 const create = () => {
   //TODO:

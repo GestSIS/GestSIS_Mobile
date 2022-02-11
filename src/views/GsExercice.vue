@@ -12,25 +12,25 @@
     <ion-content class="ion-padding">
       <h3>
         {{
-        exercice.designation != "-"
-        ? exercice.designation
-        : formatCategorie(exercice.exercice_categorie_id)
+          exercice?.designation != "-"
+            ? exercice?.designation
+            : formatCategorie(exercice?.exercice_categorie_id)
         }}
-        - {{ formatDate(exercice.date, "DD.MM.yy") }}
+        - {{ formatDate(exercice?.date, "DD.MM.yy") }}
       </h3>
-      <!-- <p v-if="exercice.id_exe_lie != null">
+      <!-- <p v-if="exercice?.id_exe_lie != null">
         Lié à l'exercice
         {{
-          exercice.communications != "-"
-            ? exercice.communications
-            : exercice.categorie
+          exercice?.communications != "-"
+            ? exercice?.communications
+            : exercice?.categorie
         }}
         - {{ formatDate(exerciceLie.date) }}
       </p>
       <ion-button
         block
         @click="linkExercice"
-        v-if="!(exercice.id_exe_lie != null || !exercice.en_creation)"
+        v-if="!(exercice?.id_exe_lie != null || !exercice?.en_creation)"
       >
         Lier un exercice
       </ion-button>-->
@@ -39,8 +39,8 @@
         @click="unlinkExercice"
         v-if="
           !(
-            exercice.id_exe_lie == null ||
-            !exercice.en_creation ||
+            exercice?.id_exe_lie == null ||
+            !exercice?.en_creation ||
             !exerciceLie.en_creation
           )
         "
@@ -60,7 +60,7 @@
           <ion-radio-group
             @ionChange="select(sapeur, $event.value.detail.value)"
             v-model="sapeur.presenceStatut"
-            v-for="(sapeur, i) in exercice.sapeurs"
+            v-for="(sapeur, i) in exercice?.sapeurs"
             :key="sapeur.id"
           >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
@@ -69,21 +69,21 @@
                 <br />
                 <span v-if="sapeur.excuse_type" class="details">
                   {{
-                  sapeur.excuse_type
+                    sapeur.excuse_type
                   }}
                 </span>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="1" :disabled="!exercice.en_creation"></ion-radio>
+                <ion-radio :value="1" :disabled="!exercice?.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="2" :disabled="!exercice.en_creation"></ion-radio>
+                <ion-radio :value="2" :disabled="!exercice?.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="3" :disabled="!exercice.en_creation"></ion-radio>
+                <ion-radio :value="3" :disabled="!exercice?.en_creation"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="4" :disabled="!exercice.en_creation"></ion-radio>
+                <ion-radio :value="4" :disabled="!exercice?.en_creation"></ion-radio>
               </ion-col>
             </ion-row>
           </ion-radio-group>
@@ -93,19 +93,19 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="addSapeur" v-if="exercice.en_creation">
+            <ion-button expand="block" @click="addSapeur" v-if="exercice?.en_creation">
               <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
             </ion-button>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="reset" color="light" v-if="exercice.en_creation">
+            <ion-button expand="block" @click="reset" color="light" v-if="exercice?.en_creation">
               <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button expand="block" @click="validate" v-if="exercice.en_creation">
+            <ion-button expand="block" @click="validate" v-if="exercice?.en_creation">
               <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
           </ion-col>
@@ -117,10 +117,9 @@
 
 <script lang="ts" setup>
 
-import { ExerciceCategorie, PresenceExercice, Exercice, ExcuseType } from "@/models/bundle";
+import { PresenceExercice } from "@/models/bundle";
 import useExerciceCategories from "@/store/useExerciceCategories";
 
-import { reactive } from "vue";
 import {
   IonButtons,
   IonContent,
@@ -141,72 +140,63 @@ import {
 } from "@ionic/vue";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useExexercices from "@/store/useExercices";
+import { useRoute } from "vue-router";
+import router from "@/router";
+import useExcuseTypes from "@/store/useExcuseTypes";
+import useSapeurs from "@/store/useSapeurs";
+
 const { formatDate } = useDateFormatter();
 
 const exercicesStore = useExexercices();
 const categoriesStore = useExerciceCategories();
+const excuseTypesStore = useExcuseTypes();
+const sapeursStore = useSapeurs();
 
 const exercices = exercicesStore.state;
-const categories: readonly ExerciceCategorie[] = categoriesStore.state;
+const categories = categoriesStore.state;
+const excusesTypes = excuseTypesStore.state;
+const sapeurs = sapeursStore.state;
+
 const formatCategorie = (categorieId: number) => {
-  categories.find(c => c.id == categorieId)?.designation
+  categories.value.find(c => c.id == categorieId)?.designation
 }
 
-const exercice = exercices[0];
-exercice.en_creation = true;
+const route = useRoute();
+const exerciceUuid = route.params.exerciceUuid;
 
-const createPresenceExercice = (
-  present: boolean,
-  remplace: boolean
-): PresenceExercice => {
-  const presence = new PresenceExercice();
-  presence.nom = "Test";
-  presence.prenom = "georges";
-  presence.present = present;
-  presence.remplace = remplace;
-  if (present) {
-    presence.presenceStatut = 1;
-  } else if (remplace) {
-    presence.presenceStatut = 2;
-  } else {
-    presence.presenceStatut = 3;
-  }
-  return reactive(presence);
-};
-exercice.sapeurs = [
-  createPresenceExercice(false, false),
-  createPresenceExercice(false, true),
-  createPresenceExercice(true, false),
-  createPresenceExercice(true, true),
-];
+const exercice = exercices.value.find(e => e.localUuid == exerciceUuid);
+if (!exercice) {
+  console.log("going back !!!")
+  router.back();
+} else if (!exercice?.en_creation) {
+  exercice.en_creation = true;
+  exercicesStore.updatExercice(exercice);
+}
 
-
-const excusesTypes: ExcuseType[] = [
-  {
-    id: 1,
-    designation: "Valable",
-    abreviation: "Ok",
-    amende: false,
-    statut: 1,
-    tri: 1,
-  },
-  {
-    id: 2,
-    designation: "Excuse valable",
-    abreviation: "Exc",
-    amende: false,
-    statut: 1,
-    tri: 2,
-  },
-  {
-    id: 2,
-    designation: "Excuse non-valable",
-    abreviation: "KO",
-    amende: true,
-    statut: 1,
-    tri: 2,
-  },
-];
+// const createPresenceExercice = (
+//   present: boolean,
+//   remplace: boolean
+// ): PresenceExercice => {
+//   const presence = new PresenceExercice();
+//   presence.nom = "Test";
+//   presence.prenom = "georges";
+//   presence.present = present;
+//   presence.remplace = remplace;
+//   if (present) {
+//     presence.presenceStatut = 1;
+//   } else if (remplace) {
+//     presence.presenceStatut = 2;
+//   } else {
+//     presence.presenceStatut = 3;
+//   }
+//   return reactive(presence);
+// };
+// exercice?.sapeurs = [
+//   createPresenceExercice(false, false),
+//   createPresenceExercice(false, true),
+//   createPresenceExercice(true, false),
+//   createPresenceExercice(true, true),
+// ];
 
 const validate = () => {
   //TODO:

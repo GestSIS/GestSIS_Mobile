@@ -1,6 +1,7 @@
 import { PresenceExercice } from './presence-exercice';
 //TODO: See what to do with class PresenceExercice
 export class Exercice {
+  localUuid: string;
   id: number;
   date: string;
   heure: string;
