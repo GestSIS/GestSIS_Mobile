@@ -4,26 +4,21 @@
       <ion-menu content-id="main-content" type="overlay">
         <ion-content>
           <ion-list id="inbox-list">
-            <ion-list-header>Inbox</ion-list-header>
+            <ion-list-header>Menu</ion-list-header>
             <!-- <ion-note>hi@ionicframework.com</ion-note> -->
 
-            <ion-menu-toggle
-              auto-hide="false"
-              v-for="(p, i) in appPages"
-              :key="i"
-            >
+            <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
               <ion-item
-                @click="selectedIndex = i"
                 router-direction="root"
                 :router-link="p.url"
                 lines="none"
                 detail="false"
                 class="hydrated"
-                :class="{ selected: selectedIndex === i }"
+                :class="{ selected: p.url.name == activeRoute }"
               >
                 <!-- <ion-icon
                   slot="start"
-                ></ion-icon> -->
+                ></ion-icon>-->
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -48,14 +43,24 @@ import {
   IonRouterOutlet,
   IonSplitPane,
 } from "@ionic/vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-const selectedIndex = ref(0);
+const route = useRoute();
+const activeRoute = ref(route.name);
+
+watch(
+  () => route.name,
+  (newValue) => {
+    activeRoute.value = newValue;
+  }
+);
+
 const appPages = [
-  {
-    title: "Login",
-    url: { name: "login" },
-  },
+  // {
+  //   title: "Login",
+  //   url: { name: "login" },
+  // },
   {
     title: "Accueil",
     url: { name: "accueil" },
@@ -77,13 +82,6 @@ const appPages = [
     url: { name: "parametres" },
   },
 ];
-
-const path = window.location.pathname.split("folder/")[1];
-if (path !== undefined) {
-  selectedIndex.value = appPages.findIndex(
-    (page) => page.title.toLowerCase() === path.toLowerCase()
-  );
-}
 </script>
 
 <style scoped>
@@ -118,17 +116,13 @@ ion-menu.md ion-list#inbox-list {
 ion-menu.md ion-list#inbox-list ion-list-header {
   font-size: 22px;
   font-weight: 600;
-
   min-height: 20px;
 }
 
 ion-menu.md ion-list#labels-list ion-list-header {
   font-size: 16px;
-
   margin-bottom: 18px;
-
   color: #757575;
-
   min-height: 26px;
 }
 

@@ -10,11 +10,6 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      <!-- <ion-button expand="full" @click="create()">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Nouveau
-      </ion-button>-->
-
       <ion-list lines="inset">
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
         <ion-item
@@ -29,13 +24,12 @@
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}
-            {{ exercice }}
             <br />
             <span class="details statut">
               {{
                 exercice.en_creation
                   ? "En cours d'édition"
-                  : "Validé, en attente de synchronisation"
+                  : 'Validé, en attente de synchronisation'
               }}
             </span>
             <br />
@@ -51,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Exercice } from "@/models/bundle";
+import { Exercice } from '@/models/bundle';
 
 import {
   IonButtons,
@@ -64,30 +58,32 @@ import {
   IonList,
   IonItem,
   IonIcon,
-} from "@ionic/vue";
+} from '@ionic/vue';
 
-import { Localite, ExerciceCategorie, ExcuseType } from "@/models/bundle";
-import { computed, Ref } from "vue";
-import useExercices from "@/store/useExercices";
-import useExcuseTypes from "@/store/useExcuseTypes";
-import useLocalites from "@/store/useLocalites";
-import useExerciceCategories from "@/store/useExerciceCategories";
-import { useRouter } from "vue-router";
-import useDateFormatter from "@/tools/useDateFormatter";
-import { DateTime } from "luxon";
+import { computed } from 'vue';
+import useExercices from '@/store/useExercices';
+import useExcuseTypes from '@/store/useExcuseTypes';
+import useLocalites from '@/store/useLocalites';
+import useExerciceCategories from '@/store/useExerciceCategories';
+import { useRouter } from 'vue-router';
+import useDateFormatter from '@/tools/useDateFormatter';
+import { DateTime } from 'luxon';
 
-const exercicesStore = useExercices()
-const categoriesStore = useExerciceCategories()
-const excusesStore = useExcuseTypes()
-const localitesStore = useLocalites()
+const exercicesStore = useExercices();
+const categoriesStore = useExerciceCategories();
+const excusesStore = useExcuseTypes();
+const localitesStore = useLocalites();
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
-  return exercices.slice(0).sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis());
+  return exercices
+    .slice(0)
+    .sort((a, b) =>
+      DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()
+    );
 };
-const exercices = computed(() => sortExercices(exercicesStore.state.value));
 
+const exercices = computed(() => sortExercices(exercicesStore.state.value));
 const categories = categoriesStore.state;
-const excuses = excusesStore.state;
 const localites = localitesStore.state;
 
 const getFormattedLocalite = (localiteId: number) =>
@@ -100,9 +96,6 @@ const { formatDate } = useDateFormatter();
 const router = useRouter();
 const openDetails = (exercice: Exercice) => {
   router.push({ name: 'exercice', params: { uuid: exercice.localUuid } });
-};
-const create = () => {
-  //TODO:
 };
 </script>
 
