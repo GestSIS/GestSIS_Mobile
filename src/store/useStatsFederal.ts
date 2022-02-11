@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { StatFederal } from '@/models/bundle';
 import StatFederalService from '@/services/StatFederalService';
 
-export interface State {
-  liste: StatFederal[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<StatFederal[]> = ref([]);
+const store = useBasicStore(
+  state,
+  StatFederalService.getStats,
+  'stat-federal'
+);
 
 export default function useStatsFederal() {
   const name = "Statistiques fédérales";
-  const store = useBasicStore(
-    state,
-    StatFederalService.getStats,
-    'stat-federal'
-  );
 
   return {
     ...store,  

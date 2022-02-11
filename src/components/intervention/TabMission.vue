@@ -62,7 +62,7 @@ const addMission = async () => {
 };
 const editMission = (mission: any) => {
   // TODO:
-  router.push({ name: 'mission', params: { mission } })
+  router.push({ name: 'mission', params: { mission: mission } })
 };
 
 </script>

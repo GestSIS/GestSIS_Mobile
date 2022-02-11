@@ -66,7 +66,7 @@ import {
 } from "@ionic/vue";
 
 import { Localite, ExerciceCategorie, ExcuseType } from "@/models/bundle";
-import { computed } from "vue";
+import { computed, Ref } from "vue";
 import useExercices from "@/store/useExercices";
 import useExcuseTypes from "@/store/useExcuseTypes";
 import useLocalites from "@/store/useLocalites";
@@ -83,22 +83,21 @@ const localitesStore = useLocalites()
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
   return exercices.slice(0).sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis());
 };
-const exercices = computed(() => sortExercices(exercicesStore.state.liste));
+const exercices = computed(() => sortExercices(exercicesStore.state.value));
 
-const categories: readonly ExerciceCategorie[] = categoriesStore.state.liste;
-const excuses: readonly ExcuseType[] = excusesStore.state.liste;
-const localites: readonly Localite[] = localitesStore.state.liste;
+const categories = categoriesStore.state;
+const excuses = excusesStore.state;
+const localites = localitesStore.state;
 
 const getFormattedLocalite = (localiteId: number) =>
-  localites.find((l) => l.id == localiteId)?.designation;
+  localites.value.find((l) => l.id == localiteId)?.designation;
 const getFormattedCategorie = (categorieid: number) =>
-  categories.find((c) => c.id == categorieid)?.designation;
+  categories.value.find((c) => c.id == categorieid)?.designation;
 
 const { formatDate } = useDateFormatter();
 
 const router = useRouter();
-const openDetails = () => {
-  //_: Exercice) {
+const openDetails = (exercice: Exercice) => {
   router.push('exercice');
 };
 const create = () => {

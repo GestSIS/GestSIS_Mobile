@@ -9,7 +9,7 @@
       <form @submit.prevent="wrappedLogin">
         <ion-list>
           <ion-item>
-            <ion-input type="email" v-model="email" name="email" placeholder="Adresse e-mail"></ion-input>
+            <ion-input type="text" v-model="email" name="email" placeholder="Adresse e-mail"></ion-input>
           </ion-item>
           <ion-item>
             <ion-input
@@ -76,6 +76,7 @@ const stopRedirect = watchEffect((onInvalidate) => {
 
 const wrappedLogin = async () => {
   try {
+    console.log(email.value, password.value)
     await login(email.value, password.value);
     console.log("Trigger, wait !!! 2");
     router.push({ name: 'accueil' });

@@ -1,20 +1,17 @@
 import { PhaseType } from '@/models/phasetype';
 import PhaseTypeService from '@/services/PhaseTypeService';
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 
-export interface State {
-  liste: PhaseType[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<PhaseType[]> = ref([]);
+const store = useBasicStore(
+  state,
+  PhaseTypeService.getPhases,
+  'phases-types'
+);
 
 export default function usePhaseTypes() {
   const name = "Phases";
-  const store = useBasicStore(
-    state,
-    PhaseTypeService.getPhases,
-    'phases-types'
-  );
 
   return {
     ...store,  

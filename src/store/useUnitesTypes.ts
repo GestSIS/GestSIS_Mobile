@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { UniteType } from '@/models/bundle';
 import UniteService from '@/services/UniteService';
 
-export interface State {
-  liste: UniteType[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<UniteType[]> = ref([]);
+const store = useBasicStore(
+  state,
+  UniteService.getUnites,
+  'unite-types'
+);
 
 export default function useUnitesType() {
   const name = "Unités";
-  const store = useBasicStore(
-    state,
-    UniteService.getUnites,
-    'unite-types'
-  );
 
   return {
     ...store,  

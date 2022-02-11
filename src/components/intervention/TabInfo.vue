@@ -246,10 +246,10 @@ const modulePhase = usePhaseTypes();
 const moduleStatFederal = useStatsFederal();
 const moduleLocalite = useLocalites();
 
-const sapeurs = moduleSapeur.state.liste;
-const typeInterventions = moduleType.state.liste;
-const statsFederales = moduleStatFederal.state.liste;
-const localites = moduleLocalite.state.liste;
+const sapeurs = moduleSapeur.state;
+const typeInterventions = moduleType.state;
+const statsFederales = moduleStatFederal.state;
+const localites = moduleLocalite.state;
 
 const customPickerOptions = {
   buttons: [

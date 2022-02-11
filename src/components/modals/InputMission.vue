@@ -35,7 +35,7 @@
             type="text"
             readonly="true"
             @ionFocus="selectSapeur()"
-            :value="mission.sapeur.nom ? (mission.sapeur.nom + ' ' + mission.sapeur.prenom) : ''"
+            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
           ></ion-input>
         </ion-item>
 
@@ -84,24 +84,26 @@ import {
   IonButton,
   IonItem,
   IonIcon,
-  IonPopover,
   IonText,
   modalController,
 } from '@ionic/vue';
 import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";
+import useActiveIntervention from "@/store/useActiveIntervention";
 
 const openModalDebut = ref(false);
 const openModalFin = ref(false);
 
+const router = useRouter();
 const route = useRoute();
 const data = route.params.mission ? route.params.mission as any as Mission : new Mission();
 let mission = reactive(data)
 
+const interventionModule = useActiveIntervention();
+
 const formatDate = (value: string) => {
   return value;
 };
-const date1 = ref("");
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 // const mission = reactive((props.mission ? { ...props.mission } : new Mission()))
 
@@ -110,7 +112,8 @@ const dismiss = () => {
 }
 
 const isInputComplete = () => {
-  return mission.date_debut && mission.titre && mission.sapeur.nom
+  return true;
+  // return mission.date_debut && mission.titre && mission.sapeur.nom
 }
 
 const save = () => {
@@ -118,7 +121,12 @@ const save = () => {
     // TODO: Notification
     return;
   }
-  modalController.dismiss(mission)
+  if (mission.localUuid) {
+    interventionModule.updateMission(mission);
+  } else {
+    interventionModule.addMission(mission);
+  }
+  router.back();
 }
 </script>
 

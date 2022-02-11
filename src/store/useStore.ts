@@ -18,7 +18,7 @@ import useVehicules from './useVehicules';
 export default function useStore() {
   const modules = [
     useExexercices(),
-    useInterventions(),
+    // useInterventions(),
     useSapeurs(),
     useLocalites(),
     useGroupes(),

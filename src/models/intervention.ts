@@ -1,6 +1,5 @@
 import { Mission } from './mission';
 import { Appel } from './appel';
-import { Materiel } from './materiel';
 import { DateTime } from 'luxon';
 
 export class Intervention {
@@ -54,7 +53,7 @@ export class Intervention {
 
   missions: Array<Mission> = [];
   appels: Array<Appel> = [];
-  vehicules: Set<number> = new Set();
-  materiel: Map<number, number> = new Map(); // id_materiel : quantite
-  groupes: Set<number> = new Set();
+  vehicules: number[];
+  materiel: any; // id_materiel : quantite
+  groupes: number[];
 }

@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Sapeur } from '@/models/bundle';
 import SapeurService from '@/services/SapeurService';
 
-export interface State {
-  liste: Sapeur[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<Sapeur[]> = ref([]);
+const store = useBasicStore(
+  state,
+  SapeurService.getSapeurs,
+  'sapeurs'
+);
 
 export default function useSapeurs() {
   const name = "Sapeurs";
-  const store = useBasicStore(
-    state,
-    SapeurService.getSapeurs,
-    'sapeurs'
-  );
 
   return {
     ...store,  

@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Vehicule } from '@/models/bundle';
 import VehiculeService from '@/services/VehiculeService';
 
-export interface State {
-  liste: Vehicule[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<Vehicule[]> = ref([]);
+const store = useBasicStore(
+  state,
+  VehiculeService.getVehicules,
+  'vehicules'
+);
 
 export default function useVehicules() {
   const name = "Véhicules";
-  const store = useBasicStore(
-    state,
-    VehiculeService.getVehicules,
-    'vehicules'
-  );
 
   return {
     ...store,  

@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { ExerciceComptable } from '@/models/exercicecomptable';
 import ExerciceComptableService from '@/services/ExerciceComptableService';
 
-export interface State {
-  liste: ExerciceComptable[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<ExerciceComptable[]> = ref([]);
+const store = useBasicStore(
+  state,
+  ExerciceComptableService.getExercices,
+  'exercices-comptable'
+);
 
 export default function useExexercicesComptable() {
   const name = "Exercices comptable";
-  const store = useBasicStore(
-    state,
-    ExerciceComptableService.getExercices,
-    'exercices-comptable'
-  );
 
   return {
     ...store,  

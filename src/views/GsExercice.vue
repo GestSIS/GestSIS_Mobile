@@ -12,9 +12,9 @@
     <ion-content class="ion-padding">
       <h3>
         {{
-          exercice.designation != "-"
-            ? exercice.designation
-            : formatCategorie(exercice.exercice_categorie_id)
+        exercice.designation != "-"
+        ? exercice.designation
+        : formatCategorie(exercice.exercice_categorie_id)
         }}
         - {{ formatDate(exercice.date, "DD.MM.yy") }}
       </h3>
@@ -69,7 +69,7 @@
                 <br />
                 <span v-if="sapeur.excuse_type" class="details">
                   {{
-                    sapeur.excuse_type
+                  sapeur.excuse_type
                   }}
                 </span>
               </ion-col>
@@ -146,8 +146,8 @@ const { formatDate } = useDateFormatter();
 const exercicesStore = useExexercices();
 const categoriesStore = useExerciceCategories();
 
-const exercices = exercicesStore.state.liste;
-const categories: readonly ExerciceCategorie[] = categoriesStore.state.liste;
+const exercices = exercicesStore.state;
+const categories: readonly ExerciceCategorie[] = categoriesStore.state;
 const formatCategorie = (categorieId: number) => {
   categories.find(c => c.id == categorieId)?.designation
 }

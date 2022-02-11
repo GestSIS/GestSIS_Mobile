@@ -13,13 +13,13 @@
       v-for="(vehicule, i) in vehicules"
       :key="i"
       @click="changeVehiculeStatut(vehicule.id)"
-      :disabled="!intervention.en_creation"
+      :disabled="!state.en_creation"
     >
       {{ vehicule.designation }}
       <ion-icon
         slot="end"
         :name="
-          intervention.vehicules.has(vehicule.id)
+          vehiculesIntervention.has(vehicule.id)
             ? 'checkmark-circle'
             : 'radio-button-off'
         "
@@ -39,19 +39,24 @@ import {
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useVehicules from '@/store/useVehicules';
+import { computed, ref } from 'vue';
+import useInterventions from '@/store/useInterventions';
 
-const { state } = useActiveIntervention();
-const intervention = state;
+const { state, updateVehicules } = useActiveIntervention();
+
+const moduleInter = useInterventions()
+const vehiculesIntervention = ref(new Set(moduleInter.state.value[0].vehicules.slice()));
 
 const moduleVehicule = useVehicules();
-const vehicules = moduleVehicule.state.liste;
+const vehicules = computed(() => new Set(moduleVehicule.state.value));
 
 const changeVehiculeStatut = (vehiculeId: number) => {
-  if (intervention.vehicules.has(vehiculeId)) {
-    intervention.vehicules.delete(vehiculeId);
+  if (vehiculesIntervention.value.has(vehiculeId)) {
+    vehiculesIntervention.value.delete(vehiculeId);
   } else {
-    intervention.vehicules.add(vehiculeId);
+    vehiculesIntervention.value.add(vehiculeId);
   }
+  updateVehicules([...vehiculesIntervention.value as any])
 };
 
 </script>

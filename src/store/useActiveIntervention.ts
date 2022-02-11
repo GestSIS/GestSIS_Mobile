@@ -1,32 +1,69 @@
-import { reactive, readonly } from 'vue';
-import { Intervention } from '@/models/intervention';
-import useInterventions from './useInterventions';
+import { Ref, ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 
-export interface State {
-  activeIntervention: Intervention;
-}
-const state: State = reactive({ activeIntervention: new Intervention() });
-const persistKey = 'interventions';
+import { Intervention } from '@/models/intervention';
+
+import useInterventions from './useInterventions';
+import { Mission } from '@/models/mission';
+import { Materiel } from '@/models/materiel';
+
+const state: Ref<Intervention> = ref({ ...new Intervention() });
 
 export default function useActiveIntervention() {
   const reset = () => {
-    state.activeIntervention = new Intervention();
+    state.value = new Intervention();
   };
   const setActiveIntervention = (intervention: Intervention) => {
-    state.activeIntervention = intervention;
+    state.value = intervention;
   };
   const persist = () => {
-    if (state.activeIntervention != null){
-      const { updateIntervention, persist } = useInterventions();
-      updateIntervention(state.activeIntervention);
-      persist();
+    if (state.value != null){
+      const { updateIntervention } = useInterventions();
+      updateIntervention(state.value);
     }
   };
 
+  const addMission = (mission: Mission) => {
+    mission.localUuid = uuidv4();
+    state.value.missions.push(mission);
+    persist();
+  }
+
+  const updateMission = (mission: Mission) => {
+    mission.localUuid = uuidv4();
+    state.value.missions = [
+      ...state.value.missions.filter(m => m.localUuid != mission.localUuid),
+      mission
+    ]
+    persist();
+  }
+
+  const updateVehicules = (vehicules: number[]) => {
+    state.value.vehicules = vehicules;
+    persist();
+  }
+
+  const updateMaterielQuantity = (materielId: number, quantity: number) => {
+    state.value.materiel[materielId] = quantity;
+    persist();
+  }
+  
+  const removeMateriel = (materielId : number) => {
+    delete state.value.materiel[materielId];
+    persist();
+  }
+
   return {
-    state: state.activeIntervention,
+    state,
     reset,
     setActiveIntervention,
     persist,
+
+    // Actions
+    addMission,
+    updateMission,
+    updateVehicules,
+    updateMaterielQuantity,
+    removeMateriel,
   };
 }

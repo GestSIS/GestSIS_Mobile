@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Materiel } from '@/models/bundle';
 import MaterielService from '@/services/MaterielService';
 
-export interface State {
-  liste: Materiel[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<Materiel[]> = ref([]);
+const store = useBasicStore(
+  state,
+  MaterielService.getMateriels,
+  'materiel'
+);
 
 export default function useMateriels() {
   const name = "Matériel";
-  const store = useBasicStore(
-    state,
-    MaterielService.getMateriels,
-    'materiel'
-  );
 
   return {
     ...store,  

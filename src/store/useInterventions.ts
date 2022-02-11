@@ -1,19 +1,15 @@
-import { reactive, readonly } from 'vue';
+import { ref, Ref } from 'vue';
 import InterventionService from '@/services/InterventionService';
 import { Intervention } from '@/models/intervention';
 import { v4 as uuidv4 } from 'uuid';
 import useBasicStore, { StoreState } from './useBasicStore';
 import { DateTime } from 'luxon';
 
-export interface State {
-  liste: Intervention[];
-}
-const state: State = reactive({ liste: [] });
-const persistKey = 'interventions';
+const state: Ref<Intervention[]> = ref([]);
+const store = useBasicStore(state, InterventionService.getInterventions, 'interventions');
 
-export default function useInterventions() {
+export default () => {
   const name = 'Interventions';
-  const store = useBasicStore(state, InterventionService.getInterventions, 'interventions');
 
   /** Load data from GestSIS API */
   const load = async (): Promise<boolean> => {
@@ -21,7 +17,7 @@ export default function useInterventions() {
     //TODO: Do not override new and in sync intervention
     const interventions = await InterventionService.getInterventions();
     //TODO: Generate random uuid for each intervention
-    state.liste = interventions.map((i) => ({ ...i, localUuid: 'null' }));
+    state.value = interventions.map((i) => ({ ...i, localUuid: 'null' }));
 
     store.lastSync.value = DateTime.now().toISO();
     store.persist();
@@ -50,15 +46,22 @@ export default function useInterventions() {
     intervention.localite_id = localite_id;
     intervention.sapeur_id = null as any;
 
-    state.liste.push(intervention);
+    intervention.materiel = {};
+    intervention.vehicules = [];
+
+    state.value.push(intervention);
     store.persist();
     return intervention;
   };
 
   const updateIntervention = (intervention: Intervention) => {
-    state.liste = state.liste.map((i) =>
+    console.log("Update intervention")
+    console.log(intervention)
+    console.log(state.value)
+    state.value = state.value.map((i) =>
       i.localUuid === intervention.localUuid ? intervention : i
     );
+    console.log(state.value)
   };
 
   return {

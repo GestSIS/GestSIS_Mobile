@@ -26,7 +26,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/mission',
     name: 'mission',
-    props: true,
+    props: (route) => ({
+      ...route.params
+    }),
     component: () => import('../components/modals/InputMission.vue'),
   },
   {

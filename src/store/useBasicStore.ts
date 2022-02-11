@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { usePersistentStore } from './usePersistentStore';
 
 const { persistentStore } = usePersistentStore();
@@ -13,7 +13,7 @@ export enum StoreState {
 }
 
 export default function useBasicStore<Type>(
-  state: { liste: Type[] },
+  state: Ref<Type[]>,
   loader: () => Promise<Type[]>,
   persistKey: string
 ) {
@@ -23,7 +23,11 @@ export default function useBasicStore<Type>(
   /** Persist data in local storage */
   const persist = async () => {
     // Persists by using persistKey
-    persistentStore.set(persistKey, JSON.stringify(state.liste));
+    persistentStore.set(persistKey, JSON.stringify(
+      state.value,
+      (_key, value) => (value instanceof Set ? [...value] :
+        value instanceof Map ? { ...value } : value)
+    ));
     persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
@@ -32,14 +36,14 @@ export default function useBasicStore<Type>(
     persistentStore.remove(persistKey);
     syncStatus.value = StoreState.NeedSync;
     lastSync.value = DateTime.now().toISO();
-    state.liste = [];
+    state.value = [];
   };
 
   /** Load data from local storage */
   const init = async () => {
     syncStatus.value = StoreState.Syncing;
     const data = await persistentStore.get(persistKey);
-    state.liste = JSON.parse(data) || [];
+    state.value = JSON.parse(data) || [];
     lastSync.value = (await persistentStore.get(persistKey + lastSyncSuffixe)) || null;
     syncStatus.value = StoreState.Synced;
   };
@@ -47,7 +51,7 @@ export default function useBasicStore<Type>(
   /** Load data from GestSIS API */
   const load = async (): Promise<boolean> => {
     syncStatus.value = StoreState.Syncing;
-    state.liste = await loader();
+    state.value = await loader();
     lastSync.value = DateTime.now().toISO();
     persist();
     syncStatus.value = StoreState.Synced;

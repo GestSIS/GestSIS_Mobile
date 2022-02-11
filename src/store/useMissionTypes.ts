@@ -1,20 +1,17 @@
-import { reactive, readonly } from 'vue';
+import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { MissionType } from '@/models/bundle';
 import MissionService from '@/services/MissionService';
 
-export interface State {
-  liste: MissionType[];
-}
-const state: State = reactive({ liste: [] });
+const state: Ref<MissionType[]> = ref([]);
+const store = useBasicStore(
+  state,
+  MissionService.getMissions,
+  'missions-types'
+);
 
 export default function useMissionTypes() {
   const name = "Missions";
-  const store = useBasicStore(
-    state,
-    MissionService.getMissions,
-    'missions-types'
-  );
 
   return {
     ...store,  

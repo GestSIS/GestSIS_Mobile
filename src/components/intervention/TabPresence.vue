@@ -14,7 +14,7 @@
           v-for="(groupe, i) of groupes"
           :key="i"
           @click="changeGroupeStatus(groupe.id)"
-          :disabled="!intervention.en_creation"
+          :disabled="!intervention.value.en_creation"
         >
           <!-- <span>{{ groupe.prefix }}</span> -->
           {{
@@ -24,7 +24,7 @@
           <ion-icon
             slot="end"
             :name="
-              intervention.groupes.has(groupe.id)
+              intervention.value.groupes.has(groupe.id)
                 ? 'checkmark-circle'
                 : 'radio-button-off'
             "
@@ -44,7 +44,7 @@
               ion-button
               expand="block"
               @click="addPresenceExercice('ARRIVEE', null)"
-              :disabled="!intervention.en_creation"
+              :disabled="!intervention.value.en_creation"
             >
               <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
             </ion-button>
@@ -54,7 +54,7 @@
               expand="block"
               @click="addPresenceExercice('DEPART', null)"
               :disabled="
-                !intervention.en_creation ||
+                !intervention.value.en_creation ||
                 sapeursAvecPresenceExercicesIncompletes.length === 0
               "
             >
@@ -77,13 +77,13 @@
       </ion-item-group>
 
       <!-- Présences des sapeurs -->
-      <ion-item-group v-for="(sapeur, i) in intervention.sapeurs" :key="i">
+      <ion-item-group v-for="(sapeur, i) in intervention.value.sapeurs" :key="i">
         <ion-item-divider color="light">{{ sapeur.nom }} {{ sapeur.prenom }}</ion-item-divider>
         <ion-item
           button
           v-for="(presence, j) in sapeur.presences"
           :key="j"
-          :disabled="!intervention.en_creation"
+          :disabled="!intervention.value.en_creation"
           @click="editPresenceExercice(i, j)"
         >
           {{ formatDate(presence.date_debut, "HH:mm") }} -
@@ -134,19 +134,19 @@ const intervention = state;
 
 const moduleSapeur = useSapeurs();
 const moduleGroupe = useGroupes();
-const sapeurs = moduleSapeur.state.liste;
-const groupes = moduleGroupe.state.liste.filter(g => g.type == 1);
+const sapeurs = moduleSapeur.state;
+const groupes = moduleGroupe.state.filter(g => g.type == 1);
 
 
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
-  intervention.sapeurs.filter(
+  intervention.value.sapeurs.filter(
     (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
   )
 );
 
 const sapeursSansPresenceExercices = computed(() => {
-  const sapeursSaisi = intervention.missions.map((mission) => mission.sapeur);
-  const sapeursIdPotentiel = new Set(intervention.sapeurs.map((sap) => sap.id));
+  const sapeursSaisi = intervention.value.missions.map((mission) => mission.sapeur);
+  const sapeursIdPotentiel = new Set(intervention.value.sapeurs.map((sap) => sap.id));
   const sapeursExistant = new Set(sapeurs.map((sap) => sap.id));
   return sapeursSaisi.filter(
     (s) => !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
@@ -154,10 +154,10 @@ const sapeursSansPresenceExercices = computed(() => {
 });
 
 const changeGroupeStatus = (groupeId: number) => {
-  if (intervention.groupes.has(groupeId)) {
-    intervention.groupes.delete(groupeId);
+  if (intervention.value.groupes.has(groupeId)) {
+    intervention.value.groupes.delete(groupeId);
   } else {
-    intervention.groupes.add(groupeId);
+    intervention.value.groupes.add(groupeId);
   }
 };
 const addPresenceExercice = (id: any, other: any) => {

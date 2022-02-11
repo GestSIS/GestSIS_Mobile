@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button defaultHref="interventions"></ion-back-button>
         </ion-buttons>
-        <ion-title>Exercices</ion-title>
+        <ion-title>Rapport d'intervention</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -97,6 +97,7 @@ import useVehicules from "@/store/useVehicules";
 import useMateriels from "@/store/useMateriels";
 import usePhaseTypes from "@/store/usePhaseTypes";
 import useGroupes from "@/store/useGroupes";
+
 const { state } = useActiveIntervention();
 const intervention = state;
 
@@ -116,7 +117,7 @@ const activeTab = ref(Tab.Journal);
 // Data section
 
 // Switch to sapeurs une fois des groupes sélectionnées ?
-intervention.en_creation = true;
+// intervention.en_creation = true;
 
 const moduleMission = useMissionTypes()
 const moduleSapeur = useSapeurs()

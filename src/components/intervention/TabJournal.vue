@@ -65,12 +65,12 @@ const iconMapping = {
 
 const { state } = useActiveIntervention()
 const evenements = computed(() => {
-  const missions = state.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
+  const missions = state.value.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
   return [
     // Début intervention
     {
       uuid: uuidv4(),
-      date: state.date_debut,
+      date: state.value.date_debut,
       type: EventType.Info,
       titre: 'Début de l\'intervention',
       description: 'TODO: Inondation à Glo',
@@ -78,7 +78,7 @@ const evenements = computed(() => {
     },
 
     // Appels
-    ...state.appels.map(a => ({
+    ...state.value.appels.map(a => ({
       ...a,
       uuid: uuidv4(),
       type: EventType.Appel,

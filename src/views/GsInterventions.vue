@@ -15,12 +15,12 @@
       </ion-button>
 
       <ion-list>
-        <ion-item v-if="!interventions.length">Aucun rapport d'intervention</ion-item>
+        <ion-item v-if="!state.length">Aucune intervention</ion-item>
         <ion-item
           :button="true"
-          v-for="intervention in interventions"
+          v-for="intervention in state"
           :key="intervention.id"
-          @click.prevent="openDetails(intervention.localUuid)"
+          @click.prevent="openDetails(intervention)"
         >
           <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
           <p>
@@ -57,30 +57,27 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import { computed } from "vue";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { DateTime } from "luxon";
+import { Intervention } from "@/models/intervention";
 const { formatDate } = useDateFormatter();
 
-const storeInterventions = useInterventions();
-const interventions = computed(() => storeInterventions.state.liste);
+const { state, newIntervention } = useInterventions();
+const { setActiveIntervention } = useActiveIntervention();
 
 const router = useRouter()
-const openDetails = async (interventionUuid: string) => {
-  // intervention: Intervention) {
-  const { setActiveIntervention } = useActiveIntervention();
-  const intervention = interventions.value.find(i => i.localUuid == interventionUuid);
-  if (intervention != null) {
-    setActiveIntervention(intervention);
-    router.push('intervention');
-  }
+const openDetails = async (intervention: Intervention) => {
+  setActiveIntervention(intervention);
+  router.push('intervention');
 };
 
 const create = async () => {
   //TODO: Change to open intervention creation
-  const intervention = storeInterventions.newIntervention(DateTime.now(), "objet ...", 1, "Adresse à définir");
+  const intervention = newIntervention(DateTime.now(), "objet ...", 1, "Adresse à définir");
+  setActiveIntervention(intervention);
+  router.push('intervention');
 };
 </script>
 
