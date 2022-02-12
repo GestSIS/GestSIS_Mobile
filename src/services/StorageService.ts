@@ -38,7 +38,7 @@ const TokenService = {
   },
   saveRefreshToken(refreshToken: string) {
     if (refreshToken === null || refreshToken === 'null') {
-      this.removeRefreshToken;
+      this.removeRefreshToken();
     } else {
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     }

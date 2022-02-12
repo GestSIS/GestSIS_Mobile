@@ -57,8 +57,7 @@ const init = async () => {
   const data = await persistentStore.get(persistKey);
   state.data = JSON.parse(data) || { ...emptyState };
   lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
-
-  if (data?.accessToken != null) {
+  if (state.data?.accessToken) {
     Api.setTokens(state.data.accessToken, state.data.refreshToken);
     const sisKeys = Object.keys(state.data.permissions);
     selectSis(sisKeys[0]);

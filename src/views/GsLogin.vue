@@ -56,8 +56,10 @@ import {
   IonHeader,
   IonToolbar,
   IonButton,
+  loadingController,
 } from '@ionic/vue';
 import { ref, watch, watchEffect, computed } from 'vue';
+import useStore from '@/store/useStore';
 
 const router = useRouter();
 const email = ref('');
@@ -76,9 +78,24 @@ const stopRedirect = watchEffect((onInvalidate) => {
 
 const wrappedLogin = async () => {
   try {
-    console.log(email.value, password.value)
     await login(email.value, password.value);
-    console.log("Trigger, wait !!! 2");
+
+    // Afficher loading
+    const loading = await loadingController
+      .create({
+        cssClass: 'my-custom-class',
+        message: 'Chargement...',
+      });
+
+    await loading.present();
+
+    // Load data
+    const store = useStore()
+    await store.loadAll();
+
+    // Hide loading
+    await loading.dismiss();
+
     router.push({ name: 'accueil' });
   } catch (error) {
     errorMessage.value = error as string;

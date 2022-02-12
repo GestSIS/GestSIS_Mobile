@@ -47,7 +47,8 @@ export default function useStore() {
 
   /** Load all modules */
   const loadAll = () => {
-    modules.forEach(({ load }) => load());
+    const promises = modules.map(({ load }) => load());
+    return Promise.all(promises);
   };
 
   return {

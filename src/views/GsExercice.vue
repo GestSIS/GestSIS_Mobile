@@ -16,7 +16,8 @@
             ? exercice?.designation
             : formatCategorie(exercice?.exercice_categorie_id)
         }}
-        - {{ formatDate(exercice?.date, "DD.MM.yy") }}
+        - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
+        {{ exercice }}
       </h3>
       <!-- <p v-if="exercice?.id_exe_lie != null">
         Lié à l'exercice
@@ -47,6 +48,7 @@
       >
         Délier l'exercice
       </ion-button>-->
+
       <ion-list>
         <ion-row class="sap-item list-header">
           <ion-col>Sapeur</ion-col>
@@ -58,14 +60,14 @@
 
         <div class="sapeurs">
           <ion-radio-group
-            @ionChange="select(sapeur, $event.value.detail.value)"
             v-model="sapeur.presenceStatut"
             v-for="(sapeur, i) in exercice?.sapeurs"
+            @ionChange="select(sapeur, $event.value.detail.value)"
             :key="sapeur.id"
           >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
-                {{ sapeur.nom }} {{ sapeur.prenom }}
+                {{ sapeur?.sapeur_id }}
                 <br />
                 <span v-if="sapeur.excuse_type" class="details">
                   {{
@@ -162,11 +164,11 @@ const formatCategorie = (categorieId: number) => {
 }
 
 const route = useRoute();
-const exerciceUuid = route.params.exerciceUuid;
+const exerciceUuid = route.params.uuid;
 
 const exercice = exercices.value.find(e => e.localUuid == exerciceUuid);
 if (!exercice) {
-  console.log("going back !!!")
+  console.log("going back !!! Invalid Exercice UUID")
   router.back();
 } else if (!exercice?.en_creation) {
   exercice.en_creation = true;
@@ -248,7 +250,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
   sapeur.remplace = false;
   sapeur.excuse = true;
 
-  const buttons = excusesTypes.map((excuse) => ({
+  const buttons = excusesTypes.value.map((excuse) => ({
     text: excuse.designation,
     handler: () => {
       sapeur.excuse = true;
@@ -269,7 +271,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
   }
 };
 
-const select = (sapeur: PresenceExercice, statut: number) => {
+const select = (sapeur: any, statut: number) => {
   if (statut == null) {
     // Unselect
   }
