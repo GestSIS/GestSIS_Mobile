@@ -1,5 +1,3 @@
-import { PresenceExercice } from './presence-exercice';
-//TODO: See what to do with class PresenceExercice
 export class Exercice {
   localUuid: string;
   id: number;
@@ -28,5 +26,18 @@ export class Exercice {
     excuse_type: string;
     excuse_type_id: number;
     presenceStatut: number;
-  }>
+  }>;
+  initialSapeurs: Array<{
+    id: number;
+    convoque: boolean;
+    present: boolean;
+    remplace: boolean;
+    absent: boolean;
+    excuse: boolean;
+    amende: boolean;
+    sapeur_id: string;
+    excuse_type: string;
+    excuse_type_id: number;
+    presenceStatut: number;
+  }>;
 }

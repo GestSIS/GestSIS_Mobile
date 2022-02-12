@@ -8,14 +8,16 @@ import { v4 as uuidv4 } from 'uuid';
 const state: Ref<Exercice[]> = ref([]);
 const store = useBasicStore(state, ExerciceService.getExercices, 'exercices');
 
-export default function useExexercices() {
+export default function useExercices() {
   const name = 'Exercices';
 
   // TODO: Override load to prevent overriding existing exercices
   const load = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-    const newExercices = (await ExerciceService.getExercices()).map(e => ({...e, localUuid: uuidv4()}));
-    // TODO: Do not lose data
+    const newExercices = (await ExerciceService.getExercices()).map(e => ({...e, initialSapeurs: e.sapeurs, localUuid: uuidv4()}));
+
+    // TODO: Do not lose data if reload exercices, Do not override edited exercices
+
     state.value = newExercices;
     store.lastSync.value = DateTime.now().toISO();
     store.persist();

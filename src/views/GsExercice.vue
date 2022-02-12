@@ -17,7 +17,7 @@
             : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
-        {{ exercice }}
+        <!-- {{ exercice }} -->
       </h3>
       <!-- <p v-if="exercice?.id_exe_lie != null">
         Lié à l'exercice
@@ -62,18 +62,14 @@
           <ion-radio-group
             v-model="sapeur.presenceStatut"
             v-for="(sapeur, i) in exercice?.sapeurs"
-            @ionChange="select(sapeur, $event.value.detail.value)"
+            @ionChange="select(sapeur, $event.target.value)"
             :key="sapeur.id"
           >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
-                {{ sapeur?.sapeur_id }}
+                {{ indexedSapeurs.get(sapeur?.sapeur_id) || "" }}
                 <br />
-                <span v-if="sapeur.excuse_type" class="details">
-                  {{
-                    sapeur.excuse_type
-                  }}
-                </span>
+                <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
               </ion-col>
               <ion-col class="col-radio">
                 <ion-radio :value="1" :disabled="!exercice?.en_creation"></ion-radio>
@@ -146,6 +142,7 @@ import { useRoute } from "vue-router";
 import router from "@/router";
 import useExcuseTypes from "@/store/useExcuseTypes";
 import useSapeurs from "@/store/useSapeurs";
+import { nextTick, ref } from "vue";
 
 const { formatDate } = useDateFormatter();
 
@@ -158,6 +155,10 @@ const exercices = exercicesStore.state;
 const categories = categoriesStore.state;
 const excusesTypes = excuseTypesStore.state;
 const sapeurs = sapeursStore.state;
+const indexedSapeurs = sapeurs.value.reduce((map, e) => {
+  map.set(e.id, e.nom + " " + e.prenom)
+  return map;
+}, new Map())
 
 const formatCategorie = (categorieId: number) => {
   categories.value.find(c => c.id == categorieId)?.designation
@@ -166,39 +167,30 @@ const formatCategorie = (categorieId: number) => {
 const route = useRoute();
 const exerciceUuid = route.params.uuid;
 
-const exercice = exercices.value.find(e => e.localUuid == exerciceUuid);
-if (!exercice) {
+const exercice = ref(exercices.value.find(e => e.localUuid == exerciceUuid)) as any;
+if (!exercice.value) {
   console.log("going back !!! Invalid Exercice UUID")
   router.back();
-} else if (!exercice?.en_creation) {
-  exercice.en_creation = true;
-  exercicesStore.updatExercice(exercice);
-}
+} else {
+  if (!exercice.value?.en_creation) {
+    exercice.value.en_creation = true;
+    exercicesStore.updatExercice(exercice.value);
+  }
 
-// const createPresenceExercice = (
-//   present: boolean,
-//   remplace: boolean
-// ): PresenceExercice => {
-//   const presence = new PresenceExercice();
-//   presence.nom = "Test";
-//   presence.prenom = "georges";
-//   presence.present = present;
-//   presence.remplace = remplace;
-//   if (present) {
-//     presence.presenceStatut = 1;
-//   } else if (remplace) {
-//     presence.presenceStatut = 2;
-//   } else {
-//     presence.presenceStatut = 3;
-//   }
-//   return reactive(presence);
-// };
-// exercice?.sapeurs = [
-//   createPresenceExercice(false, false),
-//   createPresenceExercice(false, true),
-//   createPresenceExercice(true, false),
-//   createPresenceExercice(true, true),
-// ];
+  // Compute data pour affichage
+  console.log(exercice)
+  exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
+    ...p,
+    presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
+    excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
+  }))
+  exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map((p: any) => ({
+    ...p,
+    presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
+    excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
+  }))
+  console.log(exercice.value)
+}
 
 const validate = () => {
   //TODO:
@@ -271,17 +263,32 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
   }
 };
 
-const select = (sapeur: any, statut: number) => {
+let resetting = ref(false);
+const select = async (sapeur: any, statut: number) => {
   if (statut == null) {
     // Unselect
   }
-  console.log(statut);
+  if (resetting.value) {
+    return;
+  }
   const actions = [selectPresent, selectAbsent, selectExcuse, selectRemplace];
-  (actions[statut - 1] as any)(sapeur);
+  await (actions[statut - 1])(sapeur);
+
+  // Save changes
+  exercicesStore.updatExercice(exercice);
 };
 
+// Reset les saisies effectuées
 const reset = () => {
-  //TODO: Reset les saisies
+  resetting.value = true;
+  exercice.value.sapeurs = [...exercice.value.initialSapeurs.map((e: any) => ({ ...e }))];
+  exercice.value.en_creation = true;
+
+  // Save changes
+  exercicesStore.updatExercice(exercice);
+  nextTick(() => {
+    resetting.value = false;
+  })
 };
 </script>
 
