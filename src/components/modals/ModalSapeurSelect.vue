@@ -54,6 +54,7 @@ const filteredSapeur = computed(() => {
     .filter(s => (s.nom + "" + s.prenom)
       .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
       .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
+    .sort((a, b) => (a.nom + " " + a.prenom).localeCompare((b.nom + " " + b.prenom)))
 })
 
 const search = (event: any) => {
@@ -63,6 +64,7 @@ const search = (event: any) => {
 const dismiss = () => {
   modalController.dismiss(null);
 }
+
 const selectSapeur = (sapeur: Sapeur) => {
   modalController.dismiss(sapeur.id);
 }

@@ -18,7 +18,7 @@
       button="true"
       v-for="(appel, i) in intervention.appels"
       :key="i"
-      @click="editCall(appel)"
+      @click="editCall(appel, i)"
       :disabled="!intervention.en_creation"
     >
       <p>
@@ -53,11 +53,11 @@ import ModalAppelVue from '../modals/ModalAppelSelect.vue';
 import { DateTime } from 'luxon';
 import { Appel } from '@/models/appel';
 import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
+import { Exercice } from '@/models/exercice';
 
 const { formatDate } = useDateFormatter();
 const { state, updateAppels } = useActiveIntervention();
 const intervention = state;
-
 
 const addCall = async () => {
   const modalAppel = await modalController
@@ -104,12 +104,12 @@ const addCall = async () => {
   await prompt.present();
 };
 
-const editCall = async (appel: any) => {
+const editCall = async (appel: any, index: number) => {
   const modalAppel = await modalController
     .create({
       component: ModalAppelEditVue,
       componentProps: {
-        appel
+        appel: { ...appel }
       }
     })
 
@@ -119,7 +119,10 @@ const editCall = async (appel: any) => {
   if (!data) {
     return;
   }
-  let tel = data;
+  let tel: Appel = data;
+
+  intervention.value.appels.splice(index, 1, tel);
+  updateAppels(intervention.value.appels);
 };
 
 const removeCall = async (appel: Appel, index: number) => {

@@ -256,7 +256,7 @@ const customPickerOptions = {
     {
       text: 'Vide',
       handler: () => {
-        intervention.date_fin = null as any;
+        intervention.value.date_fin = null as any;
       },
     },
   ],
@@ -276,7 +276,7 @@ const setCorrectTimezone = () => {
 };
 
 const getLocaliteFormattedValue = (localite_id: number) => {
-  return localites.find(l => l.id == localite_id)?.designation;
+  return localites.value.find(l => l.id == localite_id)?.designation;
 };
 
 const selectChefIntervention = () => {
@@ -284,7 +284,7 @@ const selectChefIntervention = () => {
 };
 
 const getSapeurFormattedValue = (sapeurId: number) => {
-  const sapeur = sapeurs.find(s => s.id == sapeurId);
+  const sapeur = sapeurs.value.find(s => s.id == sapeurId);
   return sapeur?.nom + ' ' + sapeur?.prenom;
 };
 

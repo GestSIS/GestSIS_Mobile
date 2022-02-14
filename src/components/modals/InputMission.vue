@@ -2,12 +2,10 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons>
-          <ion-button slot="start" @click="dismiss()">
-            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-          </ion-button>
-          <ion-title>{{ title }}</ion-title>
+        <ion-buttons slot="start">
+          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
         </ion-buttons>
+        <ion-title>{{ title }}</ion-title>
 
         <ion-buttons slot="end">
           <ion-button slot="end" @click="save()">Enregistrer</ion-button>
@@ -19,45 +17,51 @@
       <ion-list>
         <ion-item @click="openModalDebut = !openModalDebut">
           <ion-label>Début</ion-label>
-          <ion-text slot="end" id="open-modal">{{ mission.date_debut }}</ion-text>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ formatDate(mission.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
           <ion-modal :is-open="openModalDebut">
             <!-- TODO: format date + fix display of ion-datetime in ion-modal -->
             <ion-datetime
               presentation="time-date"
-              @ionChange="(ev: any) => mission.date_debut = ev.detail.value"
+              @ionChange="(ev: any) => mission.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Responsable</ion-label>
+          <ion-label position="floating">Responsable</ion-label>
           <ion-input
             type="text"
             readonly="true"
             @ionFocus="selectSapeur()"
-            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
+            :value="mission.sapeur.nom ? (mission.sapeur.nom + ' ' + mission.sapeur?.prenom) : ''"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Mission</ion-label>
-          <ion-input type="text" v-model="mission.titre" @ionFocus="selectTitre()"></ion-input>
+          <ion-label position="floating">Mission</ion-label>
+          <ion-input type="text" :value="mission.titre" @ionFocus="selectTitre()"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label floating>Résumé</ion-label>
-          <ion-textarea v-model="mission.resume"></ion-textarea>
+          <ion-label position="floating">Résumé</ion-label>
+          <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
         </ion-item>
 
         <ion-item @click="openModalFin = !openModalFin">
           <ion-label>Quittancer</ion-label>
-          <ion-text slot="end" id="open-modal">{{ mission.date_fin }}</ion-text>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
           <ion-modal :is-open="openModalFin">
             <!-- TODO: format date + fix display of ion-datetime in ion-modal -->
             <ion-datetime
               presentation="time-date"
               :min="mission.date_debut"
-              @ionChange="(ev: any) => mission.date_fin = ev.detail.value"
+              @ionChange="(ev: any) => mission.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
         </ion-item>
@@ -67,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, reactive, ref } from "vue";
+import { ref } from "vue";
 import {
   IonPage,
   IonTitle,
@@ -83,7 +87,7 @@ import {
   IonContent,
   IonButton,
   IonItem,
-  IonIcon,
+  IonBackButton,
   IonText,
   modalController,
 } from '@ionic/vue';
@@ -91,29 +95,73 @@ import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
 
+import ModalSapeurSelectVue from "./ModalSapeurSelect.vue";
+import useSapeurs from "@/store/useSapeurs";
+import ModalMissionSelectVue from "./ModalMissionSelect.vue";
+import useDateFormatter from "@/tools/useDateFormatter";
+import { DateTime } from "luxon";
+
+const { formatDate } = useDateFormatter();
+const sapeurModule = useSapeurs();
+
 const openModalDebut = ref(false);
 const openModalFin = ref(false);
 
 const router = useRouter();
 const route = useRoute();
 const data = route.params.mission ? route.params.mission as any as Mission : new Mission();
-let mission = reactive(data)
+const mission = ref(data)
+if (!route.params.mission) {
+  mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false }).slice(0, 16);
+}
 
 const interventionModule = useActiveIntervention();
 
-const formatDate = (value: string) => {
-  return value;
-};
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 // const mission = reactive((props.mission ? { ...props.mission } : new Mission()))
-
-const dismiss = () => {
-  modalController.dismiss()
-}
 
 const isInputComplete = () => {
   return true;
   // return mission.date_debut && mission.titre && mission.sapeur.nom
+}
+
+const selectSapeur = async () => {
+  const modalSapeurSelect = await modalController
+    .create({
+      component: ModalSapeurSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+      }
+    })
+
+  await modalSapeurSelect.present();
+  let { data } = await modalSapeurSelect.onDidDismiss();
+
+  if (!data) {
+    return;
+  }
+
+  const sapeur = sapeurModule.state.value.find(s => s.id == data);
+  mission.value.sapeur = {
+    id: data,
+    nom: sapeur?.nom || '',
+    prenom: sapeur?.prenom || ''
+  };
+}
+
+const selectTitre = async () => {
+  const modalTitreMission = await modalController
+    .create({
+      component: ModalMissionSelectVue,
+    })
+
+  await modalTitreMission.present();
+  let { data } = await modalTitreMission.onDidDismiss();
+
+  if (!data) {
+    return;
+  }
+  mission.value.titre = data.titre;
 }
 
 const save = () => {
@@ -121,10 +169,10 @@ const save = () => {
     // TODO: Notification
     return;
   }
-  if (mission.localUuid) {
-    interventionModule.updateMission(mission);
+  if (mission.value.localUuid) {
+    interventionModule.updateMission(mission.value);
   } else {
-    interventionModule.addMission(mission);
+    interventionModule.addMission(mission.value);
   }
   router.back();
 }
