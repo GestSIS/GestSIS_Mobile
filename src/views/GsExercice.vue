@@ -17,7 +17,7 @@
             : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
-        <!-- {{ exercice }} -->
+        <!-- {{ exercice.sapeurs[0] }} -->
       </h3>
       <!-- <p v-if="exercice?.id_exe_lie != null">
         Lié à l'exercice
@@ -135,6 +135,7 @@ import {
   IonCol,
   IonRow,
   actionSheetController,
+  modalController,
 } from "@ionic/vue";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useExexercices from "@/store/useExercices";
@@ -143,6 +144,7 @@ import router from "@/router";
 import useExcuseTypes from "@/store/useExcuseTypes";
 import useSapeurs from "@/store/useSapeurs";
 import { nextTick, ref } from "vue";
+import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 
 const { formatDate } = useDateFormatter();
 
@@ -195,8 +197,38 @@ if (!exercice.value) {
 const validate = () => {
   //TODO:
 };
-const addSapeur = () => {
+const addSapeur = async () => {
   //TODO:
+  const modalSapeurSelect = await modalController
+    .create({
+      component: ModalSapeurSelectVue,
+      componentProps: {
+        exceptSapeurIds: exercice.value.sapeurs.map((s: any) => s?.sapeur_id),
+      },
+    })
+
+  await modalSapeurSelect.present();
+  let { data } = await modalSapeurSelect.onDidDismiss();
+
+  const sapeurId = data;
+  if (!sapeurId) {
+    return;
+  }
+
+  exercice.value.sapeurs.push({
+    "id": null,
+    "sapeur_id": sapeurId,
+    "exercice_id": null,
+    "excuse_type_id": null,
+    "convoque": null,
+    "present": true,
+    "amende": false,
+    "remplace": false,
+    "presenceStatut": 0,
+    "excuse_type": "",
+    "absent": false,
+    "excuse": false
+  })
 };
 const saveLocal = () => {
   //TODO:

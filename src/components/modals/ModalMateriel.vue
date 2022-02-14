@@ -44,7 +44,7 @@ const materielModule = useMateriels();
 const filteredMateriel = computed(() => {
   return materielModule.state.value.filter(m => m.designation.toLowerCase().indexOf(query.value) > -1)
 })
-console.log(filteredMateriel.value)
+
 const search = (event: any) => {
   query.value = event.target.value.toLowerCase();
 }
