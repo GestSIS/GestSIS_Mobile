@@ -75,7 +75,7 @@ const selectTelephone = (telephone: any) => {
 }
 
 const addTelephone = async () => {
-  let promptQuantite = await alertController.create({
+  let promptTelephone = await alertController.create({
     header: 'Nouveau numéro',
     message: "Nom et numéro de la personne ou de l'entreprise appelée :",
     inputs: [
@@ -115,21 +115,7 @@ const addTelephone = async () => {
       }
     ]
   });
-  await promptQuantite.present();
-  const res = await promptQuantite.onDidDismiss();
-
-  const nom = parseInt(res.data?.values?.nom || 0);
-  const numero = parseInt(res.data?.values?.numero || 0);
-  if (res.data?.canceled || !nom) {
-    console.log("exit 2")
-    return;
-  }
-
-  // Ajout du téléphone
-  console.log("Téléphone")
-  console.log(nom)
-  console.log(numero)
-
+  await promptTelephone.present();
 }
 
 </script>

@@ -52,6 +52,7 @@ import useDateFormatter from '@/tools/useDateFormatter';
 import ModalAppelVue from '../modals/ModalAppelSelect.vue';
 import { DateTime } from 'luxon';
 import { Appel } from '@/models/appel';
+import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
 
 const { formatDate } = useDateFormatter();
 const { state, updateAppels } = useActiveIntervention();
@@ -103,19 +104,22 @@ const addCall = async () => {
   await prompt.present();
 };
 
-const editCall = async (call: any) => {
-  // const modalAppel = await modalController
-  //   .create({
-  //     component: ModalAppelVue,
-  //   })
+const editCall = async (appel: any) => {
+  const modalAppel = await modalController
+    .create({
+      component: ModalAppelEditVue,
+      componentProps: {
+        appel
+      }
+    })
 
-  // await modalAppel.present();
-  // let { data } = await modalAppel.onDidDismiss();
+  await modalAppel.present();
+  let { data } = await modalAppel.onDidDismiss();
 
-  // if (!data) {
-  //   return;
-  // }
-  // let tel = data;
+  if (!data) {
+    return;
+  }
+  let tel = data;
 };
 
 const removeCall = async (appel: Appel, index: number) => {

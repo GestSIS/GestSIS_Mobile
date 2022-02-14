@@ -10,130 +10,98 @@
   </ion-header>
 
   <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
-
-    <ion-list>
-      <ion-item @click="addTelephone">
-        <ion-icon name="add" slot="start"></ion-icon>Entrer un nouveau numéro
+    <ion-list no-lines>
+      <ion-item button="true" id="open-date-input">
+        <ion-label position="fixed">Date</ion-label>
+        <ion-text>{{ formatDate(appel.date, 'dd.LL.yy HH:mm') }}</ion-text>
+        <ion-button fill="clear" slot="end">
+          <ion-icon slot="end" name="calendar" />
+        </ion-button>
+        <ion-popover trigger="open-date-input" :show-backdrop="false">
+          <ion-datetime
+            presentation="time-date"
+            @ionChange="(ev: any) => appel.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+          />
+        </ion-popover>
       </ion-item>
-      <ion-item
-        v-for="telephone of filteredTelephone"
-        :key="telephone.id"
-        @click="selectTelephone(telephone)"
-      >
-        <ion-icon name="call" slot="start"></ion-icon>
-        {{ telephone.nom }}
-        <span slot="end">{{ telephone.numero }}</span>
+
+      <ion-item>
+        <ion-label position="fixed">Numéro</ion-label>
+        <ion-input v-model="appel.numero"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="fixed">Nom</ion-label>
+        <ion-input v-model="appel.nom"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="fixed">Commentaire</ion-label>
+        <ion-textarea v-model="appel.commentaire"></ion-textarea>
       </ion-item>
     </ion-list>
+
+    <ion-button expand="full" margin-top @click="save">Modifier</ion-button>
   </ion-content>
 </template>
 
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { ref, defineProps } from "vue";
 import {
   IonToolbar,
   IonTitle,
-  IonSearchbar,
+  IonList,
+  IonTextarea,
   IonButtons,
   IonHeader,
-  IonList,
+  IonLabel,
+  IonPopover,
+  IonIcon,
+  IonDatetime,
+  IonInput,
+  IonText,
   IonContent,
   IonButton,
   IonItem,
   modalController,
 } from '@ionic/vue';
-import useTelephones from "@/store/useTelephones";
-import { alertController } from "@ionic/core";
 import { useNotify } from "@/tools/useToast";
+import { Appel } from "@/models/appel";
+import { DateTime } from "luxon";
+import useDateFormatter from "@/tools/useDateFormatter";
 
-
+const { formatDate } = useDateFormatter();
 const notify = useNotify();
 
-const query = ref("")
-const telephoneModule = useTelephones();
-const filteredTelephone = computed(() => {
-  return telephoneModule.state.value.filter(m => (m.nom + " " + m.numero)
-    .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-    .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
-})
+const props = defineProps({
+  appel: Appel
+});
 
-const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
-}
+const appel = ref(props.appel || new Appel());
 
 const isPhoneNumber = (str: string): boolean => {
   return /^(?=.*\d)[\d ]+$/.test(str);
 }
 
-const dismiss = () => {
-  modalController.dismiss(null);
-}
-const selectTelephone = (telephone: any) => {
-  modalController.dismiss(telephone);
-}
-
-const addTelephone = async () => {
-  let promptQuantite = await alertController.create({
-    header: 'Nouveau numéro',
-    message: "Nom et numéro de la personne ou de l'entreprise appelée :",
-    inputs: [
-      {
-        name: 'nom',
-        placeholder: 'Nom',
-        type: 'text',
-      }, {
-        name: 'numero',
-        placeholder: 'Numéro',
-        type: 'text',
-      },
-    ],
-    buttons: [
-      {
-        text: 'Annuler',
-        handler: values => ({ values, canceled: true })
-      },
-      {
-        text: 'Valider',
-        handler: values => {
-          if (values.nom == '' || values.numero == '') {
-            notify.error('Veuillez remplir tous les champs');
-            return false;
-          }
-          else if (!isPhoneNumber(values.numero)) {
-            notify.error('N° de téléphone invalide');
-            return false;
-          } else {
-            selectTelephone({
-              nom: values.nom,
-              numero: values.numero,
-              nouveau_numero: true
-            })
-          }
-        }
-      }
-    ]
-  });
-  await promptQuantite.present();
-  const res = await promptQuantite.onDidDismiss();
-
-  const nom = parseInt(res.data?.values?.nom || 0);
-  const numero = parseInt(res.data?.values?.numero || 0);
-  if (res.data?.canceled || !nom) {
-    console.log("exit 2")
+const save = async () => {
+  // TODO:
+  if (appel.value?.nom == '' || appel.value.numero == '') {
+    notify.error('Veuillez remplir tous les champs');
+    return;
+  } else if (!isPhoneNumber(appel.value.numero || '')) {
+    notify.error("Numéro de téléphone invalid");
     return;
   }
 
-  // Ajout du téléphone
-  console.log("Téléphone")
-  console.log(nom)
-  console.log(numero)
+  modalController.dismiss(appel.value);
+}
 
+const dismiss = () => {
+  modalController.dismiss(null);
 }
 
 </script>
-
 
 <style>
 </style>
