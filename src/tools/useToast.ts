@@ -24,6 +24,11 @@ export function useNotify() {
       duration: showCloseButton ? undefined : duration,
       position: position,
       translucent: true,
+      // buttons: [
+      //   {
+      //     text: "Fermer",
+      //   }
+      // ]
       // showCloseButton: showCloseButton,
       // closeButtonText: 'Fermer',
       // dismissOnPageChange: dismissOnPageChange

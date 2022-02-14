@@ -12,6 +12,7 @@
     </ion-row>
   </ion-grid>
   <ion-list>
+    <ion-item v-if="!intervention.missions.length">Aucune mission</ion-item>
     <ion-item
       button="true"
       v-for="(mission, i) in intervention.missions"

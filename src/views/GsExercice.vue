@@ -228,7 +228,8 @@ const addSapeur = async () => {
     "excuse_type": "",
     "absent": false,
     "excuse": false
-  })
+  });
+  exercicesStore.updatExercice(exercice); 0
 };
 const saveLocal = () => {
   //TODO:

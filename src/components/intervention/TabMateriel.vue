@@ -51,7 +51,25 @@ const materiels = materielModule.state;
 const interventionModule = useActiveIntervention();
 const intervention = interventionModule.state;
 
-const removeMateriel = interventionModule.removeMateriel;
+const removeMateriel = async (materielId: number) => {
+  const materiel = materiels.value.find(m => m.id == materielId)
+  let confirm = await alertController.create({
+    header: 'Supprimer matériel',
+    message: "Êtes-vous sûr de vouloir supprimer le matériel [" + materiel?.designation + "] ?",
+    buttons: [
+      {
+        text: 'Non'
+      },
+      {
+        text: 'Oui',
+        handler: () => {
+          interventionModule.removeMateriel(materielId);
+        }
+      }
+    ]
+  });
+  await confirm.present();
+}
 
 const addMateriel = async () => {
   const modalSelectMateriel = await modalController

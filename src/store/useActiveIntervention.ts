@@ -5,7 +5,7 @@ import { Intervention } from '@/models/intervention';
 
 import useInterventions from './useInterventions';
 import { Mission } from '@/models/mission';
-import { Materiel } from '@/models/materiel';
+import { Appel } from '@/models/appel';
 
 const state: Ref<Intervention> = ref({ ...new Intervention() });
 
@@ -53,6 +53,11 @@ export default function useActiveIntervention() {
     persist();
   }
 
+  const updateAppels = (appels : Appel[]) => {
+    state.value.appels = appels;
+    persist();
+  }
+
   return {
     state,
     reset,
@@ -65,5 +70,6 @@ export default function useActiveIntervention() {
     updateVehicules,
     updateMaterielQuantity,
     removeMateriel,
+    updateAppels
   };
 }
