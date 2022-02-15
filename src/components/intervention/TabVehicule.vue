@@ -44,9 +44,8 @@ import { computed, ref } from 'vue';
 const { state, updateVehicules } = useActiveIntervention();
 const vehiculesIntervention = ref(new Set(state.value.vehicules.slice()));
 
-const moduleVehicule = useVehicules();
-console.log(moduleVehicule.state.value)
-const vehicules = computed(() => new Set(moduleVehicule.state.value));
+const vehiculeStore = useVehicules();
+const vehicules = computed(() => new Set(vehiculeStore.state.value));
 
 const changeVehiculeStatut = (vehiculeId: number) => {
   if (vehiculesIntervention.value.has(vehiculeId)) {

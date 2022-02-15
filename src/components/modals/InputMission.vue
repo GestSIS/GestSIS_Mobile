@@ -50,12 +50,15 @@
           <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
         </ion-item>
 
-        <ion-item @click="openModalFin = !openModalFin">
+        <ion-item button @click="openModalFin = !openModalFin">
           <ion-label>Quittancer</ion-label>
           <ion-text
             slot="end"
             id="open-modal"
           >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+          <ion-button fill="clear" slot="end">
+            <ion-icon slot="end" name="calendar" />
+          </ion-button>
           <ion-modal :is-open="openModalFin">
             <ion-datetime
               presentation="time-date"
@@ -90,6 +93,7 @@ import {
   IonBackButton,
   IonText,
   modalController,
+  IonIcon
 } from '@ionic/vue';
 import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";

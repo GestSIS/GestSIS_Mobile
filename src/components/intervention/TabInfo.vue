@@ -13,32 +13,41 @@
 
     <ion-row>
       <ion-col size-sm="6" size="12">
-        <ion-item>
-          <ion-label position="floating">Début</ion-label>
-          <ion-datetime
-            displayFormat="DD.MM.YYYY HH:mm"
-            pickerFormat="DD MM YYYY HH mm"
-            cancelText="Annuler"
-            doneText="Valider"
-            v-model="intervention.date_debut"
-            :disabled="!intervention.en_creation"
-          ></ion-datetime>
+        <ion-item @click="openModalDebut = !openModalDebut">
+          <ion-label>Fin</ion-label>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ formatDate(intervention.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
+          <ion-button fill="clear" slot="end">
+            <ion-icon slot="end" name="calendar" />
+          </ion-button>
+          <ion-modal :is-open="openModalDebut">
+            <ion-datetime
+              presentation="time-date"
+              :value="DateTime.fromSQL(intervention.date_debut).toISO()"
+              @ionChange="(ev: any) => intervention.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            />
+          </ion-modal>
         </ion-item>
       </ion-col>
       <ion-col size-sm="6" size="12">
-        <ion-item>
-          <ion-label position="floating">Fin</ion-label>
-          <ion-datetime
-            displayFormat="DD.MM.YYYY HH:mm"
-            pickerFormat="DD MM YYYY HH mm"
-            cancelText="Annuler"
-            doneText="Valider"
-            v-model="intervention.date_fin"
-            :pickerOptions="customPickerOptions"
-            :min="intervention.date_debut"
-            @ionChange="setCorrectTimezone()"
-            :disabled="!intervention.en_creation"
-          ></ion-datetime>
+        <ion-item @click="openModalFin = !openModalFin">
+          <ion-label>Fin</ion-label>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ formatDate(intervention.date_fin, 'dd.LL.yy HH:mm') }}</ion-text>
+          <ion-button fill="clear" slot="end">
+            <ion-icon slot="end" name="calendar" />
+          </ion-button>
+          <ion-modal :is-open="openModalFin">
+            <ion-datetime
+              presentation="time-date"
+              :value="DateTime.fromSQL(intervention.date_fin).toISO()"
+              @ionChange="(ev: any) => intervention.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            />
+          </ion-modal>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -48,9 +57,10 @@
         <ion-item>
           <ion-label position="floating">Type</ion-label>
           <ion-select
+            interface="action-sheet"
             v-model="intervention.type_intervention_id"
             :disabled="!intervention.en_creation"
-            :okText="''"
+            okText="Ok"
             cancelText="Annuler"
           >
             <ion-select-option
@@ -75,8 +85,8 @@
           <ion-label position="floating">NPA Localité</ion-label>
           <ion-input
             type="text"
-            readonly="true"
-            @ionFocus="selectLocalite"
+            readonly
+            @ionFocus="selectLocaliteIntervention"
             :value="getLocaliteFormattedValue(intervention.localite_id)"
             :disabled="!intervention.en_creation"
           ></ion-input>
@@ -91,16 +101,17 @@
         <ion-item>
           <ion-label position="floating">Statistiques fédérales</ion-label>
           <ion-select
+            interface="action-sheet"
             v-model="intervention.stat_federal_id"
             :disabled="!intervention.en_creation"
-            okText
+            okText="Ok"
             cancelText="Annuler"
           >
             <ion-select-option
               v-for="stat in statsFederales"
               :key="stat.id"
               :value="stat.id"
-            >{{ stat.nom }}</ion-select-option>
+            >{{ stat.designation }}</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -187,9 +198,9 @@
           <ion-label position="floating">NPA / Localité</ion-label>
           <ion-input
             type="text"
-            readonly="true"
-            @ionFocus="selectLocalite('proprietaire')"
-            :value="getLocaliteFormattedValue(intervention.proprietaire.loc_id)"
+            readonly
+            @ionFocus="selectLocaliteProprietaire()"
+            :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
             :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
@@ -214,13 +225,13 @@
 </template>
 
 <script lang="ts" setup>
-import LocaliteService from '@/services/LocaliteService';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useLocalites from '@/store/useLocalites';
 import usePhaseTypes from '@/store/usePhaseTypes';
 import useSapeurs from '@/store/useSapeurs';
 import useStatsFederal from '@/store/useStatsFederal';
 import useTypesIntervention from '@/store/useTypesIntervention';
+import useDateFormatter from '@/tools/useDateFormatter';
 import {
   IonButton,
   IonTextarea,
@@ -235,10 +246,21 @@ import {
   IonCheckbox,
   IonDatetime,
   IonIcon,
+  modalController,
+  IonModal,
+  IonText,
 } from '@ionic/vue';
+import { DateTime } from 'luxon';
+import { ref } from 'vue';
+import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
+import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 
+const { formatDate } = useDateFormatter();
 const { state } = useActiveIntervention();
 const intervention = state;
+
+const openModalDebut = ref(false);
+const openModalFin = ref(false);
 
 const moduleSapeur = useSapeurs();
 const moduleType = useTypesIntervention();
@@ -268,24 +290,60 @@ const supprimerRapport = () => {
 const validate = () => {
   // TODO:
 };
-const selectLocalite = (temp: string) => {
-  // TODO:
-};
-const setCorrectTimezone = () => {
-  // TODO:
-};
+
+const selectLocalite = async () => {
+  const modalLocaliteSelect = await modalController
+    .create({
+      component: ModalLocaliteSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+      }
+    })
+
+  await modalLocaliteSelect.present();
+  let { data } = await modalLocaliteSelect.onDidDismiss();
+
+  return data;
+}
+
+const selectLocaliteIntervention = async () => {
+  const localiteId = await selectLocalite();
+  if (localiteId) {
+    intervention.value.localite_id = localiteId;
+  }
+}
+
+const selectLocaliteProprietaire = async () => {
+  const localiteId = await selectLocalite();
+  if (localiteId) {
+    intervention.value.proprietaire.localite_id = localiteId;
+  }
+}
+
+const selectChefIntervention = async () => {
+  const modalSapeurSelect = await modalController
+    .create({
+      component: ModalSapeurSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+      }
+    })
+
+  await modalSapeurSelect.present();
+  let { data } = await modalSapeurSelect.onDidDismiss();
+
+  if (data) {
+    intervention.value.sapeur_id = data;
+  }
+}
 
 const getLocaliteFormattedValue = (localite_id: number) => {
   return localites.value.find(l => l.id == localite_id)?.designation;
 };
 
-const selectChefIntervention = () => {
-  // TODO:
-};
-
 const getSapeurFormattedValue = (sapeurId: number) => {
   const sapeur = sapeurs.value.find(s => s.id == sapeurId);
-  return sapeur?.nom + ' ' + sapeur?.prenom;
+  return sapeur ? sapeur?.nom + ' ' + sapeur?.prenom : '';
 };
 
 const ensureNumericKey = (event: KeyboardEvent) => {

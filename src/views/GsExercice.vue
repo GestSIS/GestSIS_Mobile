@@ -12,9 +12,9 @@
     <ion-content class="ion-padding">
       <h3>
         {{
-        exercice?.designation != "-"
-        ? exercice?.designation
-        : formatCategorie(exercice?.exercice_categorie_id)
+          exercice?.designation != "-"
+            ? exercice?.designation
+            : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
       </h3>

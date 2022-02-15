@@ -1,4 +1,5 @@
 export class StatFederal {
     id: number;
-    nom: string;
+    tri: number;
+    designation: string;
 }
