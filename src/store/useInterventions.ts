@@ -38,7 +38,7 @@ export default () => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
     intervention.en_creation = true;
-    intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0,16);
+    intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0, 16);
     intervention.lieu = lieu;
     intervention.objet = objet;
 
@@ -62,7 +62,12 @@ export default () => {
     state.value = state.value.map((i) =>
       i.localUuid == intervention.localUuid ? intervention : i
     );
-    console.log("Persiste inter")
+    console.log('Persiste inter');
+    store.persist();
+  };
+
+  const removeIntervention = (uuid: string) => {
+    state.value = state.value.filter((i) => i.localUuid != uuid);
     store.persist();
   };
 
@@ -71,7 +76,8 @@ export default () => {
     name,
     state,
     load,
-    updateIntervention,
     newIntervention,
+    updateIntervention,
+    removeIntervention,
   };
 };

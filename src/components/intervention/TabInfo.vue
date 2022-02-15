@@ -44,7 +44,7 @@
           <ion-modal :is-open="openModalFin">
             <ion-datetime
               presentation="time-date"
-              :value="DateTime.fromSQL(intervention.date_fin).toISO()"
+              :value="intervention.date_fin ? DateTime.fromSQL(intervention.date_fin).toISO() : ''"
               @ionChange="(ev: any) => intervention.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
@@ -129,7 +129,7 @@
         <ion-item>
           <ion-label position="floating">Nombre de personnes sauvées</ion-label>
           <ion-input
-            type="number"
+            type="text"
             :min="0"
             :value="intervention.nb_personnes_sauvees"
             @keypress="ensureNumericKey($event)"
@@ -140,8 +140,8 @@
         <ion-item>
           <ion-label position="floating">Nombre d'animaux sauvés</ion-label>
           <ion-input
-            type="number"
-            min="0"
+            type="text"
+            :min="0"
             v-model="intervention.nb_animaux_sauves"
             @keypress="ensureNumericKey($event)"
             :disabled="!intervention.en_creation"
@@ -207,18 +207,30 @@
         <ion-item>
           <ion-label position="floating">E-mail</ion-label>
           <ion-input
-            type="email"
+            type="text"
             v-model="intervention.proprietaire.email"
             :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
         <h2>Responsables</h2>
-        <ion-textarea v-model="intervention.responsables" :disabled="!intervention.en_creation"></ion-textarea>
-
+        <ion-textarea
+          lines="5"
+          v-model="intervention.responsables"
+          :disabled="!intervention.en_creation"
+        ></ion-textarea>
+      </ion-col>
+      <ion-col size="12">
         <h2>Description de l'intervention et commentaires</h2>
-        <ion-textarea v-model="intervention.description" :disabled="!intervention.en_creation"></ion-textarea>
-
-        <ion-button expand="full" @click="supprimerRapport()">Supprimer ce rapport</ion-button>
+        <ion-textarea
+          lines="8"
+          v-model="intervention.description"
+          :disabled="!intervention.en_creation"
+        ></ion-textarea>
+        <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -226,6 +238,7 @@
 
 <script lang="ts" setup>
 import useActiveIntervention from '@/store/useActiveIntervention';
+import useInterventions from '@/store/useInterventions';
 import useLocalites from '@/store/useLocalites';
 import usePhaseTypes from '@/store/usePhaseTypes';
 import useSapeurs from '@/store/useSapeurs';
@@ -249,14 +262,18 @@ import {
   modalController,
   IonModal,
   IonText,
+  alertController
 } from '@ionic/vue';
 import { DateTime } from 'luxon';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
 import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 
+const router = useRouter();
 const { formatDate } = useDateFormatter();
-const { state } = useActiveIntervention();
+const { removeIntervention } = useInterventions();
+const { state, persist } = useActiveIntervention();
 const intervention = state;
 
 const openModalDebut = ref(false);
@@ -273,6 +290,10 @@ const typeInterventions = moduleType.state;
 const statsFederales = moduleStatFederal.state;
 const localites = moduleLocalite.state;
 
+watch(intervention, () => {
+  persist();
+}, { deep: true })
+
 const customPickerOptions = {
   buttons: [
     {
@@ -284,8 +305,26 @@ const customPickerOptions = {
   ],
 };
 
-const supprimerRapport = () => {
-  // TODO:
+const supprimerRapport = async () => {
+  console.log("Supprimer intervention");
+  const confirm = await alertController.create({
+    header: 'Supprimer l\'intervention',
+    message: "Êtes-vous sûr de vouloir supprimer ce rapport d'intervention ? Cette action est irréversible et toutes les données seront perdues !",
+    buttons: [
+      {
+        text: 'Non'
+      },
+      {
+        text: 'Oui',
+        handler: () => {
+          router.back();
+          removeIntervention(intervention.value.localUuid);
+        }
+      }
+    ]
+  });
+  console.log("Present")
+  await confirm.present();
 };
 const validate = () => {
   // TODO:
