@@ -24,11 +24,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/GsInterventions.vue'),
   },
   {
-    path: '/mission',
+    path: '/mission/:uuid',
     name: 'mission',
-    props: (route) => ({
-      ...route.params
-    }),
+    props: (route) => ({ uuid: route.params.uuid || '' }),
     component: () => import('../components/modals/InputMission.vue'),
   },
   {

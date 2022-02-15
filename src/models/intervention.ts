@@ -26,14 +26,14 @@ export class Intervention {
       nom: string;
       prenom: string;
       adresse: string;
-      loc_id: number;
+      localite_id: number;
       telephone: string;
       email: string;
   } = {
     nom: null as any,
     prenom: null as any,
     adresse: null as any,
-    loc_id: null as any,
+    localite_id: null as any,
     telephone: null as any,
     email: null as any
   };

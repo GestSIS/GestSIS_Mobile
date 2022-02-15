@@ -21,10 +21,14 @@
       :disabled="!intervention.en_creation"
     >
       <ion-icon slot="start" :name="mission.date_fin ? 'checkmark' : 'time'"></ion-icon>
-      {{ mission.titre }} - {{ mission.sapeur.nom }}
-      {{ mission.sapeur.prenom }}
-      <p>{{ formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy") }}</p>
-      <p>{{ mission.resume }}</p>
+      <p>
+        {{ mission.titre }} - {{ mission.sapeur.nom }}
+        {{ mission.sapeur.prenom }}
+        <br />
+        <span class="details">{{ formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy") }}</span>
+        <br />
+        <span class="details">{{ mission.resume }}</span>
+      </p>
     </ion-item>
   </ion-list>
 </template>
@@ -38,7 +42,6 @@ import {
   IonButton,
   IonItem,
   IonIcon,
-  // modalController
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
@@ -50,20 +53,16 @@ const intervention = state;
 const router = useRouter();
 
 const addMission = async () => {
-  // const modal = await modalController
-  //   .create({
-  //     component: InputMission,
-  //     cssClass: 'my-custom-class',
-  //     componentProps: {
-  //       mission: null
-  //     },
-  //   })
-  // return modal.present();
-  router.push({ name: 'mission', params: { mission: null } })
+  router.push({ name: 'mission', params: { uuid: 'null' } })
 };
 const editMission = (mission: any) => {
-  // TODO:
-  router.push({ name: 'mission', params: { mission: mission } })
+  router.push({ name: 'mission', params: { uuid: mission.localUuid } })
 };
 
 </script>
+
+<style scoped>
+.details {
+  color: var(--ion-color-medium);
+}
+</style>

@@ -13,13 +13,12 @@ export function useNotify() {
     position: 'top' | 'bottom' | 'middle' = 'top',
     duration = 5000,
     showCloseButton = false,
-    dismissOnPageChange = false
   ) => {
     if (toast) {
       toast?.dismiss();
     }
 
-    toast = toastController.create({
+    toast = await toastController.create({
       message: message,
       duration: showCloseButton ? undefined : duration,
       position: position,
@@ -51,7 +50,7 @@ export function useNotify() {
     // enterAnimation?: AnimationBuilder;
     // leaveAnimation?: AnimationBuilder;
 
-    toast.present();
+    await toast.present();
   };
 
   const error = (error: string) => {

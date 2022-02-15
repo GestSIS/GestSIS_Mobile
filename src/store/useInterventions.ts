@@ -6,7 +6,11 @@ import useBasicStore, { StoreState } from './useBasicStore';
 import { DateTime } from 'luxon';
 
 const state: Ref<Intervention[]> = ref([]);
-const store = useBasicStore(state, InterventionService.getInterventions, 'interventions');
+const store = useBasicStore(
+  state,
+  InterventionService.getInterventions,
+  'interventions'
+);
 
 export default () => {
   const name = 'Interventions';
@@ -29,13 +33,13 @@ export default () => {
     date: DateTime,
     objet: string,
     localite_id: number,
-    adresse: string
+    lieu: string
   ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
     intervention.en_creation = true;
-    intervention.date_debut = date.toISO();
-    intervention.lieu = adresse;
+    intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0,16);
+    intervention.lieu = lieu;
     intervention.objet = objet;
 
     intervention.nb_animaux_sauves = 0;
@@ -55,13 +59,13 @@ export default () => {
   };
 
   const updateIntervention = (intervention: Intervention) => {
-    console.log("Update intervention")
-    console.log(intervention)
-    console.log(state.value)
+    console.log('Update intervention');
+    console.log(intervention);
+    console.log(state.value);
     state.value = state.value.map((i) =>
       i.localUuid === intervention.localUuid ? intervention : i
     );
-    console.log(state.value)
+    console.log(state.value);
   };
 
   return {
@@ -72,4 +76,4 @@ export default () => {
     updateIntervention,
     newIntervention,
   };
-}
+};

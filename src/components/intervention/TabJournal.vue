@@ -39,6 +39,7 @@ import {
 } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { DateTime } from 'luxon';
+import useSapeurs from '@/store/useSapeurs';
 
 const onlyPendingMissions = ref(true);
 const { formatDate } = useDateFormatter();
@@ -63,22 +64,26 @@ const iconMapping = {
   [EventType.Info]: 'play',
 }
 
-const { state } = useActiveIntervention()
+const { state } = useActiveIntervention();
+const sapeurStore = useSapeurs();
+const intervention = state;
+
 const evenements = computed(() => {
-  const missions = state.value.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
+  const missions = intervention.value.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
+  const chefIntervention = sapeurStore.state.value.find(s => s.id == intervention.value.sapeur_id);
   return [
     // Début intervention
     {
       uuid: uuidv4(),
-      date: state.value.date_debut,
+      date: intervention.value.date_debut,
       type: EventType.Info,
       titre: 'Début de l\'intervention',
-      description: 'TODO: Inondation à Glo',
-      auteur: null
+      description: intervention.value.objet,
+      auteur: chefIntervention ? chefIntervention?.nom + " " + chefIntervention?.prenom : null
     },
 
     // Appels
-    ...state.value.appels.map(a => ({
+    ...intervention.value.appels.map(a => ({
       ...a,
       uuid: uuidv4(),
       type: EventType.Appel,
@@ -107,7 +112,6 @@ const evenements = computed(() => {
     }))
   ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis())
 });
-console.log(evenements.value)
 
 const openEvent = (event: any) => {
   //TODO: implement open event

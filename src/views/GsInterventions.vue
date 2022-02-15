@@ -55,6 +55,7 @@ import {
   IonItem,
   IonButton,
   IonIcon,
+  modalController,
 } from "@ionic/vue";
 
 import useDateFormatter from "@/tools/useDateFormatter";
@@ -62,6 +63,7 @@ import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { DateTime } from "luxon";
 import { Intervention } from "@/models/intervention";
+import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
 const { formatDate } = useDateFormatter();
 
 const { state, newIntervention } = useInterventions();
@@ -74,8 +76,19 @@ const openDetails = async (intervention: Intervention) => {
 };
 
 const create = async () => {
-  //TODO: Change to open intervention creation
-  const intervention = newIntervention(DateTime.now(), "objet ...", 1, "Adresse à définir");
+  const modalIntervention = await modalController
+    .create({
+      component: ModalInterventionCreateVue,
+    })
+
+  await modalIntervention.present();
+  let { data } = await modalIntervention.onDidDismiss();
+
+  const intervention = data;
+  if (!intervention) {
+    return;
+  }
+
   setActiveIntervention(intervention);
   router.push('intervention');
 };

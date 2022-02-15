@@ -180,7 +180,6 @@ if (!exercice.value) {
   }
 
   // Compute data pour affichage
-  console.log(exercice)
   exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
     ...p,
     presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
@@ -191,14 +190,13 @@ if (!exercice.value) {
     presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
     excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
   }))
-  console.log(exercice.value)
 }
 
 const validate = () => {
   //TODO:
 };
+
 const addSapeur = async () => {
-  //TODO:
   const modalSapeurSelect = await modalController
     .create({
       component: ModalSapeurSelectVue,

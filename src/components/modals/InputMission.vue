@@ -22,9 +22,9 @@
             id="open-modal"
           >{{ formatDate(mission.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
           <ion-modal :is-open="openModalDebut">
-            <!-- TODO: format date + fix display of ion-datetime in ion-modal -->
             <ion-datetime
               presentation="time-date"
+              :value="DateTime.fromSQL(mission.date_debut).toISO()"
               @ionChange="(ev: any) => mission.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
@@ -57,10 +57,10 @@
             id="open-modal"
           >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
           <ion-modal :is-open="openModalFin">
-            <!-- TODO: format date + fix display of ion-datetime in ion-modal -->
             <ion-datetime
               presentation="time-date"
-              :min="mission.date_debut"
+              :min="DateTime.fromSQL(mission.date_debut).toISO()"
+              :value="DateTime.fromSQL(mission.date_fin).toISO()"
               @ionChange="(ev: any) => mission.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import {
   IonPage,
   IonTitle,
@@ -109,20 +109,19 @@ const openModalFin = ref(false);
 
 const router = useRouter();
 const route = useRoute();
-const data = route.params.mission ? route.params.mission as any as Mission : new Mission();
-const mission = ref(data)
-if (!route.params.mission) {
+const missionUuid = route.params.uuid;
+const interventionStore = useActiveIntervention();
+
+const mission: Ref<Mission> = ref(interventionStore.state.value.missions.find(m => m.localUuid == missionUuid) || new Mission());
+if (!mission.value.date_debut) {
   mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false }).slice(0, 16);
 }
 
 const interventionModule = useActiveIntervention();
-
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
-// const mission = reactive((props.mission ? { ...props.mission } : new Mission()))
 
 const isInputComplete = () => {
-  return true;
-  // return mission.date_debut && mission.titre && mission.sapeur.nom
+  return mission.value.date_debut && mission.value.titre && mission.value.sapeur.nom
 }
 
 const selectSapeur = async () => {

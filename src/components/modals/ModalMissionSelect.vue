@@ -13,7 +13,7 @@
     <ion-searchbar @ionInput="search($event)" placeholder="Saisir"></ion-searchbar>
 
     <ion-list>
-      <ion-item v-if="query.length > 0" @click="selectMission(query)">{{ query }}</ion-item>
+      <ion-item v-if="query.length > 0" @click="selectMission({ titre: query, id: 0 })">{{ query }}</ion-item>
       <ion-item
         v-for="mission of filteredMission"
         :key="mission.id"
@@ -39,6 +39,7 @@ import {
   modalController,
 } from '@ionic/vue';
 import useMissionsTypes from "@/store/useMissionTypes";
+import { MissionType } from "@/models/missiontype";
 
 const query = ref("")
 const missionModule = useMissionsTypes();
@@ -53,11 +54,12 @@ const search = (event: any) => {
   query.value = event.target.value.toLowerCase();
 }
 
+const selectMission = (mission: MissionType) => {
+  modalController.dismiss(mission);
+}
+
 const dismiss = () => {
   modalController.dismiss(null);
-}
-const selectMission = (mission: any) => {
-  modalController.dismiss(mission);
 }
 </script>
 
