@@ -30,11 +30,15 @@ export default function useActiveIntervention() {
   }
 
   const updateMission = (mission: Mission) => {
-    mission.localUuid = uuidv4();
     state.value.missions = [
       ...state.value.missions.filter(m => m.localUuid != mission.localUuid),
       mission
     ]
+    persist();
+  }
+
+  const removeMission = (mission: Mission) => {
+    state.value.missions = state.value.missions.filter(m => m.localUuid != mission.localUuid)
     persist();
   }
 
@@ -67,6 +71,7 @@ export default function useActiveIntervention() {
     // Actions
     addMission,
     updateMission,
+    removeMission,
     updateVehicules,
     updateMaterielQuantity,
     removeMateriel,

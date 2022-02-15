@@ -29,6 +29,9 @@
         <br />
         <span class="details">{{ mission.resume }}</span>
       </p>
+      <ion-button @click.stop="deleteMission(mission)" fill="clear" color="dark" slot="end">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
 </template>
@@ -42,21 +45,41 @@ import {
   IonButton,
   IonItem,
   IonIcon,
+  alertController,
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
 import { useRouter } from 'vue-router';
 
 const { formatDate } = useDateFormatter();
-const { state } = useActiveIntervention();
+const { state, removeMission } = useActiveIntervention();
 const intervention = state;
 const router = useRouter();
 
 const addMission = async () => {
-  router.push({ name: 'mission', params: { uuid: 'null' } })
+  router.push({ name: 'mission', params: { uuid: 'null' } });
+
 };
 const editMission = (mission: any) => {
-  router.push({ name: 'mission', params: { uuid: mission.localUuid } })
+  router.push({ name: 'mission', params: { uuid: mission.localUuid } });
+};
+const deleteMission = async (mission: any) => {
+  let confirm = await alertController.create({
+    header: 'Supprimer mission',
+    message: "Êtes-vous sûr de vouloir supprimer la mission [" + mission?.titre + "] ?",
+    buttons: [
+      {
+        text: 'Non'
+      },
+      {
+        text: 'Oui',
+        handler: () => {
+          removeMission(mission);
+        }
+      }
+    ]
+  });
+  await confirm.present();
 };
 
 </script>

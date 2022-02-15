@@ -10,7 +10,7 @@
   </ion-header>
 
   <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
+    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..." ref="searchbar"></ion-searchbar>
 
     <ion-list>
       <ion-item
@@ -24,7 +24,7 @@
 
 
 <script lang="ts" setup>
-import { defineProps, computed, PropType, ref } from "vue";
+import { defineProps, computed, PropType, ref, onMounted, ComponentPublicInstance } from "vue";
 import {
   IonToolbar,
   IonTitle,
@@ -68,6 +68,11 @@ const dismiss = () => {
 const selectSapeur = (sapeur: Sapeur) => {
   modalController.dismiss(sapeur.id);
 }
+
+// const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
+// onMounted(() => {
+//   searchbar.value?.$el.setFocus();
+// })
 </script>
 
 <style>

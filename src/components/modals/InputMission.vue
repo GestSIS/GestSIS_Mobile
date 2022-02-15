@@ -36,7 +36,7 @@
             type="text"
             readonly="true"
             @ionFocus="selectSapeur()"
-            :value="mission.sapeur.nom ? (mission.sapeur.nom + ' ' + mission.sapeur?.prenom) : ''"
+            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
           ></ion-input>
         </ion-item>
 
@@ -112,7 +112,8 @@ const route = useRoute();
 const missionUuid = route.params.uuid;
 const interventionStore = useActiveIntervention();
 
-const mission: Ref<Mission> = ref(interventionStore.state.value.missions.find(m => m.localUuid == missionUuid) || new Mission());
+const loadedMission = Object.assign({}, interventionStore.state.value.missions.find(m => m.localUuid == missionUuid));
+const mission: Ref<Mission> = ref(loadedMission || new Mission());
 if (!mission.value.date_debut) {
   mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false }).slice(0, 16);
 }
@@ -121,7 +122,7 @@ const interventionModule = useActiveIntervention();
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
-  return mission.value.date_debut && mission.value.titre && mission.value.sapeur.nom
+  return mission.value.date_debut && mission.value.titre && mission.value.sapeur?.nom
 }
 
 const selectSapeur = async () => {

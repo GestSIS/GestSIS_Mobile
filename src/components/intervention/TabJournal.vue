@@ -99,7 +99,7 @@ const evenements = computed(() => {
       date: m.date_debut,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
-      auteur: m.sapeur
+      auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
     })),
     // Fin de mission
     ...missions.filter(m => m.date_fin != null).map(m => ({
@@ -108,7 +108,7 @@ const evenements = computed(() => {
       date: m.date_fin,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
-      auteur: m.sapeur
+      auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
     }))
   ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis())
 });
