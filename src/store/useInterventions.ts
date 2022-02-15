@@ -59,13 +59,11 @@ export default () => {
   };
 
   const updateIntervention = (intervention: Intervention) => {
-    console.log('Update intervention');
-    console.log(intervention);
-    console.log(state.value);
     state.value = state.value.map((i) =>
-      i.localUuid === intervention.localUuid ? intervention : i
+      i.localUuid == intervention.localUuid ? intervention : i
     );
-    console.log(state.value);
+    console.log("Persiste inter")
+    store.persist();
   };
 
   return {

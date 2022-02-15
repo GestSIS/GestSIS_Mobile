@@ -12,12 +12,11 @@
     <ion-content class="ion-padding">
       <h3>
         {{
-          exercice?.designation != "-"
-            ? exercice?.designation
-            : formatCategorie(exercice?.exercice_categorie_id)
+        exercice?.designation != "-"
+        ? exercice?.designation
+        : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
-        <!-- {{ exercice.sapeurs[0] }} -->
       </h3>
       <!-- <p v-if="exercice?.id_exe_lie != null">
         Lié à l'exercice

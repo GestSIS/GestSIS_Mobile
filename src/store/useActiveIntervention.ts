@@ -44,6 +44,8 @@ export default function useActiveIntervention() {
 
   const updateVehicules = (vehicules: number[]) => {
     state.value.vehicules = vehicules;
+    console.log(vehicules)
+    console.log(state.value)
     persist();
   }
 
@@ -57,8 +59,19 @@ export default function useActiveIntervention() {
     persist();
   }
 
-  const updateAppels = (appels : Appel[]) => {
-    state.value.appels = appels;
+  const addAppel = (appel: Appel) => {
+    appel.localUuid = uuidv4();
+    state.value.appels.push(appel);
+    persist();
+  }
+
+  const updateAppel = (appel: Appel) => {
+    state.value.appels = state.value.appels.map(a => a.localUuid == appel.localUuid ? appel : a);
+    persist();
+  }
+
+  const removeAppel = (appel: Appel) => {
+    state.value.appels = state.value.appels.filter(a => a.localUuid != appel.localUuid);
     persist();
   }
 
@@ -75,6 +88,8 @@ export default function useActiveIntervention() {
     updateVehicules,
     updateMaterielQuantity,
     removeMateriel,
-    updateAppels
+    addAppel,
+    updateAppel,
+    removeAppel,
   };
 }

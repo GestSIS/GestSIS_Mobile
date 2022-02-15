@@ -40,14 +40,12 @@ import {
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useVehicules from '@/store/useVehicules';
 import { computed, ref } from 'vue';
-import useInterventions from '@/store/useInterventions';
 
 const { state, updateVehicules } = useActiveIntervention();
-
-const moduleInter = useInterventions()
-const vehiculesIntervention = ref(new Set(moduleInter.state.value[0].vehicules.slice()));
+const vehiculesIntervention = ref(new Set(state.value.vehicules.slice()));
 
 const moduleVehicule = useVehicules();
+console.log(moduleVehicule.state.value)
 const vehicules = computed(() => new Set(moduleVehicule.state.value));
 
 const changeVehiculeStatut = (vehiculeId: number) => {

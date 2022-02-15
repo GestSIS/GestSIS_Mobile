@@ -17,8 +17,10 @@
       <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
         <h4 class="title">{{ event.titre }}</h4>
         <p class="date">
-          {{ formatDate(event.date, null) }}
-          <span v-if="event.auteur">par {{ event.auteur }}</span>
+          {{ formatDate(event.date, 'dd.LL.yy HH:mm') }}
+          <span
+            v-if="event.auteur"
+          >par {{ event.auteur }}</span>
         </p>
         <p class="description" v-if="event.description">{{ event.description }}</p>
       </div>
@@ -40,6 +42,9 @@ import {
 import { computed, ref } from 'vue';
 import { DateTime } from 'luxon';
 import useSapeurs from '@/store/useSapeurs';
+import { modalController } from '@ionic/core';
+import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
+import { useRouter } from 'vue-router';
 
 const onlyPendingMissions = ref(true);
 const { formatDate } = useDateFormatter();
@@ -64,9 +69,19 @@ const iconMapping = {
   [EventType.Info]: 'play',
 }
 
+const router = useRouter();
 const { state } = useActiveIntervention();
 const sapeurStore = useSapeurs();
 const intervention = state;
+
+interface Event {
+  uuid: string,
+  date: string,
+  type: EventType,
+  titre: string,
+  description: string,
+  auteur: string
+}
 
 const evenements = computed(() => {
   const missions = intervention.value.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
@@ -85,17 +100,17 @@ const evenements = computed(() => {
     // Appels
     ...intervention.value.appels.map(a => ({
       ...a,
-      uuid: uuidv4(),
+      uuid: a.localUuid,
       type: EventType.Appel,
       titre: a.nom + ' (' + a.numero + ')',
-      description: '',
+      description: a.commentaire,
       auteur: null
     })),
 
     // Début de mission
     ...missions.map(m => ({
       ...m,
-      uuid: uuidv4(),
+      uuid: m.localUuid,
       date: m.date_debut,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
@@ -104,17 +119,39 @@ const evenements = computed(() => {
     // Fin de mission
     ...missions.filter(m => m.date_fin != null).map(m => ({
       ...m,
-      uuid: uuidv4(),
+      uuid: m.localUuid,
       date: m.date_fin,
       type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
       auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
     }))
-  ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis())
+  ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()) as Event[]
 });
 
-const openEvent = (event: any) => {
-  //TODO: implement open event
+const openEvent = async (event: Event) => {
+  switch (event.type) {
+    case EventType.Appel: {
+      const appel = intervention.value.appels.find(a => a.localUuid == event.uuid)
+      const modalAppel = await modalController
+        .create({
+          component: ModalAppelEditVue,
+          componentProps: {
+            appel: { ...appel }
+          }
+        })
+
+      await modalAppel.present();
+    }
+      break;
+
+    case EventType.EndedMission:
+    case EventType.OngoingMission:
+      router.push({ name: 'mission', params: { uuid: event.uuid } });
+      break;
+
+    case EventType.Info:
+    // Nothing
+  }
 }
 
 </script>

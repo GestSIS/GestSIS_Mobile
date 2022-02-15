@@ -70,10 +70,12 @@ import { useNotify } from "@/tools/useToast";
 import { Appel } from "@/models/appel";
 import { DateTime } from "luxon";
 import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "@/store/useActiveIntervention";
 
 const { formatDate } = useDateFormatter();
 const notify = useNotify();
 
+const { updateAppel } = useActiveIntervention();
 const props = defineProps({
   appel: Appel
 });
@@ -96,11 +98,12 @@ const save = async () => {
     return;
   }
 
-  modalController.dismiss(appel.value);
+  updateAppel(appel.value);
+  modalController.dismiss();
 }
 
 const dismiss = () => {
-  modalController.dismiss(null);
+  modalController.dismiss();
 }
 
 </script>

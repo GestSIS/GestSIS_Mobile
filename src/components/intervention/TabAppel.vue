@@ -16,9 +16,9 @@
     <ion-item v-if="!intervention.appels.length">Aucun appel</ion-item>
     <ion-item
       button="true"
-      v-for="(appel, i) in intervention.appels"
-      :key="i"
-      @click="editCall(appel, i)"
+      v-for="appel in intervention.appels"
+      :key="appel.localUuid"
+      @click="editCall(appel)"
       :disabled="!intervention.en_creation"
     >
       <p>
@@ -28,7 +28,7 @@
         <br />
         <span class="details">{{ appel.commentaire }}</span>
       </p>
-      <ion-button @click.stop="removeCall(appel, i)" fill="clear" color="dark" slot="end">
+      <ion-button @click.stop="removeCall(appel)" fill="clear" color="dark" slot="end">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-item>
@@ -53,10 +53,9 @@ import ModalAppelVue from '../modals/ModalAppelSelect.vue';
 import { DateTime } from 'luxon';
 import { Appel } from '@/models/appel';
 import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
-import { Exercice } from '@/models/exercice';
 
 const { formatDate } = useDateFormatter();
-const { state, updateAppels } = useActiveIntervention();
+const { state, addAppel, removeAppel } = useActiveIntervention();
 const intervention = state;
 
 const addCall = async () => {
@@ -95,8 +94,7 @@ const addCall = async () => {
             date: DateTime.now().toSQL({ includeOffset: false }).slice(0, 16),
             commentaire: data.commentaire
           }
-          intervention.value.appels.push(appel);
-          updateAppels(intervention.value.appels);
+          addAppel(appel);
         }
       }
     ]
@@ -104,7 +102,7 @@ const addCall = async () => {
   await prompt.present();
 };
 
-const editCall = async (appel: any, index: number) => {
+const editCall = async (appel: any) => {
   const modalAppel = await modalController
     .create({
       component: ModalAppelEditVue,
@@ -114,18 +112,9 @@ const editCall = async (appel: any, index: number) => {
     })
 
   await modalAppel.present();
-  let { data } = await modalAppel.onDidDismiss();
-
-  if (!data) {
-    return;
-  }
-  let tel: Appel = data;
-
-  intervention.value.appels.splice(index, 1, tel);
-  updateAppels(intervention.value.appels);
 };
 
-const removeCall = async (appel: Appel, index: number) => {
+const removeCall = async (appel: Appel) => {
   let confirm = await alertController.create({
     header: 'Supprimer appel',
     message: "Êtes-vous sûr de vouloir supprimer l'appel [" + appel.nom + "] ?",
@@ -136,8 +125,7 @@ const removeCall = async (appel: Appel, index: number) => {
       {
         text: 'Oui',
         handler: () => {
-          intervention.value.appels.splice(index, 1);
-          updateAppels(intervention.value.appels);
+          removeAppel(appel);
         }
       }
     ]

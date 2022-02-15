@@ -42,6 +42,7 @@ import {
   IonContent,
   IonButton,
   IonItem,
+  IonIcon,
   modalController,
 } from '@ionic/vue';
 import useTelephones from "@/store/useTelephones";
