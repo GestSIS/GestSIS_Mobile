@@ -113,13 +113,10 @@ const addMateriel = async () => {
 
   const quantite = parseInt(res.data?.values?.quantite || 0);
   if (res.data?.canceled || !quantite) {
-    console.log("exit 2")
     return;
   }
 
   // Ajout du materiel
-  console.log("Materiel")
-  console.log(intervention.value.materiel)
   const previousQuantite = intervention.value.materiel[materielId] || 0;
 
   interventionModule.updateMaterielQuantity(materielId, parseInt((previousQuantite || 0)) + quantite);

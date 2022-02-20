@@ -38,11 +38,11 @@ import {
   IonLabel,
   IonCheckbox,
   IonIcon,
+  modalController,
 } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { DateTime } from 'luxon';
 import useSapeurs from '@/store/useSapeurs';
-import { modalController } from '@ionic/core';
 import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
 import { useRouter } from 'vue-router';
 
@@ -153,7 +153,6 @@ const openEvent = async (event: Event) => {
     // Nothing
   }
 }
-
 </script>
 
 <style scoped>

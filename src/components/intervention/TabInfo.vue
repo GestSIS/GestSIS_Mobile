@@ -18,14 +18,14 @@
           <ion-text
             slot="end"
             id="open-modal"
-          >{{ formatDate(intervention.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
+          >{{ intervention.date_debut ? formatDate(intervention.date_debut, 'dd.LL.yy HH:mm') : '' }}</ion-text>
           <ion-button fill="clear" slot="end">
             <ion-icon slot="end" name="calendar" />
           </ion-button>
           <ion-modal :is-open="openModalDebut">
             <ion-datetime
               presentation="time-date"
-              :value="DateTime.fromSQL(intervention.date_debut).toISO()"
+              :value="intervention.date_debut ? DateTime.fromSQL(intervention.date_debut).toISO() : ''"
               @ionChange="(ev: any) => intervention.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
@@ -37,14 +37,15 @@
           <ion-text
             slot="end"
             id="open-modal"
-          >{{ formatDate(intervention.date_fin, 'dd.LL.yy HH:mm') }}</ion-text>
+          >{{ intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
           <ion-button fill="clear" slot="end">
             <ion-icon slot="end" name="calendar" />
           </ion-button>
           <ion-modal :is-open="openModalFin">
             <ion-datetime
               presentation="time-date"
-              :value="intervention.date_fin ? DateTime.fromSQL(intervention.date_fin).toISO() : ''"
+              :min="DateTime.fromSQL(intervention.date_debut).toISO()"
+              :value="DateTime.fromSQL(intervention.date_fin).toISO()"
               @ionChange="(ev: any) => intervention.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
             />
           </ion-modal>
@@ -323,7 +324,6 @@ const supprimerRapport = async () => {
       }
     ]
   });
-  console.log("Present")
   await confirm.present();
 };
 const validate = () => {

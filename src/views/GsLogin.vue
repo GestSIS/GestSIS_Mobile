@@ -71,7 +71,6 @@ const { login, state } = useAuth();
 // If connected redirect to home page
 const stopRedirect = watchEffect((onInvalidate) => {
   if (state.data.statut == UserStatus.connected && router.currentRoute.value.name == 'login') {
-    console.log("Trigger, wait !!!");
     router.push({ name: 'accueil' });
   }
 });

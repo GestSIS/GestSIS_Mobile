@@ -44,8 +44,6 @@ export default function useActiveIntervention() {
 
   const updateVehicules = (vehicules: number[]) => {
     state.value.vehicules = vehicules;
-    console.log(vehicules)
-    console.log(state.value)
     persist();
   }
 
@@ -77,8 +75,6 @@ export default function useActiveIntervention() {
 
   const updateGroupes = (vehicules: number[]) => {
     state.value.vehicules = vehicules;
-    console.log(vehicules)
-    console.log(state.value)
     persist();
   }
 

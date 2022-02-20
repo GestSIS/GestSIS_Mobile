@@ -80,8 +80,6 @@ const props = defineProps({
   appel: Appel
 });
 
-console.log("props")
-console.log(props)
 const appel = ref(props.appel || new Appel());
 
 const isPhoneNumber = (str: string): boolean => {
