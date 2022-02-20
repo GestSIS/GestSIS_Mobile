@@ -51,9 +51,9 @@ export class Intervention {
     }>;
   }> = [];
 
-  missions: Array<Mission> = [];
-  appels: Array<Appel> = [];
+  missions: Mission[] = [];
+  appels: Appel[] = [];
   vehicules: number[];
   materiel: any; // id_materiel : quantite
-  groupes: number[];
+  groupes: number[] = [];
 }
