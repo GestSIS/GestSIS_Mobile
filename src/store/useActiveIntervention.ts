@@ -78,6 +78,18 @@ export default function useActiveIntervention() {
     persist();
   }
 
+  const addSapeursArrival = (date: string, sapeurs: number[]) => {
+
+    // sapeurs.forEach();
+    // state.value.sapeurs.push(
+    //   sapeurs.map(id => ({id, date}))
+    // )
+  }
+  
+  const updateSapeurs = () => {
+    // TODO:
+  }
+
   return {
     state,
     reset,
@@ -95,5 +107,9 @@ export default function useActiveIntervention() {
     updateAppel,
     removeAppel,
     updateGroupes,
+
+    // Sapeurs
+    addSapeursArrival,
+    updateSapeurs
   };
 }

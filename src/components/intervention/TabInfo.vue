@@ -209,6 +209,7 @@
           <ion-label position="floating">E-mail</ion-label>
           <ion-input
             type="text"
+            inputmode="email"
             v-model="intervention.proprietaire.email"
             :disabled="!intervention.en_creation"
           ></ion-input>

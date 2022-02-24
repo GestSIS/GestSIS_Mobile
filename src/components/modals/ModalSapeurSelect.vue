@@ -1,10 +1,14 @@
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title>Ajouter un sapeur</ion-title>
-
       <ion-buttons slot="primary">
         <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+
+      <ion-title>Ajouter un sapeur</ion-title>
+
+      <ion-buttons right>
+        <ion-button @click="validate()" v-if="props.multiSelect">Valider</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -24,7 +28,7 @@
 
 
 <script lang="ts" setup>
-import { defineProps, computed, PropType, ref, onMounted, ComponentPublicInstance } from "vue";
+import { defineProps, computed, PropType, ref } from "vue";
 import {
   IonToolbar,
   IonTitle,
@@ -41,7 +45,8 @@ import useSapeurs from "@/store/useSapeurs";
 import { Sapeur } from "@/models/sapeur";
 
 const props = defineProps({
-  exceptSapeurIds: Array as PropType<Array<number>>
+  exceptSapeurIds: { type: Array as PropType<Array<number>>, required: false, default: () => [] },
+  multiSelect: { type: Boolean, required: false, default: false }
 });
 
 const exceptIds = new Set(props.exceptSapeurIds);
@@ -65,8 +70,14 @@ const dismiss = () => {
   modalController.dismiss(null);
 }
 
+const validate = () => {
+  // TODO:
+}
+
 const selectSapeur = (sapeur: Sapeur) => {
-  modalController.dismiss(sapeur.id);
+  if (!props.multiSelect) {
+    modalController.dismiss(sapeur.id);
+  }
 }
 
 // const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();

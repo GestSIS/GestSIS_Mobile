@@ -9,7 +9,13 @@
       <form @submit.prevent="wrappedLogin">
         <ion-list>
           <ion-item>
-            <ion-input type="text" v-model="email" name="email" placeholder="Adresse e-mail"></ion-input>
+            <ion-input
+              type="text"
+              inputmode="email"
+              v-model="email"
+              name="email"
+              placeholder="Adresse e-mail"
+            ></ion-input>
           </ion-item>
           <ion-item>
             <ion-input

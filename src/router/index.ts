@@ -27,7 +27,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/mission/:uuid',
     name: 'mission',
     props: (route) => ({ uuid: route.params.uuid || '' }),
-    component: () => import('../components/modals/InputMission.vue'),
+    component: () => import('../views/GsInterventionMission.vue'),
+  },
+  {
+    path: '/sapeurs/:mode',
+    name: 'sapeurs',
+    props: (route) => ({ uuid: route.params.uuid || '' }),
+    component: () => import('../views/GsInterventionSapeur.vue'),
   },
   {
     path: '/exercices',

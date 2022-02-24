@@ -55,6 +55,7 @@
           <ion-col class="col-radio">Absent</ion-col>
           <ion-col class="col-radio">Excusé</ion-col>
           <ion-col class="col-radio">Remplacé</ion-col>
+          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{ heure.designation }}</ion-col>
         </ion-row>
 
         <div class="sapeurs">
@@ -81,6 +82,14 @@
               </ion-col>
               <ion-col class="col-radio">
                 <ion-radio :value="4" :disabled="!exercice?.en_creation"></ion-radio>
+              </ion-col>
+              <ion-col v-for="heure in heuresTypes" :key="heure.id">
+                <ion-item lines="none">
+                  <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
+                  <ion-label
+                    slot="end"
+                  >{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
+                </ion-item>
               </ion-col>
             </ion-row>
           </ion-radio-group>
@@ -119,6 +128,9 @@ import useExerciceCategories from "@/store/useExerciceCategories";
 
 import {
   IonButtons,
+  IonInput,
+  IonLabel,
+  IonItem,
   IonContent,
   IonHeader,
   IonBackButton,
@@ -144,6 +156,8 @@ import useExcuseTypes from "@/store/useExcuseTypes";
 import useSapeurs from "@/store/useSapeurs";
 import { nextTick, ref } from "vue";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
+import useHeureExerciceTypes from "@/store/useHeureExerciceTypes";
+import useUnitesType from "@/store/useUnitesTypes";
 
 const { formatDate } = useDateFormatter();
 
@@ -151,11 +165,15 @@ const exercicesStore = useExexercices();
 const categoriesStore = useExerciceCategories();
 const excuseTypesStore = useExcuseTypes();
 const sapeursStore = useSapeurs();
+const heuresStore = useHeureExerciceTypes();
+const unitesStore = useUnitesType();
 
 const exercices = exercicesStore.state;
 const categories = categoriesStore.state;
 const excusesTypes = excuseTypesStore.state;
 const sapeurs = sapeursStore.state;
+const heuresTypes = heuresStore.state;
+const unites = unitesStore.state;
 const indexedSapeurs = sapeurs.value.reduce((map, e) => {
   map.set(e.id, e.nom + " " + e.prenom)
   return map;

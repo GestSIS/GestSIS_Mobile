@@ -99,9 +99,9 @@ import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
 
-import ModalSapeurSelectVue from "./ModalSapeurSelect.vue";
+import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
+import ModalMissionSelectVue from "@/components/modals/ModalMissionSelect.vue";
 import useSapeurs from "@/store/useSapeurs";
-import ModalMissionSelectVue from "./ModalMissionSelect.vue";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 
@@ -122,7 +122,6 @@ if (!mission.value.date_debut) {
   mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false }).slice(0, 16);
 }
 
-const interventionModule = useActiveIntervention();
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
@@ -174,9 +173,9 @@ const save = () => {
     return;
   }
   if (mission.value.localUuid) {
-    interventionModule.updateMission(mission.value);
+    interventionStore.updateMission(mission.value);
   } else {
-    interventionModule.addMission(mission.value);
+    interventionStore.addMission(mission.value);
   }
   router.back();
 }
