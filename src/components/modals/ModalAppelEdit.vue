@@ -1,3 +1,61 @@
+<script lang="ts" setup>
+import { ref, defineProps } from "vue";
+import {
+  IonToolbar,
+  IonTitle,
+  IonList,
+  IonTextarea,
+  IonButtons,
+  IonHeader,
+  IonLabel,
+  IonPopover,
+  IonIcon,
+  IonDatetime,
+  IonInput,
+  IonText,
+  IonContent,
+  IonButton,
+  IonItem,
+  modalController,
+} from '@ionic/vue';
+import { useNotify } from "@/tools/useToast";
+import { Appel } from "@/models/appel";
+import { DateTime } from "luxon";
+import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "@/store/useActiveIntervention";
+
+const { formatDate } = useDateFormatter();
+const notify = useNotify();
+
+const { updateAppel } = useActiveIntervention();
+const props = defineProps<{ appel: Appel }>();
+
+const appel = ref(props.appel || new Appel());
+
+const isPhoneNumber = (str: string): boolean => {
+  return /^(?=.*\d)[\d ]+$/.test(str);
+}
+
+const save = async () => {
+  // TODO:
+  if (appel.value?.nom == '' || appel.value.numero == '') {
+    notify.error('Veuillez remplir tous les champs');
+    return;
+  } else if (!isPhoneNumber(appel.value.numero || '')) {
+    notify.error("Numéro de téléphone invalid");
+    return;
+  }
+
+  updateAppel(appel.value);
+  modalController.dismiss();
+}
+
+const dismiss = () => {
+  modalController.dismiss();
+}
+
+</script>
+
 <template>
   <ion-header>
     <ion-toolbar>
@@ -44,67 +102,6 @@
     <ion-button expand="full" margin-top @click="save">Modifier</ion-button>
   </ion-content>
 </template>
-
-
-<script lang="ts" setup>
-import { ref, defineProps } from "vue";
-import {
-  IonToolbar,
-  IonTitle,
-  IonList,
-  IonTextarea,
-  IonButtons,
-  IonHeader,
-  IonLabel,
-  IonPopover,
-  IonIcon,
-  IonDatetime,
-  IonInput,
-  IonText,
-  IonContent,
-  IonButton,
-  IonItem,
-  modalController,
-} from '@ionic/vue';
-import { useNotify } from "@/tools/useToast";
-import { Appel } from "@/models/appel";
-import { DateTime } from "luxon";
-import useDateFormatter from "@/tools/useDateFormatter";
-import useActiveIntervention from "@/store/useActiveIntervention";
-
-const { formatDate } = useDateFormatter();
-const notify = useNotify();
-
-const { updateAppel } = useActiveIntervention();
-const props = defineProps({
-  appel: Appel
-});
-
-const appel = ref(props.appel || new Appel());
-
-const isPhoneNumber = (str: string): boolean => {
-  return /^(?=.*\d)[\d ]+$/.test(str);
-}
-
-const save = async () => {
-  // TODO:
-  if (appel.value?.nom == '' || appel.value.numero == '') {
-    notify.error('Veuillez remplir tous les champs');
-    return;
-  } else if (!isPhoneNumber(appel.value.numero || '')) {
-    notify.error("Numéro de téléphone invalid");
-    return;
-  }
-
-  updateAppel(appel.value);
-  modalController.dismiss();
-}
-
-const dismiss = () => {
-  modalController.dismiss();
-}
-
-</script>
 
 <style>
 </style>

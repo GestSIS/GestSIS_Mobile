@@ -1,29 +1,3 @@
-<template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Sélection du titre de la mission</ion-title>
-
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Saisir"></ion-searchbar>
-
-    <ion-list>
-      <ion-item v-if="query.length > 0" @click="selectMission({ titre: query, id: 0 })">{{ query }}</ion-item>
-      <ion-item
-        v-for="mission of filteredMission"
-        :key="mission.id"
-        @click="selectMission(mission)"
-      >{{ mission.titre }}</ion-item>
-    </ion-list>
-  </ion-content>
-</template>
-
-
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import {
@@ -62,6 +36,31 @@ const dismiss = () => {
   modalController.dismiss(null);
 }
 </script>
+
+<template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Sélection du titre de la mission</ion-title>
+
+      <ion-buttons slot="primary">
+        <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-searchbar @ionInput="search($event)" placeholder="Saisir"></ion-searchbar>
+
+    <ion-list>
+      <ion-item v-if="query.length > 0" @click="selectMission({ titre: query, id: 0 })">{{ query }}</ion-item>
+      <ion-item
+        v-for="mission of filteredMission"
+        :key="mission.id"
+        @click="selectMission(mission)"
+      >{{ mission.titre }}</ion-item>
+    </ion-list>
+  </ion-content>
+</template>
 
 <style>
 </style>

@@ -1,37 +1,10 @@
-<template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
-      </ion-buttons>
-
-      <ion-title>Ajouter un sapeur</ion-title>
-
-      <ion-buttons right>
-        <ion-button @click="validate()" v-if="props.multiSelect">Valider</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..." ref="searchbar"></ion-searchbar>
-
-    <ion-list>
-      <ion-item
-        v-for="sapeur of filteredSapeur"
-        :key="sapeur.id"
-        @click="selectSapeur(sapeur)"
-      >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-item>
-    </ion-list>
-  </ion-content>
-</template>
-
-
 <script lang="ts" setup>
-import { defineProps, computed, PropType, ref } from "vue";
+import { defineProps, computed, PropType, ref, withDefaults } from "vue";
 import {
   IonToolbar,
   IonTitle,
+  IonLabel,
+  IonCheckbox,
   IonSearchbar,
   IonButtons,
   IonHeader,
@@ -44,12 +17,17 @@ import {
 import useSapeurs from "@/store/useSapeurs";
 import { Sapeur } from "@/models/sapeur";
 
-const props = defineProps({
-  exceptSapeurIds: { type: Array as PropType<Array<number>>, required: false, default: () => [] },
-  multiSelect: { type: Boolean, required: false, default: false }
-});
-
+const props = withDefaults(defineProps<{
+  exceptSapeurIds?: number[],
+  multiSelect?: boolean
+}>(), { exceptSapeurIds: () => [], multiSelect: false });
 const exceptIds = new Set(props.exceptSapeurIds);
+
+// const { exceptSapeurIds = [], multiSelect = false } = defineProps<{
+//   exceptSapeurIds?: number[],
+//   multiSelect?: boolean
+// }>();
+
 
 const query = ref("")
 const sapeurModule = useSapeurs();
@@ -85,6 +63,33 @@ const selectSapeur = (sapeur: Sapeur) => {
 //   searchbar.value?.$el.setFocus();
 // })
 </script>
+
+<template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="primary">
+        <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+
+      <ion-title>Ajouter un sapeur</ion-title>
+
+      <ion-buttons right>
+        <ion-button @click="validate()" v-if="props.multiSelect">Valider</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..." ref="searchbar"></ion-searchbar>
+
+    <ion-list>
+      <ion-item v-for="sapeur of filteredSapeur" :key="sapeur.id" @click="selectSapeur(sapeur)">
+        <ion-checkbox v-if="props.multiSelect"></ion-checkbox>
+        <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</template>
 
 <style>
 </style>

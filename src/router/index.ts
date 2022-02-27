@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/sapeurs/:mode',
     name: 'sapeurs',
-    props: (route) => ({ uuid: route.params.uuid || '' }),
+    props: (route) => ({ mode: route.params.mode || '' }),
     component: () => import('../views/GsInterventionSapeur.vue'),
   },
   {

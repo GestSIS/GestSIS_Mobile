@@ -1,35 +1,3 @@
-<template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Nouvel appel</ion-title>
-
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
-
-    <ion-list>
-      <ion-item @click="addTelephone">
-        <ion-icon name="add" slot="start"></ion-icon>Entrer un nouveau numéro
-      </ion-item>
-      <ion-item
-        v-for="telephone of filteredTelephone"
-        :key="telephone.id"
-        @click="selectTelephone(telephone)"
-      >
-        <ion-icon name="call" slot="start"></ion-icon>
-        {{ telephone.nom }}
-        <span slot="end">{{ telephone.numero }}</span>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</template>
-
-
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import {
@@ -121,6 +89,36 @@ const addTelephone = async () => {
 
 </script>
 
+<template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Nouvel appel</ion-title>
+
+      <ion-buttons slot="primary">
+        <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
+
+    <ion-list>
+      <ion-item @click="addTelephone">
+        <ion-icon name="add" slot="start"></ion-icon>Entrer un nouveau numéro
+      </ion-item>
+      <ion-item
+        v-for="telephone of filteredTelephone"
+        :key="telephone.id"
+        @click="selectTelephone(telephone)"
+      >
+        <ion-icon name="call" slot="start"></ion-icon>
+        {{ telephone.nom }}
+        <span slot="end">{{ telephone.numero }}</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</template>
 
 <style>
 </style>

@@ -1,50 +1,3 @@
-<template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Nouvelle intervention</ion-title>
-
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content padding>
-    <ion-list no-lines>
-      <ion-item button="true" id="open-date-input">
-        <ion-label position="fixed">Date</ion-label>
-        <ion-text>{{ formatDate(intervention.date, 'dd.LL.yy HH:mm') }}</ion-text>
-        <ion-button fill="clear" slot="end">
-          <ion-icon slot="end" name="calendar" />
-        </ion-button>
-        <ion-popover trigger="open-date-input" :show-backdrop="false">
-          <ion-datetime
-            presentation="time-date"
-            @ionChange="(ev: any) => intervention.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-          />
-        </ion-popover>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="fixed">Objet</ion-label>
-        <ion-input v-model="intervention.objet"></ion-input>
-      </ion-item>
-
-      <ion-item @click="selectLocalite">
-        <ion-label position="fixed">Localité</ion-label>
-        <ion-input :value="formatLocalite(intervention.localite_id)" readonly></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="fixed">Adresse, lieu</ion-label>
-        <ion-textarea v-model="intervention.lieu"></ion-textarea>
-      </ion-item>
-    </ion-list>
-
-    <ion-button expand="full" margin-top @click="save">Créer</ion-button>
-  </ion-content>
-</template>
-
 <script lang="ts" setup>
 import { reactive } from "vue";
 import {
@@ -125,6 +78,53 @@ const dismiss = () => {
 }
 
 </script>
+
+<template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Nouvelle intervention</ion-title>
+
+      <ion-buttons slot="primary">
+        <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-list no-lines>
+      <ion-item button="true" id="open-date-input">
+        <ion-label position="fixed">Date</ion-label>
+        <ion-text>{{ formatDate(intervention.date, 'dd.LL.yy HH:mm') }}</ion-text>
+        <ion-button fill="clear" slot="end">
+          <ion-icon slot="end" name="calendar" />
+        </ion-button>
+        <ion-popover trigger="open-date-input" :show-backdrop="false">
+          <ion-datetime
+            presentation="time-date"
+            @ionChange="(ev: any) => intervention.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+          />
+        </ion-popover>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="fixed">Objet</ion-label>
+        <ion-input v-model="intervention.objet"></ion-input>
+      </ion-item>
+
+      <ion-item @click="selectLocalite">
+        <ion-label position="fixed">Localité</ion-label>
+        <ion-input :value="formatLocalite(intervention.localite_id)" readonly></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="fixed">Adresse, lieu</ion-label>
+        <ion-textarea v-model="intervention.lieu"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="full" margin-top @click="save">Créer</ion-button>
+  </ion-content>
+</template>
 
 <style>
 </style>

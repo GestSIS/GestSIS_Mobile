@@ -1,28 +1,3 @@
-<template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Sélection de la localité</ion-title>
-
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content padding>
-    <ion-searchbar @ionInput="search($event)" placeholder="Saisir..."></ion-searchbar>
-
-    <ion-list>
-      <ion-item
-        v-for="localite of filteredLocalite"
-        :key="localite.id"
-        @click="selectLocalite(localite)"
-      >{{ localite.npa }} {{ localite.designation }}</ion-item>
-    </ion-list>
-  </ion-content>
-</template>
-
-
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import {
@@ -63,6 +38,30 @@ const selectLocalite = (localite: Localite) => {
   modalController.dismiss(localite.id);
 }
 </script>
+
+<template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Sélection de la localité</ion-title>
+
+      <ion-buttons slot="primary">
+        <ion-button @click="dismiss()">Annuler</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-searchbar @ionInput="search($event)" placeholder="Saisir..."></ion-searchbar>
+
+    <ion-list>
+      <ion-item
+        v-for="localite of filteredLocalite"
+        :key="localite.id"
+        @click="selectLocalite(localite)"
+      >{{ localite.npa }} {{ localite.designation }}</ion-item>
+    </ion-list>
+  </ion-content>
+</template>
 
 <style>
 </style>

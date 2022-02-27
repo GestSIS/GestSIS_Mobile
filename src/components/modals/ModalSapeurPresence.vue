@@ -1,3 +1,46 @@
+<script lang="ts" setup>
+import { defineProps, PropType, ref, reactive } from "vue";
+import {
+  IonToolbar,
+  IonLabel,
+  IonDatetime,
+  IonInput,
+  IonTitle,
+  IonButtons,
+  IonHeader,
+  IonList,
+  IonContent,
+  IonButton,
+  IonItem,
+  modalController,
+} from '@ionic/vue';
+import useSapeurs from "@/store/useSapeurs";
+
+interface Presence {
+  nom: string,
+  prenom: string,
+  date_debut: null,
+  date_fin: null,
+  sapeur_id: null
+}
+
+const props: Presence = defineProps<Presence>();
+const presence = reactive({ ...props })
+
+const dismiss = () => {
+  modalController.dismiss(null);
+}
+
+const save = () => {
+  // modalController.dismiss(presence);
+}
+
+// const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
+// onMounted(() => {
+//   searchbar.value?.$el.setFocus();
+// })
+</script>
+
 <template>
   <ion-header>
     <ion-toolbar>
@@ -19,7 +62,7 @@
         <ion-input
           type="text"
           readonly="true"
-          :value="presence.sapeur.nom + ' ' + presence.sapeur.prenom"
+          :value="presence.nom + ' ' + presence.prenom"
         ></ion-input>
       </ion-item>
 
@@ -42,7 +85,7 @@
           pickerFormat="DD MM YYYY HH mm"
           cancelText="Annuler"
           doneText="Valider"
-          min:="presence.date_debut"
+          :min="presence.date_debut"
           v-modal="presence.date_fin"
           pickerOptions:="customPickerOptions"
           @ionChange="setCorrectTimezone()"
@@ -52,47 +95,6 @@
     </ion-list>
   </ion-content>
 </template>
-
-
-<script lang="ts" setup>
-import { defineProps, PropType, ref } from "vue";
-import {
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonHeader,
-  IonList,
-  IonContent,
-  IonButton,
-  IonItem,
-  modalController,
-} from '@ionic/vue';
-import useSapeurs from "@/store/useSapeurs";
-import { Sapeur } from "@/models/sapeur";
-
-const props = defineProps({
-  exceptSapeurIds: Array as PropType<Array<number>>
-});
-
-const exceptIds = new Set(props.exceptSapeurIds);
-
-const sapeurModule = useSapeurs();
-
-const presence = ref({});
-
-const dismiss = () => {
-  modalController.dismiss(null);
-}
-
-const save = () => {
-  // modalController.dismiss(presence);
-}
-
-// const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
-// onMounted(() => {
-//   searchbar.value?.$el.setFocus();
-// })
-</script>
 
 <style>
 </style>

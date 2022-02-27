@@ -1,3 +1,88 @@
+<script lang="ts" setup>
+import { Ref, ref, reactive, normalizeClass, defineProps } from "vue";
+import {
+  IonPage,
+  IonRow,
+  IonCol,
+  IonGrid,
+  IonCheckbox,
+  IonTitle,
+  IonButtons,
+  IonToolbar,
+  IonHeader,
+  IonList,
+  IonLabel,
+  IonDatetime,
+  IonContent,
+  IonButton,
+  IonItem,
+  IonBackButton,
+  modalController,
+  IonIcon
+} from '@ionic/vue';
+
+import { useRoute, useRouter } from "vue-router";
+import useActiveIntervention from "@/store/useActiveIntervention";
+
+import useSapeurs from "@/store/useSapeurs";
+import useDateFormatter from "@/tools/useDateFormatter";
+import { DateTime } from "luxon";
+import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
+
+const router = useRouter();
+const route = useRoute();
+
+const mode = route.params.mode as "ARRIVEE" | "DEPART";
+const presences: { date: null, mode: "ARRIVEE" | "DEPART", sapeurs: Array<{ nom: string, prenom: string, id: number, selected: boolean }> }
+  = reactive({ date: null, sapeurs: [], mode: mode });
+
+const { formatDate } = useDateFormatter();
+const sapeurModule = useSapeurs();
+
+// const { addSapeurArrival, addSapeurDeparture } = useActiveIntervention();
+const { updateSapeurs } = useActiveIntervention();
+
+const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
+const interventionModule = useActiveIntervention();
+const sapeursDejaPresent = [];
+
+const addSapeurs = async () => {
+  const modalSapeurSelect = await modalController
+    .create({
+      component: ModalSapeurSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+        multiSelect: true,
+      }
+    })
+
+  await modalSapeurSelect.present();
+  let { data } = await modalSapeurSelect.onDidDismiss();
+
+  if (!data) {
+    return;
+  }
+
+  const ids = new Set(data);
+  const sapeurs = sapeurModule.state.value.filter(s => ids.has(s.id));
+  presences.sapeurs = [
+    ...presences.sapeurs,
+    ...sapeurs.map(s => ({ nom: s.nom, prenom: s.prenom, id: s.id, selected: true }))
+  ].sort((a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom));
+}
+
+const save = () => {
+  if (mode == 'ARRIVEE') {
+    // addSapeurArrival();
+    // updateSapeurs();
+    //TODO: Complete this part
+  } else {
+    // interventionModule.addMission(mission.value);
+  }
+  router.back();
+}
+</script>
+
 <template>
   <ion-page>
     <ion-header>
@@ -22,7 +107,7 @@
             pickerFormat="DD MM YYYY HH mm"
             cancelText="Annuler"
             doneText="Valider"
-            v-model="presence.date"
+            v-model="presences.date"
             minuteValues="0,15,30,45"
           ></ion-datetime>
         </ion-item>
@@ -33,7 +118,7 @@
           <ion-col col-8>
             <h3>Sapeurs</h3>
           </ion-col>
-          <ion-col v-if="presence.type == 'ARRIVEE'" col-4>
+          <ion-col v-if="presences.mode == 'ARRIVEE'" col-4>
             <ion-button block slot="start" @click="addSapeurs()">
               <ion-icon name="add" item-start></ion-icon>Autres sapeurs
             </ion-button>
@@ -42,106 +127,14 @@
       </ion-grid>
 
       <ion-list>
-        <ion-item v-for="sapeur of presence.sapeurs" :key="sapeur.id">
-          <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
+        <ion-item v-for="sapeur of presences.sapeurs" :key="sapeur.id">
           <ion-checkbox v-model="sapeur.selected"></ion-checkbox>
+          <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts" setup>
-import { Ref, ref } from "vue";
-import {
-  IonPage,
-  IonRow,
-  IonCol,
-  IonGrid,
-  IonCheckbox,
-  IonTitle,
-  IonModal,
-  IonButtons,
-  IonToolbar,
-  IonHeader,
-  IonList,
-  IonInput,
-  IonTextarea,
-  IonLabel,
-  IonDatetime,
-  IonContent,
-  IonButton,
-  IonItem,
-  IonBackButton,
-  IonText,
-  modalController,
-  IonIcon
-} from '@ionic/vue';
-import { useRoute, useRouter } from "vue-router";
-import useActiveIntervention from "@/store/useActiveIntervention";
-
-import useSapeurs from "@/store/useSapeurs";
-import useDateFormatter from "@/tools/useDateFormatter";
-import { DateTime } from "luxon";
-import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
-
-const { formatDate } = useDateFormatter();
-const sapeurModule = useSapeurs();
-
-const router = useRouter();
-const route = useRoute();
-const mode = route.params.mode;
-const { addSapeurArrival, addSapeurDeparture } = useActiveIntervention();
-
-const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
-const interventionModule = useActiveIntervention();
-const sapeursDejaPresent = [];
-
-const selectSapeur = async () => {
-  const modalSapeurSelect = await modalController
-    .create({
-      component: ModalSapeurSelectVue,
-      componentProps: {
-        exceptSapeurIds: [],
-      }
-    })
-
-  await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
-
-  if (!data) {
-    return;
-  }
-
-  const sapeur = sapeurModule.state.value.find(s => s.id == data);
-  interventionModule.state.value.sapeur = {
-    id: data,
-    nom: sapeur?.nom || '',
-    prenom: sapeur?.prenom || ''
-  };
-}
-
-const save = () => {
-  if (mode == 'ARRIVEE') {
-    addSapeurArrival();
-  } else {
-    // interventionModule.addMission(mission.value);
-  }
-  router.back();
-}
-</script>
-
 <style>
-/* ion-popover.popover-bottom::part(content) {
-  top: unset !important;
-  left: 0 !important;
-  bottom: 0;
-  width: 100vw;
-  border-radius: 0;
-}
-ion-popover.popover-bottom ion-datetime {
-  margin-left: auto;
-  margin-right: auto;
-  
-} */
 </style>
