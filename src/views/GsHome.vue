@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonCol,
+  IonRow,
+  IonCard,
+  IonGrid,
+  IonButton,
+  IonIcon,
+  IonCardContent,
+} from "@ionic/vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const navigateTo = async (name: string) => {
+  router.push(name);
+};
+
+const needSync = () => {
+  return true;
+};
+const startSync = () => {
+  return true;
+};
+</script>
+
 <template>
   <ion-page>
     <ion-header :translucent="true">
@@ -68,39 +100,6 @@
     </ion-content>
   </ion-page>
 </template>
-
-<script setup lang="ts">
-import {
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonMenuButton,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonCol,
-  IonRow,
-  IonCard,
-  IonGrid,
-  IonButton,
-  IonIcon,
-  IonCardContent,
-} from "@ionic/vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const navigateTo = async (name: string) => {
-  router.push(name);
-};
-
-const needSync = () => {
-  return true;
-};
-const startSync = () => {
-  return true;
-};
-</script>
-
 
 <style scoped>
 ion-col > div {

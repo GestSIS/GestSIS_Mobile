@@ -99,7 +99,7 @@ const dismiss = () => {
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" margin-top @click="save">Modifier</ion-button>
+    <ion-button expand="full" class="ion-margin-top" @click="save">Modifier</ion-button>
   </ion-content>
 </template>
 

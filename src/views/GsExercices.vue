@@ -1,49 +1,3 @@
-<template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Exercices</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="ion-padding">
-      <ion-list lines="inset">
-        <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
-        <ion-item
-          tappable
-          v-for="exercice in exercices"
-          :key="exercice.id"
-          @click="openDetails(exercice)"
-        >
-          <ion-icon slot="start" :name="exercice.en_creation ? 'create' : 'sync'"></ion-icon>
-          <p>
-            <!-- TODO: See if display can be improved -->
-            <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
-            {{ formatDate(exercice.date, null) }} -
-            {{ exercice.designation }}
-            <br />
-            <span class="details statut">
-              {{
-                exercice.en_creation
-                  ? "En cours d'édition"
-                  : 'Validé, en attente de synchronisation'
-              }}
-            </span>
-            <br />
-            <span class="details">
-              {{ getFormattedLocalite(exercice.localite_id) }} -
-              {{ getFormattedCategorie(exercice.exercice_categorie_id) }}
-            </span>
-          </p>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
 import { Exercice } from '@/models/bundle';
 
@@ -98,6 +52,52 @@ const openDetails = (exercice: Exercice) => {
   router.push({ name: 'exercice', params: { uuid: exercice.localUuid } });
 };
 </script>
+
+<template>
+  <ion-page>
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Exercices</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-list lines="inset">
+        <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
+        <ion-item
+          tappable
+          v-for="exercice in exercices"
+          :key="exercice.id"
+          @click="openDetails(exercice)"
+        >
+          <ion-icon slot="start" :name="exercice.en_creation ? 'create' : 'sync'"></ion-icon>
+          <p>
+            <!-- TODO: See if display can be improved -->
+            <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
+            {{ formatDate(exercice.date, null) }} -
+            {{ exercice.designation }}
+            <br />
+            <span class="details statut">
+              {{
+                exercice.en_creation
+                  ? "En cours d'édition"
+                  : 'Validé, en attente de synchronisation'
+              }}
+            </span>
+            <br />
+            <span class="details">
+              {{ getFormattedLocalite(exercice.localite_id) }} -
+              {{ getFormattedCategorie(exercice.exercice_categorie_id) }}
+            </span>
+          </p>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style scoped>
 .details {

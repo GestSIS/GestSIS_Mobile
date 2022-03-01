@@ -1,54 +1,3 @@
-<template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Connexion</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <form @submit.prevent="wrappedLogin">
-        <ion-list>
-          <ion-item>
-            <ion-input
-              type="text"
-              inputmode="email"
-              v-model="email"
-              name="email"
-              placeholder="Adresse e-mail"
-            ></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input
-              type="password"
-              v-model="password"
-              name="password"
-              placeholder="Mot de passe"
-            ></ion-input>
-          </ion-item>
-          <!-- <ion-item>
-            <ion-label>SIS</ion-label>
-            <ion-select
-              name="sis"
-              cancelText="Annuler"
-              okText="Valider"
-              v-model="account.sisId"
-              ref="sisSelect"
-            >
-              <ion-select-option
-                v-for="sis in listeSis"
-                :value="sis.id"
-                :key="sis.id"
-                >{{ sis.nom }}</ion-select-option
-              >
-            </ion-select>
-          </ion-item>-->
-          <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">Connexion</ion-button>
-        </ion-list>
-      </form>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 import useAuth, { UserStatus } from '@/store/useAuth';
@@ -107,6 +56,57 @@ const wrappedLogin = async () => {
   }
 };
 </script>
+
+<template>
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Connexion</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <form @submit.prevent="wrappedLogin">
+        <ion-list>
+          <ion-item>
+            <ion-input
+              type="text"
+              inputmode="email"
+              v-model="email"
+              name="email"
+              placeholder="Adresse e-mail"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              type="password"
+              v-model="password"
+              name="password"
+              placeholder="Mot de passe"
+            ></ion-input>
+          </ion-item>
+          <!-- <ion-item>
+            <ion-label>SIS</ion-label>
+            <ion-select
+              name="sis"
+              cancelText="Annuler"
+              okText="Valider"
+              v-model="account.sisId"
+              ref="sisSelect"
+            >
+              <ion-select-option
+                v-for="sis in listeSis"
+                :value="sis.id"
+                :key="sis.id"
+                >{{ sis.nom }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>-->
+          <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">Connexion</ion-button>
+        </ion-list>
+      </form>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style scoped>
 #container {

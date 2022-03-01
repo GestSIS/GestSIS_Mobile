@@ -1,46 +1,3 @@
-<template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="accueil"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Rapports d'intervention</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="ion-padding">
-      <ion-button expand="full" @click="create()">
-        <ion-icon slot="start" name="add"></ion-icon>Nouveau
-      </ion-button>
-
-      <ion-list>
-        <ion-item v-if="!state.length">Aucune intervention</ion-item>
-        <ion-item
-          :button="true"
-          v-for="intervention in state"
-          :key="intervention.id"
-          @click.prevent="openDetails(intervention)"
-        >
-          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
-          <p>
-            {{ intervention.objet }} –
-            {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
-            <br />
-            <span class="details">
-              {{
-                intervention.en_creation
-                  ? "En cours d'édition"
-                  : "Validé, en attente de synchronisation"
-              }}
-            </span>
-          </p>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
 import useInterventions from "@/store/useInterventions";
 import {
@@ -93,6 +50,49 @@ const create = async () => {
   router.push('intervention');
 };
 </script>
+
+<template>
+  <ion-page>
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="accueil"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Rapports d'intervention</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-button expand="full" @click="create()">
+        <ion-icon slot="start" name="add"></ion-icon>Nouveau
+      </ion-button>
+
+      <ion-list>
+        <ion-item v-if="!state.length">Aucune intervention</ion-item>
+        <ion-item
+          :button="true"
+          v-for="intervention in state"
+          :key="intervention.id"
+          @click.prevent="openDetails(intervention)"
+        >
+          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
+          <p>
+            {{ intervention.objet }} –
+            {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
+            <br />
+            <span class="details">
+              {{
+                intervention.en_creation
+                  ? "En cours d'édition"
+                  : "Validé, en attente de synchronisation"
+              }}
+            </span>
+          </p>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style scoped>
 .details {

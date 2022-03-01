@@ -1,37 +1,3 @@
-<template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
-        </ion-buttons>
-        <ion-title>{{ $route.params.id }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-button expand="full" color="light" @click="loadAll">Tout synchroniser</ion-button>
-      <ion-list>
-        <ion-item
-          button="true"
-          v-for="{ name, lastSync, syncStatus, load } in modules"
-          :key="name"
-          @click="load"
-        >
-          <div>
-            {{ name }}
-            <br />
-            <span
-              class="details"
-            >{{ syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé' }}</span>
-          </div>
-          <ion-icon :name="getSyncStatusIcon(syncStatus.value)" slot="end"></ion-icon>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
 import {
   IonButtons,
@@ -70,8 +36,41 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
       return 'warning';
   }
 }
-
 </script>
+
+<template>
+  <ion-page>
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ $route.params.id }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-button expand="full" color="light" @click="loadAll">Tout synchroniser</ion-button>
+      <ion-list>
+        <ion-item
+          button="true"
+          v-for="{ name, lastSync, syncStatus, load } in modules"
+          :key="name"
+          @click="load"
+        >
+          <div>
+            {{ name }}
+            <br />
+            <span
+              class="details"
+            >{{ syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé' }}</span>
+          </div>
+          <ion-icon :name="getSyncStatusIcon(syncStatus.value)" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style scoped>
 .details {

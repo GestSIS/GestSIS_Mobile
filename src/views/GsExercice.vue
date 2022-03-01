@@ -1,128 +1,4 @@
-<template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Exercices</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content class="ion-padding">
-      <h3>
-        {{
-          exercice?.designation != "-"
-            ? exercice?.designation
-            : formatCategorie(exercice?.exercice_categorie_id)
-        }}
-        - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
-      </h3>
-      <!-- <p v-if="exercice?.id_exe_lie != null">
-        Lié à l'exercice
-        {{
-          exercice?.communications != "-"
-            ? exercice?.communications
-            : exercice?.categorie
-        }}
-        - {{ formatDate(exerciceLie.date) }}
-      </p>
-      <ion-button
-        block
-        @click="linkExercice"
-        v-if="!(exercice?.id_exe_lie != null || !exercice?.en_creation)"
-      >
-        Lier un exercice
-      </ion-button>-->
-      <!-- <ion-button
-        block
-        @click="unlinkExercice"
-        v-if="
-          !(
-            exercice?.id_exe_lie == null ||
-            !exercice?.en_creation ||
-            !exerciceLie.en_creation
-          )
-        "
-      >
-        Délier l'exercice
-      </ion-button>-->
-
-      <ion-list>
-        <ion-row class="sap-item list-header">
-          <ion-col>Sapeur</ion-col>
-          <ion-col class="col-radio">Présent</ion-col>
-          <ion-col class="col-radio">Absent</ion-col>
-          <ion-col class="col-radio">Excusé</ion-col>
-          <ion-col class="col-radio">Remplacé</ion-col>
-          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{ heure.designation }}</ion-col>
-        </ion-row>
-
-        <div class="sapeurs">
-          <ion-radio-group
-            v-model="sapeur.presenceStatut"
-            v-for="(sapeur, i) in exercice?.sapeurs"
-            @ionChange="select(sapeur, $event.target.value)"
-            :key="sapeur.id"
-          >
-            <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
-              <ion-col>
-                {{ indexedSapeurs.get(sapeur?.sapeur_id) || "" }}
-                <br />
-                <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio :value="1" :disabled="!exercice?.en_creation"></ion-radio>
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio :value="2" :disabled="!exercice?.en_creation"></ion-radio>
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio :value="3" :disabled="!exercice?.en_creation"></ion-radio>
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio :value="4" :disabled="!exercice?.en_creation"></ion-radio>
-              </ion-col>
-              <ion-col v-for="heure in heuresTypes" :key="heure.id">
-                <ion-item lines="none">
-                  <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
-                  <ion-label
-                    slot="end"
-                  >{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-radio-group>
-        </div>
-      </ion-list>
-
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-button expand="block" @click="addSapeur" v-if="exercice?.en_creation">
-              <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
-            </ion-button>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-button expand="block" @click="reset" color="light" v-if="exercice?.en_creation">
-              <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
-            </ion-button>
-          </ion-col>
-          <ion-col>
-            <ion-button expand="block" @click="validate" v-if="exercice?.en_creation">
-              <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
-
 import { PresenceExercice } from "@/models/bundle";
 import useExerciceCategories from "@/store/useExerciceCategories";
 
@@ -339,6 +215,129 @@ const reset = () => {
   })
 };
 </script>
+
+<template>
+  <ion-page>
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Exercices</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <h3>
+        {{
+          exercice?.designation != "-"
+            ? exercice?.designation
+            : formatCategorie(exercice?.exercice_categorie_id)
+        }}
+        - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
+      </h3>
+      <!-- <p v-if="exercice?.id_exe_lie != null">
+        Lié à l'exercice
+        {{
+          exercice?.communications != "-"
+            ? exercice?.communications
+            : exercice?.categorie
+        }}
+        - {{ formatDate(exerciceLie.date) }}
+      </p>
+      <ion-button
+        block
+        @click="linkExercice"
+        v-if="!(exercice?.id_exe_lie != null || !exercice?.en_creation)"
+      >
+        Lier un exercice
+      </ion-button>-->
+      <!-- <ion-button
+        block
+        @click="unlinkExercice"
+        v-if="
+          !(
+            exercice?.id_exe_lie == null ||
+            !exercice?.en_creation ||
+            !exerciceLie.en_creation
+          )
+        "
+      >
+        Délier l'exercice
+      </ion-button>-->
+
+      <ion-list>
+        <ion-row class="sap-item list-header">
+          <ion-col>Sapeur</ion-col>
+          <ion-col class="col-radio">Présent</ion-col>
+          <ion-col class="col-radio">Absent</ion-col>
+          <ion-col class="col-radio">Excusé</ion-col>
+          <ion-col class="col-radio">Remplacé</ion-col>
+          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{ heure.designation }}</ion-col>
+        </ion-row>
+
+        <div class="sapeurs">
+          <ion-radio-group
+            v-model="sapeur.presenceStatut"
+            v-for="(sapeur, i) in exercice?.sapeurs"
+            @ionChange="select(sapeur, $event.target.value)"
+            :key="sapeur.id"
+          >
+            <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
+              <ion-col>
+                {{ indexedSapeurs.get(sapeur?.sapeur_id) || "" }}
+                <br />
+                <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
+              </ion-col>
+              <ion-col class="col-radio">
+                <ion-radio :value="1" :disabled="!exercice?.en_creation"></ion-radio>
+              </ion-col>
+              <ion-col class="col-radio">
+                <ion-radio :value="2" :disabled="!exercice?.en_creation"></ion-radio>
+              </ion-col>
+              <ion-col class="col-radio">
+                <ion-radio :value="3" :disabled="!exercice?.en_creation"></ion-radio>
+              </ion-col>
+              <ion-col class="col-radio">
+                <ion-radio :value="4" :disabled="!exercice?.en_creation"></ion-radio>
+              </ion-col>
+              <ion-col v-for="heure in heuresTypes" :key="heure.id">
+                <ion-item lines="none">
+                  <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
+                  <ion-label
+                    slot="end"
+                  >{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-radio-group>
+        </div>
+      </ion-list>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" @click="addSapeur" v-if="exercice?.en_creation">
+              <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" @click="reset" color="light" v-if="exercice?.en_creation">
+              <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" @click="validate" v-if="exercice?.en_creation">
+              <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style scoped>
 .sapeur {

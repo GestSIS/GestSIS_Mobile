@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, computed, PropType, ref, withDefaults } from "vue";
+import { defineProps, computed, ref, withDefaults } from "vue";
 import {
   IonToolbar,
   IonTitle,
@@ -11,6 +11,7 @@ import {
   IonList,
   IonContent,
   IonButton,
+  IonIcon,
   IonItem,
   modalController,
 } from '@ionic/vue';
@@ -50,6 +51,7 @@ const dismiss = () => {
 
 const validate = () => {
   // TODO:
+  modalController.dismiss(null);
 }
 
 const selectSapeur = (sapeur: Sapeur) => {
@@ -67,24 +69,26 @@ const selectSapeur = (sapeur: Sapeur) => {
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+      <ion-buttons slot="start">
+        <ion-button slot="start" @click="dismiss()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
       </ion-buttons>
 
       <ion-title>Ajouter un sapeur</ion-title>
 
-      <ion-buttons right>
-        <ion-button @click="validate()" v-if="props.multiSelect">Valider</ion-button>
+      <ion-buttons v-if="props.multiSelect" slot="end">
+        <ion-button @click="validate()">Valider</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
-  <ion-content padding>
+  <ion-content class="ion-padding">
     <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..." ref="searchbar"></ion-searchbar>
 
     <ion-list>
       <ion-item v-for="sapeur of filteredSapeur" :key="sapeur.id" @click="selectSapeur(sapeur)">
-        <ion-checkbox v-if="props.multiSelect"></ion-checkbox>
+        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"></ion-checkbox>
         <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
       </ion-item>
     </ion-list>

@@ -115,12 +115,13 @@ const save = () => {
 
       <ion-grid>
         <ion-row>
-          <ion-col col-8>
+          <ion-col size="8">
             <h3>Sapeurs</h3>
           </ion-col>
-          <ion-col v-if="presences.mode == 'ARRIVEE'" col-4>
-            <ion-button block slot="start" @click="addSapeurs()">
-              <ion-icon name="add" item-start></ion-icon>Autres sapeurs
+          <ion-col v-if="mode == 'ARRIVEE'" size="4">
+            <ion-button expand="block" @click="addSapeurs()">
+              Autres sapeurs
+              <ion-icon name="add" slot="start"></ion-icon>
             </ion-button>
           </ion-col>
         </ion-row>

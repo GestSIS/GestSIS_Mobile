@@ -42,7 +42,7 @@ const groupes = moduleGroupe.state;
 
 const filteredGroupes = computed(() => groupes.value.filter(g => g.type == 1));
 const groupesIntervention = ref(new Set(intervention.value.groupes));
-console.log(intervention.value)
+
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.value.sapeurs.filter(
     (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
@@ -91,7 +91,7 @@ const removePresenceExercice = (id: number, sapeur: number) => {
     </ion-segment>
   </div>
 
-  <div padding-top>
+  <div class="ion-padding-top">
     <div v-if="activeTab == Tab.Groupe">
       <ion-list>
         <ion-item

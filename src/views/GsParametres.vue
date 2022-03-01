@@ -1,3 +1,30 @@
+<script lang="ts" setup>
+import useAuth from '@/store/useAuth';
+import {
+  IonButtons,
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonBackButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonIcon,
+  IonAvatar,
+} from '@ionic/vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const { state, logout } = useAuth();
+
+const wrappedLogout = () => {
+  logout();
+  router.push({ name: 'login' })
+}
+</script>
+
 <template>
   <ion-page>
     <ion-header :translucent="true">
@@ -37,33 +64,6 @@
     </ion-footer>
   </ion-page>
 </template>
-
-<script lang="ts" setup>
-import useAuth from '@/store/useAuth';
-import {
-  IonButtons,
-  IonButton,
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonBackButton,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonList,
-  IonItem,
-  IonIcon,
-  IonAvatar,
-} from '@ionic/vue';
-import { useRouter } from 'vue-router';
-const router = useRouter()
-const { state, logout } = useAuth();
-
-const wrappedLogout = () => {
-  logout();
-  router.push({ name: 'login' })
-}
-</script>
 
 <style scoped>
 #container {

@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { defineProps, PropType, ref, reactive } from "vue";
+import { defineProps, ref, reactive } from "vue";
 import {
   IonToolbar,
   IonLabel,
+  IonText,
+  IonModal,
   IonDatetime,
   IonInput,
   IonTitle,
@@ -14,13 +16,17 @@ import {
   IonItem,
   modalController,
 } from '@ionic/vue';
-import useSapeurs from "@/store/useSapeurs";
+
+import { DateTime } from "luxon";
+import useDateFormatter from "@/tools/useDateFormatter";
+
+const { formatDate } = useDateFormatter();
 
 interface Presence {
   nom: string,
   prenom: string,
-  date_debut: null,
-  date_fin: null,
+  date_debut: string,
+  date_fin: string,
   sapeur_id: null
 }
 
@@ -35,6 +41,8 @@ const save = () => {
   // modalController.dismiss(presence);
 }
 
+const openModalDebut = ref(false);
+const openModalFin = ref(false);
 // const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
 // onMounted(() => {
 //   searchbar.value?.$el.setFocus();
@@ -59,38 +67,46 @@ const save = () => {
     <ion-list>
       <ion-item>
         <ion-label fixed>Sapeur</ion-label>
-        <ion-input
-          type="text"
-          readonly="true"
-          :value="presence.nom + ' ' + presence.prenom"
-        ></ion-input>
+        <ion-input type="text" readonly="true" :value="presence.nom + ' ' + presence.prenom"></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item @click="openModalFin = !openModalFin">
         <ion-label>Heure d'arrivée</ion-label>
-        <ion-datetime
-          displayFormat="DD.MM.YYYY HH:mm"
-          pickerFormat="DD MM YYYY HH mm"
-          cancelText="Annuler"
-          doneText="Valider"
-          v-modal="presence.date_debut"
-          minuteValues="0,15,30,45"
-        ></ion-datetime>
+        <ion-text
+          slot="end"
+          id="open-modal"
+        >{{ presence.date_debut ? formatDate(presence.date_debut, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+        <ion-button fill="clear" slot="end">
+          <ion-icon slot="end" name="calendar" />
+        </ion-button>
+        <ion-modal :is-open="openModalFin">
+          <ion-datetime
+            presentation="time-date"
+            minuteValues="0,15,30,45"
+            :value="DateTime.fromSQL(presence.date_debut).toISO()"
+            @ionChange="(ev: any) => presence.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+          />
+        </ion-modal>
       </ion-item>
 
-      <ion-item>
+      <ion-item @click="openModalFin = !openModalFin">
         <ion-label>Heure de départ</ion-label>
-        <ion-datetime
-          displayFormat="DD.MM.YYYY HH:mm"
-          pickerFormat="DD MM YYYY HH mm"
-          cancelText="Annuler"
-          doneText="Valider"
-          :min="presence.date_debut"
-          v-modal="presence.date_fin"
-          pickerOptions:="customPickerOptions"
-          @ionChange="setCorrectTimezone()"
-          minuteValues="0,15,30,45"
-        ></ion-datetime>
+        <ion-text
+          slot="end"
+          id="open-modal"
+        >{{ presence.date_fin ? formatDate(presence.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+        <ion-button fill="clear" slot="end">
+          <ion-icon slot="end" name="calendar" />
+        </ion-button>
+        <ion-modal :is-open="openModalFin">
+          <ion-datetime
+            presentation="time-date"
+            minuteValues="0,15,30,45"
+            :min="DateTime.fromSQL(presence.date_debut).toISO()"
+            :value="DateTime.fromSQL(presence.date_fin).toISO()"
+            @ionChange="(ev: any) => presence.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+          />
+        </ion-modal>
       </ion-item>
     </ion-list>
   </ion-content>

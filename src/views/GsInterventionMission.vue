@@ -1,78 +1,3 @@
-<template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
-        </ion-buttons>
-        <ion-title>{{ title }}</ion-title>
-
-        <ion-buttons slot="end">
-          <ion-button slot="end" @click="save()">Enregistrer</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content padding>
-      <ion-list>
-        <ion-item @click="openModalDebut = !openModalDebut">
-          <ion-label>Début</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ formatDate(mission.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
-          <ion-modal :is-open="openModalDebut">
-            <ion-datetime
-              presentation="time-date"
-              :value="DateTime.fromSQL(mission.date_debut).toISO()"
-              @ionChange="(ev: any) => mission.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-            />
-          </ion-modal>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Responsable</ion-label>
-          <ion-input
-            type="text"
-            readonly="true"
-            @ionFocus="selectSapeur()"
-            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Mission</ion-label>
-          <ion-input type="text" :value="mission.titre" @ionFocus="selectTitre()"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Résumé</ion-label>
-          <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
-        </ion-item>
-
-        <ion-item button @click="openModalFin = !openModalFin">
-          <ion-label>Quittancer</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
-          <ion-button fill="clear" slot="end">
-            <ion-icon slot="end" name="calendar" />
-          </ion-button>
-          <ion-modal :is-open="openModalFin">
-            <ion-datetime
-              presentation="time-date"
-              :min="DateTime.fromSQL(mission.date_debut).toISO()"
-              :value="DateTime.fromSQL(mission.date_fin).toISO()"
-              @ionChange="(ev: any) => mission.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-            />
-          </ion-modal>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-page>
-</template>
-
 <script lang="ts" setup>
 import { Ref, ref } from "vue";
 import {
@@ -180,6 +105,81 @@ const save = () => {
   router.back();
 }
 </script>
+
+<template>
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ title }}</ion-title>
+
+        <ion-buttons slot="end">
+          <ion-button slot="end" @click="save()">Enregistrer</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content padding>
+      <ion-list>
+        <ion-item @click="openModalDebut = !openModalDebut">
+          <ion-label>Début</ion-label>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ formatDate(mission.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
+          <ion-modal :is-open="openModalDebut">
+            <ion-datetime
+              presentation="time-date"
+              :value="DateTime.fromSQL(mission.date_debut).toISO()"
+              @ionChange="(ev: any) => mission.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            />
+          </ion-modal>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Responsable</ion-label>
+          <ion-input
+            type="text"
+            readonly="true"
+            @ionFocus="selectSapeur()"
+            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Mission</ion-label>
+          <ion-input type="text" :value="mission.titre" @ionFocus="selectTitre()"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Résumé</ion-label>
+          <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
+        </ion-item>
+
+        <ion-item button @click="openModalFin = !openModalFin">
+          <ion-label>Quittancer</ion-label>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+          <ion-button fill="clear" slot="end">
+            <ion-icon slot="end" name="calendar" />
+          </ion-button>
+          <ion-modal :is-open="openModalFin">
+            <ion-datetime
+              presentation="time-date"
+              :min="DateTime.fromSQL(mission.date_debut).toISO()"
+              :value="DateTime.fromSQL(mission.date_fin).toISO()"
+              @ionChange="(ev: any) => mission.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            />
+          </ion-modal>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-page>
+</template>
 
 <style>
 /* ion-popover.popover-bottom::part(content) {
