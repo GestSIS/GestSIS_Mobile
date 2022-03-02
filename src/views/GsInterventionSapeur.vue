@@ -4,6 +4,8 @@ import {
   IonPage,
   IonRow,
   IonCol,
+  IonModal,
+  IonText,
   IonGrid,
   IonCheckbox,
   IonTitle,
@@ -29,12 +31,24 @@ import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 
+const openModal = ref(false);
 const router = useRouter();
 const route = useRoute();
 
 const mode = route.params.mode as "ARRIVEE" | "DEPART";
-const presences: { date: null, mode: "ARRIVEE" | "DEPART", sapeurs: Array<{ nom: string, prenom: string, id: number, selected: boolean }> }
-  = reactive({ date: null, sapeurs: [], mode: mode });
+interface Presences {
+  date: string,
+  mode: "ARRIVEE" | "DEPART",
+  sapeurs: Array<{
+    nom: string,
+    prenom: string,
+    id: number,
+    selected: boolean
+  }>
+}
+
+//TODO: Init date with current date rounded to nearest quarter
+const presences: Presences = reactive({ date: "", sapeurs: [], mode: mode });
 
 const { formatDate } = useDateFormatter();
 const sapeurModule = useSapeurs();
@@ -58,7 +72,7 @@ const addSapeurs = async () => {
 
   await modalSapeurSelect.present();
   let { data } = await modalSapeurSelect.onDidDismiss();
-
+  console.log(data)
   if (!data) {
     return;
   }
@@ -100,16 +114,23 @@ const save = () => {
 
     <ion-content padding>
       <ion-list>
-        <ion-item>
+        <ion-item @click="openModal = !openModal">
           <ion-label>Heure {{ mode == 'ARRIVEE' ? "d'arrivée" : 'de départ' }}</ion-label>
-          <ion-datetime
-            displayFormat="DD.MM.YYYY HH:mm"
-            pickerFormat="DD MM YYYY HH mm"
-            cancelText="Annuler"
-            doneText="Valider"
-            v-model="presences.date"
-            minuteValues="0,15,30,45"
-          ></ion-datetime>
+          <ion-text
+            slot="end"
+            id="open-modal"
+          >{{ presences.date ? formatDate(presences.date, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+          <ion-button fill="clear" slot="end">
+            <ion-icon slot="end" name="calendar" />
+          </ion-button>
+          <ion-modal :is-open="openModal">
+            <ion-datetime
+              presentation="time-date"
+              minuteValues="0,15,30,45"
+              :value="DateTime.fromSQL(presences.date).toISO()"
+              @ionChange="(ev: any) => presences.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            />
+          </ion-modal>
         </ion-item>
       </ion-list>
 
@@ -129,7 +150,7 @@ const save = () => {
 
       <ion-list>
         <ion-item v-for="sapeur of presences.sapeurs" :key="sapeur.id">
-          <ion-checkbox v-model="sapeur.selected"></ion-checkbox>
+          <ion-checkbox v-model="sapeur.selected" class="ion-margin-end"></ion-checkbox>
           <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
         </ion-item>
       </ion-list>

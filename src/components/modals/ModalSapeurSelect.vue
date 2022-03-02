@@ -29,6 +29,7 @@ const exceptIds = new Set(props.exceptSapeurIds);
 //   multiSelect?: boolean
 // }>();
 
+const selectedSapeurId = new Set();
 
 const query = ref("")
 const sapeurModule = useSapeurs();
@@ -51,12 +52,19 @@ const dismiss = () => {
 
 const validate = () => {
   // TODO:
-  modalController.dismiss(null);
+  modalController.dismiss([...selectedSapeurId]);
 }
 
 const selectSapeur = (sapeur: Sapeur) => {
   if (!props.multiSelect) {
     modalController.dismiss(sapeur.id);
+    return;
+  }
+
+  if (selectedSapeurId.has(sapeur.id)) {
+    selectedSapeurId.delete(sapeur.id);
+  } else {
+    selectedSapeurId.add(sapeur.id)
   }
 }
 
