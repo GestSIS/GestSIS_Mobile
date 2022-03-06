@@ -2,6 +2,7 @@
 import { defineProps, ref, reactive } from "vue";
 import {
   IonToolbar,
+  IonIcon,
   IonLabel,
   IonText,
   IonModal,
@@ -23,14 +24,15 @@ import useDateFormatter from "@/tools/useDateFormatter";
 const { formatDate } = useDateFormatter();
 
 interface Presence {
+  sapeur_id: null
   nom: string,
   prenom: string,
   date_debut: string,
   date_fin: string,
-  sapeur_id: null
 }
 
 const props: Presence = defineProps<Presence>();
+console.log(props)
 const presence = reactive({ ...props })
 
 const dismiss = () => {
@@ -38,7 +40,7 @@ const dismiss = () => {
 }
 
 const save = () => {
-  // modalController.dismiss(presence);
+  modalController.dismiss(presence);
 }
 
 const openModalDebut = ref(false);
@@ -52,12 +54,14 @@ const openModalFin = ref(false);
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+      <ion-buttons slot="start">
+        <ion-button @click="dismiss()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
       </ion-buttons>
       <ion-title>Détail d'une présence</ion-title>
 
-      <ion-buttons right>
+      <ion-buttons slot="end">
         <ion-button @click="save()">Enregistrer</ion-button>
       </ion-buttons>
     </ion-toolbar>
@@ -70,7 +74,7 @@ const openModalFin = ref(false);
         <ion-input type="text" readonly="true" :value="presence.nom + ' ' + presence.prenom"></ion-input>
       </ion-item>
 
-      <ion-item @click="openModalFin = !openModalFin">
+      <ion-item @click="openModalDebut = !openModalDebut">
         <ion-label>Heure d'arrivée</ion-label>
         <ion-text
           slot="end"
@@ -79,7 +83,7 @@ const openModalFin = ref(false);
         <ion-button fill="clear" slot="end">
           <ion-icon slot="end" name="calendar" />
         </ion-button>
-        <ion-modal :is-open="openModalFin">
+        <ion-modal :is-open="openModalDebut">
           <ion-datetime
             presentation="time-date"
             minuteValues="0,15,30,45"

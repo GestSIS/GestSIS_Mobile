@@ -75,7 +75,6 @@ const addMateriel = async () => {
   const modalSelectMateriel = await modalController
     .create({
       component: ModalMaterielVue,
-      cssClass: 'my-custom-class',
     })
 
   await modalSelectMateriel.present();

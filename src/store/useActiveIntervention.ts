@@ -154,6 +154,11 @@ export default function useActiveIntervention() {
     persist();
   };
 
+  const updatePresences = (sapeurs: Intervention["sapeurs"]) => {
+    state.value.sapeurs = sapeurs;
+    persist();
+  }
+
   return {
     state,
     reset,
@@ -174,6 +179,7 @@ export default function useActiveIntervention() {
 
     // Sapeurs
     addSapeursArrival,
-    addSapeursDeparture
+    addSapeursDeparture,
+    updatePresences,
   };
 }

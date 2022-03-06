@@ -12,6 +12,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonIcon,
+  modalController,
 } from '@ionic/vue';
 
 import useActiveIntervention from '@/store/useActiveIntervention';
@@ -21,6 +22,7 @@ import useDateFormatter from '@/tools/useDateFormatter';
 import { ref, computed } from 'vue';
 import { Sapeur } from '@/models/sapeur';
 import router from '@/router';
+import ModalSapeurPresenceVue from '../modals/ModalSapeurPresence.vue';
 
 const { formatDate } = useDateFormatter();
 
@@ -32,7 +34,7 @@ const enum Tab {
 
 const activeTab = ref(Tab.Groupe);
 
-const { state, updateGroupes } = useActiveIntervention();
+const { state, updateGroupes, updatePresences } = useActiveIntervention();
 const intervention = state;
 
 const moduleSapeur = useSapeurs();
@@ -74,11 +76,52 @@ const addMissingSapeur = (sapeur: Sapeur) => {
 const addPresenceExercice = (mode: 'ARRIVEE' | 'DEPART') => {
   router.push({ name: 'sapeurs', params: { mode } })
 };
-const editPresenceExercice = (id: number, sapeur: any) => {
-  // TODO:
+const editPresenceExercice = async (sapeurIndex: number, presenceIndex: any) => {
+  const sapeur = intervention.value.sapeurs[sapeurIndex];
+  if (!sapeur) {
+    return;
+  }
+
+  const presence = {
+    ...sapeur.presences[presenceIndex],
+    sapeur_id: sapeur.id,
+    nom: sapeur.nom,
+    prenom: sapeur.prenom,
+  }
+  const modalEditPresence = await modalController
+    .create({
+      component: ModalSapeurPresenceVue,
+      componentProps: presence
+    })
+
+  await modalEditPresence.present();
+  let { data } = await modalEditPresence.onDidDismiss();
+  if (data) {
+    sapeur.presences[presenceIndex] = {
+      date_debut: data.date_debut,
+      date_fin: data.date_fin,
+    }
+  }
+
+  // Update data in store
+  updatePresences(intervention.value.sapeurs);
 };
-const removePresenceExercice = (id: number, sapeur: number) => {
-  // TODO:
+
+const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
+  const sapeur = intervention.value.sapeurs[sapeurIndex];
+  if (!sapeur) {
+    return;
+  }
+
+  // Supprime le sapeur s'il n'a plus aucune présence
+  if (sapeur.presences.length == 1) {
+    intervention.value.sapeurs.splice(sapeurIndex, 1);
+  } else {
+    sapeur.presences.splice(presenceIndex, 1);
+  }
+
+  // Update data in store
+  updatePresences(intervention.value.sapeurs);
 };
 </script>
 
@@ -169,15 +212,22 @@ const removePresenceExercice = (id: number, sapeur: number) => {
       <ion-item-group v-for="(sapeur, i) in intervention.sapeurs" :key="i">
         <ion-item-divider color="light">{{ sapeur.nom }} {{ sapeur.prenom }}</ion-item-divider>
         <ion-item
-          button="true"
+          :button="true"
           v-for="(presence, j) in sapeur.presences"
           :key="j"
           :disabled="!intervention.en_creation"
           @click="editPresenceExercice(i, j)"
         >
-          {{ formatDate(presence.date_debut, "HH:mm") }} -
-          {{ formatDate(presence.date_fin, "HH:mm") }}
-          <ion-button @click="removePresenceExercice(i, j)" fill="clear" color="dark">
+          <p>
+            {{ formatDate(presence.date_debut, "HH:mm") }} -
+            {{ presence.date_fin ? formatDate(presence.date_fin, "HH:mm") : "" }}
+          </p>
+          <ion-button
+            @click.stop="removePresenceExercice(i, j)"
+            fill="clear"
+            color="dark"
+            slot="end"
+          >
             <ion-icon slot="icon-only" name="close"></ion-icon>
           </ion-button>
         </ion-item>

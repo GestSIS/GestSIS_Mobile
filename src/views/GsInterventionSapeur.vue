@@ -62,6 +62,7 @@ date.set({ minute: date.minute + (15 - date.minute % 15) });
 // TODO: load presences that fix ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = [];
+
 if (mode == "ARRIVEE") {
   const exceptSapeursId = new Set(state.value.sapeurs
     .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
@@ -70,7 +71,7 @@ if (mode == "ARRIVEE") {
   let potentialsSapeursIds = new Set<number>();
   groupeModule.state.value
     .filter(g => selectedGroupes.has(g.id))
-    .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s as number)));
+    .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s.sapeur_id)));
   potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursId.has(s)));
 
   sapeurs = sapeurModule.state.value
@@ -82,9 +83,7 @@ if (mode == "ARRIVEE") {
     .map(s => ({ ...s, selected: true }))
 }
 
-const presences: Presences = reactive({ date: date.toISO(), sapeurs, mode });
-
-const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
+const presences: Presences = reactive({ date: date.toSQL(), sapeurs, mode });
 
 const addSapeurs = async () => {
   const modalSapeurSelect = await modalController
@@ -128,7 +127,7 @@ const save = () => {
         <ion-buttons slot="start">
           <ion-back-button :defaultHref="{ name: 'intervention' }"></ion-back-button>
         </ion-buttons>
-        <ion-title>{{ title }}</ion-title>
+        <ion-title>Présences</ion-title>
 
         <ion-buttons slot="end">
           <ion-button slot="end" @click="save()">Valider</ion-button>
