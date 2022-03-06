@@ -35,7 +35,7 @@ export default function useBasicStore<Type>(
   const reset = () => {
     persistentStore.remove(persistKey);
     syncStatus.value = StoreState.NeedSync;
-    lastSync.value = DateTime.now().toISO();
+    lastSync.value = DateTime.now().toSQL();
     state.value = [];
   };
 
@@ -52,7 +52,7 @@ export default function useBasicStore<Type>(
   const load = async (): Promise<boolean> => {
     syncStatus.value = StoreState.Syncing;
     state.value = await loader();
-    lastSync.value = DateTime.now().toISO();
+    lastSync.value = DateTime.now().toSQL();
     persist();
     syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);

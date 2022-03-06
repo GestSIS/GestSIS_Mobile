@@ -45,7 +45,7 @@ const groupesIntervention = ref(new Set(intervention.value.groupes));
 
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.value.sapeurs.filter(
-    (sap) => sap.presences.filter((pres) => pres.date_fin == null).length > 0
+    (sap) => sap.presences.filter((pres) => pres.date_fin == null || pres.date_fin == "").length > 0
   )
 );
 
@@ -64,7 +64,6 @@ const changeGroupeStatus = (groupeId: number) => {
   } else {
     groupesIntervention.value.add(groupeId);
   }
-  console.log(groupesIntervention.value)
   updateGroupes([...(groupesIntervention.value)]);
 };
 

@@ -25,15 +25,18 @@ import {
 
 import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
-
+import useGroupes from "@/store/useGroupes";
 import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
+import { Intervention } from "@/models/intervention";
+import { Sapeur } from "@/models/sapeur";
 
 const openModal = ref(false);
 const router = useRouter();
 const route = useRoute();
+const { formatDate } = useDateFormatter();
 
 const mode = route.params.mode as "ARRIVEE" | "DEPART";
 interface Presences {
@@ -47,18 +50,41 @@ interface Presences {
   }>
 }
 
-//TODO: Init date with current date rounded to nearest quarter
-const presences: Presences = reactive({ date: "", sapeurs: [], mode: mode });
-
-const { formatDate } = useDateFormatter();
+// Load needed data from active Intervention
+const { state, addSapeursArrival, addSapeursDeparture } = useActiveIntervention();
+const groupeModule = useGroupes();
 const sapeurModule = useSapeurs();
 
-// const { addSapeurArrival, addSapeurDeparture } = useActiveIntervention();
-const { updateSapeurs } = useActiveIntervention();
+// Init date with current date rounded to nearest quarter
+const date = DateTime.now();
+date.set({ minute: date.minute + (15 - date.minute % 15) });
+
+// TODO: load presences that fix ARRIVEE or DEPART
+let sapeurs: Presences["sapeurs"] = [];
+let exceptSapeursIds = [];
+if (mode == "ARRIVEE") {
+  const exceptSapeursId = new Set(state.value.sapeurs
+    .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
+    .map(s => s.id));
+  const selectedGroupes = new Set(state.value.groupes);
+  let potentialsSapeursIds = new Set<number>();
+  groupeModule.state.value
+    .filter(g => selectedGroupes.has(g.id))
+    .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s as number)));
+  potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursId.has(s)));
+
+  sapeurs = sapeurModule.state.value
+    .filter(s => potentialsSapeursIds.has(s.id))
+    .map(s => ({ ...s, selected: false }));
+} else if (mode == "DEPART") {
+  sapeurs = state.value.sapeurs
+    .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
+    .map(s => ({ ...s, selected: true }))
+}
+
+const presences: Presences = reactive({ date: date.toISO(), sapeurs, mode });
 
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
-const interventionModule = useActiveIntervention();
-const sapeursDejaPresent = [];
 
 const addSapeurs = async () => {
   const modalSapeurSelect = await modalController
@@ -72,7 +98,7 @@ const addSapeurs = async () => {
 
   await modalSapeurSelect.present();
   let { data } = await modalSapeurSelect.onDidDismiss();
-  console.log(data)
+
   if (!data) {
     return;
   }
@@ -87,11 +113,9 @@ const addSapeurs = async () => {
 
 const save = () => {
   if (mode == 'ARRIVEE') {
-    // addSapeurArrival();
-    // updateSapeurs();
-    //TODO: Complete this part
+    addSapeursArrival(presences);
   } else {
-    // interventionModule.addMission(mission.value);
+    addSapeursDeparture(presences)
   }
   router.back();
 }

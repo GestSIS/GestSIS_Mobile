@@ -5,4 +5,5 @@ export class Groupe {
     designation: string;
     tri: number;
     pere_id: number;
+    sapeur_ids: number[]; //TODO: Next correct to fit the effective returne type
 }

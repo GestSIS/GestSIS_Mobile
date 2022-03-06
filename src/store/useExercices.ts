@@ -19,7 +19,7 @@ export default function useExercices() {
     // TODO: Do not lose data if reload exercices, Do not override edited exercices
 
     state.value = newExercices;
-    store.lastSync.value = DateTime.now().toISO();
+    store.lastSync.value = DateTime.now().toSQL();
     store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
