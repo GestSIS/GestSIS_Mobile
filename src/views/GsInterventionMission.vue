@@ -121,7 +121,7 @@ const save = () => {
       </ion-toolbar>
     </ion-header>
 
-    <ion-content padding>
+    <ion-content class="ion-padding">
       <ion-list>
         <ion-item @click="openModalDebut = !openModalDebut">
           <ion-label>Début</ion-label>

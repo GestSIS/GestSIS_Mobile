@@ -32,7 +32,6 @@ interface Presence {
 }
 
 const props: Presence = defineProps<Presence>();
-console.log(props)
 const presence = reactive({ ...props })
 
 const dismiss = () => {
@@ -43,12 +42,23 @@ const save = () => {
   modalController.dismiss(presence);
 }
 
+const reset = () => {
+  // modalController.dismiss(presence);
+}
+
 const openModalDebut = ref(false);
 const openModalFin = ref(false);
 // const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
 // onMounted(() => {
 //   searchbar.value?.$el.setFocus();
 // })
+
+const computeCurrentDate = (): DateTime => {
+  // Défault à heure actuelle
+  let date = DateTime.now();
+  date = date.set({ minute: date.minute + 15 - (date.minute % 15), second: 0, millisecond: 0 });
+  return date;
+}
 </script>
 
 <template>
@@ -67,7 +77,7 @@ const openModalFin = ref(false);
     </ion-toolbar>
   </ion-header>
 
-  <ion-content padding>
+  <ion-content class="ion-padding">
     <ion-list>
       <ion-item>
         <ion-label fixed>Sapeur</ion-label>
@@ -107,9 +117,11 @@ const openModalFin = ref(false);
             presentation="time-date"
             minuteValues="0,15,30,45"
             :min="DateTime.fromSQL(presence.date_debut).toISO()"
-            :value="DateTime.fromSQL(presence.date_fin).toISO()"
+            :value="presence.date_fin ? DateTime.fromSQL(presence.date_fin).toISO() : computeCurrentDate().toISO()"
             @ionChange="(ev: any) => presence.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-          />
+          >
+            <ion-button slot="buttons" @click="reset">Reset</ion-button>
+          </ion-datetime>
         </ion-modal>
       </ion-item>
     </ion-list>

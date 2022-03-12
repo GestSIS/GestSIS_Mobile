@@ -100,7 +100,7 @@ const addTelephone = async () => {
     </ion-toolbar>
   </ion-header>
 
-  <ion-content padding>
+  <ion-content class="ion-padding">
     <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
 
     <ion-list>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, ref, reactive, normalizeClass, defineProps } from "vue";
+import { ref, reactive } from "vue";
 import {
   IonPage,
   IonRow,
@@ -30,8 +30,6 @@ import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
-import { Intervention } from "@/models/intervention";
-import { Sapeur } from "@/models/sapeur";
 
 const openModal = ref(false);
 const router = useRouter();
@@ -56,23 +54,32 @@ const groupeModule = useGroupes();
 const sapeurModule = useSapeurs();
 
 // Init date with current date rounded to nearest quarter
-const date = DateTime.now();
-date.set({ minute: date.minute + (15 - date.minute % 15) });
+let date: DateTime = null as any;
+if (mode == "ARRIVEE") {
+  // Défault à date de début d'intervention
+  date = DateTime.fromSQL(state.value.date_debut);
+  date = date.set({ minute: date.minute - (date.minute % 15), second: 0, millisecond: 0 });
+} else {
+  // Défault à heure actuelle
+  date = DateTime.now();
+  date = date.set({ minute: date.minute + 15 - (date.minute % 15), second: 0, millisecond: 0 });
+}
 
 // TODO: load presences that fix ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
-let exceptSapeursIds = [];
+let exceptSapeursIds = new Set<number>();
 
 if (mode == "ARRIVEE") {
-  const exceptSapeursId = new Set(state.value.sapeurs
+  exceptSapeursIds = new Set(state.value.sapeurs
     .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
     .map(s => s.id));
+
   const selectedGroupes = new Set(state.value.groupes);
   let potentialsSapeursIds = new Set<number>();
   groupeModule.state.value
     .filter(g => selectedGroupes.has(g.id))
     .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s.sapeur_id)));
-  potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursId.has(s)));
+  potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursIds.has(s)));
 
   sapeurs = sapeurModule.state.value
     .filter(s => potentialsSapeursIds.has(s.id))
@@ -83,14 +90,14 @@ if (mode == "ARRIVEE") {
     .map(s => ({ ...s, selected: true }))
 }
 
-const presences: Presences = reactive({ date: date.toSQL(), sapeurs, mode });
+const presences: Presences = reactive({ date: date.toSQL({ includeOffset: false }), sapeurs, mode });
 
 const addSapeurs = async () => {
   const modalSapeurSelect = await modalController
     .create({
       component: ModalSapeurSelectVue,
       componentProps: {
-        exceptSapeurIds: [],
+        exceptSapeurIds: [...exceptSapeursIds],
         multiSelect: true,
       }
     })
@@ -135,7 +142,7 @@ const save = () => {
       </ion-toolbar>
     </ion-header>
 
-    <ion-content padding>
+    <ion-content class="ion-padding">
       <ion-list>
         <ion-item @click="openModal = !openModal">
           <ion-label>Heure {{ mode == 'ARRIVEE' ? "d'arrivée" : 'de départ' }}</ion-label>

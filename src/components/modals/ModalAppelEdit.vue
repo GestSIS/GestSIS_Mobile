@@ -67,7 +67,7 @@ const dismiss = () => {
     </ion-toolbar>
   </ion-header>
 
-  <ion-content padding>
+  <ion-content class="ion-padding">
     <ion-list no-lines>
       <ion-item button="true" id="open-date-input">
         <ion-label position="fixed">Date</ion-label>
