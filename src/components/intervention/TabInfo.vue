@@ -1,3 +1,168 @@
+
+<script lang="ts" setup>
+import useActiveIntervention from '@/store/useActiveIntervention';
+import useInterventions from '@/store/useInterventions';
+import useLocalites from '@/store/useLocalites';
+import usePhaseTypes from '@/store/usePhaseTypes';
+import useSapeurs from '@/store/useSapeurs';
+import useStatsFederal from '@/store/useStatsFederal';
+import useTypesIntervention from '@/store/useTypesIntervention';
+import useDateFormatter from '@/tools/useDateFormatter';
+import {
+  IonButton,
+  IonTextarea,
+  IonCol,
+  IonRow,
+  IonGrid,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonCheckbox,
+  IonDatetime,
+  IonIcon,
+  modalController,
+  IonModal,
+  IonText,
+  alertController
+} from '@ionic/vue';
+import { DateTime } from 'luxon';
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
+import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
+
+const router = useRouter();
+const { formatDate } = useDateFormatter();
+const { removeIntervention } = useInterventions();
+const { state, persist } = useActiveIntervention();
+const intervention = state;
+
+const openModalDebut = ref(false);
+const openModalFin = ref(false);
+
+const moduleSapeur = useSapeurs();
+const moduleType = useTypesIntervention();
+const modulePhase = usePhaseTypes();
+const moduleStatFederal = useStatsFederal();
+const moduleLocalite = useLocalites();
+
+const sapeurs = moduleSapeur.state;
+const typeInterventions = moduleType.state;
+const statsFederales = moduleStatFederal.state;
+const localites = moduleLocalite.state;
+
+watch(intervention, () => {
+  persist();
+}, { deep: true })
+
+const supprimerRapport = async () => {
+  const confirm = await alertController.create({
+    header: 'Supprimer l\'intervention',
+    message: "Êtes-vous sûr de vouloir supprimer ce rapport d'intervention ? Cette action est irréversible et toutes les données seront perdues !",
+    buttons: [
+      {
+        text: 'Non'
+      },
+      {
+        text: 'Oui',
+        handler: () => {
+          router.back();
+          removeIntervention(intervention.value.localUuid);
+        }
+      }
+    ]
+  });
+  await confirm.present();
+};
+const validate = async () => {
+  const confirm = await alertController.create({
+    header: 'Valider l\'intervention',
+    message: "Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Cette action est irréversible et l'intervention ne pourra être éditée que depuis la plateforme GestSIS.",
+    buttons: [
+      {
+        text: 'Non'
+      },
+      {
+        text: 'Oui',
+        handler: () => {
+          intervention.value.en_creation = false;
+
+          router.back();
+
+        }
+      }
+    ]
+  });
+  await confirm.present();
+};
+
+const selectLocalite = async () => {
+  const modalLocaliteSelect = await modalController
+    .create({
+      component: ModalLocaliteSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+      }
+    })
+
+  await modalLocaliteSelect.present();
+  let { data } = await modalLocaliteSelect.onDidDismiss();
+
+  return data;
+}
+
+const selectLocaliteIntervention = async () => {
+  const localiteId = await selectLocalite();
+  if (localiteId) {
+    intervention.value.localite_id = localiteId;
+  }
+}
+
+const selectLocaliteProprietaire = async () => {
+  const localiteId = await selectLocalite();
+  if (localiteId) {
+    intervention.value.proprietaire.localite_id = localiteId;
+  }
+}
+
+const selectChefIntervention = async () => {
+  const modalSapeurSelect = await modalController
+    .create({
+      component: ModalSapeurSelectVue,
+      componentProps: {
+        exceptSapeurIds: [],
+      }
+    })
+
+  await modalSapeurSelect.present();
+  let { data } = await modalSapeurSelect.onDidDismiss();
+
+  if (data) {
+    intervention.value.sapeur_id = data;
+  }
+}
+
+const getLocaliteFormattedValue = (localite_id: number) => {
+  return localites.value.find(l => l.id == localite_id)?.designation;
+};
+
+const getSapeurFormattedValue = (sapeurId: number) => {
+  const sapeur = sapeurs.value.find(s => s.id == sapeurId);
+  return sapeur ? sapeur?.nom + ' ' + sapeur?.prenom : '';
+};
+
+const ensureNumericKey = (event: KeyboardEvent) => {
+  const pattern = /[0-9]/;
+  if (!pattern.test(event.key)) {
+    // invalid character, prevent input
+    event.preventDefault();
+  }
+};
+
+</script>
+
 <template>
   <ion-grid>
     <ion-row>
@@ -237,161 +402,3 @@
     </ion-row>
   </ion-grid>
 </template>
-
-<script lang="ts" setup>
-import useActiveIntervention from '@/store/useActiveIntervention';
-import useInterventions from '@/store/useInterventions';
-import useLocalites from '@/store/useLocalites';
-import usePhaseTypes from '@/store/usePhaseTypes';
-import useSapeurs from '@/store/useSapeurs';
-import useStatsFederal from '@/store/useStatsFederal';
-import useTypesIntervention from '@/store/useTypesIntervention';
-import useDateFormatter from '@/tools/useDateFormatter';
-import {
-  IonButton,
-  IonTextarea,
-  IonCol,
-  IonRow,
-  IonGrid,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonCheckbox,
-  IonDatetime,
-  IonIcon,
-  modalController,
-  IonModal,
-  IonText,
-  alertController
-} from '@ionic/vue';
-import { DateTime } from 'luxon';
-import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
-import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
-
-const router = useRouter();
-const { formatDate } = useDateFormatter();
-const { removeIntervention } = useInterventions();
-const { state, persist } = useActiveIntervention();
-const intervention = state;
-
-const openModalDebut = ref(false);
-const openModalFin = ref(false);
-
-const moduleSapeur = useSapeurs();
-const moduleType = useTypesIntervention();
-const modulePhase = usePhaseTypes();
-const moduleStatFederal = useStatsFederal();
-const moduleLocalite = useLocalites();
-
-const sapeurs = moduleSapeur.state;
-const typeInterventions = moduleType.state;
-const statsFederales = moduleStatFederal.state;
-const localites = moduleLocalite.state;
-
-watch(intervention, () => {
-  persist();
-}, { deep: true })
-
-const customPickerOptions = {
-  buttons: [
-    {
-      text: 'Vide',
-      handler: () => {
-        intervention.value.date_fin = null as any;
-      },
-    },
-  ],
-};
-
-const supprimerRapport = async () => {
-  console.log("Supprimer intervention");
-  const confirm = await alertController.create({
-    header: 'Supprimer l\'intervention',
-    message: "Êtes-vous sûr de vouloir supprimer ce rapport d'intervention ? Cette action est irréversible et toutes les données seront perdues !",
-    buttons: [
-      {
-        text: 'Non'
-      },
-      {
-        text: 'Oui',
-        handler: () => {
-          router.back();
-          removeIntervention(intervention.value.localUuid);
-        }
-      }
-    ]
-  });
-  await confirm.present();
-};
-const validate = () => {
-  // TODO:
-};
-
-const selectLocalite = async () => {
-  const modalLocaliteSelect = await modalController
-    .create({
-      component: ModalLocaliteSelectVue,
-      componentProps: {
-        exceptSapeurIds: [],
-      }
-    })
-
-  await modalLocaliteSelect.present();
-  let { data } = await modalLocaliteSelect.onDidDismiss();
-
-  return data;
-}
-
-const selectLocaliteIntervention = async () => {
-  const localiteId = await selectLocalite();
-  if (localiteId) {
-    intervention.value.localite_id = localiteId;
-  }
-}
-
-const selectLocaliteProprietaire = async () => {
-  const localiteId = await selectLocalite();
-  if (localiteId) {
-    intervention.value.proprietaire.localite_id = localiteId;
-  }
-}
-
-const selectChefIntervention = async () => {
-  const modalSapeurSelect = await modalController
-    .create({
-      component: ModalSapeurSelectVue,
-      componentProps: {
-        exceptSapeurIds: [],
-      }
-    })
-
-  await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
-
-  if (data) {
-    intervention.value.sapeur_id = data;
-  }
-}
-
-const getLocaliteFormattedValue = (localite_id: number) => {
-  return localites.value.find(l => l.id == localite_id)?.designation;
-};
-
-const getSapeurFormattedValue = (sapeurId: number) => {
-  const sapeur = sapeurs.value.find(s => s.id == sapeurId);
-  return sapeur ? sapeur?.nom + ' ' + sapeur?.prenom : '';
-};
-
-const ensureNumericKey = (event: KeyboardEvent) => {
-  const pattern = /[0-9]/;
-  if (!pattern.test(event.key)) {
-    // invalid character, prevent input
-    event.preventDefault();
-  }
-};
-
-</script>

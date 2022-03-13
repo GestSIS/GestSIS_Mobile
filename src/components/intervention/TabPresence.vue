@@ -36,6 +36,7 @@ const activeTab = ref(Tab.Groupe);
 
 const { state, updateGroupes, updatePresences } = useActiveIntervention();
 const intervention = state;
+intervention.value.sapeurs.sort((a, b) => (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom))
 
 const moduleSapeur = useSapeurs();
 const moduleGroupe = useGroupes();
@@ -165,10 +166,14 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
         <ion-row>
           <ion-col size="4">
             <h1>Présences</h1>
+            <span
+              v-if="intervention.sapeurs?.length"
+              class="details"
+            >{{ intervention.sapeurs?.length }} sapeurs</span>
+            <span v-else class="details">Aucun sapeur</span>
           </ion-col>
           <ion-col size="4">
             <ion-button
-              ion-button
               expand="block"
               @click="addPresenceExercice('ARRIVEE')"
               :disabled="!intervention.en_creation"
@@ -180,10 +185,8 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
             <ion-button
               expand="block"
               @click="addPresenceExercice('DEPART')"
-              :disabled="
-                !intervention.en_creation ||
-                sapeursAvecPresenceExercicesIncompletes.length === 0
-              "
+              v-if="intervention.en_creation"
+              :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0"
             >
               <ion-icon slot="start" name="log-out"></ion-icon>Départ
             </ion-button>
@@ -202,10 +205,6 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           <ion-icon color="warning" name="warning" slot="start"></ion-icon>
           <ion-text color="warning">{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text>
         </ion-item>
-      </ion-item-group>
-
-      <ion-item-group v-if="!intervention.sapeurs.length">
-        <ion-item-divider color="light">Aucun sapeur</ion-item-divider>
       </ion-item-group>
 
       <!-- Présences des sapeurs -->
@@ -235,3 +234,9 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.details {
+  color: var(--ion-color-medium);
+}
+</style>
