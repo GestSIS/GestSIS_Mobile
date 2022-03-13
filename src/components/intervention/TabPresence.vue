@@ -23,16 +23,10 @@ import { ref, computed } from 'vue';
 import { Sapeur } from '@/models/sapeur';
 import router from '@/router';
 import ModalSapeurPresenceVue from '../modals/ModalSapeurPresence.vue';
+import { usePresenceTab } from '@/store/usePresenceTabState';
 
 const { formatDate } = useDateFormatter();
-
-// Define tabs
-const enum Tab {
-  Groupe,
-  Sapeur
-}
-
-const activeTab = ref(Tab.Groupe);
+const { activeTab } = usePresenceTab();
 
 const { state, updateGroupes, updatePresences } = useActiveIntervention();
 const intervention = state;
@@ -129,13 +123,13 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
 <template>
   <div>
     <ion-segment v-model="activeTab">
-      <ion-segment-button :value="Tab.Groupe">Groupes</ion-segment-button>
-      <ion-segment-button :value="Tab.Sapeur">Sapeurs</ion-segment-button>
+      <ion-segment-button value="GROUPE">Groupes</ion-segment-button>
+      <ion-segment-button value="SAPEUR">Sapeurs</ion-segment-button>
     </ion-segment>
   </div>
 
   <div class="ion-padding-top">
-    <div v-if="activeTab == Tab.Groupe">
+    <div v-if="activeTab == 'GROUPE'">
       <ion-list>
         <ion-item
           button
@@ -161,7 +155,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
       </ion-list>
     </div>
 
-    <div v-if="activeTab == Tab.Sapeur">
+    <div v-if="activeTab == 'SAPEUR'">
       <ion-grid>
         <ion-row>
           <ion-col size="4">
