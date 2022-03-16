@@ -37,6 +37,7 @@ const route = useRoute();
 const { formatDate } = useDateFormatter();
 
 const mode = route.params.mode as "ARRIVEE" | "DEPART";
+const sapeursIds = new Set((route.params.sapeursIds as string ?? "").split(",").map(e => parseInt(e)).filter(e => e));
 interface Presences {
   date: string,
   mode: "ARRIVEE" | "DEPART",
@@ -65,25 +66,34 @@ if (mode == "ARRIVEE") {
   date = date.set({ minute: date.minute + 15 - (date.minute % 15), second: 0, millisecond: 0 });
 }
 
-// TODO: load presences that fix ARRIVEE or DEPART
+// load presences that fit ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = new Set<number>();
 
 if (mode == "ARRIVEE") {
-  exceptSapeursIds = new Set(state.value.sapeurs
-    .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
-    .map(s => s.id));
+  console.log(sapeursIds)
+  if (sapeursIds.size > 0) {
+    // Uniquement les sapeurs passé en paramètre par défault
+    sapeurs = sapeurModule.state.value
+      .filter(s => sapeursIds.has(s.id))
+      .map(s => ({ ...s, selected: true }));
+  } else {
+    // Uniquement les sapeurs dans les groupes sélectionnés par défault 
+    exceptSapeursIds = new Set(state.value.sapeurs
+      .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
+      .map(s => s.id));
 
-  const selectedGroupes = new Set(state.value.groupes);
-  let potentialsSapeursIds = new Set<number>();
-  groupeModule.state.value
-    .filter(g => selectedGroupes.has(g.id))
-    .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s.sapeur_id)));
-  potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursIds.has(s)));
+    const selectedGroupes = new Set(state.value.groupes);
+    let potentialsSapeursIds = new Set<number>();
+    groupeModule.state.value
+      .filter(g => selectedGroupes.has(g.id))
+      .forEach(g => g.sapeur_ids.forEach(s => potentialsSapeursIds.add(s.sapeur_id)));
+    potentialsSapeursIds = new Set([...potentialsSapeursIds].filter(s => !exceptSapeursIds.has(s)));
 
-  sapeurs = sapeurModule.state.value
-    .filter(s => potentialsSapeursIds.has(s.id))
-    .map(s => ({ ...s, selected: false }));
+    sapeurs = sapeurModule.state.value
+      .filter(s => potentialsSapeursIds.has(s.id))
+      .map(s => ({ ...s, selected: false }));
+  }
 } else if (mode == "DEPART") {
   sapeurs = state.value.sapeurs
     .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)

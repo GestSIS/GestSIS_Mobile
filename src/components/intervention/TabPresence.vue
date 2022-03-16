@@ -65,11 +65,15 @@ const changeGroupeStatus = (groupeId: number) => {
 };
 
 const addMissingSapeur = (sapeur: Sapeur) => {
-  //TODO: add missing sapeur
+  router.push({
+    name: 'sapeurs', params: {
+      mode: 'ARRIVEE', sapeursIds: sapeur.id.toString()
+    }
+  })
 }
 
 const addPresenceExercice = (mode: 'ARRIVEE' | 'DEPART') => {
-  router.push({ name: 'sapeurs', params: { mode } })
+  router.push({ name: 'sapeurs', params: { mode } });
 };
 const editPresenceExercice = async (sapeurIndex: number, presenceIndex: any) => {
   const sapeur = intervention.value.sapeurs[sapeurIndex];

@@ -26,13 +26,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/mission/:uuid',
     name: 'mission',
-    props: (route) => ({ uuid: route.params.uuid || '' }),
+    props: (route) => ({ uuid: route.params.uuid ?? '' }),
     component: () => import('../views/GsInterventionMission.vue'),
   },
   {
     path: '/sapeurs/:mode',
     name: 'sapeurs',
-    props: (route) => ({ mode: route.params.mode || '' }),
+    props: (route) => ({ mode: route.params.mode ?? '', sapeursIds: route.params.sapeursIds ?? "" }),
     component: () => import('../views/GsInterventionSapeur.vue'),
   },
   {
