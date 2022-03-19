@@ -15,6 +15,7 @@ import {
   IonIcon,
   IonCardContent,
 } from "@ionic/vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -22,9 +23,9 @@ const navigateTo = async (name: string) => {
   router.push(name);
 };
 
-const needSync = () => {
+const needSync = computed((): boolean => {
   return true;
-};
+});
 const startSync = () => {
   return true;
 };

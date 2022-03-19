@@ -23,12 +23,12 @@ export default function useBasicStore<Type>(
   /** Persist data in local storage */
   const persist = async () => {
     // Persists by using persistKey
-    persistentStore.set(persistKey, JSON.stringify(
+    await persistentStore.set(persistKey, JSON.stringify(
       state.value,
       (_key, value) => (value instanceof Set ? [...value] :
         value instanceof Map ? { ...value } : value)
     ));
-    persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
+    await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
   /** Reset local storage */
@@ -53,7 +53,7 @@ export default function useBasicStore<Type>(
     syncStatus.value = StoreState.Syncing;
     state.value = await loader();
     lastSync.value = DateTime.now().toSQL();
-    persist();
+    await persist();
     syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
   };

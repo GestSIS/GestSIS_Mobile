@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import useAuth from '@/store/useAuth';
+import useStore from '@/store/useStore';
+import { useNotify } from '@/tools/useToast';
 import {
   IonButtons,
   IonButton,
+  IonLabel,
   IonContent,
   IonFooter,
   IonHeader,
@@ -14,14 +17,52 @@ import {
   IonItem,
   IonIcon,
   IonAvatar,
+  IonSelect,
+  IonSelectOption,
+  loadingController,
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 const router = useRouter()
-const { state, logout } = useAuth();
+const { state, activeSisKey, logout, selectSis } = useAuth();
 
 const wrappedLogout = () => {
   logout();
   router.push({ name: 'login' })
+}
+
+const onSelectSis = async (sis: string) => {
+  //TODO: Check if some exercices/interventions need to be synced 
+  // if so then confirm that the modifications will be lost
+
+  // else
+  const ok = await selectSis(sis);
+  if (!ok) {
+    // TODO: Error message
+    return;
+  }
+
+  // Afficher loading
+  const loading = await loadingController
+    .create({
+      message: 'Chargement...',
+    });
+
+  await loading.present();
+
+  // Load data
+  const store = useStore()
+  try {
+    await store.loadAll();
+  } catch (e: any) {
+    // Catch Refresh token expired
+    if (e?.status === 401) {
+      const notify = useNotify();
+      notify.error("Vous avez été déconnecté pour cause d'absence prolongée.");
+    }
+  }
+
+  // Hide loading
+  await loading.dismiss();
 }
 </script>
 
@@ -37,6 +78,12 @@ const wrappedLogout = () => {
     </ion-header>
     <ion-content>
       <ion-list lines="none">
+        <ion-item v-if="state.data.sis.length > 1">
+          <ion-label>Sis</ion-label>
+          <ion-select @ion-change="onSelectSis($event.target.value)" :value="activeSisKey">
+            <ion-select-option v-for="sis in state.data.sis" :key="sis">{{ sis }}</ion-select-option>
+          </ion-select>
+        </ion-item>
         <ion-item>
           <ion-avatar slot="end">
             <!-- <img v-if="state.data.photo" :src="user.photo" /> -->
@@ -54,7 +101,7 @@ const wrappedLogout = () => {
     </ion-content>
 
     <ion-footer>
-      <div padding class="copyright">
+      <div class="ion-padding copyright">
         Version 2.0.0
         <br />Application créée par Bastien Wermeille
         <br />support@gestsis.ch

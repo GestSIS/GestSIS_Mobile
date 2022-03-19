@@ -33,40 +33,47 @@ const emptyState = {
   sis: [],
 };
 
-const state: { data: User } = reactive({ data: { ...emptyState } });
+const state = reactive<{ data: User }>({ data: { ...emptyState } });
 const activeSisKey = ref<string>('');
 const activePermissions = ref<string[]>([]);
 const lastSync = ref<Date | null>(null);
 
 const persistKey = 'auth';
+const persistActiveSisKey = 'auth-siskey';
 const lastSyncSuffixe = 'last_sync';
-
-const selectSis = (sisKey: string) => {
-  if (!sisKey || !(sisKey in state.data.permissions)) {
-    console.error("seems invalid key :"+sisKey)
-    return;
-  }
-  activePermissions.value = state.data.permissions[sisKey];
-  activeSisKey.value = sisKey;
-  Api.setSisKey(sisKey);
-  console.log('Set sis-key' + sisKey);
-};
 
 /** Load data from local storage */
 const init = async () => {
   const data = await persistentStore.get(persistKey);
+  const sisKey = await persistentStore.get(persistActiveSisKey);
+
   state.data = JSON.parse(data) || { ...emptyState };
+  activeSisKey.value = sisKey;
   lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
+
   if (state.data?.accessToken) {
     Api.setTokens(state.data.accessToken, state.data.refreshToken);
-    const sisKeys = Object.keys(state.data.permissions);
-    selectSis(sisKeys[0]);
+    Api.setSisKey(sisKey);
   }
 };
 
 init();
 
 export default function useAuth() {
+  const selectSis = async (sisKey: string): Promise<boolean> => {
+    if (!sisKey || !(sisKey in state.data.permissions)) {
+      console.error('Invalid key :' + sisKey);
+      return false;
+    }
+
+    activePermissions.value = state.data.permissions[sisKey];
+    activeSisKey.value = sisKey;
+
+    Api.setSisKey(sisKey);
+    await persist();
+    return true;
+  };
+
   /** Log in */
   const login = async (email: string, password: string) => {
     // Login request
@@ -74,11 +81,11 @@ export default function useAuth() {
       email,
       password,
     });
-    
+
     const userId = user.id;
     const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
     const availableSis = Object.keys(permissions);
-    
+
     // TODO: Throw exception if no permissions
     if (availableSis.length == 0) {
       throw { message: 'Aucune permission' };
@@ -109,9 +116,10 @@ export default function useAuth() {
 
   /** Persist data in local storage */
   const persist = async () => {
-    persistentStore.set(persistKey, JSON.stringify(state.data));
+    await persistentStore.set(persistKey, JSON.stringify(state.data));
+    await persistentStore.set(persistActiveSisKey, activeSisKey.value);
     lastSync.value = new Date();
-    persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
+    await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
   /** Logout */

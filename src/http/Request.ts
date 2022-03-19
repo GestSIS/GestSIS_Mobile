@@ -1,6 +1,8 @@
 import useAuth from '@/store/useAuth';
+import useSimpleState from '@/tools/useSimpleState';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { useRouter } from 'vue-router';
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
@@ -9,24 +11,27 @@ const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 // console.log(AUTH_URL)
 // import store from '@/store';
 
+const refreshTokenPromise = useSimpleState();
+const refreshTokenCountAwait = useSimpleState();
+
 const request = {
   _refreshToken: '',
   _refreshFailed: null,
 
   _accessTokenValidity: null,
-  
+
   setTokens(acccessToken: string, refreshToken: string) {
-    const { exp } = (jwt_decode(acccessToken) as any);
+    const { exp } = jwt_decode(acccessToken) as any;
     this._accessTokenValidity = exp;
     this._refreshToken = refreshToken;
     axios.defaults.headers.common['Authorization'] = `Bearer ${acccessToken}`;
   },
 
-  setSisKey: (sis_key:string) => {
+  setSisKey: (sis_key: string) => {
     axios.defaults.headers.common['Sis-Id'] = sis_key;
   },
 
-  apiFileDownload(filename:string) {
+  apiFileDownload(filename: string) {
     const api = axios.create({
       baseURL: API_URL,
       responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
@@ -76,12 +81,45 @@ const request = {
     api.interceptors.request.use(async (req) => {
       // Test if expired
       if (Date.now() < (this._accessTokenValidity || 0) * 1000) {
-        return req
+        return req;
       }
 
       // Expired !
-      const response = await this.auth().post('refresh-token', { token: this._refreshToken }) as any;
+      let response: any;
       const auth = useAuth();
+
+      // Check if a refreshToken request has already been sent
+      if (refreshTokenPromise.state.value != '') {
+        refreshTokenCountAwait.state.value++;
+        
+        // Await the result of this request
+        try {
+          return await refreshTokenPromise.state.value;
+        } finally {
+          refreshTokenCountAwait.state.value--;
+          if (refreshTokenCountAwait.state.value == 0) {
+            refreshTokenPromise.state.value = '';
+          }
+        }
+      }
+
+      // Send a refresh token request
+      try {
+        refreshTokenPromise.state.value = this.auth().post('refresh-token', {
+          token: this._refreshToken,
+        });
+        response = await refreshTokenPromise.state.value;
+      } catch (e: any) {
+        if (e?.status === 401) {
+          auth.logout();
+          useRouter().push({ name: 'login' })
+          return Promise.reject(e);
+        }
+      } finally {
+        if (refreshTokenCountAwait.state.value == 0) {
+          refreshTokenPromise.state.value = '';
+        }
+      }
 
       // Update store
       auth.state.data.accessToken = response?.accessToken;
@@ -89,7 +127,9 @@ const request = {
       auth.persist();
 
       // Update axios
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.accessToken}`;
+      axios.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${response.accessToken}`;
       if (req.headers?.common) {
         req.headers['Authorization'] = `Bearer ${response.accessToken}`;
       }
@@ -126,11 +166,16 @@ const request = {
     auth.interceptors.response.use(
       function (response: any) {
         if (response.status === 401) {
-          throw response.data;
+          console.log('Should never happen');
+          return Promise.reject(response);
         }
-        return response.data;
+        return Promise.resolve(response.data);
       },
       function (error: any) {
+        if (error.response?.status === 401) {
+          return Promise.reject(error.response);
+        }
+        console.error(error);
         // Do something with response error
         return Promise.reject(error.response.data);
       }
