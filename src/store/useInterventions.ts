@@ -17,6 +17,8 @@ export default () => {
 
   /** Load data from GestSIS API */
   const load = async (): Promise<boolean> => {
+    //TODO: For now, we should not load any intervention
+
     store.syncStatus.value = StoreState.Syncing;
     //TODO: Do not override new and in sync intervention
     const interventions = await InterventionService.getInterventions();

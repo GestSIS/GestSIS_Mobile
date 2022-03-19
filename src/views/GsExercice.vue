@@ -86,7 +86,7 @@ if (!exercice.value) {
 }
 
 const validate = () => {
-  //TODO:
+  //TODO: validate an exercice
 };
 
 const addSapeur = async () => {

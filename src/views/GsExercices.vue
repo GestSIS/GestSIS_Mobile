@@ -75,7 +75,7 @@ const openDetails = (exercice: Exercice) => {
         >
           <ion-icon slot="start" :name="exercice.en_creation ? 'create' : 'sync'"></ion-icon>
           <p>
-            <!-- TODO: See if display can be improved -->
+            <!-- TODO: Optional See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}

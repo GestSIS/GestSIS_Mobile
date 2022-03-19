@@ -63,7 +63,6 @@ const intervention = reactive({
 });
 
 const save = async () => {
-  // TODO: valider les différents champs
   if (intervention.date == '' || intervention.objet == '' || !intervention.localite_id) {
     notify.error('Veuillez remplir tous les champs');
     return;

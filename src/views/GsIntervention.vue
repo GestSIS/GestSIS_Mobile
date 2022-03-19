@@ -1,9 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, computed } from "vue";
-
-import { Sapeur } from "@/models/bundle";
-import { Vehicule } from "@/models/bundle";
-import { Materiel } from "@/models/bundle";
+import { ref } from "vue";
 
 import TabMateriel from "@/components/intervention/TabMateriel.vue";
 import TabVehicule from "@/components/intervention/TabVehicule.vue";
@@ -26,19 +22,6 @@ import {
   IonSegmentButton,
 } from "@ionic/vue";
 
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useDateFormatter from "@/tools/useDateFormatter";
-import useMissionTypes from "@/store/useMissionTypes";
-import useSapeurs from "@/store/useSapeurs";
-import useVehicules from "@/store/useVehicules";
-import useMateriels from "@/store/useMateriels";
-import usePhaseTypes from "@/store/usePhaseTypes";
-import useGroupes from "@/store/useGroupes";
-
-const { state } = useActiveIntervention();
-const intervention = state;
-
-
 // Define tabs
 const enum Tab {
   Journal,
@@ -50,26 +33,6 @@ const enum Tab {
   Info
 }
 const activeTab = ref(Tab.Journal);
-
-// Data section
-
-// Switch to sapeurs une fois des groupes sélectionnées ?
-// intervention.en_creation = true;
-
-const moduleMission = useMissionTypes()
-const moduleSapeur = useSapeurs()
-const moduleVehicule = useVehicules()
-const moduleMateriel = useMateriels()
-const modulePhase = usePhaseTypes()
-const moduleGroupe = useGroupes()
-
-const evenements = reactive([]);
-const groupes = reactive([]);
-const vehicules = reactive([] as Vehicule[]);
-const materiels = reactive([] as Materiel[]);
-const sapeurs = reactive([] as Sapeur[]);
-
-//TODO: Test nb personnes sauvé ne peut pas être négatif
 </script>
 
 <template>

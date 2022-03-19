@@ -86,7 +86,7 @@ export default function useAuth() {
     const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
     const availableSis = Object.keys(permissions);
 
-    // TODO: Throw exception if no permissions
+    // TODO: Throw exception if no permissions and manage the result
     if (availableSis.length == 0) {
       throw { message: 'Aucune permission' };
     }

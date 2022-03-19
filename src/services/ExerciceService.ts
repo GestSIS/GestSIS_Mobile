@@ -4,7 +4,6 @@ import { Exercice, PresenceExercice } from '@/models/bundle';
 export default {
   // TODO: Nouvelle api pour simplifier la gestion des présences ???
   getExercices():Promise<Exercice[]> {
-    // TODO: Nouvelle API pour les exercices
     return Api.api().get('/exercices-derniers');
   },
   createExercice(exerciceData: Exercice): Promise<Exercice> {

@@ -37,7 +37,6 @@ const isPhoneNumber = (str: string): boolean => {
 }
 
 const save = async () => {
-  // TODO:
   if (appel.value?.nom == '' || appel.value.numero == '') {
     notify.error('Veuillez remplir tous les champs');
     return;
