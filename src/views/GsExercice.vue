@@ -120,10 +120,7 @@ const addSapeur = async () => {
     "absent": false,
     "excuse": false
   });
-  exercicesStore.updatExercice(exercice); 0
-};
-const saveLocal = () => {
-  //TODO:
+  exercicesStore.updatExercice(exercice);
 };
 
 const selectPresent = async (sapeur: PresenceExercice) => {
@@ -134,7 +131,7 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  saveLocal();
+  exercicesStore.updatExercice(exercice);
 };
 
 const selectAbsent = async (sapeur: PresenceExercice) => {
@@ -145,7 +142,7 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  saveLocal();
+  exercicesStore.updatExercice(exercice);
 };
 
 const selectRemplace = async (sapeur: PresenceExercice) => {
@@ -156,7 +153,7 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = true;
-  saveLocal();
+  exercicesStore.updatExercice(exercice);
 };
 
 const selectExcuse = async (sapeur: PresenceExercice) => {
@@ -172,7 +169,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
       sapeur.excuse = true;
       sapeur.excuse_type_id = excuse.id;
       sapeur.excuse_type = excuse.designation;
-      saveLocal();
+      exercicesStore.updatExercice(exercice);
     },
   }));
 

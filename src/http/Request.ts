@@ -1,7 +1,7 @@
 import useAuth from '@/store/useAuth';
-import useSimpleState from '@/tools/useSimpleState';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
@@ -11,8 +11,8 @@ const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 // console.log(AUTH_URL)
 // import store from '@/store';
 
-const refreshTokenPromise = useSimpleState();
-const refreshTokenCountAwait = useSimpleState();
+const refreshTokenPromise = ref<any>("");
+const refreshTokenCountAwait = ref<any>("");
 
 const request = {
   _refreshToken: '',
@@ -89,26 +89,26 @@ const request = {
       const auth = useAuth();
 
       // Check if a refreshToken request has already been sent
-      if (refreshTokenPromise.state.value != '') {
-        refreshTokenCountAwait.state.value++;
+      if (refreshTokenPromise.value != '') {
+        refreshTokenCountAwait.value++;
         
         // Await the result of this request
         try {
-          return await refreshTokenPromise.state.value;
+          return await refreshTokenPromise.value;
         } finally {
-          refreshTokenCountAwait.state.value--;
-          if (refreshTokenCountAwait.state.value == 0) {
-            refreshTokenPromise.state.value = '';
+          refreshTokenCountAwait.value--;
+          if (refreshTokenCountAwait.value == 0) {
+            refreshTokenPromise.value = '';
           }
         }
       }
 
       // Send a refresh token request
       try {
-        refreshTokenPromise.state.value = this.auth().post('refresh-token', {
+        refreshTokenPromise.value = this.auth().post('refresh-token', {
           token: this._refreshToken,
         });
-        response = await refreshTokenPromise.state.value;
+        response = await refreshTokenPromise.value;
       } catch (e: any) {
         if (e?.status === 401) {
           auth.logout();
@@ -116,8 +116,8 @@ const request = {
           return Promise.reject(e);
         }
       } finally {
-        if (refreshTokenCountAwait.state.value == 0) {
-          refreshTokenPromise.state.value = '';
+        if (refreshTokenCountAwait.value == 0) {
+          refreshTokenPromise.value = '';
         }
       }
 
