@@ -16,7 +16,6 @@ import {
 
 import { computed } from 'vue';
 import useExercices from '@/store/useExercices';
-import useExcuseTypes from '@/store/useExcuseTypes';
 import useLocalites from '@/store/useLocalites';
 import useExerciceCategories from '@/store/useExerciceCategories';
 import { useRouter } from 'vue-router';
@@ -25,7 +24,6 @@ import { DateTime } from 'luxon';
 
 const exercicesStore = useExercices();
 const categoriesStore = useExerciceCategories();
-const excusesStore = useExcuseTypes();
 const localitesStore = useLocalites();
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {

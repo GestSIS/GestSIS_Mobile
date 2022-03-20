@@ -44,7 +44,7 @@ const openModalFin = ref(false);
 
 const moduleSapeur = useSapeurs();
 const moduleType = useTypesIntervention();
-const modulePhase = usePhaseTypes();
+const modulePhase = usePhaseTypes(); // TODO: Ajout gestion des phases
 const moduleStatFederal = useStatsFederal();
 const moduleLocalite = useLocalites();
 
@@ -169,7 +169,11 @@ const ensureNumericKey = (event: KeyboardEvent) => {
         <h1>Informations générales</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="validate()" v-if="intervention.en_creation">
+        <ion-button
+          expand="block"
+          @click="validate()"
+          v-if="intervention.localStatus == 'in_progress'"
+        >
           <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
         </ion-button>
       </ion-col>
@@ -224,7 +228,6 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-select
             interface="action-sheet"
             v-model="intervention.type_intervention_id"
-            :disabled="!intervention.en_creation"
             okText="Ok"
             cancelText="Annuler"
           >
@@ -238,12 +241,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
 
         <ion-item>
           <ion-label position="floating">Objet</ion-label>
-          <ion-input type="text" v-model="intervention.objet" :disabled="!intervention.en_creation"></ion-input>
+          <ion-input type="text" v-model="intervention.objet"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Lieu du sinistre</ion-label>
-          <ion-input type="text" v-model="intervention.lieu" :disabled="!intervention.en_creation"></ion-input>
+          <ion-input type="text" v-model="intervention.lieu"></ion-input>
         </ion-item>
 
         <ion-item>
@@ -253,13 +256,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             readonly
             @ionFocus="selectLocaliteIntervention"
             :value="getLocaliteFormattedValue(intervention.localite_id)"
-            :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
 
         <ion-item class="checkbox-item">
           <ion-label>Rapport de police</ion-label>
-          <ion-checkbox v-model="intervention.rapport_police" :disabled="!intervention.en_creation"></ion-checkbox>
+          <ion-checkbox v-model="intervention.rapport_police"></ion-checkbox>
         </ion-item>
       </ion-col>
       <ion-col size-sm="6" size="12">
@@ -268,7 +270,6 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-select
             interface="action-sheet"
             v-model="intervention.stat_federal_id"
-            :disabled="!intervention.en_creation"
             okText="Ok"
             cancelText="Annuler"
           >
@@ -287,7 +288,6 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             readonly="true"
             @ionFocus="selectChefIntervention()"
             :value="getSapeurFormattedValue(intervention.sapeur_id)"
-            :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
 
@@ -298,7 +298,6 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             :min="0"
             :value="intervention.nb_personnes_sauvees"
             @keypress="ensureNumericKey($event)"
-            :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
 
@@ -309,13 +308,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             :min="0"
             v-model="intervention.nb_animaux_sauves"
             @keypress="ensureNumericKey($event)"
-            :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
 
         <ion-item v-if="intervention.rapport_police">
           <ion-label position="floating">Nom et prénom de l'agent</ion-label>
-          <ion-input type="text" v-model="intervention.agent" :disabled="!intervention.en_creation"></ion-input>
+          <ion-input type="text" v-model="intervention.agent"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -327,37 +325,21 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-label position="floating">Nom</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.proprietaire.nom"
-            :disabled="!intervention.en_creation"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.proprietaire.nom"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Adresse</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.proprietaire.adresse"
-            :disabled="!intervention.en_creation"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.proprietaire.adresse"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Téléphone</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.proprietaire.telephone"
-            :disabled="!intervention.en_creation"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.proprietaire.telephone"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-label position="floating">Prénom</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.proprietaire.prenom"
-            :disabled="!intervention.en_creation"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.proprietaire.prenom"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">NPA / Localité</ion-label>
@@ -366,36 +348,22 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             readonly
             @ionFocus="selectLocaliteProprietaire()"
             :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
-            :disabled="!intervention.en_creation"
           ></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">E-mail</ion-label>
-          <ion-input
-            type="text"
-            inputmode="email"
-            v-model="intervention.proprietaire.email"
-            :disabled="!intervention.en_creation"
-          ></ion-input>
+          <ion-input type="text" inputmode="email" v-model="intervention.proprietaire.email"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="12">
         <h2>Responsables</h2>
-        <ion-textarea
-          lines="5"
-          v-model="intervention.responsables"
-          :disabled="!intervention.en_creation"
-        ></ion-textarea>
+        <ion-textarea lines="5" v-model="intervention.responsables"></ion-textarea>
       </ion-col>
       <ion-col size="12">
         <h2>Description de l'intervention et commentaires</h2>
-        <ion-textarea
-          lines="8"
-          v-model="intervention.description"
-          :disabled="!intervention.en_creation"
-        ></ion-textarea>
+        <ion-textarea lines="8" v-model="intervention.description"></ion-textarea>
         <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
       </ion-col>
     </ion-row>

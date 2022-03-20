@@ -13,7 +13,7 @@ import {
   IonButton,
   loadingController,
 } from '@ionic/vue';
-import { ref, watch, watchEffect, computed } from 'vue';
+import { ref, watchEffect } from 'vue';
 import useStore from '@/store/useStore';
 
 const router = useRouter();
@@ -24,7 +24,7 @@ const errorMessage = ref('');
 const { login, state } = useAuth();
 
 // If connected redirect to home page
-const stopRedirect = watchEffect((onInvalidate) => {
+watchEffect(() => {
   if (state.data.statut == UserStatus.connected && router.currentRoute.value.name == 'login') {
     router.push({ name: 'accueil' });
   }

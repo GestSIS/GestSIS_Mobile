@@ -1,4 +1,4 @@
-import { readonly, Ref, ref } from 'vue';
+import { Ref, ref } from 'vue';
 import useBasicStore, { StoreState } from './useBasicStore';
 import { Exercice } from '@/models/bundle';
 import ExerciceService from '@/services/ExerciceService';
@@ -19,7 +19,7 @@ export default function useExercices() {
     const exercices: Exercice[] = state.value.filter(
       (e) => e.localStatus == 'validated'
     );
-    const res = await exercices.map(async (e) => {
+    await exercices.map(async (e) => {
       await ExerciceService.updateExercicePresences(e);
       return { ok: true, uuid: e.localUuid };
     });
