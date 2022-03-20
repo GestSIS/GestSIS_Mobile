@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import useExercices from "@/store/useExercices";
+import useInterventions from "@/store/useInterventions";
+import useStore from "@/store/useStore";
+import { useNotify } from "@/tools/useToast";
 import {
   IonButtons,
   IonContent,
@@ -14,9 +18,14 @@ import {
   IonButton,
   IonIcon,
   IonCardContent,
+  loadingController,
 } from "@ionic/vue";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
+
+const exerciceStore = useExercices();
+const interventionStore = useInterventions();
+const notify = useNotify();
 
 const router = useRouter();
 const navigateTo = async (name: string) => {
@@ -24,11 +33,33 @@ const navigateTo = async (name: string) => {
 };
 
 const needSync = computed((): boolean => {
-  return true;
+  return interventionStore.state.value.every(e => e.localStatus == "validated") ||
+    exerciceStore.state.value.every(e => e.localStatus == "validated")
 });
-const startSync = () => {
-  return true;
+
+const sync = async () => {
+  // Afficher loading
+  const loading = await loadingController.create({
+    message: 'Chargement...',
+  });
+
+  await loading.present();
+
+  // Load data
+  const store = useStore();
+  try {
+    await store.syncAll();
+  } catch (e: any) {
+    // Catch Refresh token expired
+    if (e?.status === 401) {
+      notify.error("Vous avez été déconnecté pour cause d'absence prolongée.");
+    }
+  }
+
+  // Hide loading
+  await loading.dismiss();
 };
+
 </script>
 
 <template>
@@ -51,7 +82,7 @@ const startSync = () => {
                 <h2>⚠️ Certains éléments ne sont pas synchronisés.</h2>
               </ion-col>
               <ion-col col-12 col-md-4>
-                <ion-button ion-button color="light" block icon-start @click="startSync">
+                <ion-button ion-button color="light" block icon-start @click="sync">
                   <ion-icon slot="start" name="syncOutline"></ion-icon>Synchroniser maintenant
                 </ion-button>
               </ion-col>

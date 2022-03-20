@@ -12,6 +12,8 @@ export default {
     return Api.api().post('/exercices', exerciceData);
   },
   updateExercicePresences(exercice: Exercice) {
-    return Api.api().post('/exercices/' + exercice.id + '/presences', exercice.sapeurs);
+    return Api.api().post('/exercices/' + exercice.id + '/presences', {
+      sapeurs: exercice.sapeurs,
+    });
   },
 };

@@ -30,7 +30,7 @@ import { useRoute } from "vue-router";
 import router from "@/router";
 import useExcuseTypes from "@/store/useExcuseTypes";
 import useSapeurs from "@/store/useSapeurs";
-import { nextTick, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 import useHeureExerciceTypes from "@/store/useHeureExerciceTypes";
 import useUnitesType from "@/store/useUnitesTypes";
@@ -80,6 +80,13 @@ if (!exercice.value) {
     excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
   }))
 }
+
+const computedSapeurs = computed(() => {
+  return exercice.value?.sapeurs.map(s => {
+    const nomPrenom = indexedSapeurs.get(s.sapeur_id);
+    return { ...s, nomPrenom };
+  }).sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
+})
 
 const validate = () => {
   // Validate an exercice
@@ -283,7 +290,7 @@ const reset = () => {
         <div class="sapeurs">
           <ion-radio-group
             v-model="sapeur.presenceStatut"
-            v-for="(sapeur, i) in exercice?.sapeurs"
+            v-for="(sapeur, i) in computedSapeurs"
             @ionChange="select(sapeur, $event.target.value)"
             :key="sapeur.id"
           >

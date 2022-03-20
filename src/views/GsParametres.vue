@@ -35,8 +35,7 @@ const wrappedLogout = () => {
 };
 
 const onSelectSis = async (sis: string) => {
-  //TODO: Check if some exercices/interventions need to be synced
-  // if so then confirm that the modifications will be lost
+  // Check if some exercices/interventions need to be synced if so then confirm that the modifications will be lost
   const exerciceStore = useExercices();
   const interventionStore = useInterventions();
   const hasInProgressExercices = exerciceStore.state.value.every(
