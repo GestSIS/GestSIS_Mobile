@@ -29,8 +29,10 @@ import ModalMissionSelectVue from "@/components/modals/ModalMissionSelect.vue";
 import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
+import { useNotify } from "@/tools/useToast";
 
 const { formatDate } = useDateFormatter();
+const notify = useNotify();
 const sapeurModule = useSapeurs();
 
 const openModalDebut = ref(false);
@@ -94,7 +96,7 @@ const selectTitre = async () => {
 
 const save = () => {
   if (!isInputComplete()) {
-    // TODO: Notification
+    notify.error("Veuillez compléter tous les champs");
     return;
   }
   if (mission.value.localUuid) {

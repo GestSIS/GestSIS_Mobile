@@ -51,7 +51,6 @@ const dismiss = () => {
 }
 
 const validate = () => {
-  // TODO: validate modal sapeur select
   modalController.dismiss([...selectedSapeurId]);
 }
 

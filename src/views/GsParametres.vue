@@ -22,7 +22,8 @@ import {
   loadingController,
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-const router = useRouter()
+const router = useRouter();
+const notify = useNotify();
 const { state, activeSisKey, logout, selectSis } = useAuth();
 
 const wrappedLogout = () => {
@@ -37,7 +38,7 @@ const onSelectSis = async (sis: string) => {
   // else
   const ok = await selectSis(sis);
   if (!ok) {
-    // TODO: Error message
+    notify.error("Impossible de changer de SIS");
     return;
   }
 
@@ -52,11 +53,10 @@ const onSelectSis = async (sis: string) => {
   // Load data
   const store = useStore()
   try {
-    await store.loadAll();
+    await store.syncAll();
   } catch (e: any) {
     // Catch Refresh token expired
     if (e?.status === 401) {
-      const notify = useNotify();
       notify.error("Vous avez été déconnecté pour cause d'absence prolongée.");
     }
   }

@@ -2,7 +2,7 @@ import Api from '@/http/Request';
 import { Intervention } from '@/models/bundle';
 
 export default {
-  //TODO: Nouvelle api - Récupérer les dernières interventions (n jours)
+  //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)
   getInterventions() : Promise<Intervention[]> {
     return Api.api().get('/interventions');
   },

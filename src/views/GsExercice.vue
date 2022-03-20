@@ -50,6 +50,7 @@ const excusesTypes = excuseTypesStore.state;
 const sapeurs = sapeursStore.state;
 const heuresTypes = heuresStore.state;
 const unites = unitesStore.state;
+
 const indexedSapeurs = sapeurs.value.reduce((map, e) => {
   map.set(e.id, e.nom + " " + e.prenom)
   return map;
@@ -62,16 +63,11 @@ const formatCategorie = (categorieId: number) => {
 const route = useRoute();
 const exerciceUuid = route.params.uuid;
 
-const exercice = ref(exercices.value.find(e => e.localUuid == exerciceUuid)) as any;
+const exercice = ref(exercices.value.find(e => e.localUuid == exerciceUuid));
 if (!exercice.value) {
   console.log("going back !!! Invalid Exercice UUID")
   router.back();
 } else {
-  if (!exercice.value?.en_creation) {
-    exercice.value.en_creation = true;
-    exercicesStore.updatExercice(exercice.value);
-  }
-
   // Compute data pour affichage
   exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
     ...p,
@@ -86,10 +82,15 @@ if (!exercice.value) {
 }
 
 const validate = () => {
-  //TODO: validate an exercice
-};
+  // Validate an exercice
+  if (exercice.value) {
+    exercice.value.localStatus = "validated";
+    exercicesStore.updatExercice(exercice.value, true);
+  }
+}
 
 const addSapeur = async () => {
+  if (!exercice.value) return;
   const modalSapeurSelect = await modalController
     .create({
       component: ModalSapeurSelectVue,
@@ -107,23 +108,24 @@ const addSapeur = async () => {
   }
 
   exercice.value.sapeurs.push({
-    "id": null,
-    "sapeur_id": sapeurId,
-    "exercice_id": null,
-    "excuse_type_id": null,
-    "convoque": null,
-    "present": true,
-    "amende": false,
-    "remplace": false,
-    "presenceStatut": 0,
-    "excuse_type": "",
-    "absent": false,
-    "excuse": false
+    id: null as any,
+    sapeur_id: sapeurId,
+    excuse_type_id: null as any,
+    convoque: false,
+    present: false,
+    amende: false,
+    remplace: false,
+    presenceStatut: 0,
+    excuse_type: "",
+    absent: false,
+    excuse: false,
+    heures: []
   });
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectPresent = async (sapeur: PresenceExercice) => {
+  if (!exercice.value) return;
   console.log("Select present");
   sapeur.absent = false;
   sapeur.present = true;
@@ -131,10 +133,11 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectAbsent = async (sapeur: PresenceExercice) => {
+  if (!exercice.value) return;
   console.log("Select absent");
   sapeur.present = false;
   sapeur.absent = true;
@@ -142,10 +145,11 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectRemplace = async (sapeur: PresenceExercice) => {
+  if (!exercice.value) return;
   console.log("Select remplace");
   sapeur.absent = false;
   sapeur.present = false;
@@ -153,10 +157,11 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = true;
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectExcuse = async (sapeur: PresenceExercice) => {
+  if (!exercice.value) return;
   console.log("Select excuse");
   sapeur.present = false;
   sapeur.absent = false;
@@ -166,10 +171,11 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
   const buttons = excusesTypes.value.map((excuse) => ({
     text: excuse.designation,
     handler: () => {
+      if (!exercice.value) return;
       sapeur.excuse = true;
       sapeur.excuse_type_id = excuse.id;
       sapeur.excuse_type = excuse.designation;
-      exercicesStore.updatExercice(exercice);
+      exercicesStore.updatExercice(exercice.value);
     },
   }));
 
@@ -186,6 +192,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
 
 let resetting = ref(false);
 const select = async (sapeur: any, statut: number) => {
+  if (!exercice.value) return;
   if (statut == null) {
     // Unselect
   }
@@ -196,17 +203,18 @@ const select = async (sapeur: any, statut: number) => {
   await (actions[statut - 1])(sapeur);
 
   // Save changes
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value);
 };
 
 // Reset les saisies effectuées
 const reset = () => {
+  if (!exercice.value) return;
   resetting.value = true;
   exercice.value.sapeurs = [...exercice.value.initialSapeurs.map((e: any) => ({ ...e }))];
-  exercice.value.en_creation = true;
+  exercice.value.localStatus = "empty";
 
   // Save changes
-  exercicesStore.updatExercice(exercice);
+  exercicesStore.updatExercice(exercice.value, true);
   nextTick(() => {
     resetting.value = false;
   })
@@ -227,8 +235,7 @@ const reset = () => {
     <ion-content class="ion-padding">
       <h3>
         {{
-          exercice?.designation != "-"
-            ? exercice?.designation
+          exercice?.designation != '-' ? exercice?.designation
             : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
@@ -287,16 +294,16 @@ const reset = () => {
                 <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="1" :disabled="!exercice?.en_creation"></ion-radio>
+                <ion-radio :value="1"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="2" :disabled="!exercice?.en_creation"></ion-radio>
+                <ion-radio :value="2"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="3" :disabled="!exercice?.en_creation"></ion-radio>
+                <ion-radio :value="3"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="4" :disabled="!exercice?.en_creation"></ion-radio>
+                <ion-radio :value="4"></ion-radio>
               </ion-col>
               <ion-col v-for="heure in heuresTypes" :key="heure.id">
                 <ion-item lines="none">
@@ -314,21 +321,32 @@ const reset = () => {
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="addSapeur" v-if="exercice?.en_creation">
+            <ion-button expand="block" @click="addSapeur">
               <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
             </ion-button>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="reset" color="light" v-if="exercice?.en_creation">
+            <ion-button
+              expand="block"
+              @click="reset"
+              color="light"
+              :disabled="exercice?.localStatus == 'empty'"
+            >
               <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button expand="block" @click="validate" v-if="exercice?.en_creation">
+            <ion-button
+              expand="block"
+              @click="validate"
+              v-if="exercice?.localStatus != 'validated'"
+              :disabled="exercice?.localStatus == 'empty'"
+            >
               <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
+            <!-- TODO: Optionnel Ajouter bouton synchroniser pour exporter l'exercice ?  -->
           </ion-col>
         </ion-row>
       </ion-grid>

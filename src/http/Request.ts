@@ -31,43 +31,6 @@ const request = {
     axios.defaults.headers.common['Sis-Id'] = sis_key;
   },
 
-  apiFileDownload(filename: string) {
-    const api = axios.create({
-      baseURL: API_URL,
-      responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
-      headers: {
-        Accept: 'application/pdf',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-
-    api.interceptors.response.use(
-      function (response: any) {
-        return response;
-      },
-      function (error: any) {
-        throw error.response.data;
-      }
-    );
-
-    if (filename) {
-      api.interceptors.response.use((response: any) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        // link.target = '_blank' // If we want to open it in another tab
-        link.setAttribute('download', filename);
-        // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
-        link.click();
-        window.URL.revokeObjectURL(url);
-        return response.data;
-      });
-    }
-
-    return api;
-  },
-
   api() {
     const api = axios.create({
       baseURL: API_URL,

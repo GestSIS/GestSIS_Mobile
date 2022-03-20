@@ -18,7 +18,7 @@ import useVehicules from './useVehicules';
 export default function useStore() {
   const modules = [
     useExexercices(),
-    // useInterventions(),
+    useInterventions(),
     useSapeurs(),
     useLocalites(),
     useGroupes(),
@@ -46,15 +46,15 @@ export default function useStore() {
   };
 
   /** Load all modules */
-  const loadAll = () => {
-    const promises = modules.map(({ load }) => load());
+  const syncAll = () => {
+    const promises = modules.map(({ sync }) => sync());
     return Promise.all(promises);
   };
 
   return {
     persist,
     reset,
-    loadAll,
+    syncAll,
     modules,
   };
 }

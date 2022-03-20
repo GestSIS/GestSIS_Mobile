@@ -16,14 +16,25 @@ export default () => {
   const name = 'Interventions';
 
   /** Load data from GestSIS API */
-  const load = async (): Promise<boolean> => {
-    //TODO: For now, we should not load any intervention
-
+  const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-    //TODO: Do not override new and in sync intervention
-    const interventions = await InterventionService.getInterventions();
-    //TODO: Generate random uuid for each intervention
-    state.value = interventions.map((i) => ({ ...i, localUuid: 'null' }));
+
+    // TODO: Load local interventions validated
+    const interventions: any[] = [];
+    // Export interventions
+    const res = interventions.map((i) => {
+      // TODO: Export single intervention
+
+      // FIXME: Require update of api to handle easy export of intervention
+
+      return { ok: true, uuid: i.localUuid };
+    });
+
+    //TODO: For now, we should not load any intervention
+    // //TODO: Do not override new and in sync intervention
+    // const interventions = await InterventionService.getInterventions();
+    // //TODO: Generate random uuid for each intervention
+    // state.value = interventions.map((i) => ({ ...i, localUuid: 'null' }));
 
     store.lastSync.value = DateTime.now().toISO();
     store.persist();
@@ -77,7 +88,7 @@ export default () => {
     ...store,
     name,
     state,
-    load,
+    sync,
     newIntervention,
     updateIntervention,
     removeIntervention,

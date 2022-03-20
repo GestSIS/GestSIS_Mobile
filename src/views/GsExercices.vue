@@ -73,18 +73,25 @@ const openDetails = (exercice: Exercice) => {
           :key="exercice.id"
           @click="openDetails(exercice)"
         >
-          <ion-icon slot="start" :name="exercice.en_creation ? 'create' : 'sync'"></ion-icon>
+          <ion-icon
+            slot="start"
+            :name="
+              exercice.localStatus == 'empty' ? 'create' :
+                exercice.localStatus == 'in_progress' ? 'create' :
+                  exercice.localStatus == 'validated' ? 'sync' : ''
+            "
+          ></ion-icon>
           <p>
-            <!-- TODO: Optional See if display can be improved -->
+            <!-- TODO: Optionnel See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}
             <br />
             <span class="details statut">
               {{
-                exercice.en_creation
-                  ? "En cours d'édition"
-                  : 'Validé, en attente de synchronisation'
+                exercice.localStatus == "empty" ? "A saisir" :
+                  exercice.localStatus == "in_progress" ? "En cours d'édition" :
+                    exercice.localStatus == "validated" ? 'Validé, en attente de synchronisation' : ""
               }}
             </span>
             <br />

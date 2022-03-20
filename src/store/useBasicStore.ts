@@ -49,7 +49,7 @@ export default function useBasicStore<Type>(
   };
 
   /** Load data from GestSIS API */
-  const load = async (): Promise<boolean> => {
+  const sync = async (): Promise<boolean> => {
     syncStatus.value = StoreState.Syncing;
     state.value = await loader();
     lastSync.value = DateTime.now().toSQL();
@@ -65,6 +65,6 @@ export default function useBasicStore<Type>(
     lastSync,
     reset,
     persist,
-    load,
+    sync,
   };
 }

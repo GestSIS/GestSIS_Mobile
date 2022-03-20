@@ -45,7 +45,7 @@ const wrappedLogin = async () => {
 
     // Load data
     const store = useStore()
-    await store.loadAll();
+    await store.syncAll();
 
     // Hide loading
     await loading.dismiss();

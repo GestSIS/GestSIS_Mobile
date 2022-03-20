@@ -11,28 +11,51 @@ const store = useBasicStore(state, ExerciceService.getExercices, 'exercices');
 export default function useExercices() {
   const name = 'Exercices';
 
-  // TODO: Override load to prevent overriding existing exercices
-  const load = async (): Promise<boolean> => {
+  // Override load to prevent overriding existing exercices
+  const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-    const newExercices = (await ExerciceService.getExercices()).map(e => ({...e, initialSapeurs: e.sapeurs, localUuid: uuidv4()}));
+
+    // Sync validated exercices
+    const exercices: Exercice[] = state.value.filter(
+      (e) => e.localStatus == 'validated'
+    );
+    const res = await exercices.map(async (e) => {
+      await ExerciceService.updateExercicePresences(e)
+      return { ok: true, uuid: e.localUuid };
+    });
 
     // TODO: Do not lose data if reload exercices, Do not override edited exercices
+    
+    const newExercices = (await ExerciceService.getExercices()).map(
+      (e): Exercice => ({
+        ...e,
+        initialSapeurs: e.sapeurs,
+        localUuid: uuidv4(),
+        localStatus: 'empty',
+      })
+    );
 
+    // Store loaded exercices
     state.value = newExercices;
     store.lastSync.value = DateTime.now().toSQL();
     store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
-  }
+  };
 
-  const updatExercice = (exercice: Exercice) => {
-    state.value = state.value.map(e => e.localUuid == exercice.localUuid ? exercice : e);
+  const updatExercice = (exercice: Exercice, reset = false) => {
+    if (!reset){
+      exercice.localStatus = exercice.localStatus == "validated" ? "validated" : "in_progress";
+    }
+    state.value = state.value.map((e) =>
+      e.localUuid == exercice.localUuid ? exercice : e
+    );
     store.persist();
-  }
+  };
 
   return {
     ...store,
-    load,
+    sync,
     name,
     state,
 

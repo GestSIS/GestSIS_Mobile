@@ -109,7 +109,7 @@ export default function useAuth() {
 
     // Load data
     const store = useStore();
-    store.loadAll();
+    store.syncAll();
 
     return Promise.resolve();
   };

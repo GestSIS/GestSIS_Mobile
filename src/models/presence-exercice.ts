@@ -1,7 +1,5 @@
 export class PresenceExercice {
   id: number;
-  nom: string;
-  prenom: string;
   convoque: boolean;
   present: boolean;
   remplace: boolean;
@@ -9,6 +7,12 @@ export class PresenceExercice {
   excuse: boolean;
   amende: boolean;
   excuse_type: string;
+  sapeur_id: string;
   excuse_type_id: number;
   presenceStatut = 0;
+  heures:{
+    id: number,
+    heure_supplementaire_type_id: number,
+    quantite: number,
+  }[]
 }

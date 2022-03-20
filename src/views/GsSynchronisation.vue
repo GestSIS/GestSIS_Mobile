@@ -17,7 +17,7 @@ import useDateFormatter from "@/tools/useDateFormatter";
 import useStore from "@/store/useStore";
 import { StoreState } from "@/store/useBasicStore";
 const { formatDate } = useDateFormatter();
-const { modules, loadAll } = useStore();
+const { modules, syncAll } = useStore();
 
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
   switch (syncStatus || StoreState.Synced) {
@@ -50,13 +50,13 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
     </ion-header>
 
     <ion-content>
-      <ion-button expand="full" color="light" @click="loadAll">Tout synchroniser</ion-button>
+      <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
       <ion-list>
         <ion-item
           button="true"
-          v-for="{ name, lastSync, syncStatus, load } in modules"
+          v-for="{ name, lastSync, syncStatus, sync } in modules"
           :key="name"
-          @click="load"
+          @click="sync"
         >
           <div>
             {{ name }}

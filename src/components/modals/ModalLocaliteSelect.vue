@@ -19,7 +19,7 @@ const query = ref("")
 const localiteModule = useLocalites();
 const filteredLocalite = computed(() => {
   return localiteModule.state.value
-    // .filter(s => query.value == '' ? s) //TODO: Optionnal pré-filtrer sur localités du SIS
+    // .filter(s => query.value == '' ? s) //TODO: Optionnel pré-filtrer sur localités du SIS
     .filter(s => (s.npa + "" + s.designation)
       .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
       .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
