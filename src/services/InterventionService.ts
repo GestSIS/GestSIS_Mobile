@@ -144,12 +144,4 @@ export default {
       data: { phases: [phaseId] },
     });
   },
-
-  // Rapport d'intervention
-  downloadRapport(interventionId: number, params: any) {
-    return Api.apiFileDownload('rapport.pdf').post(
-      '/interventions/' + interventionId + '/rapport',
-      params
-    );
-  },
 };

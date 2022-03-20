@@ -3,9 +3,10 @@ import { Appel } from './appel';
 import { DateTime } from 'luxon';
 
 export class Intervention {
-  id: number;
   localUuid: string;
-  en_creation= false;
+  localStatus: "in_progress" | "validated";
+
+  id: number;
   date_debut = DateTime.now().toISO();
   date_fin: string;
   objet: string;

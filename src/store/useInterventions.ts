@@ -36,8 +36,8 @@ export default () => {
     // //TODO: Generate random uuid for each intervention
     // state.value = interventions.map((i) => ({ ...i, localUuid: 'null' }));
 
-    store.lastSync.value = DateTime.now().toISO();
-    store.persist();
+    store.lastSync.value = DateTime.now().toSQL();
+    await store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
   };
@@ -50,7 +50,7 @@ export default () => {
   ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
-    intervention.en_creation = true;
+    intervention.localStatus = "in_progress";
     intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0, 16);
     intervention.lieu = lieu;
     intervention.objet = objet;

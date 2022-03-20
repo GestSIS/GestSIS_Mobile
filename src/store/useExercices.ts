@@ -20,12 +20,11 @@ export default function useExercices() {
       (e) => e.localStatus == 'validated'
     );
     const res = await exercices.map(async (e) => {
-      await ExerciceService.updateExercicePresences(e)
+      await ExerciceService.updateExercicePresences(e);
       return { ok: true, uuid: e.localUuid };
     });
 
-    // TODO: Do not lose data if reload exercices, Do not override edited exercices
-    
+    // Resolve conflicts to avoid overridinf in progress exercices
     const newExercices = (await ExerciceService.getExercices()).map(
       (e): Exercice => ({
         ...e,
@@ -35,8 +34,27 @@ export default function useExercices() {
       })
     );
 
+    const inProgressExercices = exercices.filter(
+      (e) => e.localStatus == 'in_progress'
+    );
+    const indexedInProgressExercices = inProgressExercices.reduce((acc, e) => {
+      acc.set(e.id, e);
+      return acc;
+    }, new Map<number, Exercice>());
+
+    // Resolve conflicting exercices
+    const filteredExercices = newExercices.filter((e) => {
+      const conflicting = indexedInProgressExercices.has(e.id);
+      if (conflicting) {
+        // TODO Resolve conflicts
+        // Se baser sur le statut de l'exo ?
+        // Non car pourrait déjà contenir des execuses
+      }
+      return !conflicting;
+    });
+
     // Store loaded exercices
-    state.value = newExercices;
+    state.value = [...inProgressExercices, ...filteredExercices];
     store.lastSync.value = DateTime.now().toSQL();
     store.persist();
     store.syncStatus.value = StoreState.Synced;
@@ -44,8 +62,9 @@ export default function useExercices() {
   };
 
   const updatExercice = (exercice: Exercice, reset = false) => {
-    if (!reset){
-      exercice.localStatus = exercice.localStatus == "validated" ? "validated" : "in_progress";
+    if (!reset) {
+      exercice.localStatus =
+        exercice.localStatus == 'validated' ? 'validated' : 'in_progress';
     }
     state.value = state.value.map((e) =>
       e.localUuid == exercice.localUuid ? exercice : e

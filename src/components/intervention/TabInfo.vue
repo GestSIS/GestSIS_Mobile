@@ -87,8 +87,7 @@ const validate = async () => {
       {
         text: 'Oui',
         handler: () => {
-          intervention.value.en_creation = false;
-
+          intervention.value.localStatus = "validated";
           router.back();
 
         }
