@@ -76,7 +76,18 @@ const supprimerRapport = async () => {
   });
   await confirm.present();
 };
+
+const sync = async () => {
+  // FIXME: A implémenter
+  // Check internet connexion
+
+  // Sync que cette intervention
+
+}
+
 const validate = async () => {
+  // FIXME: Valider ques tous les champs soit saisi !
+
   const confirm = await alertController.create({
     header: 'Valider l\'intervention',
     message: "Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Cette action est irréversible et l'intervention ne pourra être éditée que depuis la plateforme GestSIS.",
@@ -169,11 +180,10 @@ const ensureNumericKey = (event: KeyboardEvent) => {
         <h1>Informations générales</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button
-          expand="block"
-          @click="validate()"
-          v-if="intervention.localStatus == 'in_progress'"
-        >
+        <ion-button expand="block" @click="sync()" v-if="intervention.localStatus == 'validated'">
+          <ion-icon slot="start" name="sync"></ion-icon>Synchroniser
+        </ion-button>
+        <ion-button expand="block" @click="validate()" v-else>
           <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
         </ion-button>
       </ion-col>

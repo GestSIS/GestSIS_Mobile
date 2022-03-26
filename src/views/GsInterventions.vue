@@ -75,14 +75,17 @@ const create = async () => {
           :key="intervention.id"
           @click.prevent="openDetails(intervention)"
         >
-          <ion-icon slot="start" :name="intervention.en_creation ? 'create' : 'create'"></ion-icon>
+          <ion-icon
+            slot="start"
+            :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'"
+          ></ion-icon>
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
             <br />
             <span class="details">
               {{
-                intervention.en_creation
+                intervention.localStatus == 'in_progress'
                   ? "En cours d'édition"
                   : "Validé, en attente de synchronisation"
               }}
