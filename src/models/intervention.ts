@@ -12,8 +12,8 @@ export class Intervention {
   objet: string;
   lieu: string;
   
-  nb_personnes_sauvees = 0;
-  nb_animaux_sauves = 0;
+  sauve_personne = 0;
+  sauve_animaux = 0;
 
   rapport_police: boolean;
   agent: string;
@@ -49,12 +49,13 @@ export class Intervention {
     presences: Array<{
       date_debut: string;
       date_fin: string;
+      piquet: boolean;
     }>;
   }> = [];
 
   missions: Mission[] = [];
   appels: Appel[] = [];
-  vehicules: number[];
   materiel: any; // id_materiel : quantite
+  vehicules: number[];
   groupes: number[] = [];
 }

@@ -1,10 +1,27 @@
 import Api from '@/http/Request';
 import { Intervention } from '@/models/bundle';
+import SapeurService from './SapeurService';
 
 export default {
   //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)
   getInterventions() : Promise<Intervention[]> {
     return Api.api().get('/interventions');
+  },
+  exportInterventions(interventions:Intervention[]): Promise<any> {
+    const formattedInterventions = interventions.map((i) => {
+      return {
+        ...i,
+        sapeurs: i.sapeurs.flatMap(sapeur => 
+          sapeur.presences.map(p => ({debut:p.date_debut, fin:p.date_fin, sapeur_id:sapeur.id, piquet: p.piquet}))
+        ),
+        materiel: Object.entries(i.materiel).map((key, value) => ({
+          materiel_id: key,
+          quantite: value,
+        })),
+        missions: i.missions.map((m) => ({ ...m, sapeur_id: m.sapeur.id })),
+      };
+    });
+    return Promise.all(formattedInterventions.map(intervention => Api.api().post('/interventions/export', intervention)))
   },
   createIntervention(interventionData: any) {
     return Api.api().post('/interventions', interventionData);

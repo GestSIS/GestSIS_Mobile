@@ -306,7 +306,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-input
             type="text"
             :min="0"
-            :value="intervention.nb_personnes_sauvees"
+            :value="intervention.sauve_personne"
             @keypress="ensureNumericKey($event)"
           ></ion-input>
         </ion-item>
@@ -316,7 +316,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-input
             type="text"
             :min="0"
-            v-model="intervention.nb_animaux_sauves"
+            v-model="intervention.sauve_animaux"
             @keypress="ensureNumericKey($event)"
           ></ion-input>
         </ion-item>

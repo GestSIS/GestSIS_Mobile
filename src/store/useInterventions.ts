@@ -19,22 +19,13 @@ export default () => {
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
 
-    // TODO: Load local interventions validated
-    const interventions: any[] = [];
-    // Export interventions
-    const res = interventions.map((i) => {
-      // TODO: Export single intervention
+    // Export validated interventions
+    const interventions: Intervention[] = state.value.filter(
+      (e) => e.localStatus == 'validated'
+    );
+    const successes = await InterventionService.exportInterventions(interventions);
 
-      // FIXME: Require update of api to handle easy export of intervention
-
-      return { ok: true, uuid: i.localUuid };
-    });
-
-    //TODO: For now, we should not load any intervention
-    // //TODO: Do not override new and in sync intervention
-    // const interventions = await InterventionService.getInterventions();
-    // //TODO: Generate random uuid for each intervention
-    // state.value = interventions.map((i) => ({ ...i, localUuid: 'null' }));
+    // For now, we do not offer the possibility to edit intervention
 
     store.lastSync.value = DateTime.now().toSQL();
     await store.persist();
@@ -50,13 +41,13 @@ export default () => {
   ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
-    intervention.localStatus = "in_progress";
+    intervention.localStatus = 'in_progress';
     intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0, 16);
     intervention.lieu = lieu;
     intervention.objet = objet;
 
-    intervention.nb_animaux_sauves = 0;
-    intervention.nb_personnes_sauvees = 0;
+    intervention.sauve_animaux = 0;
+    intervention.sauve_personne = 0;
 
     intervention.type_intervention_id = null as any;
     intervention.stat_federal_id = null as any;
