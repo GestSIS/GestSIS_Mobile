@@ -5,7 +5,7 @@
         <h1>Appels</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addCall()" :disabled="!intervention.en_creation">
+        <ion-button expand="block" @click="addCall()">
           <ion-icon name="add" slot="start"></ion-icon>Nouvel appel
         </ion-button>
       </ion-col>
@@ -19,7 +19,6 @@
       v-for="appel in intervention.appels"
       :key="appel.localUuid"
       @click="editCall(appel)"
-      :disabled="!intervention.en_creation"
     >
       <p>
         {{ appel.nom }} - {{ appel.numero }}

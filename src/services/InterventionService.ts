@@ -21,7 +21,8 @@ export default {
         missions: i.missions.map((m) => ({ ...m, sapeur_id: m.sapeur.id })),
       };
     });
-    return Promise.all(formattedInterventions.map(intervention => Api.api().post('/interventions/export', intervention)))
+    
+    return Promise.all(formattedInterventions.map(intervention => Api.api().post('/interventions-complet', intervention)));
   },
   createIntervention(interventionData: any) {
     return Api.api().post('/interventions', interventionData);

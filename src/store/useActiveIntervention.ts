@@ -103,7 +103,7 @@ export default function useActiveIntervention() {
         let presence = sapeursMapping.get(s.id);
         // Get sapeur presence and either create a new entry or complete the existing one
         if (presence) {
-          presence.presences.push({ date_debut: presences.date, date_fin: '' });
+          presence.presences.push({ date_debut: presences.date, date_fin: '', piquet: false });
         } else {
           presence = {
             id: s.id,
@@ -113,6 +113,7 @@ export default function useActiveIntervention() {
               {
                 date_debut: presences.date,
                 date_fin: '',
+                piquet: false,
               },
             ],
           };

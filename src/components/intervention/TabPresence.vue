@@ -99,6 +99,7 @@ const editPresenceExercice = async (sapeurIndex: number, presenceIndex: any) => 
     sapeur.presences[presenceIndex] = {
       date_debut: data.date_debut,
       date_fin: data.date_fin,
+      piquet: false,
     }
   }
 
@@ -140,7 +141,6 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           v-for="(groupe, i) of filteredGroupes"
           :key="i"
           @click="changeGroupeStatus(groupe.id)"
-          :disabled="!intervention.en_creation"
         >
           <!-- <span>{{ groupe.prefix }}</span> -->
           {{
@@ -171,11 +171,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
             <span v-else class="details">Aucun sapeur</span>
           </ion-col>
           <ion-col size="4">
-            <ion-button
-              expand="block"
-              @click="addPresenceExercice('ARRIVEE')"
-              :disabled="!intervention.en_creation"
-            >
+            <ion-button expand="block" @click="addPresenceExercice('ARRIVEE')">
               <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
             </ion-button>
           </ion-col>
@@ -183,7 +179,6 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
             <ion-button
               expand="block"
               @click="addPresenceExercice('DEPART')"
-              v-if="intervention.en_creation"
               :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0"
             >
               <ion-icon slot="start" name="log-out"></ion-icon>Départ
@@ -212,7 +207,6 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           :button="true"
           v-for="(presence, j) in sapeur.presences"
           :key="j"
-          :disabled="!intervention.en_creation"
           @click="editPresenceExercice(i, j)"
         >
           <p>

@@ -13,7 +13,6 @@
       v-for="(vehicule, i) in vehicules"
       :key="i"
       @click="changeVehiculeStatut(vehicule.id)"
-      :disabled="!state.en_creation"
     >
       {{ vehicule.designation }}
       <ion-icon

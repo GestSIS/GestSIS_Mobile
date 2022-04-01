@@ -5,7 +5,7 @@
         <h1>Missions</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addMission()" :disabled="!intervention.en_creation">
+        <ion-button expand="block" @click="addMission()">
           <ion-icon slot="start" name="add"></ion-icon>Nouvelle mission
         </ion-button>
       </ion-col>
@@ -18,7 +18,6 @@
       v-for="(mission, i) in intervention.missions"
       :key="i"
       @click="editMission(mission)"
-      :disabled="!intervention.en_creation"
     >
       <ion-icon slot="start" :name="mission.date_fin ? 'checkmark' : 'time'"></ion-icon>
       <p>

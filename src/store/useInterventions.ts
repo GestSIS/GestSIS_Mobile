@@ -18,7 +18,6 @@ export default () => {
   /** Load data from GestSIS API */
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-
     // Export validated interventions
     const interventions: Intervention[] = state.value.filter(
       (e) => e.localStatus == 'validated'

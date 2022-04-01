@@ -304,8 +304,10 @@ const ensureNumericKey = (event: KeyboardEvent) => {
         <ion-item>
           <ion-label position="floating">Nombre de personnes sauvées</ion-label>
           <ion-input
-            type="text"
+            type="number"
+            inputmode="numeric"
             :min="0"
+            @ionChange="(ev: any) => intervention.sauve_personne = parseInt(ev.target.value)"
             :value="intervention.sauve_personne"
             @keypress="ensureNumericKey($event)"
           ></ion-input>
@@ -314,9 +316,11 @@ const ensureNumericKey = (event: KeyboardEvent) => {
         <ion-item>
           <ion-label position="floating">Nombre d'animaux sauvés</ion-label>
           <ion-input
-            type="text"
+            type="number"
+            inputmode="numeric"
             :min="0"
-            v-model="intervention.sauve_animaux"
+            @ionChange="(ev: any) => intervention.sauve_animaux = parseInt(ev.target.value)"
+            :value="intervention.sauve_animaux"
             @keypress="ensureNumericKey($event)"
           ></ion-input>
         </ion-item>

@@ -5,7 +5,7 @@
         <h1>Matériel consommable et en prêt</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addMateriel()" :disabled="!intervention.en_creation">
+        <ion-button expand="block" @click="addMateriel()">
           <ion-icon slot="start" name="add"></ion-icon>Ajouter du matériel
         </ion-button>
       </ion-col>
