@@ -8,6 +8,7 @@ import useSapeurs from '@/store/useSapeurs';
 import useStatsFederal from '@/store/useStatsFederal';
 import useTypesIntervention from '@/store/useTypesIntervention';
 import useDateFormatter from '@/tools/useDateFormatter';
+import { useNotify } from '@/tools/useToast';
 import {
   IonButton,
   IonTextarea,
@@ -38,6 +39,7 @@ const { formatDate } = useDateFormatter();
 const { removeIntervention } = useInterventions();
 const { state, persist } = useActiveIntervention();
 const intervention = state;
+const errors: any = ref({});
 
 const openModalDebut = ref(false);
 const openModalFin = ref(false);
@@ -82,11 +84,30 @@ const sync = async () => {
   // Check internet connexion
 
   // Sync que cette intervention
+  intervention.value.localStatus = "in_progress";
 
 }
 
 const validate = async () => {
   // FIXME: Valider ques tous les champs soit saisi !
+  errors.value = {}
+
+  if (!intervention.value.date_debut) errors.value.date_debut = "A saisir";
+  if (!intervention.value.date_fin) errors.value.date_fin = "A saisir";
+  if (!intervention.value.localite_id) errors.value.localite_id = "A saisir";
+  if (!intervention.value.degre) errors.value.degre = "A saisir";
+  if (!intervention.value.objet) errors.value.objet = "A saisir";
+  if (!intervention.value.lieu) errors.value.lieu = "A saisir";
+  if (!intervention.value.sapeur_id) errors.value.sapeur_id = "A saisir";
+  if (!intervention.value.stat_federal_id) errors.value.stat_federal_id = "A saisir";
+  if (intervention.value.stat_nb < 0 || intervention.value.stat_nb != 0 && !intervention.value.stat_nb) errors.value.stat_nb = "A saisir";
+  if (!intervention.value.type_intervention_id) errors.value.type_intervention_id = "A saisir";
+  console.log(Object.keys(errors.value))
+  if (Object.keys(errors.value).length > 0) {
+    const notify = useNotify();
+    notify.error("Veuillez compléter tous les champs !")
+    return;
+  }
 
   const confirm = await alertController.create({
     header: 'Valider l\'intervention',
@@ -177,7 +198,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
   <ion-grid>
     <ion-row>
       <ion-col size="8">
-        <h1>Informations générales</h1>
+        <h2>Informations générales</h2>
       </ion-col>
       <ion-col size="4">
         <ion-button expand="block" @click="sync()" v-if="intervention.localStatus == 'validated'">
@@ -192,11 +213,13 @@ const ensureNumericKey = (event: KeyboardEvent) => {
     <ion-row>
       <ion-col size-sm="6" size="12">
         <ion-item @click="openModalDebut = !openModalDebut">
-          <ion-label>Fin</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ intervention.date_debut ? formatDate(intervention.date_debut, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+          <ion-label :color="errors.date_debut ? 'primary' : ''">Début</ion-label>
+          <ion-text slot="end" id="open-modal">
+            {{
+              intervention.date_debut ? formatDate(intervention.date_debut,
+                'dd.LL.yy HH:mm') : ''
+            }}
+          </ion-text>
           <ion-button fill="clear" slot="end">
             <ion-icon slot="end" name="calendar" />
           </ion-button>
@@ -211,11 +234,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item @click="openModalFin = !openModalFin">
-          <ion-label>Fin</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
+          <ion-label :color="errors.date_fin ? 'primary' : ''">Fin</ion-label>
+          <ion-text slot="end" id="open-modal">
+            {{
+              intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH: mm') : ''
+            }}
+          </ion-text>
           <ion-button fill="clear" slot="end">
             <ion-icon slot="end" name="calendar" />
           </ion-button>
@@ -232,35 +256,14 @@ const ensureNumericKey = (event: KeyboardEvent) => {
     </ion-row>
 
     <ion-row>
-      <ion-col size-sm="6" size="12">
+      <ion-col size="12" size-sm="6">
         <ion-item>
-          <ion-label position="floating">Type</ion-label>
-          <ion-select
-            interface="action-sheet"
-            v-model="intervention.type_intervention_id"
-            okText="Ok"
-            cancelText="Annuler"
-          >
-            <ion-select-option
-              v-for="t in typeInterventions"
-              :key="t.id"
-              :value="t.id"
-            >{{ t.designation }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Objet</ion-label>
+          <ion-label :color="errors.objet ? 'primary' : ''" position="floating">Objet</ion-label>
           <ion-input type="text" v-model="intervention.objet"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Lieu du sinistre</ion-label>
-          <ion-input type="text" v-model="intervention.lieu"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">NPA Localité</ion-label>
+          <ion-label :color="errors.localite_id ? 'primary' : ''" position="floating">NPA Localité</ion-label>
           <ion-input
             type="text"
             readonly
@@ -276,7 +279,77 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label position="floating">Statistiques fédérales</ion-label>
+          <ion-label
+            :color="errors.sapeur_id ? 'primary' : ''"
+            position="floating"
+          >Chef d'intervention</ion-label>
+          <ion-input
+            type="text"
+            readonly="true"
+            @ionFocus="selectChefIntervention()"
+            :value="getSapeurFormattedValue(intervention.sapeur_id)"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label :color="errors.lieu ? 'primary' : ''" position="floating">Lieu du sinistre</ion-label>
+          <ion-input type="text" v-model="intervention.lieu"></ion-input>
+        </ion-item>
+
+        <ion-item v-if="intervention.rapport_police">
+          <ion-label position="floating">Nom et prénom de l'agent</ion-label>
+          <ion-input type="text" v-model="intervention.agent"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <h2>Statistiques</h2>
+      </ion-col>
+      <ion-col size-sm="6" size="12">
+        <ion-item>
+          <ion-label :color="errors.type_intervention_id ? 'primary' : ''" position="floating">Type</ion-label>
+          <ion-select
+            interface="action-sheet"
+            v-model="intervention.type_intervention_id"
+            okText="Ok"
+            cancelText="Annuler"
+          >
+            <ion-select-option
+              v-for="t in typeInterventions"
+              :key="t.id"
+              :value="t.id"
+            >{{ t.designation }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label :color="errors.degre ? 'primary' : ''" position="floating">Degré</ion-label>
+          <ion-select
+            interface="action-sheet"
+            v-model="intervention.degre"
+            okText="Ok"
+            cancelText="Annuler"
+          >
+            <ion-select-option
+              v-for="stat in [
+                { id: 1, type: 'Fausse-alarme' },
+                { id: 2, type: 'Petite' },
+                { id: 3, type: 'Moyenne' },
+                { id: 4, type: 'Grande' },
+              ]"
+              :key="stat.id"
+              :value="stat.id"
+            >{{ stat.type }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label
+            :color="errors.stat_federal_id ? 'primary' : ''"
+            position="floating"
+          >Statistiques fédérales</ion-label>
           <ion-select
             interface="action-sheet"
             v-model="intervention.stat_federal_id"
@@ -290,14 +363,20 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             >{{ stat.designation }}</ion-select-option>
           </ion-select>
         </ion-item>
-
+      </ion-col>
+      <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label position="floating">Chef d'intervention</ion-label>
+          <ion-label
+            :color="errors.stat_nb ? 'primary' : ''"
+            position="floating"
+          >Nombre d'interventions</ion-label>
           <ion-input
-            type="text"
-            readonly="true"
-            @ionFocus="selectChefIntervention()"
-            :value="getSapeurFormattedValue(intervention.sapeur_id)"
+            type="number"
+            inputmode="numeric"
+            :min="0"
+            @ionChange="(ev: any) => intervention.stat_nb = parseInt(ev.target.value)"
+            :value="intervention.stat_nb"
+            @keypress="ensureNumericKey($event)"
           ></ion-input>
         </ion-item>
 
@@ -324,62 +403,61 @@ const ensureNumericKey = (event: KeyboardEvent) => {
             @keypress="ensureNumericKey($event)"
           ></ion-input>
         </ion-item>
-
-        <ion-item v-if="intervention.rapport_police">
-          <ion-label position="floating">Nom et prénom de l'agent</ion-label>
-          <ion-input type="text" v-model="intervention.agent"></ion-input>
-        </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <h2>Propriétaire</h2>
-  <ion-grid>
-    <ion-row>
-      <ion-col size-sm="6" size="12">
-        <ion-item>
-          <ion-label position="floating">Nom</ion-label>
-          <ion-input type="text" v-model="intervention.proprietaire.nom"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Adresse</ion-label>
-          <ion-input type="text" v-model="intervention.proprietaire.adresse"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Téléphone</ion-label>
-          <ion-input type="text" v-model="intervention.proprietaire.telephone"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col size-sm="6" size="12">
-        <ion-item>
-          <ion-label position="floating">Prénom</ion-label>
-          <ion-input type="text" v-model="intervention.proprietaire.prenom"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">NPA / Localité</ion-label>
-          <ion-input
-            type="text"
-            readonly
-            @ionFocus="selectLocaliteProprietaire()"
-            :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">E-mail</ion-label>
-          <ion-input type="text" inputmode="email" v-model="intervention.proprietaire.email"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12">
-        <h2>Responsables</h2>
-        <ion-textarea lines="5" v-model="intervention.responsables"></ion-textarea>
-      </ion-col>
-      <ion-col size="12">
-        <h2>Description de l'intervention et commentaires</h2>
-        <ion-textarea lines="8" v-model="intervention.description"></ion-textarea>
-        <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <form>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <h2>Propriétaire</h2>
+        </ion-col>
+        <ion-col size-sm="6" size="12">
+          <ion-item>
+            <ion-label position="floating">Nom</ion-label>
+            <ion-input type="text" v-model="intervention.proprietaire.nom"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Adresse</ion-label>
+            <ion-input type="text" v-model="intervention.proprietaire.adresse"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Téléphone</ion-label>
+            <ion-input type="text" v-model="intervention.proprietaire.telephone"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="6" size="12">
+          <ion-item>
+            <ion-label position="floating">Prénom</ion-label>
+            <ion-input type="text" v-model="intervention.proprietaire.prenom"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">NPA / Localité</ion-label>
+            <ion-input
+              type="text"
+              readonly
+              @ionFocus="selectLocaliteProprietaire()"
+              :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">E-mail</ion-label>
+            <ion-input type="text" inputmode="email" v-model="intervention.proprietaire.email"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <h2>Responsables</h2>
+          <ion-textarea lines="5" v-model="intervention.responsables"></ion-textarea>
+        </ion-col>
+        <ion-col size="12">
+          <h2>Description de l'intervention et commentaires</h2>
+          <ion-textarea lines="8" v-model="intervention.description"></ion-textarea>
+          <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </template>

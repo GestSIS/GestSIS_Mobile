@@ -8,9 +8,17 @@ export default {
     return Api.api().get('/interventions');
   },
   exportInterventions(interventions:Intervention[]): Promise<any> {
+    // TODO: Format localité
     const formattedInterventions = interventions.map((i) => {
       return {
         ...i,
+        date_debut: i.date_debut.split(" ")[0],
+        heure_debut: i.date_debut.split(" ")[1],
+        date_fin: i.date_fin.split(" ")[0],
+        heure_fin: i.date_fin.split(" ")[1],
+        proprietaire: `${i.proprietaire.nom} ${i.proprietaire.prenom}\n`+
+                      `${i.proprietaire.adresse}, ${i.proprietaire.localite_id}\n`+
+                      `${i.proprietaire.email}, ${i.proprietaire.telephone}`,
         sapeurs: i.sapeurs.flatMap(sapeur => 
           sapeur.presences.map(p => ({debut:p.date_debut, fin:p.date_fin, sapeur_id:sapeur.id, piquet: p.piquet}))
         ),

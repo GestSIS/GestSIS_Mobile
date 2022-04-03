@@ -11,11 +11,13 @@ export class Intervention {
   date_fin: string;
   objet: string;
   lieu: string;
-  
+
+  degre: number;
+  stat_nb = 1; // Correspond au nombre d'interventions effectif
   sauve_personne = 0;
   sauve_animaux = 0;
 
-  rapport_police: boolean;
+  rapport_police = false;
   agent: string;
   
   type_intervention_id: number;
