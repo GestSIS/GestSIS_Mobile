@@ -4,33 +4,49 @@ import SapeurService from './SapeurService';
 
 export default {
   //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)
-  getInterventions() : Promise<Intervention[]> {
+  getInterventions(): Promise<Intervention[]> {
     return Api.api().get('/interventions');
   },
-  exportInterventions(interventions:Intervention[]): Promise<any> {
+  exportInterventions(interventions: Intervention[]): Promise<any> {
     // TODO: Format localité
     const formattedInterventions = interventions.map((i) => {
       return {
         ...i,
-        date_debut: i.date_debut.split(" ")[0],
-        heure_debut: i.date_debut.split(" ")[1],
-        date_fin: i.date_fin.split(" ")[0],
-        heure_fin: i.date_fin.split(" ")[1],
-        proprietaire: `${i.proprietaire.nom} ${i.proprietaire.prenom}\n`+
-                      `${i.proprietaire.adresse}, ${i.proprietaire.localite_id}\n`+
-                      `${i.proprietaire.email}, ${i.proprietaire.telephone}`,
-        sapeurs: i.sapeurs.flatMap(sapeur => 
-          sapeur.presences.map(p => ({debut:p.date_debut, fin:p.date_fin, sapeur_id:sapeur.id, piquet: p.piquet}))
+        date_debut: i.date_debut.split(' ')[0],
+        heure_debut: i.date_debut.split(' ')[1],
+        date_fin: i.date_fin.split(' ')[0],
+        heure_fin: i.date_fin.split(' ')[1],
+        proprietaire:
+          `${i.proprietaire.nom} ${i.proprietaire.prenom}\n` +
+          `${i.proprietaire.adresse}, ${i.proprietaire.localite_id}\n` +
+          `${i.proprietaire.email}, ${i.proprietaire.telephone}`,
+        sapeurs: i.sapeurs.flatMap((sapeur) =>
+          sapeur.presences.map((p) => ({
+            debut: p.date_debut,
+            fin: p.date_fin,
+            sapeur_id: sapeur.id,
+            piquet: p.piquet,
+          }))
         ),
         materiel: Object.entries(i.materiel).map((key, value) => ({
           materiel_id: key,
           quantite: value,
         })),
-        missions: i.missions.map((m) => ({ ...m, sapeur_id: m.sapeur.id })),
+        missions: i.missions.map((m) => ({
+          titre: m.titre,
+          resume: m.resume,
+          debut: m.date_debut,
+          fin: m.date_fin,
+          sapeur_id: m.sapeur.id,
+        })),
       };
     });
-    
-    return Promise.all(formattedInterventions.map(intervention => Api.api().post('/interventions-complet', intervention)));
+
+    return Promise.all(
+      formattedInterventions.map((intervention) =>
+        Api.api().post('/interventions-complet', intervention)
+      )
+    );
   },
   createIntervention(interventionData: any) {
     return Api.api().post('/interventions', interventionData);
@@ -51,12 +67,9 @@ export default {
     });
   },
   removeMateriel(interventionId: number, materielId: number) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/materiels',
-      {
-        data: { materiels: [materielId] },
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/materiels', {
+      data: { materiels: [materielId] },
+    });
   },
 
   //Vehicules
@@ -66,12 +79,9 @@ export default {
     });
   },
   removeVehicules(interventionId: number, vehiculesId: number[]) {
-    return Api.api().delete(
-      '/interventions/' + interventionId + '/vehicules',
-      {
-        data: { vehicules: vehiculesId },
-      }
-    );
+    return Api.api().delete('/interventions/' + interventionId + '/vehicules', {
+      data: { vehicules: vehiculesId },
+    });
   },
 
   //Groupes
