@@ -38,16 +38,30 @@ const dismiss = () => {
   modalController.dismiss(null);
 }
 
+const datetimeDebut = ref();
+const datetimeFin = ref();
+
+const openModalDebut = ref(false);
+const openModalFin = ref(false);
+
+const confirm = () => {
+  if (datetimeFin.value === undefined) return;
+  datetimeFin.value.$el.confirm();
+  openModalFin.value = false;
+};
+
+const reset = () => {
+  if (datetimeFin.value === undefined) return;
+
+  datetimeFin.value.$el.reset();
+  presence.date_fin = "";
+  openModalFin.value = false;
+};
+
 const save = () => {
   modalController.dismiss(presence);
 }
 
-const reset = () => {
-  // modalController.dismiss(presence);
-}
-
-const openModalDebut = ref(false);
-const openModalFin = ref(false);
 // const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
 // onMounted(() => {
 //   searchbar.value?.$el.setFocus();
@@ -69,7 +83,7 @@ const computeCurrentDate = (): DateTime => {
           <ion-icon name="arrow-back"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-title>Détail d'une présence</ion-title>
+      <ion-title>Détails d'une présence</ion-title>
 
       <ion-buttons slot="end">
         <ion-button @click="save()">Enregistrer</ion-button>
@@ -95,6 +109,7 @@ const computeCurrentDate = (): DateTime => {
         </ion-button>
         <ion-modal :is-open="openModalDebut">
           <ion-datetime
+            ref="datetimeDebut"
             presentation="time-date"
             minuteValues="0,15,30,45"
             :value="DateTime.fromSQL(presence.date_debut).toISO()"
@@ -114,13 +129,17 @@ const computeCurrentDate = (): DateTime => {
         </ion-button>
         <ion-modal :is-open="openModalFin">
           <ion-datetime
+            ref="datetimeFin"
             presentation="time-date"
             minuteValues="0,15,30,45"
             :min="DateTime.fromSQL(presence.date_debut).toISO()"
             :value="presence.date_fin ? DateTime.fromSQL(presence.date_fin).toISO() : computeCurrentDate().toISO()"
-            @ionChange="(ev: any) => presence.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
+            @ionChange="(ev: any) => presence.date_fin = DateTime.fromISO(ev.detail.value || '')?.toSQL({ includeOffset: false })?.slice(0, 16) || ''"
           >
-            <ion-button slot="buttons" @click="reset">Reset</ion-button>
+            <ion-buttons slot="buttons">
+              <ion-button @click="confirm()">Valider</ion-button>
+              <ion-button @click="reset()">Reset</ion-button>
+            </ion-buttons>
           </ion-datetime>
         </ion-modal>
       </ion-item>
