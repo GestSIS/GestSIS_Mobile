@@ -30,8 +30,8 @@ export default {
             piquet: p.piquet,
           }))
         ),
-        materiel: Object.entries(i.materiel).map((key, value) => ({
-          materiel_id: key,
+        materiel: Object.entries(i.materiel).map(([key, value], ) => ({
+          materiel_id: parseInt(key),
           quantite: value,
         })),
         missions: i.missions.map((m) => ({

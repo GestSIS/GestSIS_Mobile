@@ -100,7 +100,7 @@ if (mode == "ARRIVEE") {
     .map(s => ({ ...s, selected: true }))
 }
 
-const presences: Presences = reactive({ date: date.toSQL({ includeOffset: false }), sapeurs, mode });
+const presences: Presences = reactive({ date: date.toSQL({ includeOffset: false }).slice(0, 16), sapeurs, mode });
 
 const addSapeurs = async () => {
   const modalSapeurSelect = await modalController
