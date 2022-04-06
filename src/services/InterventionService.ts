@@ -1,7 +1,6 @@
 import Api from '@/http/Request';
 import { Intervention } from '@/models/bundle';
 import useLocalites from '@/store/useLocalites';
-import SapeurService from './SapeurService';
 
 export default {
   //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)
@@ -11,7 +10,9 @@ export default {
   exportInterventions(interventions: Intervention[]): Promise<any> {
     const localitesStore = useLocalites();
     const formattedInterventions = interventions.map((i) => {
-      const formattedLocalite = localitesStore.state.value.find(l => l.id == i.proprietaire?.localite_id) ?.designation;
+      const formattedLocalite = localitesStore.state.value.find(
+        (l) => l.id == i.proprietaire?.localite_id
+      )?.designation;
       return {
         ...i,
         date_debut: i.date_debut.split(' ')[0],
@@ -20,8 +21,10 @@ export default {
         heure_fin: i.date_fin.split(' ')[1],
         proprietaire:
           `${i.proprietaire.nom ?? ''} ${i.proprietaire.prenom ?? ''}\n` +
-          `${i.proprietaire.adresse}, ${formattedLocalite ?? ''}\n` +
-          `${i.proprietaire.email ?? ''}, ${i.proprietaire.telephone ?? ''}`,
+          `${(i.proprietaire.adresse + ', ') ?? ''}${formattedLocalite ?? ''}\n` +
+          `${(i.proprietaire.email + ', ') ?? ''}${
+            i.proprietaire.telephone ?? ''
+          }`,
         sapeurs: i.sapeurs.flatMap((sapeur) =>
           sapeur.presences.map((p) => ({
             debut: p.date_debut,
@@ -30,7 +33,7 @@ export default {
             piquet: p.piquet,
           }))
         ),
-        materiel: Object.entries(i.materiel).map(([key, value], ) => ({
+        materiel: Object.entries(i.materiel).map(([key, value]) => ({
           materiel_id: parseInt(key),
           quantite: value,
         })),
