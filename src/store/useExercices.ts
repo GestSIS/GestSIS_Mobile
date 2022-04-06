@@ -24,7 +24,7 @@ export default function useExercices() {
       return { ok: true, uuid: e.localUuid };
     });
 
-    // Resolve conflicts to avoid overridinf in progress exercices
+    // Resolve conflicts to avoid overriding in progress exercices
     const newExercices = (await ExerciceService.getExercices()).map(
       (e): Exercice => ({
         ...e,
@@ -48,7 +48,7 @@ export default function useExercices() {
       if (conflicting) {
         // TODO Resolve conflicts
         // Se baser sur le statut de l'exo ?
-        // Non car pourrait déjà contenir des execuses
+        // Non car pourrait déjà contenir des excuses
       }
       return !conflicting;
     });

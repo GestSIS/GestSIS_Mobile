@@ -89,7 +89,6 @@ const sync = async () => {
 }
 
 const validate = async () => {
-  // FIXME: Valider ques tous les champs soit saisi !
   errors.value = {}
 
   if (!intervention.value.date_debut) errors.value.date_debut = "A saisir";
@@ -216,8 +215,8 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-label :color="errors.date_debut ? 'primary' : ''">Début</ion-label>
           <ion-text slot="end" id="open-modal">
             {{
-              intervention.date_debut ? formatDate(intervention.date_debut,
-                'dd.LL.yy HH:mm') : ''
+            intervention.date_debut ? formatDate(intervention.date_debut,
+            'dd.LL.yy HH:mm') : ''
             }}
           </ion-text>
           <ion-button fill="clear" slot="end">
@@ -237,7 +236,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-label :color="errors.date_fin ? 'primary' : ''">Fin</ion-label>
           <ion-text slot="end" id="open-modal">
             {{
-              intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH: mm') : ''
+            intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH: mm') : ''
             }}
           </ion-text>
           <ion-button fill="clear" slot="end">
