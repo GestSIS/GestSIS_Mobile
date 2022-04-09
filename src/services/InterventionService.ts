@@ -1,5 +1,6 @@
 import Api from '@/http/Request';
 import { Intervention } from '@/models/bundle';
+import useGroupes from '@/store/useGroupes';
 import useLocalites from '@/store/useLocalites';
 
 export default {
@@ -9,6 +10,8 @@ export default {
   },
   exportInterventions(interventions: Intervention[]): Promise<any> {
     const localitesStore = useLocalites();
+    const groupesStore = useGroupes();
+
     const formattedInterventions = interventions.map((i) => {
       const formattedLocalite = localitesStore.state.value.find(
         (l) => l.id == i.proprietaire?.localite_id
@@ -21,8 +24,10 @@ export default {
         heure_fin: i.date_fin.split(' ')[1],
         proprietaire:
           `${i.proprietaire.nom ?? ''} ${i.proprietaire.prenom ?? ''}\n` +
-          `${(i.proprietaire.adresse + ', ') ?? ''}${formattedLocalite ?? ''}\n` +
-          `${(i.proprietaire.email + ', ') ?? ''}${
+          `${
+            i.proprietaire.adresse ? i.proprietaire.adresse ?? '' + ', ' : ''
+          }${formattedLocalite ?? ''}\n` +
+          `${i.proprietaire.email ? i.proprietaire.email ?? '' + ', ' : ''}${
             i.proprietaire.telephone ?? ''
           }`,
         sapeurs: i.sapeurs.flatMap((sapeur) =>
@@ -32,6 +37,9 @@ export default {
             sapeur_id: sapeur.id,
             piquet: p.piquet,
           }))
+        ),
+        groupes: i.groupes.map((id) =>
+          groupesStore.state.value.find((g) => g.id == id)
         ),
         materiel: Object.entries(i.materiel).map(([key, value]) => ({
           materiel_id: parseInt(key),
