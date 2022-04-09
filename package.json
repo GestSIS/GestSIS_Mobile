@@ -32,7 +32,7 @@
     "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "3.3.4",
+    "@capacitor/cli": "3.4.3",
     "@types/jest": "^27.0.2",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
