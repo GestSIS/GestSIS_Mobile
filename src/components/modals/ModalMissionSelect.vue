@@ -25,7 +25,7 @@ const filteredMission = computed(() => {
 })
 
 const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
+  query.value = event.target.value;
 }
 
 const selectMission = (mission: MissionType) => {

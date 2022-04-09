@@ -31,7 +31,7 @@ import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 import BaseDatetime from '../base/BaseDatetime.vue';
 
 const router = useRouter();
-const { removeIntervention } = useInterventions();
+const interventionStore = useInterventions();
 const { state, persist } = useActiveIntervention();
 const intervention = state;
 const errors: any = ref({});
@@ -63,7 +63,7 @@ const supprimerRapport = async () => {
         text: 'Oui',
         handler: () => {
           router.back();
-          removeIntervention(intervention.value.localUuid);
+          interventionStore.removeIntervention(intervention.value.localUuid);
         }
       }
     ]
@@ -78,8 +78,8 @@ const edit = async () => {
 const sync = async () => {
   // TODO: Check internet connexion
 
-  // TODO: Sync que cette intervention
-
+  // Sync les interventions
+  await interventionStore.sync();
 }
 
 const validate = async () => {
@@ -128,7 +128,7 @@ const validate = async () => {
 
   const confirm = await alertController.create({
     header: 'Valider l\'intervention',
-    message: "Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Cette action est irréversible et l'intervention ne pourra être éditée que depuis la plateforme GestSIS.",
+    message: "Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Les rapports d'interventions seront supprimés de la tablette une fois synchronisés.",
     buttons: [
       {
         text: 'Non'

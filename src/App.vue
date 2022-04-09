@@ -43,12 +43,14 @@ import {
   IonRouterOutlet,
   IonSplitPane,
 } from "@ionic/vue";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
+import useAuth from "./store/useAuth";
 
 const route = useRoute();
 const activeRoute = ref(route.name);
 
+const { activePermissions, isLoggedIn } = useAuth();
 watch(
   () => route.name,
   (newValue) => {
@@ -56,32 +58,41 @@ watch(
   }
 );
 
-const appPages = [
-  // {
-  //   title: "Login",
-  //   url: { name: "login" },
-  // },
+console.log(activePermissions.value)
+const appPages = computed(() => [
+  {
+    title: "Login",
+    url: { name: "login" },
+    disconnectedOnly: true,
+  },
   {
     title: "Accueil",
     url: { name: "accueil" },
+    connectedOnly: true,
   },
   {
     title: "Rapports d'intervention",
     url: { name: "interventions" },
+    permission: 'intervention.modification',
+    connectedOnly: true,
   },
   {
     title: "Présences exercices",
     url: { name: "exercices" },
+    permission: 'exercice.presence',
+    connectedOnly: true,
   },
   {
     title: "Synchronisation",
     url: { name: "synchronisation" },
+    connectedOnly: true,
   },
   {
     title: "Paramètres",
     url: { name: "parametres" },
+    connectedOnly: true,
   },
-];
+].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || activePermissions.value?.includes(p.permission))));
 </script>
 
 <style scoped>
