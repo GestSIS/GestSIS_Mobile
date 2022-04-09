@@ -36,15 +36,12 @@ const props = withDefaults(defineProps<{
 
 const openModal = ref(false);
 const emit = defineEmits(['update:modelValue'])
-console.log("Render")
+
 const input = ref();
 
 const confirm = () => {
-  console.log("Confirm click")
-  // if (input.value === undefined) return;
   input.value.$el.confirm();
   openModal.value = false;
-  console.log("Confirm finish")
 };
 
 const clear = () => {
@@ -53,8 +50,6 @@ const clear = () => {
 };
 
 const reset = () => {
-  if (input.value === undefined) return;
-
   input.value.$el.reset();
 };
 

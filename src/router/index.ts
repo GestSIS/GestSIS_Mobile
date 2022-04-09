@@ -68,18 +68,15 @@ const { isLoggedIn } = useAuth();
 router.beforeEach((to, from, next) => {
   if (to.name != 'login' && !isLoggedIn()) {
     // Redirect to login if not logged in
-    console.log('redirect to login');
     return next({
       name: 'login',
     });
   } else if (to.name == 'login' && isLoggedIn()) {
     // Redirect to accueil if logged in
-    console.log('redirect to accueil');
     return next({
       name: 'accueil',
     });
   }
-  console.log({ to, from });
   next();
 });
 

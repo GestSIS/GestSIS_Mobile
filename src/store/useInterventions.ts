@@ -22,13 +22,12 @@ export default () => {
     const interventions: Intervention[] = state.value.filter(
       (e) => e.localStatus == 'validated'
     );
-    const successes = await InterventionService.exportInterventions(interventions);
+    await InterventionService.exportInterventions(interventions);
 
-    // TODO: Manage errors and remove sync interventions
-    console.log(successes)
+    // Manage errors and remove sync interventions
+    state.value = state.value.filter(i => i.localStatus != 'validated');
 
     // For now, we do not offer the possibility to edit intervention
-
     store.lastSync.value = DateTime.now().toSQL();
     await store.persist();
     store.syncStatus.value = StoreState.Synced;

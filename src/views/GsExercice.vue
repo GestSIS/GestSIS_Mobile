@@ -133,7 +133,6 @@ const addSapeur = async () => {
 
 const selectPresent = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
-  console.log("Select present");
   sapeur.absent = false;
   sapeur.present = true;
   sapeur.excuse = false;
@@ -145,7 +144,6 @@ const selectPresent = async (sapeur: PresenceExercice) => {
 
 const selectAbsent = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
-  console.log("Select absent");
   sapeur.present = false;
   sapeur.absent = true;
   sapeur.excuse = false;
@@ -157,7 +155,6 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
 
 const selectRemplace = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
-  console.log("Select remplace");
   sapeur.absent = false;
   sapeur.present = false;
   sapeur.excuse = false;
@@ -169,7 +166,6 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
 
 const selectExcuse = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
-  console.log("Select excuse");
   sapeur.present = false;
   sapeur.absent = false;
   sapeur.remplace = false;
