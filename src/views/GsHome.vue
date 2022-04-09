@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import useAuth from "@/store/useAuth";
 import useExercices from "@/store/useExercices";
 import useInterventions from "@/store/useInterventions";
 import useStore from "@/store/useStore";
@@ -60,6 +61,10 @@ const sync = async () => {
   await loading.dismiss();
 };
 
+// Permissions checks
+const authStore = useAuth();
+const hasInterventionEditPermission = computed(() => authStore.activePermissions.value.includes("intervention.modification"));
+const hasExercicePresencePermission = computed(() => authStore.activePermissions.value.includes("exercice.presence"));
 </script>
 
 <template>
@@ -93,7 +98,7 @@ const sync = async () => {
 
       <ion-grid>
         <ion-row>
-          <ion-col size="6">
+          <ion-col size="6" v-if="hasInterventionEditPermission">
             <!-- v-if="user.hasRole('rapport_inter_all')"> -->
             <div class="tile" @click="navigateTo('interventions')">
               <div class="icon">
@@ -102,7 +107,7 @@ const sync = async () => {
               <p class="label">Rapports d'intervention</p>
             </div>
           </ion-col>
-          <ion-col size="6">
+          <ion-col size="6" v-if="hasExercicePresencePermission">
             <!-- v-if="user.hasRole('presence_exe_all')"> -->
             <div class="tile" @click="navigateTo('exercices')">
               <div class="icon">

@@ -101,10 +101,34 @@ const validate = async () => {
   if (!intervention.value.stat_federal_id) errors.value.stat_federal_id = "A saisir";
   if (intervention.value.stat_nb < 0 || intervention.value.stat_nb != 0 && !intervention.value.stat_nb) errors.value.stat_nb = "A saisir";
   if (!intervention.value.type_intervention_id) errors.value.type_intervention_id = "A saisir";
-  console.log(Object.keys(errors.value))
+
+  const notify = useNotify();
   if (Object.keys(errors.value).length > 0) {
-    const notify = useNotify();
     notify.error("Veuillez compléter tous les champs !")
+    return;
+  }
+
+  // Check toutes les missions sont terminées
+  if (!intervention.value.missions.every(m => m.date_fin)) {
+    notify.error("Certaines missions sont toujours en cours ! Veillez à toutes les quittancer afin de pouvoir valider cette intervention.")
+    return;
+  }
+
+  // Check toutes les présences sont complètes
+  if (!intervention.value.sapeurs.every(s => s.presences.every(p => p.date_fin))) {
+    notify.error("Certaines présences sont incomplètes ! Veillez à compléter toutes les présences afin de pouvoir valider cette intervention.")
+    return;
+  }
+
+  // Check tous les sapeurs saisis dans les missions sont bien présent
+  const sapeursSaisi = [...new Set(intervention.value.missions.map((mission) => mission.sapeur).map(s => s.id))];
+  const sapeursIdPotentiel = new Set(intervention.value.sapeurs.map((sap) => sap.id));
+  const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
+  const sapeursSansPresenceExercices = sapeursSaisi.filter(
+    (s) => !sapeursIdPotentiel.has(s) && sapeursExistant.has(s)
+  );
+  if (sapeursSansPresenceExercices.length > 0) {
+    notify.error("Sapeurs manquants ! Saisissez les sapeurs manquant ayant effectués des missions afin de pouvoir valider cette intervention.")
     return;
   }
 
@@ -215,8 +239,8 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-label :color="errors.date_debut ? 'primary' : ''">Début</ion-label>
           <ion-text slot="end" id="open-modal">
             {{
-            intervention.date_debut ? formatDate(intervention.date_debut,
-            'dd.LL.yy HH:mm') : ''
+              intervention.date_debut ? formatDate(intervention.date_debut,
+                'dd.LL.yy HH:mm') : ''
             }}
           </ion-text>
           <ion-button fill="clear" slot="end">
@@ -236,7 +260,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
           <ion-label :color="errors.date_fin ? 'primary' : ''">Fin</ion-label>
           <ion-text slot="end" id="open-modal">
             {{
-            intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH: mm') : ''
+              intervention.date_fin ? formatDate(intervention.date_fin, 'dd.LL.yy HH: mm') : ''
             }}
           </ion-text>
           <ion-button fill="clear" slot="end">

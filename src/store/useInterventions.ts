@@ -24,6 +24,9 @@ export default () => {
     );
     const successes = await InterventionService.exportInterventions(interventions);
 
+    // TODO: Manage errors and remove sync interventions
+    console.log(successes)
+
     // For now, we do not offer the possibility to edit intervention
 
     store.lastSync.value = DateTime.now().toSQL();

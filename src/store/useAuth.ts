@@ -48,6 +48,7 @@ const init = async () => {
   const sisKey = await persistentStore.get(persistActiveSisKey);
 
   state.data = JSON.parse(data) || { ...emptyState };
+  activePermissions.value = state.data.permissions[sisKey];
   activeSisKey.value = sisKey;
   lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
 

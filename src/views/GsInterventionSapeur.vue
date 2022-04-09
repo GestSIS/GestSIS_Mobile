@@ -71,7 +71,6 @@ let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = new Set<number>();
 
 if (mode == "ARRIVEE") {
-  console.log(sapeursIds)
   if (sapeursIds.size > 0) {
     // Uniquement les sapeurs passé en paramètre par défault
     sapeurs = sapeurModule.state.value

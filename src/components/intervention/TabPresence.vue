@@ -47,7 +47,7 @@ const sapeursAvecPresenceExercicesIncompletes = computed(() =>
 );
 
 const sapeursSansPresenceExercices = computed(() => {
-  const sapeursSaisi = intervention.value.missions.map((mission) => mission.sapeur);
+  const sapeursSaisi = [...new Map(intervention.value.missions.map((mission) => mission.sapeur).map(s => [s.id, s])).values()];
   const sapeursIdPotentiel = new Set(intervention.value.sapeurs.map((sap) => sap.id));
   const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
   return sapeursSaisi.filter(

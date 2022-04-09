@@ -5,7 +5,7 @@ export class Exercice {
   localUuid: string;
   localStatus: "empty"|"in_progress"|"validated"
   initialSapeurs: PresenceExercice[];
-  
+
   // Remote data
   id: number;
   date: string;
