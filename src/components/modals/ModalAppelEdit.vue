@@ -8,11 +8,7 @@ import {
   IonButtons,
   IonHeader,
   IonLabel,
-  IonPopover,
-  IonIcon,
-  IonDatetime,
   IonInput,
-  IonText,
   IonContent,
   IonButton,
   IonItem,
@@ -20,12 +16,9 @@ import {
 } from '@ionic/vue';
 import { useNotify } from "@/tools/useToast";
 import { Appel } from "@/models/appel";
-import { DateTime } from "luxon";
-import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
-const { formatDate } = useDateFormatter();
 const notify = useNotify();
 
 const { updateAppel } = useActiveIntervention();

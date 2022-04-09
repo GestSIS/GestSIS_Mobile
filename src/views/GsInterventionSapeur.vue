@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import {
   IonPage,
   IonRow,
   IonCol,
-  IonModal,
-  IonText,
   IonGrid,
   IonCheckbox,
   IonTitle,
@@ -14,7 +12,6 @@ import {
   IonHeader,
   IonList,
   IonLabel,
-  IonDatetime,
   IonContent,
   IonButton,
   IonItem,
@@ -27,15 +24,12 @@ import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import useGroupes from "@/store/useGroupes";
 import useSapeurs from "@/store/useSapeurs";
-import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 import BaseDatetime from "@/components/base/BaseDatetime.vue";
 
-const openModal = ref(false);
 const router = useRouter();
 const route = useRoute();
-const { formatDate } = useDateFormatter();
 
 const mode = route.params.mode as "ARRIVEE" | "DEPART";
 const sapeursIds = new Set((route.params.sapeursIds as string ?? "").split(",").map(e => parseInt(e)).filter(e => e));

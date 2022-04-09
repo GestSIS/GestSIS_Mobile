@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-import { defineProps, ref, reactive } from "vue";
+import { defineProps, reactive } from "vue";
 import {
   IonToolbar,
   IonIcon,
   IonLabel,
-  IonText,
-  IonModal,
-  IonDatetime,
   IonInput,
   IonTitle,
   IonButtons,
@@ -18,11 +15,7 @@ import {
   modalController,
 } from '@ionic/vue';
 
-import { DateTime } from "luxon";
-import useDateFormatter from "@/tools/useDateFormatter";
 import BaseDatetime from "../base/BaseDatetime.vue";
-
-const { formatDate } = useDateFormatter();
 
 interface Presence {
   sapeur_id: null
@@ -39,26 +32,6 @@ const dismiss = () => {
   modalController.dismiss(null);
 }
 
-const datetimeDebut = ref();
-const datetimeFin = ref();
-
-const openModalDebut = ref(false);
-const openModalFin = ref(false);
-
-const confirm = () => {
-  if (datetimeFin.value === undefined) return;
-  datetimeFin.value.$el.confirm();
-  openModalFin.value = false;
-};
-
-const reset = () => {
-  if (datetimeFin.value === undefined) return;
-
-  datetimeFin.value.$el.reset();
-  presence.date_fin = "";
-  openModalFin.value = false;
-};
-
 const save = () => {
   modalController.dismiss(presence);
 }
@@ -68,12 +41,6 @@ const save = () => {
 //   searchbar.value?.$el.setFocus();
 // })
 
-const computeCurrentDate = (): DateTime => {
-  // Défault à heure actuelle
-  let date = DateTime.now();
-  date = date.set({ minute: date.minute + 15 - (date.minute % 15), second: 0, millisecond: 0 });
-  return date;
-}
 </script>
 
 <template>

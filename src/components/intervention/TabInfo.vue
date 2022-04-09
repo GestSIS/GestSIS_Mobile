@@ -3,11 +3,10 @@
 import useActiveIntervention from '@/store/useActiveIntervention';
 import useInterventions from '@/store/useInterventions';
 import useLocalites from '@/store/useLocalites';
-import usePhaseTypes from '@/store/usePhaseTypes';
+// import usePhaseTypes from '@/store/usePhaseTypes';
 import useSapeurs from '@/store/useSapeurs';
 import useStatsFederal from '@/store/useStatsFederal';
 import useTypesIntervention from '@/store/useTypesIntervention';
-import useDateFormatter from '@/tools/useDateFormatter';
 import { useNotify } from '@/tools/useToast';
 import {
   IonButton,
@@ -21,14 +20,10 @@ import {
   IonSelect,
   IonSelectOption,
   IonCheckbox,
-  IonDatetime,
   IonIcon,
-  modalController,
-  IonModal,
-  IonText,
-  alertController
+  alertController,
+  modalController
 } from '@ionic/vue';
-import { DateTime } from 'luxon';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
@@ -36,18 +31,14 @@ import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 import BaseDatetime from '../base/BaseDatetime.vue';
 
 const router = useRouter();
-const { formatDate } = useDateFormatter();
 const { removeIntervention } = useInterventions();
 const { state, persist } = useActiveIntervention();
 const intervention = state;
 const errors: any = ref({});
 
-const openModalDebut = ref(false);
-const openModalFin = ref(false);
-
 const moduleSapeur = useSapeurs();
 const moduleType = useTypesIntervention();
-const modulePhase = usePhaseTypes(); // TODO: Ajout gestion des phases
+// const modulePhase = usePhaseTypes(); // TODO: Ajout gestion des phases
 const moduleStatFederal = useStatsFederal();
 const moduleLocalite = useLocalites();
 

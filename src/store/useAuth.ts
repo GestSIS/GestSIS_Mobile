@@ -78,12 +78,12 @@ export default function useAuth() {
   /** Log in */
   const login = async (email: string, password: string) => {
     // Login request
-    const { accessToken, refreshToken, user } = await AuthService.login({
+    const { accessToken, refreshToken } = await AuthService.login({
       email,
       password,
     });
 
-    const userId = user.id;
+    // const userId = user.id;
     const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
     const availableSis = Object.keys(permissions);
 

@@ -3,7 +3,6 @@ import { Ref, ref } from "vue";
 import {
   IonPage,
   IonTitle,
-  IonModal,
   IonButtons,
   IonToolbar,
   IonHeader,
@@ -11,14 +10,11 @@ import {
   IonInput,
   IonTextarea,
   IonLabel,
-  IonDatetime,
   IonContent,
   IonButton,
   IonItem,
   IonBackButton,
-  IonText,
-  modalController,
-  IonIcon
+  modalController
 } from '@ionic/vue';
 import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";
@@ -27,17 +23,12 @@ import useActiveIntervention from "@/store/useActiveIntervention";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 import ModalMissionSelectVue from "@/components/modals/ModalMissionSelect.vue";
 import useSapeurs from "@/store/useSapeurs";
-import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import { useNotify } from "@/tools/useToast";
 import BaseDatetime from "@/components/base/BaseDatetime.vue";
 
-const { formatDate } = useDateFormatter();
 const notify = useNotify();
 const sapeurModule = useSapeurs();
-
-const openModalDebut = ref(false);
-const openModalFin = ref(false);
 
 const router = useRouter();
 const route = useRoute();

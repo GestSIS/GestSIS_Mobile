@@ -18,12 +18,11 @@ import {
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
-import { DateTime } from "luxon";
 import { Intervention } from "@/models/intervention";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
 const { formatDate } = useDateFormatter();
 
-const { state, newIntervention } = useInterventions();
+const { state } = useInterventions();
 const { setActiveIntervention } = useActiveIntervention();
 
 const router = useRouter()

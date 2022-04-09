@@ -34,8 +34,10 @@ const navigateTo = async (name: string) => {
 };
 
 const needSync = computed((): boolean => {
-  return interventionStore.state.value.every(e => e.localStatus == "validated") ||
-    exerciceStore.state.value.every(e => e.localStatus == "validated")
+  return !(
+    interventionStore.state.value.map(i => i.localStatus).includes("validated") ||
+    exerciceStore.state.value.map(e => e.localStatus).includes("validated")
+  );
 });
 
 const sync = async () => {

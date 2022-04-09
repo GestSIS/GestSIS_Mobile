@@ -8,11 +8,7 @@ import {
   IonButtons,
   IonHeader,
   IonLabel,
-  IonPopover,
-  IonIcon,
-  IonDatetime,
   IonInput,
-  IonText,
   IonContent,
   IonButton,
   IonItem,
@@ -20,7 +16,6 @@ import {
 } from '@ionic/vue';
 import { useNotify } from "@/tools/useToast";
 import { DateTime } from "luxon";
-import useDateFormatter from "@/tools/useDateFormatter";
 
 import useInterventions from "@/store/useInterventions";
 import useLocalites from "@/store/useLocalites";
@@ -28,7 +23,6 @@ import ModalLocaliteSelectVue from "./ModalLocaliteSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
 const { newIntervention } = useInterventions();
-const { formatDate } = useDateFormatter();
 const notify = useNotify();
 
 const localiteStore = useLocalites();
