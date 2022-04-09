@@ -16,8 +16,10 @@ import {
 import useDateFormatter from "@/tools/useDateFormatter";
 import useStore from "@/store/useStore";
 import { StoreState } from "@/store/useBasicStore";
+import useAuth from "@/store/useAuth";
 const { formatDate } = useDateFormatter();
 const { modules, syncAll } = useStore();
+const { activePermissions } = useAuth();
 
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
   switch (syncStatus || StoreState.Synced) {
@@ -54,7 +56,7 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
       <ion-list>
         <ion-item
           button="true"
-          v-for="{ name, lastSync, syncStatus, sync } in modules"
+          v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || activePermissions.includes(m.permission))"
           :key="name"
           @click="sync"
         >

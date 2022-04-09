@@ -17,5 +17,6 @@ export default function useTelephones() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'intervention.modification',
   };
 }

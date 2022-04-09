@@ -1,3 +1,4 @@
+import useAuth from './useAuth';
 import useExcuseTypes from './useExcuseTypes';
 import useExerciceCategories from './useExerciceCategories';
 import useExexercices from './useExercices';
@@ -47,7 +48,10 @@ export default function useStore() {
 
   /** Load all modules */
   const syncAll = () => {
-    const promises = modules.map(({ sync }) => sync());
+    const { activePermissions } = useAuth();
+    const promises = modules
+      .filter(m => !m.permission || activePermissions.value.includes(m.permission))
+      .map(({ sync }) => sync());
     return Promise.all(promises);
   };
 

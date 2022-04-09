@@ -17,5 +17,6 @@ export default function usePhaseTypes() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'intervention.modification',
   };
 }

@@ -63,6 +63,8 @@ export default function useBasicStore<Type>(
   return {
     syncStatus,
     lastSync,
+    permission: '',
+    
     reset,
     persist,
     sync,

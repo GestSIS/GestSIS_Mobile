@@ -17,5 +17,6 @@ export default function useUnitesType() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'intervention.modification',
   };
 }

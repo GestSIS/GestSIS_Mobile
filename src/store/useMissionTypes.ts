@@ -17,5 +17,6 @@ export default function useMissionTypes() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'intervention.modification',
   };
 }

@@ -80,6 +80,8 @@ export default () => {
     ...store,
     name,
     state,
+    permission: 'intervention.modification',
+
     sync,
     newIntervention,
     updateIntervention,

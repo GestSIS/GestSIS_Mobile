@@ -17,5 +17,6 @@ export default function useExerciceCategories() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'exercice.presence',
   };
 }

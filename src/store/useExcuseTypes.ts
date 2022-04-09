@@ -17,5 +17,6 @@ export default function useExcuseTypes() {
     ...store,
     name,
     state: readonly(state),
+    permission: 'exercice.presence',
   };
 }

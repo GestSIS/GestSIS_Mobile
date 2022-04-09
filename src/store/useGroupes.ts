@@ -17,5 +17,6 @@ export default function useGroupes() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'intervention.modification',
   };
 }

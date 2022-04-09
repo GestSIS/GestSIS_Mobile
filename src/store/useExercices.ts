@@ -135,6 +135,7 @@ export default function useExercices() {
     sync,
     name,
     state,
+    permission: 'exercice.presence',
 
     // Actions
     updatExercice,

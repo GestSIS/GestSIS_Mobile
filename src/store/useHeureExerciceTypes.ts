@@ -17,5 +17,6 @@ export default function useHeureExerciceTypes() {
     ...store,  
     name,
     state: readonly(state),
+    permission: 'exercice.presence',
   };
 }
