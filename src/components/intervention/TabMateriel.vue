@@ -5,7 +5,11 @@
         <h1>Matériel consommable et en prêt</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addMateriel()">
+        <ion-button
+          expand="block"
+          @click="addMateriel()"
+          :disabled="intervention.localStatus == 'validated'"
+        >
           <ion-icon slot="start" name="add"></ion-icon>Ajouter du matériel
         </ion-button>
       </ion-col>
@@ -17,13 +21,20 @@
     <ion-item
       v-for="([id, quantite], i) in (Object.entries(intervention.materiel) as [string, number][])"
       :key="i"
+      :disabled="intervention.localStatus == 'validated'"
       @click="changeMaterielQuantity(parseInt(id), quantite)"
     >
       <p>
         <strong item-start>{{ quantite }}</strong>
         {{ materiels.find(m => m.id == parseInt(id))?.designation }}
       </p>
-      <ion-button slot="end" @click.stop="removeMateriel(parseInt(id))" fill="clear" color="dark">
+      <ion-button
+        slot="end"
+        :disabled="intervention.localStatus == 'validated'"
+        @click.stop="removeMateriel(parseInt(id))"
+        fill="clear"
+        color="dark"
+      >
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-item>

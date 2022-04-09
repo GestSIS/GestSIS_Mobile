@@ -30,6 +30,7 @@ import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import { useNotify } from "@/tools/useToast";
+import BaseDatetime from "@/components/base/BaseDatetime.vue";
 
 const { formatDate } = useDateFormatter();
 const notify = useNotify();
@@ -125,20 +126,7 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item @click="openModalDebut = !openModalDebut">
-          <ion-label>Début</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ formatDate(mission.date_debut, 'dd.LL.yy HH:mm') }}</ion-text>
-          <ion-modal :is-open="openModalDebut">
-            <ion-datetime
-              presentation="time-date"
-              :value="DateTime.fromSQL(mission.date_debut).toISO()"
-              @ionChange="(ev: any) => mission.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-            />
-          </ion-modal>
-        </ion-item>
+        <base-datetime :max="mission.date_fin" v-model="mission.date_debut">Début</base-datetime>
 
         <ion-item>
           <ion-label position="floating">Responsable</ion-label>
@@ -160,24 +148,11 @@ const save = () => {
           <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
         </ion-item>
 
-        <ion-item button @click="openModalFin = !openModalFin">
-          <ion-label>Quittancer</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ mission.date_fin ? formatDate(mission.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
-          <ion-button fill="clear" slot="end">
-            <ion-icon slot="end" name="calendar" />
-          </ion-button>
-          <ion-modal :is-open="openModalFin">
-            <ion-datetime
-              presentation="time-date"
-              :min="DateTime.fromSQL(mission.date_debut).toISO()"
-              :value="DateTime.fromSQL(mission.date_fin).toISO()"
-              @ionChange="(ev: any) => mission.date_fin = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-            />
-          </ion-modal>
-        </ion-item>
+        <base-datetime
+          :min="mission.date_debut"
+          v-model="mission.date_fin"
+          :clearable="true"
+        >Quittancer</base-datetime>
       </ion-list>
     </ion-content>
   </ion-page>

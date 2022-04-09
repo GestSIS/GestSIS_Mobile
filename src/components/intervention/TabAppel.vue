@@ -5,7 +5,11 @@
         <h1>Appels</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addCall()">
+        <ion-button
+          expand="block"
+          @click="addCall()"
+          :disabled="intervention.localStatus == 'validated'"
+        >
           <ion-icon name="add" slot="start"></ion-icon>Nouvel appel
         </ion-button>
       </ion-col>
@@ -18,6 +22,7 @@
       button="true"
       v-for="appel in intervention.appels"
       :key="appel.localUuid"
+      :disabled="intervention.localStatus == 'validated'"
       @click="editCall(appel)"
     >
       <p>
@@ -27,7 +32,13 @@
         <br />
         <span class="details">{{ appel.commentaire }}</span>
       </p>
-      <ion-button @click.stop="removeCall(appel)" fill="clear" color="dark" slot="end">
+      <ion-button
+        @click.stop="removeCall(appel)"
+        fill="clear"
+        color="dark"
+        slot="end"
+        :disabled="intervention.localStatus == 'validated'"
+      >
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-item>

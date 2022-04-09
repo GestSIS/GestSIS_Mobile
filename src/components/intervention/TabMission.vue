@@ -5,7 +5,11 @@
         <h1>Missions</h1>
       </ion-col>
       <ion-col size="4">
-        <ion-button expand="block" @click="addMission()">
+        <ion-button
+          expand="block"
+          @click="addMission()"
+          :disabled="intervention.localStatus == 'validated'"
+        >
           <ion-icon slot="start" name="add"></ion-icon>Nouvelle mission
         </ion-button>
       </ion-col>
@@ -17,6 +21,7 @@
       button="true"
       v-for="(mission, i) in intervention.missions"
       :key="i"
+      :disabled="intervention.localStatus == 'validated'"
       @click="editMission(mission)"
     >
       <ion-icon slot="start" :name="mission.date_fin ? 'checkmark' : 'time'"></ion-icon>
@@ -28,7 +33,13 @@
         <br />
         <span class="details">{{ mission.resume }}</span>
       </p>
-      <ion-button @click.stop="deleteMission(mission)" fill="clear" color="dark" slot="end">
+      <ion-button
+        :disabled="intervention.localStatus == 'validated'"
+        @click.stop="deleteMission(mission)"
+        fill="clear"
+        color="dark"
+        slot="end"
+      >
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-item>

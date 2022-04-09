@@ -13,6 +13,7 @@
       v-for="(vehicule, i) in vehicules"
       :key="i"
       @click="changeVehiculeStatut(vehicule.id)"
+      :disabled="intervention.localStatus == 'validated'"
     >
       {{ vehicule.designation }}
       <ion-icon
@@ -41,6 +42,7 @@ import useVehicules from '@/store/useVehicules';
 import { computed, ref } from 'vue';
 
 const { state, updateVehicules } = useActiveIntervention();
+const intervention = state;
 const vehiculesIntervention = ref(new Set(state.value.vehicules.slice()));
 
 const vehiculeStore = useVehicules();

@@ -140,6 +140,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           button
           v-for="(groupe, i) of filteredGroupes"
           :key="i"
+          :disabled="intervention.localStatus == 'validated'"
           @click="changeGroupeStatus(groupe.id)"
         >
           <!-- <span>{{ groupe.prefix }}</span> -->
@@ -171,7 +172,11 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
             <span v-else class="details">Aucun sapeur</span>
           </ion-col>
           <ion-col size="4">
-            <ion-button expand="block" @click="addPresenceExercice('ARRIVEE')">
+            <ion-button
+              expand="block"
+              @click="addPresenceExercice('ARRIVEE')"
+              :disabled="intervention.localStatus == 'validated'"
+            >
               <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
             </ion-button>
           </ion-col>
@@ -194,6 +199,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           v-for="(sapeur, i) of sapeursSansPresenceExercices"
           :key="i"
           @click="addMissingSapeur(sapeur)"
+          :disabled="intervention.localStatus == 'validated'"
         >
           <ion-icon color="warning" name="warning" slot="start"></ion-icon>
           <ion-text color="warning">{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text>
@@ -208,6 +214,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           v-for="(presence, j) in sapeur.presences"
           :key="j"
           @click="editPresenceExercice(i, j)"
+          :disabled="intervention.localStatus == 'validated'"
         >
           <p>
             {{ formatDate(presence.date_debut, "HH:mm") }} -
@@ -215,6 +222,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           </p>
           <ion-button
             @click.stop="removePresenceExercice(i, j)"
+            :disabled="intervention.localStatus == 'validated'"
             fill="clear"
             color="dark"
             slot="end"

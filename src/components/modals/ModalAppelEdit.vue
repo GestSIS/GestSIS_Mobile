@@ -23,6 +23,7 @@ import { Appel } from "@/models/appel";
 import { DateTime } from "luxon";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
+import BaseDatetime from "../base/BaseDatetime.vue";
 
 const { formatDate } = useDateFormatter();
 const notify = useNotify();
@@ -58,7 +59,7 @@ const dismiss = () => {
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title>Nouvel appel</ion-title>
+      <ion-title>Modifier appel</ion-title>
 
       <ion-buttons slot="primary">
         <ion-button @click="dismiss()">Annuler</ion-button>
@@ -68,19 +69,7 @@ const dismiss = () => {
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <ion-item button="true" id="open-date-input">
-        <ion-label position="fixed">Date</ion-label>
-        <ion-text>{{ formatDate(appel.date, 'dd.LL.yy HH:mm') }}</ion-text>
-        <ion-button fill="clear" slot="end">
-          <ion-icon slot="end" name="calendar" />
-        </ion-button>
-        <ion-popover trigger="open-date-input" :show-backdrop="false">
-          <ion-datetime
-            presentation="time-date"
-            @ionChange="(ev: any) => appel.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-          />
-        </ion-popover>
-      </ion-item>
+      <base-datetime v-model="appel.date">Date</base-datetime>
 
       <ion-item>
         <ion-label position="fixed">Numéro</ion-label>

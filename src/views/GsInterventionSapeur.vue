@@ -30,6 +30,7 @@ import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
+import BaseDatetime from "@/components/base/BaseDatetime.vue";
 
 const openModal = ref(false);
 const router = useRouter();
@@ -153,24 +154,11 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item @click="openModal = !openModal">
-          <ion-label>Heure {{ mode == 'ARRIVEE' ? "d'arrivée" : 'de départ' }}</ion-label>
-          <ion-text
-            slot="end"
-            id="open-modal"
-          >{{ presences.date ? formatDate(presences.date, 'dd.LL.yy HH:mm') : '' }}</ion-text>
-          <ion-button fill="clear" slot="end">
-            <ion-icon slot="end" name="calendar" />
-          </ion-button>
-          <ion-modal :is-open="openModal">
-            <ion-datetime
-              presentation="time-date"
-              minuteValues="0,15,30,45"
-              :value="DateTime.fromSQL(presences.date).toISO()"
-              @ionChange="(ev: any) => presences.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-            />
-          </ion-modal>
-        </ion-item>
+        <base-datetime
+          :per-quarter="true"
+          v-model="presences.date"
+          :clearable="true"
+        >Heure {{ mode == 'ARRIVEE' ? "d'arrivée" : 'de départ' }}</base-datetime>
       </ion-list>
 
       <ion-grid>

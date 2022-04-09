@@ -129,6 +129,9 @@ const evenements = computed(() => {
 });
 
 const openEvent = async (event: Event) => {
+  if (intervention.value.localStatus == "validated") {
+    return;
+  }
   switch (event.type) {
     case EventType.Appel: {
       const appel = intervention.value.appels.find(a => a.localUuid == event.uuid)

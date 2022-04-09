@@ -20,6 +20,7 @@ import {
 
 import { DateTime } from "luxon";
 import useDateFormatter from "@/tools/useDateFormatter";
+import BaseDatetime from "../base/BaseDatetime.vue";
 
 const { formatDate } = useDateFormatter();
 
@@ -98,51 +99,18 @@ const computeCurrentDate = (): DateTime => {
         <ion-input type="text" readonly="true" :value="presence.nom + ' ' + presence.prenom"></ion-input>
       </ion-item>
 
-      <ion-item @click="openModalDebut = !openModalDebut">
-        <ion-label>Heure d'arrivée</ion-label>
-        <ion-text
-          slot="end"
-          id="open-modal"
-        >{{ presence.date_debut ? formatDate(presence.date_debut, 'dd.LL.yy HH:mm') : '' }}</ion-text>
-        <ion-button fill="clear" slot="end">
-          <ion-icon slot="end" name="calendar" />
-        </ion-button>
-        <ion-modal :is-open="openModalDebut">
-          <ion-datetime
-            ref="datetimeDebut"
-            presentation="time-date"
-            minuteValues="0,15,30,45"
-            :value="DateTime.fromSQL(presence.date_debut).toISO()"
-            @ionChange="(ev: any) => presence.date_debut = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-          />
-        </ion-modal>
-      </ion-item>
+      <base-datetime
+        :per-quarter="true"
+        :max="presence.date_fin"
+        v-model="presence.date_debut"
+      >Heure d'arrivée</base-datetime>
 
-      <ion-item @click="openModalFin = !openModalFin">
-        <ion-label>Heure de départ</ion-label>
-        <ion-text
-          slot="end"
-          id="open-modal"
-        >{{ presence.date_fin ? formatDate(presence.date_fin, 'dd.LL.yy HH:mm') : '' }}</ion-text>
-        <ion-button fill="clear" slot="end">
-          <ion-icon slot="end" name="calendar" />
-        </ion-button>
-        <ion-modal :is-open="openModalFin">
-          <ion-datetime
-            ref="datetimeFin"
-            presentation="time-date"
-            minuteValues="0,15,30,45"
-            :min="DateTime.fromSQL(presence.date_debut).toISO()"
-            :value="presence.date_fin ? DateTime.fromSQL(presence.date_fin).toISO() : computeCurrentDate().toISO()"
-            @ionChange="(ev: any) => presence.date_fin = DateTime.fromISO(ev.detail.value || '')?.toSQL({ includeOffset: false })?.slice(0, 16) || ''"
-          >
-            <ion-buttons slot="buttons">
-              <ion-button @click="confirm()">Valider</ion-button>
-              <ion-button @click="reset()">Reset</ion-button>
-            </ion-buttons>
-          </ion-datetime>
-        </ion-modal>
-      </ion-item>
+      <base-datetime
+        :per-quarter="true"
+        :min="presence.date_debut"
+        v-model="presence.date_fin"
+        label="Heure de départ"
+      >Heure de départ</base-datetime>
     </ion-list>
   </ion-content>
 </template>

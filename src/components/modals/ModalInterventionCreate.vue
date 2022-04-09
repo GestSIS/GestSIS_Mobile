@@ -25,6 +25,7 @@ import useDateFormatter from "@/tools/useDateFormatter";
 import useInterventions from "@/store/useInterventions";
 import useLocalites from "@/store/useLocalites";
 import ModalLocaliteSelectVue from "./ModalLocaliteSelect.vue";
+import BaseDatetime from "../base/BaseDatetime.vue";
 
 const { newIntervention } = useInterventions();
 const { formatDate } = useDateFormatter();
@@ -91,19 +92,7 @@ const dismiss = () => {
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <ion-item button="true" id="open-date-input">
-        <ion-label position="fixed">Date</ion-label>
-        <ion-text>{{ formatDate(intervention.date, 'dd.LL.yy HH:mm') }}</ion-text>
-        <ion-button fill="clear" slot="end">
-          <ion-icon slot="end" name="calendar" />
-        </ion-button>
-        <ion-popover trigger="open-date-input" :show-backdrop="false">
-          <ion-datetime
-            presentation="time-date"
-            @ionChange="(ev: any) => intervention.date = DateTime.fromISO(ev.detail.value || '').toSQL({ includeOffset: false }).slice(0, 16) || ''"
-          />
-        </ion-popover>
-      </ion-item>
+      <base-datetime v-model="intervention.date">Fin</base-datetime>
 
       <ion-item>
         <ion-label position="fixed">Objet</ion-label>
