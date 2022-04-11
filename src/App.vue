@@ -8,14 +8,8 @@
             <!-- <ion-note>hi@ionicframework.com</ion-note> -->
 
             <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item
-                router-direction="root"
-                :router-link="p.url"
-                lines="none"
-                detail="false"
-                class="hydrated"
-                :class="{ selected: p.url.name == activeRoute }"
-              >
+              <ion-item router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated"
+                :class="{ selected: p.url.name == activeRoute }">
                 <!-- <ion-icon
                   slot="start"
                 ></ion-icon>-->
@@ -27,7 +21,7 @@
       </ion-menu>
       <ion-router-outlet id="main-content"></ion-router-outlet>
     </ion-split-pane>
-  </ion-app>
+    </ion-app>
 </template>
 
 <script lang="ts" setup>
@@ -58,7 +52,6 @@ watch(
   }
 );
 
-console.log(activePermissions.value)
 const appPages = computed(() => [
   {
     title: "Login",
@@ -95,8 +88,7 @@ const appPages = computed(() => [
 ].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || activePermissions.value?.includes(p.permission))));
 </script>
 
-<style scoped>
-ion-menu ion-content {
+<style scoped>ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }
 
@@ -210,5 +202,4 @@ ion-note {
 
 ion-item.selected {
   --color: var(--ion-color-primary);
-}
-</style>
+}</style>

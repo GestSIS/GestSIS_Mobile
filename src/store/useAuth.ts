@@ -43,6 +43,7 @@ const persistActiveSisKey = 'auth-siskey';
 const lastSyncSuffixe = 'last_sync';
 
 /** Load data from local storage */
+// yTODO: Check Mobile permission
 const init = async () => {
   const data = await persistentStore.get(persistKey);
   const sisKey = await persistentStore.get(persistActiveSisKey);
@@ -84,12 +85,14 @@ export default function useAuth() {
     });
 
     // const userId = user.id;
-    const { permissions, pseudo } = (jwt_decode(accessToken) as any).data;
-    const availableSis = Object.keys(permissions);
+    const { permissions, pseudo, mobiles } = (jwt_decode(accessToken) as any).data;
 
-    // TODO: Throw exception if no permissions and manage the result
+    const availableSis = Object.keys(permissions).filter(sis => mobiles.includes(sis));
+    const filteredPermissions = Object.fromEntries(Object.entries(permissions).filter(([sis]) => mobiles.includes(sis)));
+
+    // Throw exception if no permissions and manage the result
     if (availableSis.length == 0) {
-      throw { message: 'Aucune permission' };
+      throw { message: 'GestSIS Mobile non disponible avec votre compte' };
     }
 
     // Update state
@@ -98,7 +101,7 @@ export default function useAuth() {
     state.data.accessToken = accessToken;
     state.data.refreshToken = refreshToken;
     state.data.sis = availableSis;
-    state.data.permissions = permissions;
+    state.data.permissions = filteredPermissions;
     state.data.statut = UserStatus.connected;
 
     // Select first sis;

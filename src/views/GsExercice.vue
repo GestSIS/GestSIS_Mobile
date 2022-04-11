@@ -65,7 +65,6 @@ const exerciceUuid = route.params.uuid;
 
 const exercice = ref(exercices.value.find(e => e.localUuid == exerciceUuid));
 if (!exercice.value) {
-  console.log("going back !!! Invalid Exercice UUID")
   router.back();
 } else {
   // Compute data pour affichage
@@ -139,7 +138,6 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectAbsent = async (sapeur: PresenceExercice) => {
@@ -150,7 +148,6 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = false;
-  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectRemplace = async (sapeur: PresenceExercice) => {
@@ -161,7 +158,6 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   sapeur.excuse_type_id = null as any;
   sapeur.excuse_type = null as any;
   sapeur.remplace = true;
-  exercicesStore.updatExercice(exercice.value);
 };
 
 const selectExcuse = async (sapeur: PresenceExercice) => {
@@ -178,7 +174,6 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
       sapeur.excuse = true;
       sapeur.excuse_type_id = excuse.id;
       sapeur.excuse_type = excuse.designation;
-      exercicesStore.updatExercice(exercice.value);
     },
   }));
 
@@ -206,6 +201,7 @@ const select = async (sapeur: any, statut: number) => {
   await (actions[statut - 1])(sapeur);
 
   // Save changes
+  exercice.value.sapeurs = exercice.value.sapeurs.map(s => s.sapeur_id == sapeur.sapeur_id ? sapeur : s);
   exercicesStore.updatExercice(exercice.value);
 };
 
@@ -284,12 +280,8 @@ const reset = () => {
         </ion-row>
 
         <div class="sapeurs">
-          <ion-radio-group
-            v-model="sapeur.presenceStatut"
-            v-for="(sapeur, i) in computedSapeurs"
-            @ionChange="select(sapeur, $event.target.value)"
-            :key="sapeur.id"
-          >
+          <ion-radio-group v-model="sapeur.presenceStatut" v-for="(sapeur, i) in computedSapeurs"
+            @ionChange="select(sapeur, $event.target.value)" :key="sapeur.id">
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
                 {{ indexedSapeurs.get(sapeur?.sapeur_id) || "" }}
@@ -311,9 +303,7 @@ const reset = () => {
               <ion-col v-for="heure in heuresTypes" :key="heure.id">
                 <ion-item lines="none">
                   <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
-                  <ion-label
-                    slot="end"
-                  >{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
+                  <ion-label slot="end">{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
@@ -331,22 +321,13 @@ const reset = () => {
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button
-              expand="block"
-              @click="reset"
-              color="light"
-              :disabled="exercice?.localStatus == 'empty'"
-            >
+            <ion-button expand="block" @click="reset" color="light" :disabled="exercice?.localStatus == 'empty'">
               <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button
-              expand="block"
-              @click="validate"
-              v-if="exercice?.localStatus != 'validated'"
-              :disabled="exercice?.localStatus == 'empty'"
-            >
+            <ion-button expand="block" @click="validate" v-if="exercice?.localStatus != 'validated'"
+              :disabled="exercice?.localStatus == 'empty'">
               <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
             <!-- TODO: Optionnel Ajouter bouton synchroniser pour exporter l'exercice ?  -->
@@ -354,11 +335,10 @@ const reset = () => {
         </ion-row>
       </ion-grid>
     </ion-content>
-  </ion-page>
+    </ion-page>
 </template>
 
-<style scoped>
-.sapeur {
+<style scoped>.sapeur {
   font-size: 1.6rem;
   padding-left: 16px;
   min-height: 4rem;
@@ -390,5 +370,4 @@ const reset = () => {
 .list-header {
   font-weight: bold;
   min-height: 2.5rem;
-}
-</style>
+}</style>

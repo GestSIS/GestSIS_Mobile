@@ -214,17 +214,21 @@ const ensureNumericKey = (event: KeyboardEvent) => {
 <template>
   <ion-grid>
     <ion-row>
-      <ion-col size="8">
+      <ion-col :size="intervention.localStatus == 'validated' ? 4 : 8">
         <h2>Informations générales</h2>
       </ion-col>
-      <ion-col size="4">
-        <ion-button expand="block" @click="edit()" v-if="intervention.localStatus == 'validated'">
-          <ion-icon slot="start" name="sync"></ion-icon>Modifier
+      <ion-col size="4" v-if="intervention.localStatus == 'validated'">
+        <ion-button expand="block" @click="edit()">
+          <ion-icon slot="start" name="create-outline"></ion-icon>Modifier
         </ion-button>
-        <ion-button expand="block" @click="sync()" v-if="intervention.localStatus == 'validated'">
+      </ion-col>
+      <ion-col size="4" v-if="intervention.localStatus == 'validated'">
+        <ion-button expand="block" @click="sync()">
           <ion-icon slot="start" name="sync"></ion-icon>Synchroniser
         </ion-button>
-        <ion-button expand="block" @click="validate()" v-else>
+      </ion-col>
+      <ion-col size="4" v-if="intervention.localStatus != 'validated'">
+        <ion-button expand="block" @click="validate()">
           <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
         </ion-button>
       </ion-col>
@@ -232,21 +236,12 @@ const ensureNumericKey = (event: KeyboardEvent) => {
 
     <ion-row>
       <ion-col size-sm="6" size="12">
-        <base-datetime
-          :invalid="errors.date_debut"
-          :disabled="intervention.localStatus == 'validated'"
-          :max="intervention.date_fin"
-          v-model="intervention.date_debut"
-        >Début</base-datetime>
+        <base-datetime :invalid="errors.date_debut" :disabled="intervention.localStatus == 'validated'"
+          :max="intervention.date_fin" v-model="intervention.date_debut">Début</base-datetime>
       </ion-col>
       <ion-col size-sm="6" size="12">
-        <base-datetime
-          :invalid="errors.date_fin"
-          :disabled="intervention.localStatus == 'validated'"
-          :min="intervention.date_debut"
-          v-model="intervention.date_fin"
-          :clearable="true"
-        >Fin</base-datetime>
+        <base-datetime :invalid="errors.date_fin" :disabled="intervention.localStatus == 'validated'"
+          :min="intervention.date_debut" v-model="intervention.date_fin" :clearable="true">Fin</base-datetime>
       </ion-col>
     </ion-row>
 
@@ -254,63 +249,41 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       <ion-col size="12" size-sm="6">
         <ion-item>
           <ion-label :color="errors.objet ? 'primary' : ''" position="floating">Objet</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.objet"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.objet" :disabled="intervention.localStatus == 'validated'">
+          </ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label :color="errors.localite_id ? 'primary' : ''" position="floating">NPA Localité</ion-label>
-          <ion-input
-            type="text"
-            readonly
-            @ionFocus="selectLocaliteIntervention"
+          <ion-input type="text" readonly @ionFocus="selectLocaliteIntervention"
             :value="getLocaliteFormattedValue(intervention.localite_id)"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+            :disabled="intervention.localStatus == 'validated'"></ion-input>
         </ion-item>
 
         <ion-item class="checkbox-item">
           <ion-label>Rapport de police</ion-label>
-          <ion-checkbox
-            v-model="intervention.rapport_police"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-checkbox>
+          <ion-checkbox v-model="intervention.rapport_police" :disabled="intervention.localStatus == 'validated'">
+          </ion-checkbox>
         </ion-item>
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label
-            :color="errors.sapeur_id ? 'primary' : ''"
-            position="floating"
-          >Chef d'intervention</ion-label>
-          <ion-input
-            type="text"
-            readonly="true"
-            @ionFocus="selectChefIntervention()"
+          <ion-label :color="errors.sapeur_id ? 'primary' : ''" position="floating">Chef d'intervention</ion-label>
+          <ion-input type="text" readonly="true" @ionFocus="selectChefIntervention()"
             :value="getSapeurFormattedValue(intervention.sapeur_id)"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+            :disabled="intervention.localStatus == 'validated'"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label :color="errors.lieu ? 'primary' : ''" position="floating">Lieu du sinistre</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.lieu"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.lieu" :disabled="intervention.localStatus == 'validated'">
+          </ion-input>
         </ion-item>
 
         <ion-item v-if="intervention.rapport_police">
           <ion-label position="floating">Nom et prénom de l'agent</ion-label>
-          <ion-input
-            type="text"
-            v-model="intervention.agent"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+          <ion-input type="text" v-model="intervention.agent" :disabled="intervention.localStatus == 'validated'">
+          </ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -324,102 +297,56 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-label :color="errors.type_intervention_id ? 'primary' : ''" position="floating">Type</ion-label>
-          <ion-select
-            interface="action-sheet"
-            v-model="intervention.type_intervention_id"
-            okText="Ok"
-            cancelText="Annuler"
-            :disabled="intervention.localStatus == 'validated'"
-          >
-            <ion-select-option
-              v-for="t in typeInterventions"
-              :key="t.id"
-              :value="t.id"
-            >{{ t.designation }}</ion-select-option>
+          <ion-select interface="action-sheet" v-model="intervention.type_intervention_id" okText="Ok"
+            cancelText="Annuler" :disabled="intervention.localStatus == 'validated'">
+            <ion-select-option v-for="t in typeInterventions" :key="t.id" :value="t.id">{{ t.designation }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
           <ion-label :color="errors.degre ? 'primary' : ''" position="floating">Degré</ion-label>
-          <ion-select
-            interface="action-sheet"
-            v-model="intervention.degre"
-            okText="Ok"
-            cancelText="Annuler"
-            :disabled="intervention.localStatus == 'validated'"
-          >
-            <ion-select-option
-              v-for="stat in [
-                { id: 1, type: 'Fausse-alarme' },
-                { id: 2, type: 'Petite' },
-                { id: 3, type: 'Moyenne' },
-                { id: 4, type: 'Grande' },
-              ]"
-              :key="stat.id"
-              :value="stat.id"
-            >{{ stat.type }}</ion-select-option>
+          <ion-select interface="action-sheet" v-model="intervention.degre" okText="Ok" cancelText="Annuler"
+            :disabled="intervention.localStatus == 'validated'">
+            <ion-select-option v-for="stat in [
+              { id: 1, type: 'Fausse-alarme' },
+              { id: 2, type: 'Petite' },
+              { id: 3, type: 'Moyenne' },
+              { id: 4, type: 'Grande' },
+            ]" :key="stat.id" :value="stat.id">{{ stat.type }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label
-            :color="errors.stat_federal_id ? 'primary' : ''"
-            position="floating"
-          >Statistiques fédérales</ion-label>
-          <ion-select
-            interface="action-sheet"
-            v-model="intervention.stat_federal_id"
-            okText="Ok"
-            cancelText="Annuler"
-            :disabled="intervention.localStatus == 'validated'"
-          >
-            <ion-select-option
-              v-for="stat in statsFederales"
-              :key="stat.id"
-              :value="stat.id"
-            >{{ stat.designation }}</ion-select-option>
+          <ion-label :color="errors.stat_federal_id ? 'primary' : ''" position="floating">Statistiques fédérales
+          </ion-label>
+          <ion-select interface="action-sheet" v-model="intervention.stat_federal_id" okText="Ok" cancelText="Annuler"
+            :disabled="intervention.localStatus == 'validated'">
+            <ion-select-option v-for="stat in statsFederales" :key="stat.id" :value="stat.id">{{ stat.designation }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label
-            :color="errors.stat_nb ? 'primary' : ''"
-            position="floating"
-          >Nombre d'interventions</ion-label>
-          <ion-input
-            type="number"
-            inputmode="numeric"
-            :min="0"
-            @ionChange="(ev: any) => intervention.stat_nb = parseInt(ev.target.value)"
-            :value="intervention.stat_nb"
-            @keypress="ensureNumericKey($event)"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+          <ion-label :color="errors.stat_nb ? 'primary' : ''" position="floating">Nombre d'interventions</ion-label>
+          <ion-input type="number" inputmode="numeric" :min="0"
+            @ionChange="(ev: any) => intervention.stat_nb = parseInt(ev.target.value)" :value="intervention.stat_nb"
+            @keypress="ensureNumericKey($event)" :disabled="intervention.localStatus == 'validated'"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Nombre de personnes sauvées</ion-label>
-          <ion-input
-            type="number"
-            inputmode="numeric"
-            :min="0"
+          <ion-input type="number" inputmode="numeric" :min="0"
             @ionChange="(ev: any) => intervention.sauve_personne = parseInt(ev.target.value)"
-            :value="intervention.sauve_personne"
-            @keypress="ensureNumericKey($event)"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+            :value="intervention.sauve_personne" @keypress="ensureNumericKey($event)"
+            :disabled="intervention.localStatus == 'validated'"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Nombre d'animaux sauvés</ion-label>
-          <ion-input
-            type="number"
-            inputmode="numeric"
-            :min="0"
+          <ion-input type="number" inputmode="numeric" :min="0"
             @ionChange="(ev: any) => intervention.sauve_animaux = parseInt(ev.target.value)"
-            :value="intervention.sauve_animaux"
-            @keypress="ensureNumericKey($event)"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-input>
+            :value="intervention.sauve_animaux" @keypress="ensureNumericKey($event)"
+            :disabled="intervention.localStatus == 'validated'"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -434,78 +361,51 @@ const ensureNumericKey = (event: KeyboardEvent) => {
         <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-label position="floating">Nom</ion-label>
-            <ion-input
-              type="text"
-              v-model="intervention.proprietaire.nom"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+            <ion-input type="text" v-model="intervention.proprietaire.nom"
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Adresse</ion-label>
-            <ion-input
-              type="text"
-              v-model="intervention.proprietaire.adresse"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+            <ion-input type="text" v-model="intervention.proprietaire.adresse"
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Téléphone</ion-label>
-            <ion-input
-              type="text"
-              v-model="intervention.proprietaire.telephone"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+            <ion-input type="text" v-model="intervention.proprietaire.telephone"
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
         </ion-col>
         <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-label position="floating">Prénom</ion-label>
-            <ion-input
-              type="text"
-              v-model="intervention.proprietaire.prenom"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+            <ion-input type="text" v-model="intervention.proprietaire.prenom"
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">NPA / Localité</ion-label>
-            <ion-input
-              type="text"
-              readonly
-              @ionFocus="selectLocaliteProprietaire()"
+            <ion-input type="text" readonly @ionFocus="selectLocaliteProprietaire()"
               :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">E-mail</ion-label>
-            <ion-input
-              type="text"
-              inputmode="email"
-              v-model="intervention.proprietaire.email"
-              :disabled="intervention.localStatus == 'validated'"
-            ></ion-input>
+            <ion-input type="text" inputmode="email" v-model="intervention.proprietaire.email"
+              :disabled="intervention.localStatus == 'validated'"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="12">
           <h2>Responsables</h2>
-          <ion-textarea
-            lines="5"
-            v-model="intervention.responsables"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-textarea>
+          <ion-textarea lines="5" v-model="intervention.responsables"
+            :disabled="intervention.localStatus == 'validated'"></ion-textarea>
         </ion-col>
         <ion-col size="12">
           <h2>Description de l'intervention et commentaires</h2>
-          <ion-textarea
-            lines="8"
-            v-model="intervention.description"
-            :disabled="intervention.localStatus == 'validated'"
-          ></ion-textarea>
+          <ion-textarea lines="8" v-model="intervention.description"
+            :disabled="intervention.localStatus == 'validated'"></ion-textarea>
           <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
         </ion-col>
       </ion-row>
-    </ion-grid>
-  </form>
+    </ion-grid>  </form>
 </template>

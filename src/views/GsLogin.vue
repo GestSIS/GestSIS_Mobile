@@ -12,9 +12,11 @@ import {
   IonToolbar,
   IonButton,
   loadingController,
+  IonText,
 } from '@ionic/vue';
 import { ref, watchEffect } from 'vue';
 import useStore from '@/store/useStore';
+import { useNotify } from '@/tools/useToast';
 
 const router = useRouter();
 const email = ref('');
@@ -51,8 +53,10 @@ const wrappedLogin = async () => {
     await loading.dismiss();
 
     router.push({ name: 'accueil' });
-  } catch (error) {
-    errorMessage.value = error as string;
+  } catch (error: any) {
+    const notify = useNotify()
+    notify.error(error?.message ?? "Identifiants incorrect")
+    // errorMessage.value = error?.message ?? "Identifiants incorrect";
   }
 };
 </script>
@@ -66,23 +70,13 @@ const wrappedLogin = async () => {
     </ion-header>
     <ion-content class="ion-padding">
       <form @submit.prevent="wrappedLogin">
-        <ion-list>
+        <ion-list class="ion-padding">
           <ion-item>
-            <ion-input
-              type="text"
-              inputmode="email"
-              v-model="email"
-              name="email"
-              placeholder="Adresse e-mail"
-            ></ion-input>
+            <ion-input type="text" inputmode="email" v-model="email" name="email" placeholder="Adresse e-mail">
+            </ion-input>
           </ion-item>
           <ion-item>
-            <ion-input
-              type="password"
-              v-model="password"
-              name="password"
-              placeholder="Mot de passe"
-            ></ion-input>
+            <ion-input type="password" v-model="password" name="password" placeholder="Mot de passe"></ion-input>
           </ion-item>
           <!-- <ion-item>
             <ion-label>SIS</ion-label>
@@ -105,11 +99,10 @@ const wrappedLogin = async () => {
         </ion-list>
       </form>
     </ion-content>
-  </ion-page>
+    </ion-page>
 </template>
 
-<style scoped>
-#container {
+<style scoped>#container {
   text-align: center;
   position: absolute;
   left: 0;
@@ -132,5 +125,4 @@ const wrappedLogin = async () => {
 
 #container a {
   text-decoration: none;
-}
-</style>
+}</style>

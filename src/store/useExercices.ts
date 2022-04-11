@@ -36,7 +36,7 @@ export default function useExercices() {
       })
     );
 
-    const inProgressExercices = exercices.filter(
+    const inProgressExercices = state.value.filter(
       (e) => e.localStatus == 'in_progress'
     );
     const indexedInProgressExercices = inProgressExercices.reduce((acc, e) => {
@@ -50,9 +50,9 @@ export default function useExercices() {
     
     // TODO: Idée, dans une prochaine version afficher les exercices ne pouvant pas être saisie et les marquer en tant que tel
     const conflictResolvedExercices = newExercices
-    .filter(e => e.statut == 0) // Filter out canceled exercices
-    .filter(e => e.statut == 4) // Filter out imputed exercices
-    .filter(e => !hasValidationPermission && e.statut == 3) // Filter out validated if no rights
+    .filter(e => e.statut != 0) // Filter out canceled exercices
+    .filter(e => e.statut != 4) // Filter out imputed exercices
+    .filter(e => e.statut == 3 && !hasValidationPermission || e.statut != 3) // Filter out validated if no rights
     .map((e) => {
       const conflicting = indexedInProgressExercices.has(e.id);
       if (!conflicting) {
@@ -82,7 +82,7 @@ export default function useExercices() {
       // Si pas ajouté, l'ajouter avec les infos saisies
 
       // Sapeurs modifiés
-      const updatedSapeurs = inProgressExercice?.sapeurs.filter(e => remoteSapeursIds.has(e.sapeur_id));
+      const updatedSapeurs = inProgressExercice?.sapeurs.filter(e => inProgressReferenceSapeursIds.has(e.sapeur_id) && remoteSapeursIds.has(e.sapeur_id));
       const updatedSapeursToKeep = updatedSapeurs?.map(s => {
         // Modifié comparé à la référence ?
         const referenceSapeur = inProgressExercice?.initialSapeurs.find(e => e.sapeur_id == s.sapeur_id);
@@ -106,13 +106,14 @@ export default function useExercices() {
       const removedSapeursToKeep = removedSapeurs?.filter(s => s.present || s.heures.length > 0) || [];
 
       e.initialSapeurs = e.sapeurs;
+      e.localStatus == inProgressExercice?.localStatus;
       e.sapeurs = [...addedSapeursToKeep, ...updatedSapeursToKeep, ...removedSapeursToKeep];
       return e;
       // Garder la saisie actuelle si saisie sinon récupérer les nouvelles modifs
     });
 
     // Store loaded exercices
-    state.value = conflictResolvedExercices;//;[...inProgressExercices, ...filteredExercices];
+    state.value = conflictResolvedExercices;
     store.lastSync.value = DateTime.now().toSQL();
     store.persist();
     store.syncStatus.value = StoreState.Synced;

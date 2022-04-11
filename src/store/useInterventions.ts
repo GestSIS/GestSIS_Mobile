@@ -67,7 +67,6 @@ export default () => {
     state.value = state.value.map((i) =>
       i.localUuid == intervention.localUuid ? intervention : i
     );
-    console.log('Persiste inter');
     store.persist();
   };
 
