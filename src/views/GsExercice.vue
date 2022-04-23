@@ -335,10 +335,11 @@ const reset = () => {
         </ion-row>
       </ion-grid>
     </ion-content>
-    </ion-page>
+  </ion-page>
 </template>
 
-<style scoped>.sapeur {
+<style scoped>
+.sapeur {
   font-size: 1.6rem;
   padding-left: 16px;
   min-height: 4rem;
@@ -370,4 +371,9 @@ const reset = () => {
 .list-header {
   font-weight: bold;
   min-height: 2.5rem;
-}</style>
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--ion-color-light-shade)
+}
+</style>
