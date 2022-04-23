@@ -21,7 +21,7 @@
       </ion-menu>
       <ion-router-outlet id="main-content"></ion-router-outlet>
     </ion-split-pane>
-    </ion-app>
+  </ion-app>
 </template>
 
 <script lang="ts" setup>
@@ -40,9 +40,13 @@ import {
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import useAuth from "./store/useAuth";
+import { useTheme } from '@/hooks/useTheme';
 
 const route = useRoute();
 const activeRoute = ref(route.name);
+
+// Activate dark theme
+useTheme();
 
 const { activePermissions, isLoggedIn } = useAuth();
 watch(
@@ -88,7 +92,8 @@ const appPages = computed(() => [
 ].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || activePermissions.value?.includes(p.permission))));
 </script>
 
-<style scoped>ion-menu ion-content {
+<style scoped>
+ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }
 
@@ -202,4 +207,5 @@ ion-note {
 
 ion-item.selected {
   --color: var(--ion-color-primary);
-}</style>
+}
+</style>

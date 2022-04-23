@@ -3,6 +3,7 @@ import useAuth from '@/store/useAuth';
 import useExercices from '@/store/useExercices';
 import useInterventions from '@/store/useInterventions';
 import useStore from '@/store/useStore';
+import { useTheme } from '@/hooks/useTheme';
 import { useNotify } from '@/tools/useToast';
 import {
   IonButtons,
@@ -25,9 +26,13 @@ import {
   alertController,
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
+
+const { switchTheme, activeTheme } = useTheme();
 const router = useRouter();
 const notify = useNotify();
+
 const { state, activeSisKey, logout, selectSis } = useAuth();
+
 
 const wrappedLogout = () => {
   logout();
@@ -119,9 +124,7 @@ const onSelectSis = async (sis: string) => {
           <ion-label>Sis</ion-label>
           <ion-select @ion-change="onSelectSis($event.target.value)" :value="activeSisKey">
             <ion-select-option v-for="sis in state.data.sis" :key="sis">
-              {{
-                sis
-              }}
+              {{ sis }}
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -136,7 +139,13 @@ const onSelectSis = async (sis: string) => {
             <span>{{ state.data.email }}</span>
           </p>
         </ion-item>
-
+        <ion-item>
+          <ion-label>Thème</ion-label>
+          <ion-select @ion-change="switchTheme($event.target.value)" :value="activeTheme">
+            <ion-select-option key="dark" value="dark">Sombre</ion-select-option>
+            <ion-select-option key="light" value="light">Clair</ion-select-option>
+          </ion-select>
+        </ion-item>
         <ion-button expand="full" @click="wrappedLogout">Déconnexion</ion-button>
       </ion-list>
     </ion-content>

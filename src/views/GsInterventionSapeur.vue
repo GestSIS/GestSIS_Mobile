@@ -94,6 +94,8 @@ if (mode == "ARRIVEE") {
     .map(s => ({ ...s, selected: true }))
 }
 
+sapeurs.sort((a, b) => (a.nom + " " + a.prenom).localeCompare((b.nom + " " + b.prenom)));
+
 const presences: Presences = reactive({ date: date.toSQL({ includeOffset: false }).slice(0, 16), sapeurs, mode });
 
 const addSapeurs = async () => {
@@ -148,11 +150,10 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime
-          :per-quarter="true"
-          v-model="presences.date"
-          :clearable="true"
-        >Heure {{ mode == 'ARRIVEE' ? "d'arrivée" : 'de départ' }}</base-datetime>
+        <base-datetime :per-quarter="true" v-model="presences.date" :clearable="true">Heure {{
+          mode == 'ARRIVEE' ?
+            "d'arrivée" : 'de départ'
+        }}</base-datetime>
       </ion-list>
 
       <ion-grid>

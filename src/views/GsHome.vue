@@ -104,7 +104,7 @@ const hasExercicePresencePermission = computed(() => authStore.activePermissions
             <!-- v-if="user.hasRole('rapport_inter_all')"> -->
             <div class="tile" @click="navigateTo('interventions')">
               <div class="icon">
-                <ion-icon name="flame"></ion-icon>
+                <ion-icon name="flame" color="white"></ion-icon>
               </div>
               <p class="label">Rapports d'intervention</p>
             </div>
@@ -113,7 +113,7 @@ const hasExercicePresencePermission = computed(() => authStore.activePermissions
             <!-- v-if="user.hasRole('presence_exe_all')"> -->
             <div class="tile" @click="navigateTo('exercices')">
               <div class="icon">
-                <ion-icon name="checkbox"></ion-icon>
+                <ion-icon name="checkbox" color="white"></ion-icon>
               </div>
               <p class="label">Présences exercices</p>
             </div>
@@ -121,7 +121,7 @@ const hasExercicePresencePermission = computed(() => authStore.activePermissions
           <ion-col size="6">
             <div class="tile" @click="navigateTo('synchronisation')">
               <div class="icon">
-                <ion-icon name="sync"></ion-icon>
+                <ion-icon name="sync" color="white"></ion-icon>
               </div>
               <p class="label">Synchronisation</p>
             </div>
@@ -129,7 +129,7 @@ const hasExercicePresencePermission = computed(() => authStore.activePermissions
           <ion-col size="6">
             <div class="tile" @click="navigateTo('parametres')">
               <div class="icon">
-                <ion-icon name="settings"></ion-icon>
+                <ion-icon name="settings" color="white"></ion-icon>
               </div>
               <p class="label">Paramètres</p>
             </div>
@@ -141,11 +141,12 @@ const hasExercicePresencePermission = computed(() => authStore.activePermissions
 </template>
 
 <style scoped>
-ion-col > div {
+ion-col>div {
   background-color: #b90101;
   padding: 1px 5px;
 }
-ion-col > div > p:first-child {
+
+ion-col>div>p:first-child {
   line-height: 60px;
 }
 
@@ -163,12 +164,15 @@ ion-col > div > p:first-child {
   text-align: center;
   height: 100%;
 }
+
 .tile .icon {
   padding-top: 5px;
 }
+
 .tile .icon ion-icon {
   font-size: 5em;
 }
+
 .tile .label {
   font-size: 1.2em;
 }

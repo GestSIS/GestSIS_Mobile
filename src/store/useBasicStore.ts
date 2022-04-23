@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { Ref, ref } from 'vue';
-import { usePersistentStore } from './usePersistentStore';
+import { usePersistentStore } from '../hooks/usePersistentStore';
 
 const { persistentStore } = usePersistentStore();
 const lastSyncSuffixe = 'last_sync';

@@ -86,7 +86,7 @@ const dismiss = () => {
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="intervention.date">Fin</base-datetime>
+      <base-datetime v-model="intervention.date">Début</base-datetime>
 
       <ion-item>
         <ion-label position="fixed">Objet</ion-label>
