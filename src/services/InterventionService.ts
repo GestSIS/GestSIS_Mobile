@@ -25,7 +25,7 @@ export default {
         proprietaire:
           `${i.proprietaire.nom ?? ''} ${i.proprietaire.prenom ?? ''}\n` +
           `${
-            i.proprietaire.adresse ? i.proprietaire.adresse ?? '' + ', ' : ''
+            i.proprietaire.adresse ? (i.proprietaire.adresse ?? '') + ', ' : ''
           }${formattedLocalite ?? ''}\n` +
           `${i.proprietaire.email ? i.proprietaire.email ?? '' + ', ' : ''}${
             i.proprietaire.telephone ?? ''
