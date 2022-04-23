@@ -397,15 +397,16 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       <ion-row>
         <ion-col size="12">
           <h2>Responsables</h2>
-          <ion-textarea lines="5" v-model="intervention.responsables"
+          <ion-textarea rows="5" v-model="intervention.responsables"
             :disabled="intervention.localStatus == 'validated'"></ion-textarea>
         </ion-col>
         <ion-col size="12">
           <h2>Description de l'intervention et commentaires</h2>
-          <ion-textarea lines="8" v-model="intervention.description"
-            :disabled="intervention.localStatus == 'validated'"></ion-textarea>
+          <ion-textarea rows="8" v-model="intervention.description" :disabled="intervention.localStatus == 'validated'">
+          </ion-textarea>
           <ion-button expand="full" @click="supprimerRapport">Supprimer ce rapport</ion-button>
         </ion-col>
       </ion-row>
-    </ion-grid>  </form>
+    </ion-grid>
+  </form>
 </template>
