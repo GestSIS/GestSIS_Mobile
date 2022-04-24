@@ -308,6 +308,7 @@ const reset = () => {
               </ion-col>
               <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
+                  {{ sapeur?.heures }}
                   <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
                   <ion-label slot="end">{{ heure.abreviation }}</ion-label>
                 </ion-item>

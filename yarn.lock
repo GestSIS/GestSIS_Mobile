@@ -960,7 +960,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@capacitor/android@3.5.0":
+"@capacitor/android@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-3.5.0.tgz#fc80297512cd66690a000edf22e8cd9177f05459"
   integrity sha512-1SiTMMdd+urvDRrSLDmrFUU9Ldm8B2mUzVNvx8u1zgagZVPNQLoMY4WX8EkpPjt4+D6YIoBjdqb72LID9Iip6A==
@@ -970,7 +970,7 @@
   resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-1.1.1.tgz#bde7202faad1b47c4ae2c4a622285d7569384c5e"
   integrity sha512-8ADkldHnoE1xkWvPUsGlERVGm6/Zvcxy6hCI80AxydIKyaCG7kbDAvUclebbnw/eFRxj2zBoVatGLjmJNvTbYw==
 
-"@capacitor/cli@3.5.0":
+"@capacitor/cli@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-3.5.0.tgz#69e0334b45822feff7888c64ad493a01ee87f5a9"
   integrity sha512-URRAfCbrXufaxRCsDR68m0H3PPndyd4UyfhF4Y+DM5GI1i+0a1SlDYx2s/Ik0ttUFuKc+StwtlmR9Bt5sYNPtQ==
@@ -2094,7 +2094,7 @@
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-vuex/-/cli-plugin-vuex-5.0.4.tgz#80853992ac4f423e8e3e8d05a120c46a94a81b5e"
   integrity sha512-dBwiD6mT9+V2HTHcwaWE8qFNgTk5I/NUvxYVeUN3Mmmpo4y/1RxXnr7BlKGnaQsTypb2RFk3KowqIJtg7s+E3Q==
 
-"@vue/cli-service@5.0.4":
+"@vue/cli-service@^5.0.4":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-5.0.4.tgz#d73300ef00395cf7705310336d3b8828e9dec92b"
   integrity sha512-xRiLNTFYmMCT9edZpyYXHijW5xot3gbZpcWDOXUOhKPHN4qs4XqWALnZlU97JYjZOr3XIr/ZvyciyEfrlUVqSA==

@@ -16,7 +16,7 @@ const init = () => {
     // Use matchMedia to check the user preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     const preferedTheme = prefersDark ? "dark" : "light";
-    console.log("Prefered theme "+preferedTheme)
+
     let theme = value ?? preferedTheme;
     if (theme === ""){
       theme = preferedTheme;
