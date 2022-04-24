@@ -13,6 +13,7 @@ import {
   IonButton,
   IonIcon,
   modalController,
+  loadingController,
 } from "@ionic/vue";
 
 import useDateFormatter from "@/tools/useDateFormatter";
@@ -27,8 +28,17 @@ const { setActiveIntervention } = useActiveIntervention();
 
 const router = useRouter()
 const openDetails = async (intervention: Intervention) => {
+  const loading = await loadingController.create({
+    message: 'Chargement...',
+  });
+
+  await loading.present();
+
   setActiveIntervention(intervention);
-  router.push('intervention');
+
+  router.push('intervention').then(() => {
+    loading.dismiss();
+  });
 };
 
 const create = async () => {
@@ -68,16 +78,9 @@ const create = async () => {
 
       <ion-list>
         <ion-item v-if="!state.length">Aucune intervention</ion-item>
-        <ion-item
-          :button="true"
-          v-for="intervention in state"
-          :key="intervention.id"
-          @click.prevent="openDetails(intervention)"
-        >
-          <ion-icon
-            slot="start"
-            :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'"
-          ></ion-icon>
+        <ion-item :button="true" v-for="intervention in state" :key="intervention.id"
+          @click.prevent="openDetails(intervention)">
+          <ion-icon slot="start" :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'"></ion-icon>
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
