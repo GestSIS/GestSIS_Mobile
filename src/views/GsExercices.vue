@@ -12,6 +12,7 @@ import {
   IonList,
   IonItem,
   IonIcon,
+  loadingController,
 } from '@ionic/vue';
 
 import { computed } from 'vue';
@@ -46,8 +47,15 @@ const getFormattedCategorie = (categorieid: number) =>
 const { formatDate } = useDateFormatter();
 
 const router = useRouter();
-const openDetails = (exercice: Exercice) => {
-  router.push({ name: 'exercice', params: { uuid: exercice.localUuid } });
+const openDetails = async (exercice: Exercice) => {
+  const loading = await loadingController.create({
+    message: 'Chargement...',
+  });
+
+  await loading.present();
+  router.push({ name: 'exercice', params: { uuid: exercice.localUuid } }).then(() => {
+    loading.dismiss();
+  });
 };
 </script>
 
