@@ -51,10 +51,16 @@ const sapeurs = sapeursStore.state;
 const heuresTypes = heuresStore.state;
 const unites = unitesStore.state;
 
-const indexedSapeurs = sapeurs.value.reduce((map, e) => {
-  map.set(e.id, e.nom + " " + e.prenom)
-  return map;
-}, new Map())
+const indexedSapeurs = new Map()
+sapeurs.value.forEach((e) => {
+  indexedSapeurs.set(e.id, e.nom + " " + e.prenom)
+})
+
+const indexedUnites = new Map()
+unites.value.forEach((e) => {
+  indexedUnites.set(e.id, e?.abreviation)
+})
+const enhancedHeuresTypes = computed(() => heuresTypes.value.map(e => ({ ...e, abreviation: indexedUnites.get(e.type_unite_id) })))
 
 const formatCategorie = (categorieId: number) => {
   categories.value.find(c => c.id == categorieId)?.designation
@@ -284,7 +290,7 @@ const reset = () => {
             @ionChange="select(sapeur, $event.target.value)" :key="sapeur.id">
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
-                {{ indexedSapeurs.get(sapeur?.sapeur_id) || "" }}
+                {{ sapeur?.nomPrenom }}
                 <br />
                 <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
               </ion-col>
@@ -300,14 +306,17 @@ const reset = () => {
               <ion-col class="col-radio">
                 <ion-radio :value="4"></ion-radio>
               </ion-col>
-              <ion-col v-for="heure in heuresTypes" :key="heure.id">
+              <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
                   <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
-                  <ion-label slot="end">{{ unites.find(u => u.id == heure.type_unite_id)?.abreviation }}</ion-label>
+                  <ion-label slot="end">{{ heure.abreviation }}</ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
           </ion-radio-group>
+          <ion-row>
+            <ion-col>Total : {{ computedSapeurs.length }}</ion-col>
+          </ion-row>
         </div>
       </ion-list>
 

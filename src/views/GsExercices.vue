@@ -30,7 +30,7 @@ const sortExercices = (exercices: Exercice[]): Exercice[] => {
   return exercices
     .slice(0)
     .sort((a, b) =>
-      DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()
+      DateTime.fromSQL(a.date).diff(DateTime.fromSQL(b.date)).toMillis()
     );
 };
 
@@ -65,20 +65,12 @@ const openDetails = (exercice: Exercice) => {
     <ion-content class="ion-padding">
       <ion-list lines="inset">
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
-        <ion-item
-          tappable
-          v-for="exercice in exercices"
-          :key="exercice.id"
-          @click="openDetails(exercice)"
-        >
-          <ion-icon
-            slot="start"
-            :name="
-              exercice.localStatus == 'empty' ? 'create' :
-                exercice.localStatus == 'in_progress' ? 'create' :
-                  exercice.localStatus == 'validated' ? 'sync' : ''
-            "
-          ></ion-icon>
+        <ion-item tappable v-for="exercice in exercices" :key="exercice.id" @click="openDetails(exercice)">
+          <ion-icon slot="start" :name="
+            exercice.localStatus == 'empty' ? 'create' :
+              exercice.localStatus == 'in_progress' ? 'create' :
+                exercice.localStatus == 'validated' ? 'sync' : ''
+          "></ion-icon>
           <p>
             <!-- TODO: Optionnel See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->

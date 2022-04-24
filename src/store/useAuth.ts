@@ -43,7 +43,6 @@ const persistActiveSisKey = 'auth-siskey';
 const lastSyncSuffixe = 'last_sync';
 
 /** Load data from local storage */
-// yTODO: Check Mobile permission
 const init = async () => {
   const data = await persistentStore.get(persistKey);
   const sisKey = await persistentStore.get(persistActiveSisKey);
@@ -76,15 +75,7 @@ export default function useAuth() {
     return true;
   };
 
-  /** Log in */
-  const login = async (email: string, password: string) => {
-    // Login request
-    const { accessToken, refreshToken } = await AuthService.login({
-      email,
-      password,
-    });
-
-    // const userId = user.id;
+  const setTokens = async (refreshToken: string, accessToken: string) => {
     const { permissions, pseudo, mobiles } = (jwt_decode(accessToken) as any).data;
     const transformedMobiles = mobiles.map((sis: any) => sis.toString());
 
@@ -97,7 +88,6 @@ export default function useAuth() {
     }
 
     // Update state
-    state.data.email = email;
     state.data.pseudo = pseudo;
     state.data.accessToken = accessToken;
     state.data.refreshToken = refreshToken;
@@ -105,12 +95,25 @@ export default function useAuth() {
     state.data.permissions = filteredPermissions;
     state.data.statut = UserStatus.connected;
 
+    await persist();
+  }
+
+  /** Log in */
+  const login = async (email: string, password: string) => {
+    // Login request
+    const { accessToken, refreshToken } = await AuthService.login({
+      email,
+      password,
+    });
+
+    // const userId = user.id;
+    setTokens(accessToken, refreshToken);
+    
     // Select first sis;
-    selectSis(availableSis[0]);
+    selectSis(state.data.sis[0]);
 
     // Set access token
     Api.setTokens(accessToken, refreshToken);
-    await persist();
 
     // Load data
     const store = useStore();
@@ -147,6 +150,7 @@ export default function useAuth() {
     login,
     logout,
     selectSis,
+    setTokens,
     persist,
     activeSisKey,
     activePermissions,

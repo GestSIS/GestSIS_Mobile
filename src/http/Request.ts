@@ -20,11 +20,11 @@ const request = {
 
   _accessTokenValidity: null,
 
-  setTokens(acccessToken: string, refreshToken: string) {
-    const { exp } = jwt_decode(acccessToken) as any;
+  setTokens(accessToken: string, refreshToken: string) {
+    const { exp } = jwt_decode(accessToken) as any;
     this._accessTokenValidity = exp;
     this._refreshToken = refreshToken;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${acccessToken}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
 
   setSisKey: (sis_key: string) => {
@@ -84,15 +84,11 @@ const request = {
         }
       }
 
-      // Update store
-      auth.state.data.accessToken = response?.accessToken;
-      auth.state.data.refreshToken = response?.refreshToken;
-      auth.persist();
+      // Update 
+      this.setTokens(response?.accessToken, response?.refreshToken)
+      auth.setTokens(response?.accessToken, response?.refreshToken)
 
       // Update axios
-      axios.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${response.accessToken}`;
       if (req.headers?.common) {
         req.headers['Authorization'] = `Bearer ${response.accessToken}`;
       }
