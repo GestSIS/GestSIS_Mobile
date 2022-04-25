@@ -87,9 +87,9 @@ const create = async () => {
             <br />
             <span class="details">
               {{
-                intervention.localStatus == 'in_progress'
-                  ? "En cours d'édition"
-                  : "Validé, en attente de synchronisation"
+                  intervention.localStatus == 'in_progress'
+                    ? "En cours d'édition"
+                    : "Validé, en attente de synchronisation"
               }}
             </span>
           </p>

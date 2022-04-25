@@ -5,6 +5,7 @@ const { persistentStore } = usePersistentStore()
 const themeStoreKey = "local-theme";
 
 const switchTheme = (mode: string) => {
+  activeTheme.value = mode;
   persistentStore.set(themeStoreKey, mode)
   document.body.classList.toggle('dark', mode === "dark");
 }
@@ -21,7 +22,7 @@ const init = () => {
     if (theme === ""){
       theme = preferedTheme;
     }
-    activeTheme.value = value;
+    
     switchTheme(activeTheme.value)
   })
 }

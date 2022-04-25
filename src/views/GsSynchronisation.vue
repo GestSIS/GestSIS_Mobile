@@ -54,18 +54,15 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
     <ion-content>
       <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
       <ion-list>
-        <ion-item
-          button="true"
+        <ion-item button="true"
           v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || activePermissions.includes(m.permission))"
-          :key="name"
-          @click="sync"
-        >
+          :key="name" @click="sync">
           <div>
             {{ name }}
             <br />
-            <span
-              class="details"
-            >{{ syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé' }}</span>
+            <span class="details">{{
+                syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé'
+            }}</span>
           </div>
           <ion-icon :name="getSyncStatusIcon(syncStatus.value)" slot="end"></ion-icon>
         </ion-item>
