@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PresenceExercice } from "@/models/bundle";
+import { PresenceExercice, HeureExerciceType } from "@/models/bundle";
 import useExerciceCategories from "@/store/useExerciceCategories";
 
 import {
@@ -86,12 +86,12 @@ if (!exercice.value) {
   }))
 }
 
-const computedSapeurs = computed(() => {
-  return exercice.value?.sapeurs.map(s => {
+const computedSapeurs = computed(() =>
+  exercice.value?.sapeurs.map(s => {
     const nomPrenom = indexedSapeurs.get(s.sapeur_id);
     return { ...s, nomPrenom };
-  }).sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom));
-})
+  }).sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
+)
 
 const validate = () => {
   // Validate an exercice
@@ -195,7 +195,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
 };
 
 let resetting = ref(false);
-const select = async (sapeur: any, statut: number) => {
+const select = async (statut: number, sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   if (statut == null) {
     // Unselect
@@ -211,6 +211,27 @@ const select = async (sapeur: any, statut: number) => {
   exercicesStore.updatExercice(exercice.value);
 };
 
+const heureInput = (value: string, sapeur: PresenceExercice, heureType: HeureExerciceType) => {
+  if (!exercice.value) return;
+  if (resetting.value) {
+    return;
+  }
+  console.log(sapeur.presenceStatut)
+  const quantite = parseFloat(value);
+  if (quantite) {
+    const heure = sapeur.heures.find(h => h.heure_exercice_type_id == heureType.id);
+    sapeur.heures = [
+      ...sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id),
+      { ...heure, quantite, heure_exercice_type_id: heureType.id, id: 0 },
+    ];
+  } else {
+    sapeur.heures = sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id);
+  }
+  exercice.value.sapeurs = exercice.value.sapeurs.map(s => s.sapeur_id == sapeur.sapeur_id ? sapeur : s);
+  console.log(sapeur.presenceStatut)
+  exercicesStore.updatExercice(exercice.value);
+}
+
 // Reset les saisies effectuées
 const reset = () => {
   if (!exercice.value) return;
@@ -224,6 +245,11 @@ const reset = () => {
     resetting.value = false;
   })
 };
+
+const selectRadio = (value: any, sapeur: PresenceExercice) => {
+  console.log("Select radio")
+  console.log(value)
+}
 </script>
 
 <template>
@@ -240,8 +266,8 @@ const reset = () => {
     <ion-content class="ion-padding">
       <h3>
         {{
-          exercice?.designation != '-' ? exercice?.designation
-            : formatCategorie(exercice?.exercice_categorie_id)
+            exercice?.designation != '-' ? exercice?.designation
+              : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
       </h3>
@@ -286,8 +312,8 @@ const reset = () => {
         </ion-row>
 
         <div class="sapeurs">
-          <ion-radio-group v-model="sapeur.presenceStatut" v-for="(sapeur, i) in computedSapeurs"
-            @ionChange="select(sapeur, $event.target.value)" :key="sapeur.id">
+          <ion-radio-group v-for="(sapeur, i) in computedSapeurs" :key="sapeur.id" v-model="sapeur.presenceStatut"
+            @ionChange="select($event.target.value, sapeur)">
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
                 {{ sapeur?.nomPrenom }}
@@ -295,28 +321,30 @@ const reset = () => {
                 <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="1"></ion-radio>
+                <ion-radio mode="md" :value="1"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="2"></ion-radio>
+                <ion-radio mode="md" :value="2"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="3"></ion-radio>
+                <ion-radio mode="md" :value="3"></ion-radio>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio :value="4"></ion-radio>
+                <ion-radio mode="md" :value="4"></ion-radio>
               </ion-col>
               <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
-                  {{ sapeur?.heures }}
-                  <ion-input type="string" inputmode="numeric" :value="sapeur?.heures"></ion-input>
+                  {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }}
+                  <ion-input type="string" inputmode="numeric"
+                    :value="sapeur?.heures.find(h => h.heure_exercice_type_id == heure.id)?.quantite"
+                    @ionChange.stop="heureInput($event.target.value, sapeur, heure)"></ion-input>
                   <ion-label slot="end">{{ heure.abreviation }}</ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
           </ion-radio-group>
           <ion-row>
-            <ion-col>Total : {{ computedSapeurs.length }}</ion-col>
+            <ion-col>Total : {{ computedSapeurs?.length }}</ion-col>
           </ion-row>
         </div>
       </ion-list>

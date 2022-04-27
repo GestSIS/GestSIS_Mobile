@@ -50,7 +50,7 @@ export default function useStore() {
   const syncAll = () => {
     const { activePermissions } = useAuth();
     const promises = modules
-      .filter(m => !m.permission || activePermissions.value.includes(m.permission))
+      .filter(m => !m.permission || activePermissions.value?.includes(m.permission))
       .map(({ sync }) => sync());
     return Promise.all(promises);
   };

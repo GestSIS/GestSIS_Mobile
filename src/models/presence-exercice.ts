@@ -12,7 +12,7 @@ export class PresenceExercice {
   presenceStatut = 0;
   heures:{
     id: number,
-    heure_supplementaire_type_id: number,
+    heure_exercice_type_id: number,
     quantite: number,
   }[]
 }

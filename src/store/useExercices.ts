@@ -16,6 +16,8 @@ export default function useExercices() {
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
 
+    // FIXME: Do not loose info about complementary hours
+
     // Exercice validé directly exported for sync
     // We assume that they are sure of their modifications
     const exercices: Exercice[] = state.value.filter(
@@ -25,6 +27,7 @@ export default function useExercices() {
       await ExerciceService.updateExercicePresences(e);
       return { ok: true, uuid: e.localUuid };
     });
+    console.log("Await terminated")
 
     // Resolve conflicts to avoid overriding in progress exercices
     const newExercices = (await ExerciceService.getExercices()).map(
@@ -35,6 +38,7 @@ export default function useExercices() {
         localStatus: 'empty',
       })
     );
+    console.log("Loaded exercices")
 
     const inProgressExercices = state.value.filter(
       (e) => e.localStatus == 'in_progress'
@@ -46,7 +50,7 @@ export default function useExercices() {
 
     // Check has validate permission
     const authStore = useAuth();
-    const hasValidationPermission = authStore.activePermissions.value.includes("exercice.validation");
+    const hasValidationPermission = authStore.activePermissions.value?.includes("exercice.validation");
     
     // TODO: Idée, dans une prochaine version afficher les exercices ne pouvant pas être saisie et les marquer en tant que tel
     const conflictResolvedExercices = newExercices

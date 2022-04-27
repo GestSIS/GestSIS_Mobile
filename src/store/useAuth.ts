@@ -48,7 +48,7 @@ const init = async () => {
   const sisKey = await persistentStore.get(persistActiveSisKey);
 
   state.data = JSON.parse(data) || { ...emptyState };
-  activePermissions.value = state.data.permissions[sisKey];
+  activePermissions.value = state.data.permissions[sisKey] ?? [];
   activeSisKey.value = sisKey;
   lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
 
@@ -75,7 +75,7 @@ export default function useAuth() {
     return true;
   };
 
-  const setTokens = async (refreshToken: string, accessToken: string) => {
+  const setTokens = async (accessToken: string, refreshToken: string) => {
     const { permissions, pseudo, mobiles } = (jwt_decode(accessToken) as any).data;
     const transformedMobiles = mobiles.map((sis: any) => sis.toString());
 
@@ -107,10 +107,13 @@ export default function useAuth() {
     });
 
     // const userId = user.id;
-    setTokens(accessToken, refreshToken);
-    
+    await setTokens(accessToken, refreshToken);
+
     // Select first sis;
-    selectSis(state.data.sis[0]);
+    const res = selectSis(state.data.sis[0]);
+    if (!res){
+      throw "Vous n'avez pas les droits requis pour utiliser cette application";
+    }
 
     // Set access token
     Api.setTokens(accessToken, refreshToken);
