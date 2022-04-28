@@ -216,19 +216,18 @@ const heureInput = (value: string, sapeur: PresenceExercice, heureType: HeureExe
   if (resetting.value) {
     return;
   }
-  console.log(sapeur.presenceStatut)
   const quantite = parseFloat(value);
   if (quantite) {
     const heure = sapeur.heures.find(h => h.heure_exercice_type_id == heureType.id);
     sapeur.heures = [
       ...sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id),
-      { ...heure, quantite, heure_exercice_type_id: heureType.id, id: 0 },
+      { ...heure, quantite, heure_exercice_type_id: heureType.id, id: null },
     ];
   } else {
     sapeur.heures = sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id);
   }
   exercice.value.sapeurs = exercice.value.sapeurs.map(s => s.sapeur_id == sapeur.sapeur_id ? sapeur : s);
-  console.log(sapeur.presenceStatut)
+  console.log(sapeur)
   exercicesStore.updatExercice(exercice.value);
 }
 
@@ -245,11 +244,6 @@ const reset = () => {
     resetting.value = false;
   })
 };
-
-const selectRadio = (value: any, sapeur: PresenceExercice) => {
-  console.log("Select radio")
-  console.log(value)
-}
 </script>
 
 <template>
@@ -334,7 +328,7 @@ const selectRadio = (value: any, sapeur: PresenceExercice) => {
               </ion-col>
               <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
-                  {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }}
+                  <!-- {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }} -->
                   <ion-input type="string" inputmode="numeric"
                     :value="sapeur?.heures.find(h => h.heure_exercice_type_id == heure.id)?.quantite"
                     @ionChange.stop="heureInput($event.target.value, sapeur, heure)"></ion-input>

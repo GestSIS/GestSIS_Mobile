@@ -11,7 +11,7 @@ export class PresenceExercice {
   excuse_type_id: number;
   presenceStatut = 0;
   heures:{
-    id: number,
+    id: number | null,
     heure_exercice_type_id: number,
     quantite: number,
   }[]
