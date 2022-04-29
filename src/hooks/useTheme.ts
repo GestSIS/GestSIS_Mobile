@@ -19,11 +19,11 @@ const init = () => {
     const preferedTheme = prefersDark ? "dark" : "light";
 
     let theme = value ?? preferedTheme;
-    if (theme === ""){
+    if (theme === "") {
       theme = preferedTheme;
     }
     
-    switchTheme(activeTheme.value)
+    switchTheme(theme);
   })
 }
 
