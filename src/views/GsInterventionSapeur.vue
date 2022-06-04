@@ -64,6 +64,7 @@ if (mode == "ARRIVEE") {
 // load presences that fit ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = new Set<number>(
+  // Filter out politique
   sapeurModule.state.value.filter(s => s.type !== 0).map(s => s.id)
 );
 
@@ -168,8 +169,8 @@ const save = () => {
           </ion-col>
           <ion-col v-if="mode == 'ARRIVEE'" size="4">
             <ion-button expand="block" @click="addSapeurs()">
-              Autres sapeurs
               <ion-icon name="add" slot="start"></ion-icon>
+              Autres sapeurs
             </ion-button>
           </ion-col>
         </ion-row>

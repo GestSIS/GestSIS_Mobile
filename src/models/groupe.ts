@@ -8,5 +8,5 @@ export class Groupe {
     sapeur_ids: {
         id: number,
         sapeur_id: number
-    }[]; //TODO: Next correct to fit the effective returne type
+    }[];
 }
