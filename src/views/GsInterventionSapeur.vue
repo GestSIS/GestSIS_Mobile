@@ -63,7 +63,9 @@ if (mode == "ARRIVEE") {
 
 // load presences that fit ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
-let exceptSapeursIds = new Set<number>();
+let exceptSapeursIds = new Set<number>(
+  sapeurModule.state.value.filter(s => s.type !== 0).map(s => s.id)
+);
 
 if (mode == "ARRIVEE") {
   if (sapeursIds.size > 0) {
@@ -73,9 +75,12 @@ if (mode == "ARRIVEE") {
       .map(s => ({ ...s, selected: true }));
   } else {
     // Uniquement les sapeurs dans les groupes sélectionnés par défault 
-    exceptSapeursIds = new Set(state.value.sapeurs
-      .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
-      .map(s => s.id));
+    exceptSapeursIds = new Set([
+      ...exceptSapeursIds,
+      ...state.value.sapeurs
+        .filter(s => s.presences.filter(p => p.date_fin == null || p.date_fin == "").length > 0)
+        .map(s => s.id)
+    ]);
 
     const selectedGroupes = new Set(state.value.groupes);
     let potentialsSapeursIds = new Set<number>();
@@ -151,8 +156,8 @@ const save = () => {
     <ion-content class="ion-padding">
       <ion-list>
         <base-datetime :per-quarter="true" v-model="presences.date" :clearable="true">Heure {{
-          mode == 'ARRIVEE' ?
-            "d'arrivée" : 'de départ'
+            mode == 'ARRIVEE' ?
+              "d'arrivée" : 'de départ'
         }}</base-datetime>
       </ion-list>
 
