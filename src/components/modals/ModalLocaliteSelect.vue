@@ -13,13 +13,16 @@ import {
   modalController,
 } from '@ionic/vue';
 import useLocalites from "@/store/useLocalites";
+import useLocalitesSis from "@/store/useLocalitesSis";
 import { Localite } from "@/models/localite";
 
 const query = ref("")
 const localiteModule = useLocalites();
+const localiteSisModule = useLocalitesSis();
 const filteredLocalite = computed(() => {
+  const localitesSis = new Set(localiteSisModule.state.value);
   return localiteModule.state.value
-    // .filter(s => query.value == '' ? s) //TODO: Optionnel pré-filtrer sur localités du SIS
+    .filter(s => query.value === '' && localitesSis.has(s.id) || query.value != '')
     .filter(s => (s.npa + "" + s.designation)
       .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
       .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
@@ -54,11 +57,9 @@ const selectLocalite = (localite: Localite) => {
     <ion-searchbar @ionInput="search($event)" placeholder="Saisir..."></ion-searchbar>
 
     <ion-list>
-      <ion-item
-        v-for="localite of filteredLocalite"
-        :key="localite.id"
-        @click="selectLocalite(localite)"
-      >{{ localite.npa }} {{ localite.designation }}</ion-item>
+      <ion-item v-for="localite of filteredLocalite" :key="localite.id" @click="selectLocalite(localite)">{{
+          localite.npa
+      }} {{ localite.designation }}</ion-item>
     </ion-list>
   </ion-content>
 </template>

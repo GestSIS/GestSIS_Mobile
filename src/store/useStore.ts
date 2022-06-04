@@ -6,6 +6,7 @@ import useGroupes from './useGroupes';
 import useHeureExerciceTypes from './useHeureExerciceTypes';
 import useInterventions from './useInterventions';
 import useLocalites from './useLocalites';
+import useLocalitesSis from './useLocalitesSis';
 import useMateriels from './useMateriels';
 import useMissionTypes from './useMissionTypes';
 import usePhaseTypes from './usePhaseTypes';
@@ -22,6 +23,7 @@ export default function useStore() {
     useInterventions(),
     useSapeurs(),
     useLocalites(),
+    useLocalitesSis(),
     useGroupes(),
     useUnitesType(),
     useExerciceCategories(),
