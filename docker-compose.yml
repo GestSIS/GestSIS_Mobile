@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  mobile:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ionic-dev:1.0
+    container_name: gestsis-mobile
+    restart: unless-stopped
+    tty: true
+    working_dir: /app
+    ports:
+      - "8100:8100"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "cd /app && yarn install && ionic serve --port=8100"
