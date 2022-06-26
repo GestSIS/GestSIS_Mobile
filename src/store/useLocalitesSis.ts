@@ -6,14 +6,14 @@ const state: Ref<number[]> = ref([]);
 const store = useBasicStore(
   state,
   LocaliteService.getLocalitesSis,
-  'localites'
+  'localites-sis'
 );
 
-export default function useLocalites() {
+export default function useLocalitesSis() {
   const name = "Localités du sis";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
   };

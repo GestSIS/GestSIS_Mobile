@@ -16,14 +16,14 @@ import { defineProps, defineEmits, withDefaults, ref } from 'vue'
 
 const { formatDate } = useDateFormatter();
 const props = withDefaults(defineProps<{
-  label: string,
-  modelValue: string,
-  min: string,
-  max: string,
-  perQuarter: boolean,
-  disabled: boolean,
-  invalid: boolean,
-  clearable: boolean,
+  label?: string,
+  modelValue?: string,
+  min?: string,
+  max?: string,
+  perQuarter?: boolean,
+  disabled?: boolean,
+  invalid?: boolean,
+  clearable?: boolean,
 }>(), {
   label: "",
   min: "",

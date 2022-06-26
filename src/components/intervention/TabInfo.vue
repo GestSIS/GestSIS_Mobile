@@ -240,11 +240,14 @@ const ensureNumericKey = (event: KeyboardEvent) => {
     <ion-row>
       <ion-col size-sm="6" size="12">
         <base-datetime :invalid="errors.date_debut" :disabled="intervention.localStatus == 'validated'"
-          :max="intervention.date_fin" v-model="intervention.date_debut">Début</base-datetime>
+          :max="intervention.date_fin" v-model="intervention.date_debut">Début
+        </base-datetime>
       </ion-col>
       <ion-col size-sm="6" size="12">
         <base-datetime :invalid="errors.date_fin" :disabled="intervention.localStatus == 'validated'"
-          :min="intervention.date_debut" v-model="intervention.date_fin" :clearable="true">Fin</base-datetime>
+          :min="intervention.date_debut" v-model="intervention.date_fin" :clearable="true">
+          Fin
+        </base-datetime>
       </ion-col>
     </ion-row>
 
