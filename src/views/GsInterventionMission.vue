@@ -57,7 +57,7 @@ const selectSapeur = async () => {
     })
 
   await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
+  const { data } = await modalSapeurSelect.onDidDismiss();
 
   if (!data) {
     return;
@@ -78,7 +78,7 @@ const selectTitre = async () => {
     })
 
   await modalTitreMission.present();
-  let { data } = await modalTitreMission.onDidDismiss();
+  const { data } = await modalTitreMission.onDidDismiss();
 
   if (!data) {
     return;

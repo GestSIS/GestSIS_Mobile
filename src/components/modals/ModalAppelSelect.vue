@@ -44,7 +44,7 @@ const selectTelephone = (telephone: any) => {
 }
 
 const addTelephone = async () => {
-  let promptTelephone = await alertController.create({
+  const promptTelephone = await alertController.create({
     header: 'Nouveau numéro',
     message: "Nom et numéro de la personne ou de l'entreprise appelée :",
     inputs: [

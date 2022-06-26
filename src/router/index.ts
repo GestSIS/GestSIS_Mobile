@@ -65,13 +65,13 @@ const router = createRouter({
 
 // Auth Navigation guard
 const { isLoggedIn } = useAuth();
-router.beforeEach((to, from, next) => {
-  if (to.name != 'login' && !isLoggedIn()) {
+router.beforeEach((to: any, from: any, next: any) => {
+  if (to.name !== 'login' && !isLoggedIn()) {
     // Redirect to login if not logged in
     return next({
       name: 'login',
     });
-  } else if (to.name == 'login' && isLoggedIn()) {
+  } else if (to.name === 'login' && isLoggedIn()) {
     // Redirect to accueil if logged in
     return next({
       name: 'accueil',

@@ -94,7 +94,7 @@ const editPresenceExercice = async (sapeurIndex: number, presenceIndex: any) => 
     })
 
   await modalEditPresence.present();
-  let { data } = await modalEditPresence.onDidDismiss();
+  const { data } = await modalEditPresence.onDidDismiss();
   if (data) {
     sapeur.presences[presenceIndex] = {
       date_debut: data.date_debut,

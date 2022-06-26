@@ -112,7 +112,7 @@ const addSapeur = async () => {
     })
 
   await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
+  const { data } = await modalSapeurSelect.onDidDismiss();
 
   const sapeurId = data;
   if (!sapeurId) {
@@ -194,7 +194,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
   }
 };
 
-let resetting = ref(false);
+const resetting = ref(false);
 const select = async (statut: number, sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   if (statut == null) {

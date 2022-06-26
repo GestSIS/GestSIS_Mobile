@@ -48,7 +48,7 @@ const create = async () => {
     })
 
   await modalIntervention.present();
-  let { data } = await modalIntervention.onDidDismiss();
+  const { data } = await modalIntervention.onDidDismiss();
 
   const intervention = data;
   if (!intervention) {

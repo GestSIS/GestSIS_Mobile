@@ -53,6 +53,10 @@ export function useNotify() {
     await toast.present();
   };
 
+  const success = (message: string) => {
+    show(message, 'bottom', 5000, true);
+  };
+
   const error = (error: string) => {
     show(error, 'bottom', 10000);
   };
@@ -63,21 +67,21 @@ export function useNotify() {
       translucent: true,
       animated: true,
     });
-    
-  // spinner?: SpinnerTypes | null;
-  // message?: string | IonicSafeString;
-  // cssClass?: string | string[];
-  // showBackdrop?: boolean;
-  // duration?: number;
-  // translucent?: boolean;
-  // animated?: boolean;
-  // backdropDismiss?: boolean;
-  // mode?: Mode;
-  // keyboardClose?: boolean;
-  // id?: string;
-  // htmlAttributes?: LoadingAttributes;
-  // enterAnimation?: AnimationBuilder;
-  // leaveAnimation?: AnimationBuilder;
+
+    // spinner?: SpinnerTypes | null;
+    // message?: string | IonicSafeString;
+    // cssClass?: string | string[];
+    // showBackdrop?: boolean;
+    // duration?: number;
+    // translucent?: boolean;
+    // animated?: boolean;
+    // backdropDismiss?: boolean;
+    // mode?: Mode;
+    // keyboardClose?: boolean;
+    // id?: string;
+    // htmlAttributes?: LoadingAttributes;
+    // enterAnimation?: AnimationBuilder;
+    // leaveAnimation?: AnimationBuilder;
     loader.present();
   };
 
@@ -92,6 +96,7 @@ export function useNotify() {
   };
 
   return {
+    success,
     error,
     loading,
     hideLoader,

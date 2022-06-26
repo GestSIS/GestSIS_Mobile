@@ -64,7 +64,7 @@ const intervention = interventionModule.state;
 
 const removeMateriel = async (materielId: number) => {
   const materiel = materiels.value.find(m => m.id == materielId)
-  let confirm = await alertController.create({
+  const confirm = await alertController.create({
     header: 'Supprimer matériel',
     message: "Êtes-vous sûr de vouloir supprimer le matériel [" + materiel?.designation + "] ?",
     buttons: [
@@ -89,14 +89,14 @@ const addMateriel = async () => {
     })
 
   await modalSelectMateriel.present();
-  let { data } = await modalSelectMateriel.onDidDismiss();
+  const { data } = await modalSelectMateriel.onDidDismiss();
 
   const materielId = data?.id;
   if (!materielId) {
     return;
   }
 
-  let promptQuantite = await alertController.create({
+  const promptQuantite = await alertController.create({
     header: 'Ajout matériel',
     message: "Veuillez entrer la quantité utilisée pour [" + data?.designation + "]",
     inputs: [
@@ -134,7 +134,7 @@ const addMateriel = async () => {
 
 const changeMaterielQuantity = async (materielId: number, currentQuantity: number) => {
   const materiel = materiels.value.find(m => m.id == materielId);
-  let promptQuantite = await alertController.create({
+  const promptQuantite = await alertController.create({
     header: 'Ajout matériel',
     message: "Veuillez entrer la quantité utilisée pour [" + materiel?.designation + "]",
     inputs: [

@@ -17,6 +17,9 @@ import useTypesIntervention from './useTypesIntervention';
 import useUnitesType from './useUnitesTypes';
 import useVehicules from './useVehicules';
 
+import { modalController } from '@ionic/vue';
+import ModalReconnectVue from '../components/modals/ModalReconnect.vue';
+
 export default function useStore() {
   const modules = [
     useExexercices(),
@@ -48,19 +51,58 @@ export default function useStore() {
     modules.forEach(({ reset }) => reset());
   };
 
+  const showReconnectModal = async () => {
+    const modalReconnect = await modalController
+      .create({
+        component: ModalReconnectVue,
+      })
+
+    await modalReconnect.present();
+  }
+
   /** Load all modules */
-  const syncAll = () => {
-    const { activePermissions } = useAuth();
+  const syncAll = async () => {
+    const { activePermissions, isLoggedInExpired } = useAuth();
+
+    if (isLoggedInExpired()) {
+      showReconnectModal();
+      return;
+    }
     const promises = modules
       .filter(m => !m.permission || activePermissions.value?.includes(m.permission))
       .map(({ sync }) => sync());
-    return Promise.all(promises);
+    try {
+      const res = await Promise.all(promises);
+      return res;
+    } catch (e) {
+      if (isLoggedInExpired()) {
+        showReconnectModal();
+      }
+    }
   };
+
+  const syncModule = async (module: { sync: () => Promise<any> }) => {
+    const { isLoggedInExpired } = useAuth();
+
+    if (isLoggedInExpired()) {
+      showReconnectModal();
+      return;
+    }
+    try {
+      const res = await module.sync();
+      return res;
+    } catch (e) {
+      if (isLoggedInExpired()) {
+        showReconnectModal();
+      }
+    }
+  }
 
   return {
     persist,
     reset,
     syncAll,
+    syncModule,
     modules,
   };
 }

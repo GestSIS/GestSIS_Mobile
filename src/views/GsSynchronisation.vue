@@ -18,7 +18,7 @@ import useStore from "@/store/useStore";
 import { StoreState } from "@/store/useBasicStore";
 import useAuth from "@/store/useAuth";
 const { formatDate } = useDateFormatter();
-const { modules, syncAll } = useStore();
+const { modules, syncAll, syncModule } = useStore();
 const { activePermissions } = useAuth();
 
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
@@ -38,6 +38,8 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
       return 'warning';
   }
 }
+
+const online = window.navigator.onLine;
 </script>
 
 <template>
@@ -52,11 +54,23 @@ const getSyncStatusIcon = (syncStatus: StoreState): string => {
     </ion-header>
 
     <ion-content>
+      <ion-card v-if="!online" color="warning">
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-12 col-md-8>
+                <h2>⚠️ Aucune connexion internet pour détectée</h2>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
       <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
       <ion-list>
         <ion-item button="true"
           v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || activePermissions.includes(m.permission))"
-          :key="name" @click="sync">
+          :key="name" @click="syncModule({ sync })">
           <div>
             {{ name }}
             <br />

@@ -7,10 +7,6 @@ import { useRouter } from 'vue-router';
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
 
-// console.log(API_URL)
-// console.log(AUTH_URL)
-// import store from '@/store';
-
 const refreshTokenPromise = ref<any>("");
 const refreshTokenCountAwait = ref<any>("");
 
@@ -54,7 +50,7 @@ const request = {
       // Check if a refreshToken request has already been sent
       if (refreshTokenPromise.value != '') {
         refreshTokenCountAwait.value++;
-        
+
         // Await the result of this request
         try {
           return await refreshTokenPromise.value;
@@ -74,8 +70,7 @@ const request = {
         response = await refreshTokenPromise.value;
       } catch (e: any) {
         if (e?.status === 401) {
-          auth.logout();
-          useRouter().push({ name: 'login' })
+          auth.loginExpired();
           return Promise.reject(e);
         }
       } finally {
@@ -86,7 +81,7 @@ const request = {
 
       // Update 
       this.setTokens(response?.accessToken, response?.refreshToken)
-      auth.setTokens(response?.accessToken, response?.refreshToken)
+      auth.setTokens(response?.accessToken, response?.refreshToken, null)
 
       // Update axios
       if (req.headers?.common) {
@@ -134,7 +129,6 @@ const request = {
         if (error.response?.status === 401) {
           return Promise.reject(error.response);
         }
-        console.error(error);
         // Do something with response error
         return Promise.reject(error.response.data);
       }

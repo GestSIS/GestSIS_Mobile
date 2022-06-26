@@ -12,7 +12,6 @@ import {
   IonToolbar,
   IonButton,
   loadingController,
-  IonText,
 } from '@ionic/vue';
 import { ref, watchEffect } from 'vue';
 import useStore from '@/store/useStore';
@@ -21,7 +20,6 @@ import { useNotify } from '@/tools/useToast';
 const router = useRouter();
 const email = ref('');
 const password = ref('');
-const errorMessage = ref('');
 
 const { login, state } = useAuth();
 
@@ -78,31 +76,15 @@ const wrappedLogin = async () => {
           <ion-item>
             <ion-input type="password" v-model="password" name="password" placeholder="Mot de passe"></ion-input>
           </ion-item>
-          <!-- <ion-item>
-            <ion-label>SIS</ion-label>
-            <ion-select
-              name="sis"
-              cancelText="Annuler"
-              okText="Valider"
-              v-model="account.sisId"
-              ref="sisSelect"
-            >
-              <ion-select-option
-                v-for="sis in listeSis"
-                :value="sis.id"
-                :key="sis.id"
-                >{{ sis.nom }}</ion-select-option
-              >
-            </ion-select>
-          </ion-item>-->
           <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">Connexion</ion-button>
         </ion-list>
       </form>
     </ion-content>
-    </ion-page>
+  </ion-page>
 </template>
 
-<style scoped>#container {
+<style scoped>
+#container {
   text-align: center;
   position: absolute;
   left: 0;
@@ -125,4 +107,5 @@ const wrappedLogin = async () => {
 
 #container a {
   text-decoration: none;
-}</style>
+}
+</style>

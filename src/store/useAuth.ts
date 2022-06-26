@@ -11,6 +11,7 @@ const store = useStore();
 export enum UserStatus {
   disconnected = 0,
   connected = 1,
+  isExpired = 2,
 }
 
 export interface User {
@@ -75,7 +76,7 @@ export default function useAuth() {
     return true;
   };
 
-  const setTokens = async (accessToken: string, refreshToken: string) => {
+  const setTokens = async (accessToken: string, refreshToken: string, email: string | null) => {
     const { permissions, pseudo, mobiles } = (jwt_decode(accessToken) as any).data;
     const transformedMobiles = mobiles.map((sis: any) => sis.toString());
 
@@ -88,6 +89,7 @@ export default function useAuth() {
     }
 
     // Update state
+    state.data.email = email ?? state.data.email;
     state.data.pseudo = pseudo;
     state.data.accessToken = accessToken;
     state.data.refreshToken = refreshToken;
@@ -107,11 +109,11 @@ export default function useAuth() {
     });
 
     // const userId = user.id;
-    await setTokens(accessToken, refreshToken);
+    await setTokens(accessToken, refreshToken, email);
 
     // Select first sis;
     const res = selectSis(state.data.sis[0]);
-    if (!res){
+    if (!res) {
       throw "Vous n'avez pas les droits requis pour utiliser cette application";
     }
 
@@ -124,6 +126,39 @@ export default function useAuth() {
 
     return Promise.resolve();
   };
+
+  /** Log in */
+  const reconnect = async (email: string, password: string) => {
+    // Login request
+    const { accessToken, refreshToken } = await AuthService.login({
+      email: state.data.email ?? email,
+      password,
+    });
+
+    // const userId = user.id;
+    await setTokens(accessToken, refreshToken, state.data.email ?? email);
+
+    // Check si l'utilisateur à toujours les droits pour ce SIS
+    if (!state.data.sis.includes(activeSisKey.value)) {
+      const res = selectSis(state.data.sis[0]);
+      if (!res) {
+        throw "Vous n'avez plus les droits requis pour utiliser cette application";
+      }
+    }
+
+    // Set access token
+    Api.setTokens(accessToken, refreshToken);
+
+    // Load data
+    const store = useStore();
+    store.syncAll();
+
+    return Promise.resolve();
+  };
+
+  const loginExpired = async () => {
+    state.data.statut = UserStatus.isExpired;
+  }
 
   /** Persist data in local storage */
   const persist = async () => {
@@ -144,14 +179,21 @@ export default function useAuth() {
   };
 
   const isLoggedIn = () => {
-    return state.data.statut == UserStatus.connected;
+    return state.data.statut === UserStatus.connected || state.data.statut === UserStatus.isExpired;
   };
+
+  const isLoggedInExpired = () => {
+    return state.data.statut === UserStatus.isExpired;
+  }
 
   return {
     state,
     isLoggedIn,
+    isLoggedInExpired,
     login,
+    reconnect,
     logout,
+    loginExpired,
     selectSis,
     setTokens,
     persist,

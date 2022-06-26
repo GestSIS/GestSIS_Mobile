@@ -19,7 +19,7 @@
     <ion-item v-if="!intervention.missions.length">Aucune mission</ion-item>
     <ion-item
       button="true"
-      v-for="(mission, i) in intervention.missions"
+      v-for="(mission, i) in intervention.missions.sort((a, b) => b.date_debut.localeCompare(a.date_debut))"
       :key="i"
       :disabled="intervention.localStatus == 'validated'"
       @click="editMission(mission)"
@@ -74,7 +74,7 @@ const editMission = (mission: any) => {
   router.push({ name: 'mission', params: { uuid: mission.localUuid } });
 };
 const deleteMission = async (mission: any) => {
-  let confirm = await alertController.create({
+  const confirm = await alertController.create({
     header: 'Supprimer mission',
     message: "Êtes-vous sûr de vouloir supprimer la mission [" + mission?.titre + "] ?",
     buttons: [

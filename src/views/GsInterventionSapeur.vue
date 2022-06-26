@@ -115,7 +115,7 @@ const addSapeurs = async () => {
     })
 
   await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
+  const { data } = await modalSapeurSelect.onDidDismiss();
 
   if (!data) {
     return;

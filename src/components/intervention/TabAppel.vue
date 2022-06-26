@@ -75,14 +75,14 @@ const addCall = async () => {
     })
 
   await modalAppel.present();
-  let { data } = await modalAppel.onDidDismiss();
+  const { data } = await modalAppel.onDidDismiss();
 
   if (!data) {
     return;
   }
-  let tel = data;
+  const tel = data;
 
-  let prompt = await alertController.create({
+  const prompt = await alertController.create({
     header: 'Ajout appel',
     message: "Commentaire pour appel de " + tel.nom + " (" + tel.numero + ")",
     inputs: [
@@ -125,7 +125,7 @@ const editCall = async (appel: any) => {
 };
 
 const removeCall = async (appel: Appel) => {
-  let confirm = await alertController.create({
+  const confirm = await alertController.create({
     header: 'Supprimer appel',
     message: "Êtes-vous sûr de vouloir supprimer l'appel [" + appel.nom + "] ?",
     buttons: [

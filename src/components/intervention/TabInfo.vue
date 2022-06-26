@@ -29,8 +29,10 @@ import { useRouter } from 'vue-router';
 import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
 import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 import BaseDatetime from '../base/BaseDatetime.vue';
+import useStore from '@/store/useStore';
 
 const router = useRouter();
+const { syncModule } = useStore();
 const interventionStore = useInterventions();
 const { state, persist } = useActiveIntervention();
 const intervention = state;
@@ -76,10 +78,11 @@ const edit = async () => {
 }
 
 const sync = async () => {
-  // TODO: Check internet connexion
-
   // Sync les interventions
-  await interventionStore.sync();
+  const res = await syncModule(interventionStore);
+  router.push({ name: 'accueil' });
+  const { success } = useNotify();
+  success("Intervention synchronisée");
 }
 
 const validate = async () => {
@@ -156,7 +159,7 @@ const selectLocalite = async () => {
     })
 
   await modalLocaliteSelect.present();
-  let { data } = await modalLocaliteSelect.onDidDismiss();
+  const { data } = await modalLocaliteSelect.onDidDismiss();
 
   return data;
 }
@@ -185,7 +188,7 @@ const selectChefIntervention = async () => {
     })
 
   await modalSapeurSelect.present();
-  let { data } = await modalSapeurSelect.onDidDismiss();
+  const { data } = await modalSapeurSelect.onDidDismiss();
 
   if (data) {
     intervention.value.sapeur_id = data;

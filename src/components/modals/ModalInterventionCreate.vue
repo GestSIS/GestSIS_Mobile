@@ -41,7 +41,7 @@ const selectLocalite = async () => {
     })
 
   await modalLocaliteSelect.present();
-  let { data } = await modalLocaliteSelect.onDidDismiss();
+  const { data } = await modalLocaliteSelect.onDidDismiss();
 
   if (!data) {
     return;
