@@ -53,6 +53,7 @@ const selectSapeur = async () => {
       component: ModalSapeurSelectVue,
       componentProps: {
         exceptSapeurIds: [],
+        preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(s => s.id),
       }
     })
 

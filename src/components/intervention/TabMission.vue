@@ -8,6 +8,7 @@ import {
   IonItem,
   IonIcon,
   IonCheckbox,
+  IonLabel,
   alertController,
 } from '@ionic/vue';
 import useActiveIntervention from '@/store/useActiveIntervention';

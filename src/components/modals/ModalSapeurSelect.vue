@@ -20,9 +20,11 @@ import { Sapeur } from "@/models/sapeur";
 
 const props = withDefaults(defineProps<{
   exceptSapeurIds?: number[],
-  multiSelect?: boolean
+  preSelectionSapeurIds?: number[],
+  multiSelect?: boolean,
 }>(), { exceptSapeurIds: () => [], multiSelect: false });
-const exceptIds = new Set(props.exceptSapeurIds);
+const exceptIds = new Set(props.exceptSapeurIds ?? []);
+const preSelectionSapeurIds = new Set(props.preSelectionSapeurIds ?? []);
 
 // const { exceptSapeurIds = [], multiSelect = false } = defineProps<{
 //   exceptSapeurIds?: number[],
@@ -36,9 +38,11 @@ const sapeurModule = useSapeurs();
 const filteredSapeur = computed(() => {
   return sapeurModule.state.value
     .filter(s => !exceptIds.has(s.id))
-    .filter(s => (s.nom + "" + s.prenom)
+    .filter(s => query.value !== "" ? (s.nom + "" + s.prenom)
       .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-      .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
+      .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1
+      : preSelectionSapeurIds.size && preSelectionSapeurIds.has(s.id) || !preSelectionSapeurIds.size
+    )
     .sort((a, b) => (a.nom + " " + a.prenom).localeCompare((b.nom + " " + b.prenom)))
 })
 

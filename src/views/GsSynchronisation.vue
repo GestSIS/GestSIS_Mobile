@@ -10,7 +10,10 @@ import {
   IonItem,
   IonList,
   IonIcon,
-  IonButton
+  IonButton,
+  IonGrid,
+  IonCardContent,
+  IonCard
 } from "@ionic/vue";
 
 import useDateFormatter from "@/tools/useDateFormatter";
@@ -57,11 +60,7 @@ const online = window.navigator.onLine;
       <ion-card v-if="!online" color="warning">
         <ion-card-content>
           <ion-grid>
-            <ion-row>
-              <ion-col col-12 col-md-8>
-                <h2>⚠️ Aucune connexion internet pour détectée</h2>
-              </ion-col>
-            </ion-row>
+            <h2>⚠️ Aucune connexion internet pour détectée</h2>
           </ion-grid>
         </ion-card-content>
       </ion-card>
