@@ -30,6 +30,7 @@ import ModalLocaliteSelectVue from '../modals/ModalLocaliteSelect.vue';
 import ModalSapeurSelectVue from '../modals/ModalSapeurSelect.vue';
 import BaseDatetime from '../base/BaseDatetime.vue';
 import useStore from '@/store/useStore';
+import { DateTime } from "luxon";
 
 const router = useRouter();
 const { syncModule } = useStore();
@@ -212,6 +213,26 @@ const ensureNumericKey = (event: KeyboardEvent) => {
   }
 };
 
+const roundDateToQuarter = (date: string) => {
+  let datetime = DateTime.fromSQL(date);
+  datetime = datetime.set({ minute: datetime.minute - (datetime.minute % 15), second: 0, millisecond: 0 });
+  return datetime.toSQL().slice(0, 16);
+}
+
+const startDate = ref<string>(roundDateToQuarter(intervention.value.date_debut));
+const dateDebutChanged = (date: string) => {
+  // Change date de début pour sapeurs saisies
+  const roundedDate = roundDateToQuarter(date);
+  intervention.value.sapeurs = intervention.value.sapeurs.map((s: any) => ({
+    ...s,
+    presences: s.presences.map((p: any) => ({
+      ...p,
+      date_debut: p.date_debut.slice(0, 16) === startDate.value ? roundedDate : p.date_debut,
+    }))
+  }));
+
+  startDate.value = roundedDate;
+}
 </script>
 
 <template>
@@ -240,7 +261,7 @@ const ensureNumericKey = (event: KeyboardEvent) => {
     <ion-row>
       <ion-col size-sm="6" size="12">
         <base-datetime :invalid="errors.date_debut" :disabled="intervention.localStatus == 'validated'"
-          :max="intervention.date_fin" v-model="intervention.date_debut">Début
+          :max="intervention.date_fin" v-model="intervention.date_debut" @update:modelValue="dateDebutChanged">Début
         </base-datetime>
       </ion-col>
       <ion-col size-sm="6" size="12">
@@ -255,7 +276,8 @@ const ensureNumericKey = (event: KeyboardEvent) => {
       <ion-col size="12" size-sm="6">
         <ion-item>
           <ion-label :color="errors.objet ? 'primary' : ''" position="floating">Objet</ion-label>
-          <ion-input type="text" v-model="intervention.objet" :disabled="intervention.localStatus == 'validated'">
+          <ion-input type="text" v-model="intervention.objet" :disabled="intervention.localStatus == 'validated'"
+            @change="dateDebutChanged">
           </ion-input>
         </ion-item>
 
