@@ -1,33 +1,3 @@
-<template>
-  <ion-list>
-    <ion-item>
-      <ion-label text-right>Afficher uniquement les missions en cours</ion-label>
-      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"></ion-checkbox>
-    </ion-item>
-  </ion-list>
-  <section id="cd-timeline" class="cd-container">
-    <div
-      :class="['cd-timeline-block', colorMapping[event.type]]"
-      v-for="event of evenements"
-      :key="event.uuid"
-    >
-      <div class="cd-timeline-icon positive text-center">
-        <ion-icon :name="iconMapping[event.type]"></ion-icon>
-      </div>
-      <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
-        <h4 class="title">{{ event.titre }}</h4>
-        <p class="date">
-          {{ formatDate(event.date, 'dd.LL.yy HH:mm') }}
-          <span
-            v-if="event.auteur"
-          >par {{ event.auteur }}</span>
-        </p>
-        <p class="description" v-if="event.description">{{ event.description }}</p>
-      </div>
-    </div>
-  </section>
-</template>
-
 <script lang="ts" setup>
 import { v4 as uuidv4 } from 'uuid';
 import useActiveIntervention from '@/store/useActiveIntervention';
@@ -46,7 +16,7 @@ import useSapeurs from '@/store/useSapeurs';
 import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
 import { useRouter } from 'vue-router';
 
-const onlyPendingMissions = ref(true);
+const onlyPendingMissions = ref<boolean>(true);
 const { formatDate } = useDateFormatter();
 
 enum EventType {
@@ -84,7 +54,7 @@ interface Event {
 }
 
 const evenements = computed(() => {
-  const missions = intervention.value.missions.filter(m => m.date_fin == null || !onlyPendingMissions.value);
+  const missions = intervention.value.missions.filter(m => !m.date_fin || !onlyPendingMissions.value);
   const chefIntervention = sapeurStore.state.value.find(s => s.id == intervention.value.sapeur_id);
   return [
     // Début intervention
@@ -112,12 +82,12 @@ const evenements = computed(() => {
       ...m,
       uuid: m.localUuid,
       date: m.date_debut,
-      type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
+      type: !m.date_fin ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
       auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
     })),
     // Fin de mission
-    ...missions.filter(m => m.date_fin != null).map(m => ({
+    ...missions.filter(m => m.date_fin).map(m => ({
       ...m,
       uuid: m.localUuid,
       date: m.date_fin,
@@ -158,6 +128,30 @@ const openEvent = async (event: Event) => {
 }
 </script>
 
+<template>
+  <ion-list>
+    <ion-item>
+      <ion-label text-right>Afficher uniquement les missions en cours</ion-label>
+      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <section id="cd-timeline" class="cd-container">
+    <div :class="['cd-timeline-block', colorMapping[event.type]]" v-for="event of evenements" :key="event.uuid">
+      <div class="cd-timeline-icon positive text-center">
+        <ion-icon :name="iconMapping[event.type]"></ion-icon>
+      </div>
+      <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
+        <h4 class="title">{{ event.titre }}</h4>
+        <p class="date">
+          {{ formatDate(event.date, 'dd.LL.yy HH:mm') }}
+          <span v-if="event.auteur">par {{ event.auteur }}</span>
+        </p>
+        <p class="description" v-if="event.description">{{ event.description }}</p>
+      </div>
+    </div>
+  </section>
+</template>
+
 <style scoped>
 textarea {
   height: 200px;
@@ -166,9 +160,11 @@ textarea {
 .blue .positive {
   border-color: #4a87ee;
 }
+
 .blue .positive ion-icon {
   color: #4a87ee;
 }
+
 .blue .cd-timeline-content {
   background: #d7eef8;
 }
@@ -176,9 +172,11 @@ textarea {
 .grey .positive {
   border-color: grey;
 }
+
 .grey .positive ion-icon {
   color: grey;
 }
+
 .grey .cd-timeline-content {
   background: #efefef;
 }
@@ -186,9 +184,11 @@ textarea {
 .green .positive {
   border-color: #009c22;
 }
+
 .green .positive ion-icon {
   color: #009c22;
 }
+
 .green .cd-timeline-content {
   background: #e0ffdf;
 }
@@ -196,16 +196,20 @@ textarea {
 .orange .positive {
   border-color: #d46200;
 }
+
 .orange .positive ion-icon,
 .text-orange {
   color: #d46200;
 }
+
 .orange .cd-timeline-content {
   background: #fbe7d6;
 }
+
 .checkbox-item {
   margin-top: 22px;
 }
+
 .item-divider .label {
   font-size: 16px;
 }

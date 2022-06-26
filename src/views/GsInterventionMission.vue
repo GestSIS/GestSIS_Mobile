@@ -121,12 +121,8 @@ const save = () => {
 
         <ion-item>
           <ion-label position="floating">Responsable</ion-label>
-          <ion-input
-            type="text"
-            readonly="true"
-            @ionFocus="selectSapeur()"
-            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"
-          ></ion-input>
+          <ion-input type="text" readonly="true" @ionFocus="selectSapeur()"
+            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"></ion-input>
         </ion-item>
 
         <ion-item>
@@ -139,11 +135,7 @@ const save = () => {
           <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
         </ion-item>
 
-        <base-datetime
-          :min="mission.date_debut"
-          v-model="mission.date_fin"
-          :clearable="true"
-        >Quittancer</base-datetime>
+        <base-datetime :min="mission.date_debut" v-model="mission.date_fin" :clearable="true">Quittancer</base-datetime>
       </ion-list>
     </ion-content>
   </ion-page>
