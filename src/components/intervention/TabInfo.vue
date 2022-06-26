@@ -80,7 +80,7 @@ const edit = async () => {
 
 const sync = async () => {
   // Sync les interventions
-  const res = await syncModule(interventionStore);
+  await syncModule(interventionStore);
   router.push({ name: 'accueil' });
   const { success } = useNotify();
   success("Intervention synchronisée");

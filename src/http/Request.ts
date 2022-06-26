@@ -2,7 +2,6 @@ import useAuth from '@/store/useAuth';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
