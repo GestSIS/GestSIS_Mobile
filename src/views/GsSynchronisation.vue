@@ -60,7 +60,7 @@ const online = window.navigator.onLine;
       <ion-card v-if="!online" color="warning">
         <ion-card-content>
           <ion-grid>
-            <h2>⚠️ Aucune connexion internet pour détectée</h2>
+            <h2>⚠️ Aucune connexion internet détectée</h2>
           </ion-grid>
         </ion-card-content>
       </ion-card>
