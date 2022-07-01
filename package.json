@@ -49,7 +49,7 @@
     "@vue/cli-service": "^5.0.4",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/test-utils": "^2.0.0-rc.20",
-    "@vue/vue3-jest": "^28.0.0",
+    "@vue/vue3-jest": "^28.0.1",
     "babel-jest": "^28.1.1",
     "cypress": "^10.1.0",
     "eslint": "^8.13.0",
