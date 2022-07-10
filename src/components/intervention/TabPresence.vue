@@ -37,7 +37,7 @@ const moduleGroupe = useGroupes();
 const sapeurs = moduleSapeur.state;
 const groupes = moduleGroupe.state;
 
-const filteredGroupes = computed(() => groupes.value.filter(g => g.type == 1));
+const filteredGroupes = computed(() => groupes.value.filter(g => g.type == 1).sort((a, b) => parseInt(a.no || 99) - parseInt(b.no || 99)));
 const groupesIntervention = ref(new Set(intervention.value.groupes));
 
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
@@ -136,26 +136,18 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
   <div class="ion-padding-top">
     <div v-if="activeTab == 'GROUPE'">
       <ion-list>
-        <ion-item
-          button
-          v-for="(groupe, i) of filteredGroupes"
-          :key="i"
-          :disabled="intervention.localStatus == 'validated'"
-          @click="changeGroupeStatus(groupe.id)"
-        >
+        <ion-item button v-for="(groupe, i) of filteredGroupes" :key="i"
+          :disabled="intervention.localStatus == 'validated'" @click="changeGroupeStatus(groupe.id)">
           <!-- <span>{{ groupe.prefix }}</span> -->
           {{
-            (groupe.no ? groupe.no + " - " : "") +
+              (groupe.no ? groupe.no + " - " : "") +
               groupe.designation
           }}
-          <ion-icon
-            slot="end"
-            :name="
-              groupesIntervention.has(groupe.id)
-                ? 'checkmark-circle'
-                : 'radio-button-off'
-            "
-          ></ion-icon>
+          <ion-icon slot="end" :name="
+            groupesIntervention.has(groupe.id)
+              ? 'checkmark-circle'
+              : 'radio-button-off'
+          "></ion-icon>
         </ion-item>
       </ion-list>
     </div>
@@ -165,27 +157,18 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
         <ion-row>
           <ion-col size="4">
             <h1>Présences</h1>
-            <span
-              v-if="intervention.sapeurs?.length"
-              class="details"
-            >{{ intervention.sapeurs?.length }} sapeurs</span>
+            <span v-if="intervention.sapeurs?.length" class="details">{{ intervention.sapeurs?.length }} sapeurs</span>
             <span v-else class="details">Aucun sapeur</span>
           </ion-col>
           <ion-col size="4">
-            <ion-button
-              expand="block"
-              @click="addPresenceExercice('ARRIVEE')"
-              :disabled="intervention.localStatus == 'validated'"
-            >
+            <ion-button expand="block" @click="addPresenceExercice('ARRIVEE')"
+              :disabled="intervention.localStatus == 'validated'">
               <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
             </ion-button>
           </ion-col>
           <ion-col size="4">
-            <ion-button
-              expand="block"
-              @click="addPresenceExercice('DEPART')"
-              :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0"
-            >
+            <ion-button expand="block" @click="addPresenceExercice('DEPART')"
+              :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0">
               <ion-icon slot="start" name="log-out"></ion-icon>Départ
             </ion-button>
           </ion-col>
@@ -194,13 +177,8 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
 
       <!-- Sapeurs dont il manque la présence -->
       <ion-item-group>
-        <ion-item
-          lines="full"
-          v-for="(sapeur, i) of sapeursSansPresenceExercices"
-          :key="i"
-          @click="addMissingSapeur(sapeur)"
-          :disabled="intervention.localStatus == 'validated'"
-        >
+        <ion-item lines="full" v-for="(sapeur, i) of sapeursSansPresenceExercices" :key="i"
+          @click="addMissingSapeur(sapeur)" :disabled="intervention.localStatus == 'validated'">
           <ion-icon color="warning" name="warning" slot="start"></ion-icon>
           <ion-text color="warning">{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text>
         </ion-item>
@@ -209,24 +187,14 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
       <!-- Présences des sapeurs -->
       <ion-item-group v-for="(sapeur, i) in intervention.sapeurs" :key="i">
         <ion-item-divider color="light">{{ sapeur.nom }} {{ sapeur.prenom }}</ion-item-divider>
-        <ion-item
-          :button="true"
-          v-for="(presence, j) in sapeur.presences"
-          :key="j"
-          @click="editPresenceExercice(i, j)"
-          :disabled="intervention.localStatus == 'validated'"
-        >
+        <ion-item :button="true" v-for="(presence, j) in sapeur.presences" :key="j" @click="editPresenceExercice(i, j)"
+          :disabled="intervention.localStatus == 'validated'">
           <p>
             {{ formatDate(presence.date_debut, "HH:mm") }} -
             {{ presence.date_fin ? formatDate(presence.date_fin, "HH:mm") : "" }}
           </p>
-          <ion-button
-            @click.stop="removePresenceExercice(i, j)"
-            :disabled="intervention.localStatus == 'validated'"
-            fill="clear"
-            color="dark"
-            slot="end"
-          >
+          <ion-button @click.stop="removePresenceExercice(i, j)" :disabled="intervention.localStatus == 'validated'"
+            fill="clear" color="dark" slot="end">
             <ion-icon slot="icon-only" name="close"></ion-icon>
           </ion-button>
         </ion-item>
