@@ -62,14 +62,14 @@ export default function useStore() {
 
   /** Load all modules */
   const syncAll = async () => {
-    const { activePermissions, isLoggedInExpired } = useAuth();
+    const { hasPermission, isLoggedInExpired } = useAuth();
 
     if (isLoggedInExpired()) {
       showReconnectModal();
       return;
     }
     const promises = modules
-      .filter(m => !m.permission || activePermissions.value?.includes(m.permission))
+      .filter(m => !m.permission || hasPermission(m.permission))
       .map(({ sync }) => sync());
     try {
       const res = await Promise.all(promises);

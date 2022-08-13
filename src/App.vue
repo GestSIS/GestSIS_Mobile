@@ -48,7 +48,7 @@ const activeRoute = ref(route.name);
 // Activate dark theme
 useTheme();
 
-const { activePermissions, isLoggedIn } = useAuth();
+const { hasPermission, isLoggedIn } = useAuth();
 watch(
   () => route.name,
   (newValue) => {
@@ -89,7 +89,7 @@ const appPages = computed(() => [
     url: { name: "parametres" },
     connectedOnly: true,
   },
-].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || activePermissions.value?.includes(p.permission))));
+].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || hasPermission(p.permission))));
 </script>
 
 <style scoped>

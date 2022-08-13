@@ -46,8 +46,8 @@ export default function useExercices() {
     }, new Map<number, Exercice>());
 
     // Check has validate permission
-    const authStore = useAuth();
-    const hasValidationPermission = authStore.activePermissions.value?.includes("exercice.validation");
+    const { hasPermission } = useAuth();
+    const hasValidationPermission = hasPermission("exercice.validation");
 
     // TODO: Idée, dans une prochaine version afficher les exercices ne pouvant pas être saisie et les marquer en tant que tel
     const conflictResolvedExercices = newExercices

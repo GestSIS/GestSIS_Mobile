@@ -1,3 +1,4 @@
+export { Alarme } from './alarme';
 export { Appel } from './appel';
 export { ExcuseType } from './excusetype';
 export { Exercice } from './exercice';

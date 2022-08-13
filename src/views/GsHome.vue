@@ -64,9 +64,9 @@ const sync = async () => {
 };
 
 // Permissions checks
-const authStore = useAuth();
-const hasInterventionEditPermission = computed(() => authStore.activePermissions.value?.includes("intervention.modification"));
-const hasExercicePresencePermission = computed(() => authStore.activePermissions.value?.includes("exercice.presence"));
+const { hasPermission } = useAuth();
+const hasInterventionEditPermission = computed(() => hasPermission("intervention.modification"));
+const hasExercicePresencePermission = computed(() => hasPermission("exercice.presence"));
 </script>
 
 <template>

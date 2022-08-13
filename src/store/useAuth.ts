@@ -21,6 +21,7 @@ export interface User {
   refreshToken: string;
   statut: UserStatus;
   permissions: any;
+  admin: boolean;
   sis: any[];
 }
 
@@ -31,6 +32,7 @@ const emptyState = {
   refreshToken: '',
   statut: UserStatus.disconnected,
   permissions: {},
+  admin: false,
   sis: [],
 };
 
@@ -77,7 +79,7 @@ export default function useAuth() {
   };
 
   const setTokens = async (accessToken: string, refreshToken: string, email: string | null) => {
-    const { permissions, pseudo, mobiles } = (jwt_decode(accessToken) as any).data;
+    const { permissions, pseudo, mobiles, admin } = (jwt_decode(accessToken) as any).data;
     const transformedMobiles = mobiles.map((sis: any) => sis.toString());
 
     const availableSis = Object.keys(permissions).map(sis => sis.toString()).filter(sis => transformedMobiles.includes(sis));
@@ -95,6 +97,7 @@ export default function useAuth() {
     state.data.refreshToken = refreshToken;
     state.data.sis = availableSis;
     state.data.permissions = filteredPermissions;
+    state.data.admin = admin;
     state.data.statut = UserStatus.connected;
 
     await persist();
@@ -186,6 +189,10 @@ export default function useAuth() {
     return state.data.statut === UserStatus.isExpired;
   }
 
+  const hasPermission = (permission: string) => {
+    return activePermissions.value?.includes(permission) || state.data.admin === true;
+  }
+
   return {
     state,
     isLoggedIn,
@@ -197,7 +204,7 @@ export default function useAuth() {
     selectSis,
     setTokens,
     persist,
+    hasPermission,
     activeSisKey,
-    activePermissions,
   };
 }

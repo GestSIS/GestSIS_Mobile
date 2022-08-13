@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import useInterventions from "@/store/useInterventions";
 import {
   IonButtons,
   IonContent,
@@ -14,8 +13,12 @@ import {
   IonIcon,
   modalController,
   loadingController,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 
+import useInterventions from "@/store/useInterventions";
+import useAlarmes from "@/store/useAlarmes";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
@@ -23,7 +26,11 @@ import { Intervention } from "@/models/intervention";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
 const { formatDate } = useDateFormatter();
 
-const { state } = useInterventions();
+const { state: interventions } = useInterventions();
+const { state: alarmes, forcedSync, sync } = useAlarmes();
+
+sync();
+
 const { setActiveIntervention } = useActiveIntervention();
 
 const router = useRouter()
@@ -39,6 +46,24 @@ const openDetails = async (intervention: Intervention) => {
   router.push('intervention').then(() => {
     loading.dismiss();
   });
+};
+
+const refresh = async () => {
+  const modalIntervention = await modalController
+    .create({
+      component: ModalInterventionCreateVue,
+    })
+
+  await modalIntervention.present();
+  const { data } = await modalIntervention.onDidDismiss();
+
+  const intervention = data;
+  if (!intervention) {
+    return;
+  }
+
+  setActiveIntervention(intervention);
+  router.push('intervention');
 };
 
 const create = async () => {
@@ -58,6 +83,10 @@ const create = async () => {
   setActiveIntervention(intervention);
   router.push('intervention');
 };
+
+const createFromAlarm = async () => {
+  //TODO:
+}
 </script>
 
 <template>
@@ -72,13 +101,35 @@ const create = async () => {
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-button expand="full" @click="create()">
-        <ion-icon slot="start" name="add"></ion-icon>Nouveau
-      </ion-button>
+      <ion-list>
+        <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
+        <ion-item :button="true" v-for="alarme in alarmes" :key="alarme.id" @click.prevent="createFromAlarm(alarme)">
+          <ion-icon slot="start" name="fire"></ion-icon>
+          <p>
+            <!-- TODO: Ajouter date, une fois disponible -->
+            {{ alarme.address }}
+            <br />
+            <span class="details"></span>
+          </p>
+        </ion-item>
+      </ion-list>
+
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" @click="create()">
+            <ion-icon slot="start" name="add"></ion-icon>Nouveau
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="full" @click="refresh()">
+            <ion-icon slot="start" name="sync"></ion-icon>Rafraîchir
+          </ion-button>
+        </ion-col>
+      </ion-row>
 
       <ion-list>
-        <ion-item v-if="!state.length">Aucune intervention</ion-item>
-        <ion-item :button="true" v-for="intervention in state" :key="intervention.id"
+        <ion-item v-if="!interventions.length">Aucune intervention</ion-item>
+        <ion-item :button="true" v-for="intervention in interventions" :key="intervention.id"
           @click.prevent="openDetails(intervention)">
           <ion-icon slot="start" :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'"></ion-icon>
           <p>

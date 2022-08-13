@@ -22,7 +22,7 @@ import { StoreState } from "@/store/useBasicStore";
 import useAuth from "@/store/useAuth";
 const { formatDate } = useDateFormatter();
 const { modules, syncAll, syncModule } = useStore();
-const { activePermissions } = useAuth();
+const { hasPermission } = useAuth();
 
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
   switch (syncStatus || StoreState.Synced) {
@@ -68,7 +68,7 @@ const online = window.navigator.onLine;
       <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
       <ion-list>
         <ion-item button="true"
-          v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || activePermissions.includes(m.permission))"
+          v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || hasPermission(m.permission))"
           :key="name" @click="syncModule({ sync })">
           <div>
             {{ name }}
