@@ -7,9 +7,19 @@
             <ion-list-header>Menu</ion-list-header>
             <!-- <ion-note>hi@ionicframework.com</ion-note> -->
 
-            <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated"
-                :class="{ selected: p.url.name == activeRoute }">
+            <ion-menu-toggle
+              :auto-hide="false"
+              v-for="(p, i) in appPages"
+              :key="i"
+            >
+              <ion-item
+                router-direction="root"
+                :router-link="p.url"
+                lines="none"
+                :detail="false"
+                class="hydrated"
+                :class="{ selected: p.url.name == activeRoute }"
+              >
                 <!-- <ion-icon
                   slot="start"
                 ></ion-icon>-->
@@ -40,7 +50,7 @@ import {
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import useAuth from "./store/useAuth";
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from "@/hooks/useTheme";
 
 const route = useRoute();
 const activeRoute = ref(route.name);
@@ -56,40 +66,47 @@ watch(
   }
 );
 
-const appPages = computed(() => [
-  {
-    title: "Login",
-    url: { name: "login" },
-    disconnectedOnly: true,
-  },
-  {
-    title: "Accueil",
-    url: { name: "accueil" },
-    connectedOnly: true,
-  },
-  {
-    title: "Rapports d'intervention",
-    url: { name: "interventions" },
-    permission: 'intervention.modification',
-    connectedOnly: true,
-  },
-  {
-    title: "Présences exercices",
-    url: { name: "exercices" },
-    permission: 'exercice.presence',
-    connectedOnly: true,
-  },
-  {
-    title: "Synchronisation",
-    url: { name: "synchronisation" },
-    connectedOnly: true,
-  },
-  {
-    title: "Paramètres",
-    url: { name: "parametres" },
-    connectedOnly: true,
-  },
-].filter(p => (p.connectedOnly && isLoggedIn() || p.disconnectedOnly && !isLoggedIn()) && (!p.permission || hasPermission(p.permission))));
+const appPages = computed(() =>
+  [
+    {
+      title: "Login",
+      url: { name: "login" },
+      disconnectedOnly: true,
+    },
+    {
+      title: "Accueil",
+      url: { name: "accueil" },
+      connectedOnly: true,
+    },
+    {
+      title: "Rapports d'intervention",
+      url: { name: "interventions" },
+      permission: "intervention.modification",
+      connectedOnly: true,
+    },
+    {
+      title: "Présences exercices",
+      url: { name: "exercices" },
+      permission: "exercice.presence",
+      connectedOnly: true,
+    },
+    {
+      title: "Synchronisation",
+      url: { name: "synchronisation" },
+      connectedOnly: true,
+    },
+    {
+      title: "Paramètres",
+      url: { name: "parametres" },
+      connectedOnly: true,
+    },
+  ].filter(
+    (p) =>
+      ((p.connectedOnly && isLoggedIn()) ||
+        (p.disconnectedOnly && !isLoggedIn())) &&
+      (!p.permission || hasPermission(p.permission))
+  )
+);
 </script>
 
 <style scoped>

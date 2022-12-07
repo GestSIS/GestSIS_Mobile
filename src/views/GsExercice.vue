@@ -51,47 +51,78 @@ const sapeurs = sapeursStore.state;
 const heuresTypes = heuresStore.state;
 const unites = unitesStore.state;
 
-const indexedSapeurs = new Map()
+const indexedSapeurs = new Map();
 sapeurs.value.forEach((e) => {
-  indexedSapeurs.set(e.id, e.nom + " " + e.prenom)
-})
+  indexedSapeurs.set(e.id, e.nom + " " + e.prenom);
+});
 
-const indexedUnites = new Map()
+const indexedUnites = new Map();
 unites.value.forEach((e) => {
-  indexedUnites.set(e.id, e?.abreviation)
-})
-const enhancedHeuresTypes = computed(() => heuresTypes.value.map(e => ({ ...e, abreviation: indexedUnites.get(e.type_unite_id) })))
+  indexedUnites.set(e.id, e?.abreviation);
+});
+const enhancedHeuresTypes = computed(() =>
+  heuresTypes.value.map((e) => ({
+    ...e,
+    abreviation: indexedUnites.get(e.type_unite_id),
+  }))
+);
 
 const formatCategorie = (categorieId: number) => {
-  categories.value.find(c => c.id == categorieId)?.designation
-}
+  categories.value.find((c) => c.id == categorieId)?.designation;
+};
 
 const route = useRoute();
 const exerciceUuid = route.params.uuid;
 
-const exercice = ref(exercices.value.find(e => e.localUuid == exerciceUuid));
+const exercice = ref(exercices.value.find((e) => e.localUuid == exerciceUuid));
 if (!exercice.value) {
   router.back();
 } else {
   // Compute data pour affichage
   exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
     ...p,
-    presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
-    excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
-  }))
-  exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map((p: any) => ({
-    ...p,
-    presenceStatut: p.present ? 1 : p.absent ? 2 : p.excuse_type_id ? 3 : p.remplace ? 4 : 0,
-    excuse_type: p.excuse_type_id ? excusesTypes.value.find(e => e.id == p.excuse_type_id)?.designation || "" : ""
-  }))
+    presenceStatut: p.present
+      ? 1
+      : p.absent
+      ? 2
+      : p.excuse_type_id
+      ? 3
+      : p.remplace
+      ? 4
+      : 0,
+    excuse_type: p.excuse_type_id
+      ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)?.designation ||
+        ""
+      : "",
+  }));
+  exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map(
+    (p: any) => ({
+      ...p,
+      presenceStatut: p.present
+        ? 1
+        : p.absent
+        ? 2
+        : p.excuse_type_id
+        ? 3
+        : p.remplace
+        ? 4
+        : 0,
+      excuse_type: p.excuse_type_id
+        ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)
+            ?.designation || ""
+        : "",
+    })
+  );
 }
 
 const computedSapeurs = computed(() =>
-  exercice.value?.sapeurs.map(s => {
-    const nomPrenom = indexedSapeurs.get(s.sapeur_id);
-    return { ...s, nomPrenom };
-  }).sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
-)
+  exercice.value?.sapeurs
+    .map((s) => {
+      const nomPrenom = indexedSapeurs.get(s.sapeur_id);
+      return { ...s, nomPrenom };
+    })
+    .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
+);
 
 const validate = () => {
   // Validate an exercice
@@ -99,17 +130,16 @@ const validate = () => {
     exercice.value.localStatus = "validated";
     exercicesStore.updatExercice(exercice.value, true);
   }
-}
+};
 
 const addSapeur = async () => {
   if (!exercice.value) return;
-  const modalSapeurSelect = await modalController
-    .create({
-      component: ModalSapeurSelectVue,
-      componentProps: {
-        exceptSapeurIds: exercice.value.sapeurs.map((s: any) => s?.sapeur_id),
-      },
-    })
+  const modalSapeurSelect = await modalController.create({
+    component: ModalSapeurSelectVue,
+    componentProps: {
+      exceptSapeurIds: exercice.value.sapeurs.map((s: any) => s?.sapeur_id),
+    },
+  });
 
   await modalSapeurSelect.present();
   const { data } = await modalSapeurSelect.onDidDismiss();
@@ -131,7 +161,7 @@ const addSapeur = async () => {
     excuse_type: "",
     absent: false,
     excuse: false,
-    heures: []
+    heures: [],
   });
   exercicesStore.updatExercice(exercice.value);
 };
@@ -204,45 +234,59 @@ const select = async (statut: number, sapeur: PresenceExercice) => {
     return;
   }
   const actions = [selectPresent, selectAbsent, selectExcuse, selectRemplace];
-  await (actions[statut - 1])(sapeur);
+  await actions[statut - 1](sapeur);
 
   // Save changes
-  exercice.value.sapeurs = exercice.value.sapeurs.map(s => s.sapeur_id == sapeur.sapeur_id ? sapeur : s);
+  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s
+  );
   exercicesStore.updatExercice(exercice.value);
 };
 
-const heureInput = (value: string, sapeur: PresenceExercice, heureType: HeureExerciceType) => {
+const heureInput = (
+  value: string | number,
+  sapeur: PresenceExercice,
+  heureType: HeureExerciceType
+) => {
   if (!exercice.value) return;
   if (resetting.value) {
     return;
   }
-  const quantite = parseFloat(value);
+  const quantite = parseFloat(`${value}`);
   if (quantite) {
-    const heure = sapeur.heures.find(h => h.heure_exercice_type_id == heureType.id);
+    const heure = sapeur.heures.find(
+      (h) => h.heure_exercice_type_id == heureType.id
+    );
     sapeur.heures = [
-      ...sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id),
+      ...sapeur.heures.filter((h) => h.heure_exercice_type_id != heureType.id),
       { ...heure, quantite, heure_exercice_type_id: heureType.id, id: null },
     ];
   } else {
-    sapeur.heures = sapeur.heures.filter(h => h.heure_exercice_type_id != heureType.id);
+    sapeur.heures = sapeur.heures.filter(
+      (h) => h.heure_exercice_type_id != heureType.id
+    );
   }
-  exercice.value.sapeurs = exercice.value.sapeurs.map(s => s.sapeur_id == sapeur.sapeur_id ? sapeur : s);
-  console.log(sapeur)
+  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s
+  );
+  console.log(sapeur);
   exercicesStore.updatExercice(exercice.value);
-}
+};
 
 // Reset les saisies effectuées
 const reset = () => {
   if (!exercice.value) return;
   resetting.value = true;
-  exercice.value.sapeurs = [...exercice.value.initialSapeurs.map((e: any) => ({ ...e }))];
+  exercice.value.sapeurs = [
+    ...exercice.value.initialSapeurs.map((e: any) => ({ ...e })),
+  ];
   exercice.value.localStatus = "empty";
 
   // Save changes
   exercicesStore.updatExercice(exercice.value, true);
   nextTick(() => {
     resetting.value = false;
-  })
+  });
 };
 </script>
 
@@ -251,7 +295,9 @@ const reset = () => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
+          <ion-back-button
+            :defaultHref="{ name: 'exercices' }"
+          ></ion-back-button>
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -260,8 +306,9 @@ const reset = () => {
     <ion-content class="ion-padding">
       <h3>
         {{
-            exercice?.designation != '-' ? exercice?.designation
-              : formatCategorie(exercice?.exercice_categorie_id)
+          exercice?.designation != "-"
+            ? exercice?.designation
+            : formatCategorie(exercice?.exercice_categorie_id)
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
       </h3>
@@ -302,17 +349,25 @@ const reset = () => {
           <ion-col class="col-radio">Absent</ion-col>
           <ion-col class="col-radio">Excusé</ion-col>
           <ion-col class="col-radio">Remplacé</ion-col>
-          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{ heure.designation }}</ion-col>
+          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{
+            heure.designation
+          }}</ion-col>
         </ion-row>
 
         <div class="sapeurs">
-          <ion-radio-group v-for="(sapeur, i) in computedSapeurs" :key="sapeur.id" v-model="sapeur.presenceStatut"
-            @ionChange="select($event.target.value, sapeur)">
+          <ion-radio-group
+            v-for="(sapeur, i) in computedSapeurs"
+            :key="sapeur.id"
+            v-model="sapeur.presenceStatut"
+            @ionChange="select($event.target.value, sapeur)"
+          >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
                 {{ sapeur?.nomPrenom }}
                 <br />
-                <span v-if="sapeur.excuse_type" class="details">{{ sapeur.excuse_type }}</span>
+                <span v-if="sapeur.excuse_type" class="details">{{
+                  sapeur.excuse_type
+                }}</span>
               </ion-col>
               <ion-col class="col-radio">
                 <ion-radio mode="md" :value="1"></ion-radio>
@@ -329,9 +384,18 @@ const reset = () => {
               <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
                   <!-- {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }} -->
-                  <ion-input type="string" inputmode="numeric"
-                    :value="sapeur?.heures.find(h => h.heure_exercice_type_id == heure.id)?.quantite"
-                    @ionChange.stop="heureInput($event.target.value, sapeur, heure)"></ion-input>
+                  <ion-input
+                    type="number"
+                    inputmode="numeric"
+                    :value="
+                      sapeur?.heures.find(
+                        (h) => h.heure_exercice_type_id == heure.id
+                      )?.quantite
+                    "
+                    @ionChange.stop="
+                      heureInput($event.target.value ?? '', sapeur, heure)
+                    "
+                  ></ion-input>
                   <ion-label slot="end">{{ heure.abreviation }}</ion-label>
                 </ion-item>
               </ion-col>
@@ -353,13 +417,22 @@ const reset = () => {
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" @click="reset" color="light" :disabled="exercice?.localStatus == 'empty'">
+            <ion-button
+              expand="block"
+              @click="reset"
+              color="light"
+              :disabled="exercice?.localStatus == 'empty'"
+            >
               <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
-            <ion-button expand="block" @click="validate" v-if="exercice?.localStatus != 'validated'"
-              :disabled="exercice?.localStatus == 'empty'">
+            <ion-button
+              expand="block"
+              @click="validate"
+              v-if="exercice?.localStatus != 'validated'"
+              :disabled="exercice?.localStatus == 'empty'"
+            >
               <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
             <!-- TODO: Optionnel Ajouter bouton synchroniser pour exporter l'exercice ?  -->
@@ -406,6 +479,6 @@ const reset = () => {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--ion-color-light-shade)
+  background-color: var(--ion-color-light-shade);
 }
 </style>

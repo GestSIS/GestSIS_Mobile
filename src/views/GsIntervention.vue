@@ -24,13 +24,13 @@ import {
 
 // Define tabs
 const enum Tab {
-  Journal,
-  Mission,
-  Appel,
-  Vehicule,
-  Materiel,
-  Presence,
-  Info
+  Journal = "Journal",
+  Mission = "Mission",
+  Appel = "Appel",
+  Vehicule = "Vehicule",
+  Materiel = "Materiel",
+  Presence = "Presence",
+  Info = "Info",
 }
 const activeTab = ref(Tab.Journal);
 </script>
@@ -98,5 +98,4 @@ const activeTab = ref(Tab.Journal);
   </ion-page>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

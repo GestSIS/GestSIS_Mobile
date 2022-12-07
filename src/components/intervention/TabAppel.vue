@@ -19,7 +19,7 @@
   <ion-list>
     <ion-item v-if="!intervention.appels.length">Aucun appel</ion-item>
     <ion-item
-      button="true"
+      :button="true"
       v-for="appel in intervention.appels"
       :key="appel.localUuid"
       :disabled="intervention.localStatus == 'validated'"
@@ -28,7 +28,9 @@
       <p>
         {{ appel.nom }} - {{ appel.numero }}
         <br />
-        <span class="details">Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span>
+        <span class="details"
+          >Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span
+        >
         <br />
         <span class="details">{{ appel.commentaire }}</span>
       </p>
@@ -56,23 +58,22 @@ import {
   IonIcon,
   modalController,
   alertController,
-} from '@ionic/vue';
-import useActiveIntervention from '@/store/useActiveIntervention';
-import useDateFormatter from '@/tools/useDateFormatter';
-import ModalAppelVue from '../modals/ModalAppelSelect.vue';
-import { DateTime } from 'luxon';
-import { Appel } from '@/models/appel';
-import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
+} from "@ionic/vue";
+import useActiveIntervention from "@/store/useActiveIntervention";
+import useDateFormatter from "@/tools/useDateFormatter";
+import ModalAppelVue from "../modals/ModalAppelSelect.vue";
+import { DateTime } from "luxon";
+import { Appel } from "@/models/appel";
+import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 
 const { formatDate } = useDateFormatter();
 const { state, addAppel, removeAppel } = useActiveIntervention();
 const intervention = state;
 
 const addCall = async () => {
-  const modalAppel = await modalController
-    .create({
-      component: ModalAppelVue,
-    })
+  const modalAppel = await modalController.create({
+    component: ModalAppelVue,
+  });
 
   await modalAppel.present();
   const { data } = await modalAppel.onDidDismiss();
@@ -83,66 +84,64 @@ const addCall = async () => {
   const tel = data;
 
   const prompt = await alertController.create({
-    header: 'Ajout appel',
+    header: "Ajout appel",
     message: "Commentaire pour appel de " + tel.nom + " (" + tel.numero + ")",
     inputs: [
       {
-        name: 'commentaire',
-        placeholder: 'Commentaire',
-        type: 'text'
+        name: "commentaire",
+        placeholder: "Commentaire",
+        type: "text",
       },
     ],
     buttons: [
       {
-        text: 'Annuler',
+        text: "Annuler",
       },
       {
-        text: 'Valider',
-        handler: data => {
+        text: "Valider",
+        handler: (data) => {
           const appel = {
             ...tel,
             date: DateTime.now().toSQL({ includeOffset: false }).slice(0, 16),
-            commentaire: data.commentaire
-          }
+            commentaire: data.commentaire,
+          };
           addAppel(appel);
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
   await prompt.present();
 };
 
 const editCall = async (appel: any) => {
-  const modalAppel = await modalController
-    .create({
-      component: ModalAppelEditVue,
-      componentProps: {
-        appel: { ...appel }
-      }
-    })
+  const modalAppel = await modalController.create({
+    component: ModalAppelEditVue,
+    componentProps: {
+      appel: { ...appel },
+    },
+  });
 
   await modalAppel.present();
 };
 
 const removeCall = async (appel: Appel) => {
   const confirm = await alertController.create({
-    header: 'Supprimer appel',
+    header: "Supprimer appel",
     message: "Êtes-vous sûr de vouloir supprimer l'appel [" + appel.nom + "] ?",
     buttons: [
       {
-        text: 'Non'
+        text: "Non",
       },
       {
-        text: 'Oui',
+        text: "Oui",
         handler: () => {
           removeAppel(appel);
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
   await confirm.present();
 };
-
 </script>
 
 <style scoped>

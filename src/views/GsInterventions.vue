@@ -23,36 +23,36 @@ import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { Intervention } from "@/models/intervention";
+import { Alarme } from "@/models/alarme";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
-const { state: alarmes, forcedSync, sync } = useAlarmes();
+const { state: alarmes, sync } = useAlarmes();
 
-sync();
+// sync();
 
 const { setActiveIntervention } = useActiveIntervention();
 
-const router = useRouter()
+const router = useRouter();
 const openDetails = async (intervention: Intervention) => {
   const loading = await loadingController.create({
-    message: 'Chargement...',
+    message: "Chargement...",
   });
 
   await loading.present();
 
   setActiveIntervention(intervention);
 
-  router.push('intervention').then(() => {
+  router.push("intervention").then(() => {
     loading.dismiss();
   });
 };
 
 const refresh = async () => {
-  const modalIntervention = await modalController
-    .create({
-      component: ModalInterventionCreateVue,
-    })
+  const modalIntervention = await modalController.create({
+    component: ModalInterventionCreateVue,
+  });
 
   await modalIntervention.present();
   const { data } = await modalIntervention.onDidDismiss();
@@ -63,14 +63,13 @@ const refresh = async () => {
   }
 
   setActiveIntervention(intervention);
-  router.push('intervention');
+  router.push("intervention");
 };
 
 const create = async () => {
-  const modalIntervention = await modalController
-    .create({
-      component: ModalInterventionCreateVue,
-    })
+  const modalIntervention = await modalController.create({
+    component: ModalInterventionCreateVue,
+  });
 
   await modalIntervention.present();
   const { data } = await modalIntervention.onDidDismiss();
@@ -81,12 +80,14 @@ const create = async () => {
   }
 
   setActiveIntervention(intervention);
-  router.push('intervention');
+  router.push("intervention");
 };
 
-const createFromAlarm = async () => {
-  //TODO:
-}
+const createFromAlarm = async (alarme: Alarme) => {
+  // TODO:
+};
+
+const displayAlarmModule = false;
 </script>
 
 <template>
@@ -101,9 +102,14 @@ const createFromAlarm = async () => {
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-list>
+      <ion-list v-if="displayAlarmModule">
         <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
-        <ion-item :button="true" v-for="alarme in alarmes" :key="alarme.id" @click.prevent="createFromAlarm(alarme)">
+        <ion-item
+          :button="true"
+          v-for="alarme in alarmes"
+          :key="alarme.id"
+          @click.prevent="createFromAlarm(alarme)"
+        >
           <ion-icon slot="start" name="fire"></ion-icon>
           <p>
             <!-- TODO: Ajouter date, une fois disponible -->
@@ -120,7 +126,7 @@ const createFromAlarm = async () => {
             <ion-icon slot="start" name="add"></ion-icon>Nouveau
           </ion-button>
         </ion-col>
-        <ion-col>
+        <ion-col v-if="displayAlarmModule">
           <ion-button expand="full" @click="refresh()">
             <ion-icon slot="start" name="sync"></ion-icon>Rafraîchir
           </ion-button>
@@ -129,18 +135,27 @@ const createFromAlarm = async () => {
 
       <ion-list>
         <ion-item v-if="!interventions.length">Aucune intervention</ion-item>
-        <ion-item :button="true" v-for="intervention in interventions" :key="intervention.id"
-          @click.prevent="openDetails(intervention)">
-          <ion-icon slot="start" :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'"></ion-icon>
+        <ion-item
+          :button="true"
+          v-for="intervention in interventions"
+          :key="intervention.id"
+          @click.prevent="openDetails(intervention)"
+        >
+          <ion-icon
+            slot="start"
+            :name="
+              intervention.localStatus == 'in_progress' ? 'create' : 'sync'
+            "
+          ></ion-icon>
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
             <br />
             <span class="details">
               {{
-                  intervention.localStatus == 'in_progress'
-                    ? "En cours d'édition"
-                    : "Validé, en attente de synchronisation"
+                intervention.localStatus == "in_progress"
+                  ? "En cours d'édition"
+                  : "Validé, en attente de synchronisation"
               }}
             </span>
           </p>

@@ -13,7 +13,7 @@ import {
   IonButton,
   IonGrid,
   IonCardContent,
-  IonCard
+  IonCard,
 } from "@ionic/vue";
 
 import useDateFormatter from "@/tools/useDateFormatter";
@@ -27,20 +27,20 @@ const { hasPermission } = useAuth();
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
   switch (syncStatus || StoreState.Synced) {
     case StoreState.Syncing:
-      return 'sync';
+      return "sync";
 
     case StoreState.NeedSync:
-      return 'alert';
+      return "alert";
 
     case StoreState.Synced:
-      return 'checkmark-circle';
+      return "checkmark-circle";
 
     // case StoreState.NeedSync:
     //   return 'warning';
     default:
-      return 'warning';
+      return "warning";
   }
-}
+};
 
 const online = window.navigator.onLine;
 </script>
@@ -65,19 +65,31 @@ const online = window.navigator.onLine;
         </ion-card-content>
       </ion-card>
 
-      <ion-button expand="full" color="light" @click="syncAll">Tout synchroniser</ion-button>
+      <ion-button expand="full" color="light" @click="syncAll"
+        >Tout synchroniser</ion-button
+      >
       <ion-list>
-        <ion-item button="true"
-          v-for="{ name, lastSync, syncStatus, sync } in modules.filter(m => !m.permission || hasPermission(m.permission))"
-          :key="name" @click="syncModule({ sync })">
+        <ion-item
+          :button="true"
+          v-for="{ name, lastSync, syncStatus, sync } in modules.filter(
+            (m) => !m.permission || hasPermission(m.permission)
+          )"
+          :key="name"
+          @click="syncModule({ sync })"
+        >
           <div>
             {{ name }}
             <br />
             <span class="details">{{
-                syncStatus ? formatDate(lastSync.value, 'dd.MM.yyyy H:mm:ss') : 'Pas encore synchronisé'
+              syncStatus
+                ? formatDate(lastSync.value, "dd.MM.yyyy H:mm:ss")
+                : "Pas encore synchronisé"
             }}</span>
           </div>
-          <ion-icon :name="getSyncStatusIcon(syncStatus.value)" slot="end"></ion-icon>
+          <ion-icon
+            :name="getSyncStatusIcon(syncStatus.value)"
+            slot="end"
+          ></ion-icon>
         </ion-item>
       </ion-list>
     </ion-content>

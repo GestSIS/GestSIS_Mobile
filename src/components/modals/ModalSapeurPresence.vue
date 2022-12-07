@@ -13,34 +13,33 @@ import {
   IonButton,
   IonItem,
   modalController,
-} from '@ionic/vue';
+} from "@ionic/vue";
 
 import BaseDatetime from "../base/BaseDatetime.vue";
 
 interface Presence {
-  sapeur_id: null
-  nom: string,
-  prenom: string,
-  date_debut: string,
-  date_fin: string,
+  sapeur_id: null;
+  nom: string;
+  prenom: string;
+  date_debut: string;
+  date_fin: string;
 }
 
 const props: Presence = defineProps<Presence>();
-const presence = reactive({ ...props })
+const presence = reactive({ ...props });
 
 const dismiss = () => {
   modalController.dismiss(null);
-}
+};
 
 const save = () => {
   modalController.dismiss(presence);
-}
+};
 
 // const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
 // onMounted(() => {
 //   searchbar.value?.$el.setFocus();
 // })
-
 </script>
 
 <template>
@@ -63,24 +62,29 @@ const save = () => {
     <ion-list>
       <ion-item>
         <ion-label fixed>Sapeur</ion-label>
-        <ion-input type="text" readonly="true" :value="presence.nom + ' ' + presence.prenom"></ion-input>
+        <ion-input
+          type="text"
+          :readonly="true"
+          :value="presence.nom + ' ' + presence.prenom"
+        ></ion-input>
       </ion-item>
 
       <base-datetime
         :per-quarter="true"
         :max="presence.date_fin"
         v-model="presence.date_debut"
-      >Heure d'arrivée</base-datetime>
+        >Heure d'arrivée</base-datetime
+      >
 
       <base-datetime
         :per-quarter="true"
         :min="presence.date_debut"
         v-model="presence.date_fin"
         label="Heure de départ"
-      >Heure de départ</base-datetime>
+        >Heure de départ</base-datetime
+      >
     </ion-list>
   </ion-content>
 </template>
 
-<style>
-</style>
+<style></style>

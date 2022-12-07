@@ -1,15 +1,11 @@
-import { readonly, Ref, ref } from 'vue';
-import useBasicStore, { StoreState } from './useBasicStore';
-import AlarmeService from '@/services/AlarmeService';
-import { Alarme } from '@/models/alarme';
-import { DateTime } from 'luxon';
+import { readonly, Ref, ref } from "vue";
+import useBasicStore, { StoreState } from "./useBasicStore";
+import AlarmeService from "@/services/AlarmeService";
+import { Alarme } from "@/models/alarme";
+import { DateTime } from "luxon";
 
 const state: Ref<Alarme[]> = ref([]);
-const store = useBasicStore(
-  state,
-  AlarmeService.fetchAlarmes,
-  'localites'
-);
+const store = useBasicStore(state, AlarmeService.fetchAlarmes, "localites");
 
 export default function useAlarmes() {
   const name = "Alarmes";
@@ -28,6 +24,6 @@ export default function useAlarmes() {
     ...store,
     forcedSync,
     name,
-    state: readonly(state),
+    state: state,
   };
 }

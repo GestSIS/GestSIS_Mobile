@@ -14,8 +14,8 @@ import {
   IonButton,
   IonItem,
   IonBackButton,
-  modalController
-} from '@ionic/vue';
+  modalController,
+} from "@ionic/vue";
 import { Mission } from "@/models/mission";
 import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
@@ -35,27 +35,35 @@ const route = useRoute();
 const missionUuid = route.params.uuid;
 const interventionStore = useActiveIntervention();
 
-const loadedMission = Object.assign({}, interventionStore.state.value.missions.find(m => m.localUuid == missionUuid));
+const loadedMission = Object.assign(
+  {},
+  interventionStore.state.value.missions.find((m) => m.localUuid == missionUuid)
+);
 const mission: Ref<Mission> = ref(loadedMission || new Mission());
 if (!mission.value.date_debut) {
-  mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false }).slice(0, 16);
+  mission.value.date_debut = DateTime.now()
+    .toSQL({ includeOffset: false })
+    .slice(0, 16);
 }
 
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
-  return mission.value.date_debut && mission.value.titre && mission.value.sapeur?.nom
-}
+  return (
+    mission.value.date_debut && mission.value.titre && mission.value.sapeur?.nom
+  );
+};
 
 const selectSapeur = async () => {
-  const modalSapeurSelect = await modalController
-    .create({
-      component: ModalSapeurSelectVue,
-      componentProps: {
-        exceptSapeurIds: [],
-        preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(s => s.id),
-      }
-    })
+  const modalSapeurSelect = await modalController.create({
+    component: ModalSapeurSelectVue,
+    componentProps: {
+      exceptSapeurIds: [],
+      preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(
+        (s) => s.id
+      ),
+    },
+  });
 
   await modalSapeurSelect.present();
   const { data } = await modalSapeurSelect.onDidDismiss();
@@ -64,19 +72,18 @@ const selectSapeur = async () => {
     return;
   }
 
-  const sapeur = sapeurModule.state.value.find(s => s.id == data);
+  const sapeur = sapeurModule.state.value.find((s) => s.id == data);
   mission.value.sapeur = {
     id: data,
-    nom: sapeur?.nom || '',
-    prenom: sapeur?.prenom || ''
+    nom: sapeur?.nom || "",
+    prenom: sapeur?.prenom || "",
   };
-}
+};
 
 const selectTitre = async () => {
-  const modalTitreMission = await modalController
-    .create({
-      component: ModalMissionSelectVue,
-    })
+  const modalTitreMission = await modalController.create({
+    component: ModalMissionSelectVue,
+  });
 
   await modalTitreMission.present();
   const { data } = await modalTitreMission.onDidDismiss();
@@ -85,7 +92,7 @@ const selectTitre = async () => {
     return;
   }
   mission.value.titre = data.titre;
-}
+};
 
 const save = () => {
   if (!isInputComplete()) {
@@ -98,7 +105,7 @@ const save = () => {
     interventionStore.addMission(mission.value);
   }
   router.back();
-}
+};
 </script>
 
 <template>
@@ -106,7 +113,9 @@ const save = () => {
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'exercices' }"></ion-back-button>
+          <ion-back-button
+            :defaultHref="{ name: 'exercices' }"
+          ></ion-back-button>
         </ion-buttons>
         <ion-title>{{ title }}</ion-title>
 
@@ -118,25 +127,48 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime :max="mission.date_fin" v-model="mission.date_debut">Début</base-datetime>
+        <base-datetime :max="mission.date_fin" v-model="mission.date_debut"
+          >Début</base-datetime
+        >
 
         <ion-item>
           <ion-label position="floating">Responsable</ion-label>
-          <ion-input type="text" readonly="true" @ionFocus="selectSapeur()"
-            :value="mission.sapeur?.nom ? (mission.sapeur?.nom + ' ' + mission.sapeur?.prenom) : ''"></ion-input>
+          <ion-input
+            type="text"
+            :readonly="true"
+            @ionFocus="selectSapeur()"
+            :value="
+              mission.sapeur?.nom
+                ? mission.sapeur?.nom + ' ' + mission.sapeur?.prenom
+                : ''
+            "
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Mission</ion-label>
-          <ion-input type="text" :value="mission.titre" @ionFocus="selectTitre()"></ion-input>
+          <ion-input
+            type="text"
+            :value="mission.titre"
+            @ionFocus="selectTitre()"
+          ></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="floating">Résumé</ion-label>
-          <ion-textarea :rows="10" :auto-grow="true" v-model="mission.resume"></ion-textarea>
+          <ion-textarea
+            :rows="10"
+            :auto-grow="true"
+            v-model="mission.resume"
+          ></ion-textarea>
         </ion-item>
 
-        <base-datetime :min="mission.date_debut" v-model="mission.date_fin" :clearable="true">Quittancer</base-datetime>
+        <base-datetime
+          :min="mission.date_debut"
+          v-model="mission.date_fin"
+          :clearable="true"
+          >Quittancer</base-datetime
+        >
       </ion-list>
     </ion-content>
   </ion-page>
