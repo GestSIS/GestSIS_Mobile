@@ -170,7 +170,8 @@ const validate = async () => {
         text: "Oui",
         handler: () => {
           intervention.value.localStatus = "validated";
-          router.back();
+          // TODO: Change to go back to
+          router.push({ name: "accueil" });
         },
       },
     ],

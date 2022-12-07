@@ -42,7 +42,7 @@ const groupes = moduleGroupe.state;
 const filteredGroupes = computed(() =>
   groupes.value
     .filter((g) => g.type == 1)
-    .sort((a, b) => parseInt(a.no || "99") - parseInt(b.no || "99"))
+    .sort((a, b) => parseInt(`${a.no || 99}`) - parseInt(`${b.no || 99}`))
 );
 const groupesIntervention = ref(new Set(intervention.value.groupes));
 
