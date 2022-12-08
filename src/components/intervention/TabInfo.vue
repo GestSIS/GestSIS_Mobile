@@ -30,6 +30,7 @@ import ModalSapeurSelectVue from "../modals/ModalSapeurSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
 import useStore from "@/store/useStore";
 import { DateTime } from "luxon";
+import ModalInterventionValidate from "../modals/ModalInterventionValidate.vue";
 
 const router = useRouter();
 const { syncModule } = useStore();
@@ -52,6 +53,7 @@ const localites = moduleLocalite.state;
 watch(
   intervention,
   () => {
+    console.log("persiste");
     persist();
   },
   { deep: true }
@@ -158,25 +160,24 @@ const validate = async () => {
     return;
   }
 
-  const confirm = await alertController.create({
-    header: "Valider l'intervention",
-    message:
-      "Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Les rapports d'interventions seront supprimés de la tablette une fois synchronisés.",
-    buttons: [
-      {
-        text: "Non",
-      },
-      {
-        text: "Oui",
-        handler: () => {
-          intervention.value.localStatus = "validated";
-          // TODO: Change to go back to
-          router.push({ name: "accueil" });
-        },
-      },
-    ],
+  // TODO: Change into modal
+  const modalValider = await modalController.create({
+    component: ModalInterventionValidate,
+    componentProps: {
+      date: intervention.value.date_fin,
+    },
   });
-  await confirm.present();
+
+  await modalValider.present();
+  const { data } = await modalValider.onDidDismiss();
+
+  if (data) {
+    console.log(data);
+    intervention.value.date_fin = data;
+    intervention.value.localStatus = "validated";
+
+    router.push({ name: "accueil" });
+  }
 };
 
 const selectLocalite = async () => {

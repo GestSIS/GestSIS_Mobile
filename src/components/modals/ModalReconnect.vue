@@ -11,6 +11,9 @@ import {
   IonContent,
   IonButton,
   IonItem,
+  IonCard,
+  IonCardContent,
+  IonGrid,
   modalController,
 } from "@ionic/vue";
 import { useNotify } from "@/tools/useToast";
