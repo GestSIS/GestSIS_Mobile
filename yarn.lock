@@ -1595,6 +1595,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:6.4.1":
+  version: 6.4.1
+  resolution: "@ionic/core@npm:6.4.1"
+  dependencies:
+    "@stencil/core": ^2.18.0
+    ionicons: ^6.0.4
+    tslib: ^2.1.0
+  checksum: f24ef3a801545160cd157af5791dc89419afbbf2c4c57b60bbafa6a95253a5c37691f2a943e7623f2a54ba68f9a8a37116f9e4b86961bfde8d22c29694a19a9b
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^3.0.6":
   version: 3.0.6
   resolution: "@ionic/storage@npm:3.0.6"
@@ -1693,16 +1704,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue-router@npm:^6.3.9":
-  version: 6.3.9
-  resolution: "@ionic/vue-router@npm:6.3.9"
+"@ionic/vue-router@npm:^6.4.1":
+  version: 6.4.1
+  resolution: "@ionic/vue-router@npm:6.4.1"
   dependencies:
-    "@ionic/vue": 6.3.9
-  checksum: 489e50d6ccae8d7e1dc897ab05251f75f8e7c3c7a0c8e16b3b86d335f1f4f4610ab9c5a10463dd0fb59e4506f913057907afb9430b50e32cf2137f7c7547c72b
+    "@ionic/vue": 6.4.1
+  checksum: d6a46fcc79d0854e3abb15d74ece8c9b634621b14e01eaa0ea9e2700f0c3cf2a5c309725f5eb9d3f7b3eee30bbbe776eda4ca39191e19a7cfe18f0e5806e9bdd
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:6.3.9, @ionic/vue@npm:^6.3.9":
+"@ionic/vue@npm:6.4.1":
+  version: 6.4.1
+  resolution: "@ionic/vue@npm:6.4.1"
+  dependencies:
+    "@ionic/core": 6.4.1
+    ionicons: ^6.0.2
+  checksum: 067c705f66b195b58f522d880895725526fcceca67095f930607d6e414790c1dda645fe8112f9d0a9d2ef06f660fad783aaae40d9faaca2e26ab4b63f407e223
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^6.3.9":
   version: 6.3.9
   resolution: "@ionic/vue@npm:6.3.9"
   dependencies:
@@ -3980,7 +4001,7 @@ __metadata:
     "@capacitor/status-bar": ^4.1.1
     "@ionic/storage": ^3.0.6
     "@ionic/vue": ^6.3.9
-    "@ionic/vue-router": ^6.3.9
+    "@ionic/vue-router": ^6.4.1
     "@types/jest": ^29.2.4
     "@types/luxon": ^3.1.0
     "@types/uuid": ^9.0.0
