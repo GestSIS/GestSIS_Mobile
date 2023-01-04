@@ -172,7 +172,6 @@ const validate = async () => {
   const { data } = await modalValider.onDidDismiss();
 
   if (data) {
-    console.log(data);
     intervention.value.date_fin = data;
     intervention.value.localStatus = "validated";
 
@@ -213,6 +212,7 @@ const selectChefIntervention = async () => {
     component: ModalSapeurSelectVue,
     componentProps: {
       exceptSapeurIds: [],
+      preSelectionSapeurIds: state.value.sapeurs.map((s) => s.id),
     },
   });
 
