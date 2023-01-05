@@ -270,7 +270,6 @@ const heureInput = (
   exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
     s.sapeur_id == sapeur.sapeur_id ? sapeur : s
   );
-  console.log(sapeur);
   exercicesStore.updatExercice(exercice.value);
 };
 

@@ -53,7 +53,6 @@ const localites = moduleLocalite.state;
 watch(
   intervention,
   () => {
-    console.log("persiste");
     persist();
   },
   { deep: true }
