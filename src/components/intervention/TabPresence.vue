@@ -59,6 +59,7 @@ const sapeursSansPresenceExercices = computed(() => {
   const sapeursSaisi = [
     ...new Map(
       intervention.value.missions
+        .filter((mission) => mission.sapeur.id)
         .map((mission) => mission.sapeur)
         .map((s) => [s.id, { ...s, type: 0 }])
     ).values(),
@@ -68,7 +69,7 @@ const sapeursSansPresenceExercices = computed(() => {
   );
   const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
   return sapeursSaisi.filter(
-    (s) => !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
+    (s) => s.id && !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
   );
 });
 
@@ -81,13 +82,11 @@ const changeGroupeStatus = (groupeId: number) => {
   updateGroupes([...groupesIntervention.value]);
 };
 
-const addMissingSapeur = (sapeur: Sapeur) => {
+const addMissingSapeur = (sapeurId: number) => {
   router.push({
     name: "sapeurs",
-    params: {
-      mode: "ARRIVEE",
-      sapeursIds: sapeur.id.toString(),
-    },
+    params: { mode: "ARRIVEE" },
+    query: { sapeursIds: sapeurId.toString() },
   });
 };
 
@@ -215,12 +214,12 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           lines="full"
           v-for="(sapeur, i) of sapeursSansPresenceExercices"
           :key="i"
-          @click="addMissingSapeur(sapeur)"
+          @click="addMissingSapeur(sapeur.id ?? 0)"
           :disabled="intervention.localStatus == 'validated'"
         >
           <ion-icon color="warning" name="warning" slot="start"></ion-icon>
           <ion-text color="warning"
-            >{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text
+            >{{ sapeur.designation }} - Présence manquante</ion-text
           >
         </ion-item>
       </ion-item-group>

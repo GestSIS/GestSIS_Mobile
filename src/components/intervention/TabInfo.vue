@@ -96,7 +96,6 @@ const validate = async () => {
   errors.value = {};
 
   if (!intervention.value.date_debut) errors.value.date_debut = "A saisir";
-  if (!intervention.value.date_fin) errors.value.date_fin = "A saisir";
   if (!intervention.value.localite_id) errors.value.localite_id = "A saisir";
   if (!intervention.value.degre) errors.value.degre = "A saisir";
   if (!intervention.value.objet) errors.value.objet = "A saisir";
@@ -114,6 +113,7 @@ const validate = async () => {
 
   const notify = useNotify();
   if (Object.keys(errors.value).length > 0) {
+    if (!intervention.value.date_fin) errors.value.date_fin = "A saisir";
     notify.error("Veuillez compléter tous les champs !");
     return;
   }
@@ -151,7 +151,7 @@ const validate = async () => {
   );
   const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
   const sapeursSansPresenceExercices = sapeursSaisi.filter(
-    (s) => !sapeursIdPotentiel.has(s) && sapeursExistant.has(s)
+    (s) => s && !sapeursIdPotentiel.has(s) && sapeursExistant.has(s)
   );
   if (sapeursSansPresenceExercices.length > 0) {
     notify.error(
@@ -172,7 +172,7 @@ const validate = async () => {
   const { data } = await modalValider.onDidDismiss();
 
   if (data) {
-    intervention.value.date_fin = data;
+    intervention.value.date_fin = data.slice(0, 16);
     intervention.value.localStatus = "validated";
 
     router.push({ name: "accueil" });

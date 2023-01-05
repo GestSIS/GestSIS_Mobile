@@ -34,6 +34,7 @@ import { computed, nextTick, ref } from "vue";
 import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
 import useHeureExerciceTypes from "@/store/useHeureExerciceTypes";
 import useUnitesType from "@/store/useUnitesTypes";
+import { useNotify } from "@/tools/useToast";
 
 const { formatDate } = useDateFormatter();
 
@@ -288,6 +289,18 @@ const reset = () => {
     resetting.value = false;
   });
 };
+
+const sync = async () => {
+  if (!exercice.value) return;
+  const { success, error } = useNotify();
+  try {
+    await exercicesStore.sync();
+    router.push({ name: "accueil" });
+    success("Exercices synchronisés");
+  } catch (exception) {
+    error("Erreur lors des la synchronisation des exercices");
+  }
+};
 </script>
 
 <template>
@@ -435,7 +448,14 @@ const reset = () => {
             >
               <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
             </ion-button>
-            <!-- TODO: Optionnel Ajouter bouton synchroniser pour exporter l'exercice ?  -->
+            <ion-button
+              expand="block"
+              @click="sync"
+              v-if="exercice?.localStatus == 'validated'"
+            >
+              <ion-icon slot="start" name="checkmark-circle"></ion-icon
+              >Synchroniser
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>

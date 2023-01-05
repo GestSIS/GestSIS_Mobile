@@ -46,13 +46,23 @@ export default {
           materiel_id: parseInt(key),
           quantite: value,
         })),
-        missions: i.missions.map((m) => ({
-          titre: m.titre,
-          resume: m.resume,
-          debut: m.date_debut,
-          fin: m.date_fin,
-          sapeur_id: m.sapeur.id,
-        })),
+        missions: i.missions
+          .map((m) => ({
+            titre: m.titre,
+            resume: m.resume,
+            debut: m.date_debut,
+            fin: m.date_fin,
+            sapeur_id: m.sapeur.id,
+            sapeur: m.sapeur.designation,
+          }))
+          .map((m: any) => {
+            if (m.sapeur_id) {
+              delete m.sapeur;
+            } else {
+              delete m.sapeur_id;
+            }
+            return m;
+          }),
       };
     });
 

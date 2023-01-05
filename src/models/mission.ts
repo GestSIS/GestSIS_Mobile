@@ -3,14 +3,12 @@ export class Mission {
   date_debut: string;
   date_fin: string;
   sapeur: {
-    id: number;
-    nom: string;
-    prenom: string;
+    id: number | null;
+    designation: string | null;
   } = {
-      id: null as any,
-      nom: null as any,
-      prenom: null as any
-    };
+    id: null as any,
+    designation: null as any,
+  };
   titre: string;
   resume: string;
 }

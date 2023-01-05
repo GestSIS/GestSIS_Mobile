@@ -1,7 +1,7 @@
-import useAuth from '@/store/useAuth';
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-import { ref } from 'vue';
+import useAuth from "@/store/useAuth";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { ref } from "vue";
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
 const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
@@ -10,7 +10,7 @@ const refreshTokenPromise = ref<any>("");
 const refreshTokenCountAwait = ref<any>("");
 
 const request = {
-  _refreshToken: '',
+  _refreshToken: "",
   _refreshFailed: null,
 
   _accessTokenValidity: null,
@@ -19,20 +19,20 @@ const request = {
     const { exp } = jwt_decode(accessToken) as any;
     this._accessTokenValidity = exp;
     this._refreshToken = refreshToken;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   },
 
   setSisKey: (sis_key: string) => {
-    axios.defaults.headers.common['Sis-Id'] = sis_key;
+    axios.defaults.headers.common["Sis-Id"] = sis_key;
   },
 
   api() {
     const api = axios.create({
       baseURL: API_URL,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
     });
 
@@ -47,7 +47,7 @@ const request = {
       const auth = useAuth();
 
       // Check if a refreshToken request has already been sent
-      if (refreshTokenPromise.value != '') {
+      if (refreshTokenPromise.value != "") {
         refreshTokenCountAwait.value++;
 
         // Await the result of this request
@@ -56,14 +56,14 @@ const request = {
         } finally {
           refreshTokenCountAwait.value--;
           if (refreshTokenCountAwait.value == 0) {
-            refreshTokenPromise.value = '';
+            refreshTokenPromise.value = "";
           }
         }
       }
 
       // Send a refresh token request
       try {
-        refreshTokenPromise.value = this.auth().post('refresh-token', {
+        refreshTokenPromise.value = this.auth().post("refresh-token", {
           token: this._refreshToken,
         });
         response = await refreshTokenPromise.value;
@@ -74,17 +74,17 @@ const request = {
         }
       } finally {
         if (refreshTokenCountAwait.value == 0) {
-          refreshTokenPromise.value = '';
+          refreshTokenPromise.value = "";
         }
       }
 
-      // Update 
-      this.setTokens(response?.accessToken, response?.refreshToken)
-      auth.setTokens(response?.accessToken, response?.refreshToken, null)
+      // Update
+      this.setTokens(response?.accessToken, response?.refreshToken);
+      auth.setTokens(response?.accessToken, response?.refreshToken, null);
 
       // Update axios
       if (req.headers?.common) {
-        req.headers['Authorization'] = `Bearer ${response.accessToken}`;
+        req.headers.Authorization = `Bearer ${response.accessToken}`;
       }
       this._refreshToken = response.refreshToken;
 
@@ -110,16 +110,16 @@ const request = {
     const auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
     });
 
     auth.interceptors.response.use(
       function (response: any) {
         if (response.status === 401) {
-          console.log('Should never happen');
+          console.log("Should never happen");
           return Promise.reject(response);
         }
         return Promise.resolve(response.data);

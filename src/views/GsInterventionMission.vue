@@ -50,7 +50,9 @@ const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
   return (
-    mission.value.date_debut && mission.value.titre && mission.value.sapeur?.nom
+    mission.value.date_debut &&
+    mission.value.titre &&
+    mission.value.sapeur?.designation
   );
 };
 
@@ -62,6 +64,7 @@ const selectSapeur = async () => {
       preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(
         (s) => s.id
       ),
+      autre: true,
     },
   });
 
@@ -72,12 +75,18 @@ const selectSapeur = async () => {
     return;
   }
 
-  const sapeur = sapeurModule.state.value.find((s) => s.id == data);
-  mission.value.sapeur = {
-    id: data,
-    nom: sapeur?.nom || "",
-    prenom: sapeur?.prenom || "",
-  };
+  if (typeof data == "object") {
+    mission.value.sapeur = {
+      id: null,
+      designation: data?.designation,
+    };
+  } else {
+    const sapeur = sapeurModule.state.value.find((s) => s.id == data);
+    mission.value.sapeur = {
+      id: data,
+      designation: `${sapeur?.nom} ${sapeur?.prenom}` || "",
+    };
+  }
 };
 
 const selectTitre = async () => {
@@ -137,11 +146,7 @@ const save = () => {
             type="text"
             :readonly="true"
             @ionFocus="selectSapeur()"
-            :value="
-              mission.sapeur?.nom
-                ? mission.sapeur?.nom + ' ' + mission.sapeur?.prenom
-                : ''
-            "
+            :value="mission.sapeur?.designation"
           ></ion-input>
         </ion-item>
 

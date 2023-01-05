@@ -1,6 +1,6 @@
-import { Mission } from './mission';
-import { Appel } from './appel';
-import { DateTime } from 'luxon';
+import { Mission } from "./mission";
+import { Appel } from "./appel";
+import { DateTime } from "luxon";
 
 export class Intervention {
   localUuid: string;
@@ -19,31 +19,31 @@ export class Intervention {
 
   rapport_police = false;
   agent: string;
-  
+
   type_intervention_id: number;
   stat_federal_id: number;
   localite_id: number;
   sapeur_id: number;
 
   proprietaire: {
-      nom: string;
-      prenom: string;
-      adresse: string;
-      localite_id: number;
-      telephone: string;
-      email: string;
+    nom: string;
+    prenom: string;
+    adresse: string;
+    localite_id: number;
+    telephone: string;
+    email: string;
   } = {
     nom: null as any,
     prenom: null as any,
     adresse: null as any,
     localite_id: null as any,
     telephone: null as any,
-    email: null as any
+    email: null as any,
   };
 
   responsables: string; // Utile ?
 
-  description = '';
+  description = "";
   sapeurs: Array<{
     id: number;
     nom: string;

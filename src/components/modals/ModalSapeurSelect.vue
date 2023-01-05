@@ -14,49 +14,58 @@ import {
   IonIcon,
   IonItem,
   modalController,
-} from '@ionic/vue';
+  alertController,
+} from "@ionic/vue";
 import useSapeurs from "@/store/useSapeurs";
 import { Sapeur } from "@/models/sapeur";
 
-const props = withDefaults(defineProps<{
-  exceptSapeurIds?: number[],
-  preSelectionSapeurIds?: number[],
-  multiSelect?: boolean,
-}>(), { exceptSapeurIds: () => [], multiSelect: false });
+const props = withDefaults(
+  defineProps<{
+    exceptSapeurIds?: number[];
+    preSelectionSapeurIds?: number[];
+    multiSelect?: boolean;
+    autre?: boolean;
+  }>(),
+  { exceptSapeurIds: () => [], multiSelect: false }
+);
 const exceptIds = new Set(props.exceptSapeurIds ?? []);
 const preSelectionSapeurIds = new Set(props.preSelectionSapeurIds ?? []);
 
-// const { exceptSapeurIds = [], multiSelect = false } = defineProps<{
-//   exceptSapeurIds?: number[],
-//   multiSelect?: boolean
-// }>();
-
 const selectedSapeurId = new Set();
 
-const query = ref("")
+const query = ref("");
 const sapeurModule = useSapeurs();
 const filteredSapeur = computed(() => {
   return sapeurModule.state.value
-    .filter(s => !exceptIds.has(s.id))
-    .filter(s => query.value !== "" ? (s.nom + "" + s.prenom)
-      .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-      .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1
-      : preSelectionSapeurIds.size && preSelectionSapeurIds.has(s.id) || !preSelectionSapeurIds.size
+    .filter((s) => !exceptIds.has(s.id))
+    .filter((s) =>
+      query.value !== ""
+        ? (s.nom + "" + s.prenom)
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/\p{Diacritic}/gu, "")
+            .indexOf(
+              query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+            ) > -1
+        : (preSelectionSapeurIds.size && preSelectionSapeurIds.has(s.id)) ||
+          !preSelectionSapeurIds.size
     )
-    .sort((a, b) => (a.nom + " " + a.prenom).localeCompare((b.nom + " " + b.prenom)))
-})
+    .sort((a, b) =>
+      (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
+    );
+});
 
 const search = (event: any) => {
   query.value = event.target.value.toLowerCase();
-}
+};
 
 const dismiss = () => {
   modalController.dismiss(null);
-}
+};
 
 const validate = () => {
   modalController.dismiss([...selectedSapeurId]);
-}
+};
 
 const selectSapeur = (sapeur: Sapeur) => {
   if (!props.multiSelect) {
@@ -67,14 +76,34 @@ const selectSapeur = (sapeur: Sapeur) => {
   if (selectedSapeurId.has(sapeur.id)) {
     selectedSapeurId.delete(sapeur.id);
   } else {
-    selectedSapeurId.add(sapeur.id)
+    selectedSapeurId.add(sapeur.id);
   }
-}
+};
 
-// const searchbar = ref<ComponentPublicInstance<HTMLInputElement>>();
-// onMounted(() => {
-//   searchbar.value?.$el.setFocus();
-// })
+const autreSapeur = async () => {
+  const prompt = await alertController.create({
+    header: "Ajouter un sapeur",
+    inputs: [
+      {
+        name: "designation",
+        placeholder: "Désignation",
+        type: "text",
+      },
+    ],
+    buttons: [
+      {
+        text: "Annuler",
+      },
+      {
+        text: "Valider",
+        handler: (data) => {
+          modalController.dismiss({ designation: data.designation });
+        },
+      },
+    ],
+  });
+  await prompt.present();
+};
 </script>
 
 <template>
@@ -95,16 +124,29 @@ const selectSapeur = (sapeur: Sapeur) => {
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..." ref="searchbar"></ion-searchbar>
+    <ion-searchbar
+      @ionInput="search($event)"
+      placeholder="Rechercher..."
+      ref="searchbar"
+    ></ion-searchbar>
 
     <ion-list>
-      <ion-item v-for="sapeur of filteredSapeur" :key="sapeur.id" @click="selectSapeur(sapeur)">
-        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"></ion-checkbox>
+      <ion-item
+        v-for="sapeur of filteredSapeur"
+        :key="sapeur.id"
+        @click="selectSapeur(sapeur)"
+      >
+        <ion-checkbox
+          v-if="props.multiSelect"
+          class="ion-margin-end"
+        ></ion-checkbox>
         <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
       </ion-item>
     </ion-list>
+    <ion-button v-if="autre && !multiSelect" expand="block" @click="autreSapeur"
+      >Autre</ion-button
+    >
   </ion-content>
 </template>
 
-<style>
-</style>
+<style></style>

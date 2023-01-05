@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import useAuth from '@/store/useAuth';
-import useExercices from '@/store/useExercices';
-import useInterventions from '@/store/useInterventions';
-import useStore from '@/store/useStore';
-import { useTheme } from '@/hooks/useTheme';
-import { useNotify } from '@/tools/useToast';
+import useAuth from "@/store/useAuth";
+import useExercices from "@/store/useExercices";
+import useInterventions from "@/store/useInterventions";
+import useStore from "@/store/useStore";
+import { useTheme } from "@/hooks/useTheme";
+import { useNotify } from "@/tools/useToast";
 import {
   IonButtons,
   IonButton,
@@ -24,8 +24,8 @@ import {
   IonSelectOption,
   loadingController,
   alertController,
-} from '@ionic/vue';
-import { useRouter } from 'vue-router';
+} from "@ionic/vue";
+import { useRouter } from "vue-router";
 
 const { switchTheme, activeTheme } = useTheme();
 const router = useRouter();
@@ -33,10 +33,9 @@ const notify = useNotify();
 
 const { state, activeSisKey, logout, selectSis } = useAuth();
 
-
 const wrappedLogout = () => {
   logout();
-  router.push({ name: 'login' });
+  router.push({ name: "login" });
 };
 
 const onSelectSis = async (sis: string) => {
@@ -44,26 +43,26 @@ const onSelectSis = async (sis: string) => {
   const exerciceStore = useExercices();
   const interventionStore = useInterventions();
   const hasInProgressExercices = exerciceStore.state.value.every(
-    (e) => e.localStatus == 'in_progress'
+    (e) => e.localStatus == "in_progress"
   );
   const hasInProgressInterventions = interventionStore.state.value.every(
-    (e) => e.localStatus == 'in_progress'
+    (e) => e.localStatus == "in_progress"
   );
 
   if (hasInProgressExercices || hasInProgressInterventions) {
     const confirm = await alertController.create({
-      header: 'Perte de données',
+      header: "Perte de données",
       message:
-        'Attention, des exercices ou interventions sont en cours de saisie, êtes-vous sûr de vouloir changer de SIS ? Les données des exercices et interventions en cours de saisie seront perdues ! Cette action est irréversible.',
+        "Attention, des exercices ou interventions sont en cours de saisie, êtes-vous sûr de vouloir changer de SIS ? Les données des exercices et interventions en cours de saisie seront perdues ! Cette action est irréversible.",
       buttons: [
         {
-          text: 'Non',
+          text: "Non",
           handler: () => {
             return false;
           },
         },
         {
-          text: 'Oui',
+          text: "Oui",
           handler: () => {
             return true;
           },
@@ -81,13 +80,13 @@ const onSelectSis = async (sis: string) => {
   // Switch SIS
   const ok = await selectSis(sis);
   if (!ok) {
-    notify.error('Impossible de changer de SIS');
+    notify.error("Impossible de changer de SIS");
     return;
   }
 
   // Afficher loading
   const loading = await loadingController.create({
-    message: 'Chargement...',
+    message: "Chargement...",
   });
 
   await loading.present();
@@ -122,7 +121,10 @@ const onSelectSis = async (sis: string) => {
       <ion-list lines="none">
         <ion-item v-if="state.data.sis.length > 1">
           <ion-label>Sis</ion-label>
-          <ion-select @ion-change="onSelectSis($event.target.value)" :value="activeSisKey">
+          <ion-select
+            @ion-change="onSelectSis($event.target.value)"
+            :value="activeSisKey"
+          >
             <ion-select-option v-for="sis in state.data.sis" :key="sis">
               {{ sis }}
             </ion-select-option>
@@ -141,20 +143,28 @@ const onSelectSis = async (sis: string) => {
         </ion-item>
         <ion-item>
           <ion-label>Thème</ion-label>
-          <ion-select @ion-change="switchTheme($event.target.value)" :value="activeTheme">
-            <ion-select-option key="dark" value="dark">Sombre</ion-select-option>
-            <ion-select-option key="light" value="light">Clair</ion-select-option>
+          <ion-select
+            @ion-change="switchTheme($event.target.value)"
+            :value="activeTheme"
+          >
+            <ion-select-option key="dark" value="dark"
+              >Sombre</ion-select-option
+            >
+            <ion-select-option key="light" value="light"
+              >Clair</ion-select-option
+            >
           </ion-select>
         </ion-item>
-        <ion-button expand="full" @click="wrappedLogout">Déconnexion</ion-button>
+        <ion-button expand="full" @click="wrappedLogout"
+          >Déconnexion</ion-button
+        >
       </ion-list>
     </ion-content>
 
     <ion-footer>
       <div class="ion-padding copyright">
-        Version 2.0.0
-        <br />Application créée par Bastien Wermeille
-        <br />support@gestsis.ch
+        Version 2.0.8
+        <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
         <br />
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
       </div>
