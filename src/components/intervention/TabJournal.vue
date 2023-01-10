@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { v4 as uuidv4 } from 'uuid';
-import useActiveIntervention from '@/store/useActiveIntervention';
-import useDateFormatter from '@/tools/useDateFormatter';
+import { v4 as uuidv4 } from "uuid";
+import useActiveIntervention from "@/store/useActiveIntervention";
+import useDateFormatter from "@/tools/useDateFormatter";
 import {
   IonList,
   IonItem,
@@ -9,12 +9,12 @@ import {
   IonCheckbox,
   IonIcon,
   modalController,
-} from '@ionic/vue';
-import { computed, ref } from 'vue';
-import { DateTime } from 'luxon';
-import useSapeurs from '@/store/useSapeurs';
-import ModalAppelEditVue from '../modals/ModalAppelEdit.vue';
-import { useRouter } from 'vue-router';
+} from "@ionic/vue";
+import { computed, ref } from "vue";
+import { DateTime } from "luxon";
+import useSapeurs from "@/store/useSapeurs";
+import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
+import { useRouter } from "vue-router";
 
 const onlyPendingMissions = ref<boolean>(true);
 const { formatDate } = useDateFormatter();
@@ -23,21 +23,21 @@ enum EventType {
   OngoingMission,
   EndedMission,
   Appel,
-  Info
+  Info,
 }
 
 const colorMapping = {
-  [EventType.OngoingMission]: 'orange',
-  [EventType.EndedMission]: 'green',
-  [EventType.Appel]: 'blue',
-  [EventType.Info]: 'grey',
-}
+  [EventType.OngoingMission]: "orange",
+  [EventType.EndedMission]: "green",
+  [EventType.Appel]: "blue",
+  [EventType.Info]: "grey",
+};
 const iconMapping = {
-  [EventType.OngoingMission]: 'body',
-  [EventType.EndedMission]: 'body',
-  [EventType.Appel]: 'call',
-  [EventType.Info]: 'play',
-}
+  [EventType.OngoingMission]: "body",
+  [EventType.EndedMission]: "body",
+  [EventType.Appel]: "call",
+  [EventType.Info]: "play",
+};
 
 const router = useRouter();
 const { state } = useActiveIntervention();
@@ -45,57 +45,70 @@ const sapeurStore = useSapeurs();
 const intervention = state;
 
 interface Event {
-  uuid: string,
-  date: string,
-  type: EventType,
-  titre: string,
-  description: string,
-  auteur: string
+  uuid: string;
+  date: string;
+  type: EventType;
+  titre: string;
+  description: string;
+  auteur: string;
 }
 
 const evenements = computed(() => {
-  const missions = intervention.value.missions.filter(m => !m.date_fin || !onlyPendingMissions.value);
-  const chefIntervention = sapeurStore.state.value.find(s => s.id == intervention.value.sapeur_id);
+  const missions = intervention.value.missions.filter(
+    (m) => !m.date_fin || !onlyPendingMissions.value
+  );
+  const chefIntervention = sapeurStore.state.value.find(
+    (s) => s.id == intervention.value.sapeur_id
+  );
   return [
     // Début intervention
     {
       uuid: uuidv4(),
       date: intervention.value.date_debut,
       type: EventType.Info,
-      titre: 'Début de l\'intervention',
+      titre: "Début de l'intervention",
       description: intervention.value.objet,
-      auteur: chefIntervention ? chefIntervention?.nom + " " + chefIntervention?.prenom : null
+      auteur: chefIntervention
+        ? chefIntervention?.nom + " " + chefIntervention?.prenom
+        : null,
     },
 
     // Appels
-    ...intervention.value.appels.map(a => ({
+    ...intervention.value.appels.map((a) => ({
       ...a,
       uuid: a.localUuid,
       type: EventType.Appel,
-      titre: a.nom + ' (' + a.numero + ')',
+      titre: a.nom + " (" + a.numero + ")",
       description: a.commentaire,
-      auteur: null
+      auteur: null,
     })),
 
     // Début de mission
-    ...missions.map(m => ({
+    ...missions.map((m) => ({
       ...m,
       uuid: m.localUuid,
       date: m.date_debut,
       type: !m.date_fin ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
-      auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
+      auteur: m.sapeur?.designation,
     })),
     // Fin de mission
-    ...missions.filter(m => m.date_fin).map(m => ({
-      ...m,
-      uuid: m.localUuid,
-      date: m.date_fin,
-      type: m.date_fin == null ? EventType.OngoingMission : EventType.EndedMission,
-      description: m.resume,
-      auteur: m.sapeur?.nom + " " + m.sapeur?.prenom
-    }))
-  ].sort((a, b) => DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()) as Event[]
+    ...missions
+      .filter((m) => m.date_fin)
+      .map((m) => ({
+        ...m,
+        uuid: m.localUuid,
+        date: m.date_fin,
+        type:
+          m.date_fin == null
+            ? EventType.OngoingMission
+            : EventType.EndedMission,
+        description: m.resume,
+        auteur: m.sapeur?.designation,
+      })),
+  ].sort((a, b) =>
+    DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()
+  ) as Event[];
 });
 
 const openEvent = async (event: Event) => {
@@ -103,50 +116,67 @@ const openEvent = async (event: Event) => {
     return;
   }
   switch (event.type) {
-    case EventType.Appel: {
-      const appel = intervention.value.appels.find(a => a.localUuid == event.uuid)
-      const modalAppel = await modalController
-        .create({
+    case EventType.Appel:
+      {
+        const appel = intervention.value.appels.find(
+          (a) => a.localUuid == event.uuid
+        );
+        const modalAppel = await modalController.create({
           component: ModalAppelEditVue,
           componentProps: {
-            appel: { ...appel }
-          }
-        })
+            appel: { ...appel },
+          },
+        });
 
-      await modalAppel.present();
-    }
+        await modalAppel.present();
+      }
       break;
 
     case EventType.EndedMission:
     case EventType.OngoingMission:
-      router.push({ name: 'mission', params: { uuid: event.uuid } });
+      router.push({ name: "mission", params: { uuid: event.uuid } });
       break;
 
     case EventType.Info:
     // Nothing
   }
-}
+};
 </script>
 
 <template>
   <ion-list>
     <ion-item>
-      <ion-label text-right>Afficher uniquement les missions en cours</ion-label>
-      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"></ion-checkbox>
+      <ion-label text-right
+        >Afficher uniquement les missions en cours</ion-label
+      >
+      <ion-checkbox
+        color="primary"
+        slot="end"
+        v-model="onlyPendingMissions"
+      ></ion-checkbox>
     </ion-item>
   </ion-list>
   <section id="cd-timeline" class="cd-container">
-    <div :class="['cd-timeline-block', colorMapping[event.type]]" v-for="event of evenements" :key="event.uuid">
+    <div
+      :class="['cd-timeline-block', colorMapping[event.type]]"
+      v-for="event of evenements"
+      :key="event.uuid"
+    >
       <div class="cd-timeline-icon positive text-center">
         <ion-icon :name="iconMapping[event.type]"></ion-icon>
       </div>
-      <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
+      <div
+        class="cd-timeline-content timeline-text positive"
+        @click="openEvent(event)"
+      >
         <h4 class="title">{{ event.titre }}</h4>
         <p class="date">
-          {{ formatDate(event.date, 'dd.LL.yy HH:mm') }}
+          {{ formatDate(event.date, "dd.LL.yy HH:mm") }}
           <span v-if="event.auteur">par {{ event.auteur }}</span>
         </p>
-        <p class="description" v-if="event.description">{{ event.description }}</p>
+        <p class="description" v-if="event.description">
+          {{ event.description }}
+        </p>
       </div>
     </div>
   </section>
