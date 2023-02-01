@@ -1570,6 +1570,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:6.5.2":
+  version: 6.5.2
+  resolution: "@ionic/core@npm:6.5.2"
+  dependencies:
+    "@stencil/core": ^2.18.0
+    ionicons: ^6.1.1
+    tslib: ^2.1.0
+  checksum: 889472605b46bc1221325269b2be5d06d443d79223f214ee457f5860c72fcd05cbf8a11705b10e6dc58c7f9951c3447c6a571ad8267fa4d01cb9f25c453ec671
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^3.0.6":
   version: 3.0.6
   resolution: "@ionic/storage@npm:3.0.6"
@@ -1677,13 +1688,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:6.4.1, @ionic/vue@npm:^6.4.1":
+"@ionic/vue@npm:6.4.1":
   version: 6.4.1
   resolution: "@ionic/vue@npm:6.4.1"
   dependencies:
     "@ionic/core": 6.4.1
     ionicons: ^6.0.2
   checksum: 067c705f66b195b58f522d880895725526fcceca67095f930607d6e414790c1dda645fe8112f9d0a9d2ef06f660fad783aaae40d9faaca2e26ab4b63f407e223
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^6.5.2":
+  version: 6.5.2
+  resolution: "@ionic/vue@npm:6.5.2"
+  dependencies:
+    "@ionic/core": 6.5.2
+    ionicons: ^6.1.1
+  checksum: 45fcd24a078808bb0f5252aee471014e932275d9c6c62816866d62a18b0e6de0c520694ce778c2192ffa7cf6af475aaa26883c371b666f8f76f96d6611c77041
   languageName: node
   linkType: hard
 
@@ -3785,7 +3806,7 @@ __metadata:
     "@capacitor/keyboard": ^4.1.0
     "@capacitor/status-bar": ^4.1.1
     "@ionic/storage": ^3.0.6
-    "@ionic/vue": ^6.4.1
+    "@ionic/vue": ^6.5.2
     "@ionic/vue-router": ^6.4.1
     "@types/jest": ^29.2.5
     "@types/luxon": ^3.2.0
@@ -7622,6 +7643,15 @@ __metadata:
   dependencies:
     "@stencil/core": ^2.18.0
   checksum: 2dd865c211d37d41aaff3b18eb3e9f0d2a48522ea102c232d9ada939e2e41a87b2e63c195cd4cadbf04a258f90a6b05ecc2250accf970d1dbc47241a1da36173
+  languageName: node
+  linkType: hard
+
+"ionicons@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "ionicons@npm:6.1.1"
+  dependencies:
+    "@stencil/core": ^2.18.0
+  checksum: aa4d79e3b6d545bd377ca181866f51ecdd854c0d2c720340782a8982a2fb4e882eab3c7dd2596ee8ec8fc1d6e9501addb1dd7d5c087edc3a2a35ff34902bf0f6
   languageName: node
   linkType: hard
 
