@@ -27,7 +27,7 @@
     "jetifier": "^2.0.0",
     "jwt-decode": "^3.1.2",
     "localforage-cordovasqlitedriver": "^1.8.0",
-    "luxon": "^3.2.1",
+    "luxon": "^3.3.0",
     "uuid": "^9.0.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
