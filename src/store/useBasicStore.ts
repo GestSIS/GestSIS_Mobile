@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon';
+import { DateTime } from "luxon";
 
-import { Ref, ref } from 'vue';
-import { usePersistentStore } from '../hooks/usePersistentStore';
+import { Ref, ref } from "vue";
+import { usePersistentStore } from "../hooks/usePersistentStore";
 
 const { persistentStore } = usePersistentStore();
-const lastSyncSuffixe = 'last_sync';
+const lastSyncSuffixe = "last_sync";
 
 export enum StoreState {
   Synced,
@@ -18,16 +18,21 @@ export default function useBasicStore<Type>(
   persistKey: string
 ) {
   const syncStatus = ref(StoreState.NeedSync);
-  const lastSync = ref<string>('');
+  const lastSync = ref<string>("");
 
   /** Persist data in local storage */
   const persist = async () => {
     // Persists by using persistKey
-    await persistentStore.set(persistKey, JSON.stringify(
-      state.value,
-      (_key, value) => (value instanceof Set ? [...value] :
-        value instanceof Map ? { ...value } : value)
-    ));
+    await persistentStore.set(
+      persistKey,
+      JSON.stringify(state.value, (_key, value) =>
+        value instanceof Set
+          ? [...value]
+          : value instanceof Map
+          ? { ...value }
+          : value
+      )
+    );
     await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };
 
@@ -35,7 +40,7 @@ export default function useBasicStore<Type>(
   const reset = () => {
     persistentStore.remove(persistKey);
     syncStatus.value = StoreState.NeedSync;
-    lastSync.value = DateTime.now().toSQL();
+    lastSync.value = DateTime.now().toSQL() ?? "";
     state.value = [];
   };
 
@@ -44,7 +49,8 @@ export default function useBasicStore<Type>(
     syncStatus.value = StoreState.Syncing;
     const data = await persistentStore.get(persistKey);
     state.value = JSON.parse(data) || [];
-    lastSync.value = (await persistentStore.get(persistKey + lastSyncSuffixe)) || null;
+    lastSync.value =
+      (await persistentStore.get(persistKey + lastSyncSuffixe)) || null;
     syncStatus.value = StoreState.Synced;
   };
 
@@ -52,7 +58,7 @@ export default function useBasicStore<Type>(
   const sync = async (): Promise<boolean> => {
     syncStatus.value = StoreState.Syncing;
     state.value = await loader();
-    lastSync.value = DateTime.now().toSQL();
+    lastSync.value = DateTime.now().toSQL() ?? "";
     await persist();
     syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
@@ -63,8 +69,8 @@ export default function useBasicStore<Type>(
   return {
     syncStatus,
     lastSync,
-    permission: '',
-    
+    permission: "",
+
     reset,
     persist,
     sync,

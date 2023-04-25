@@ -1,34 +1,34 @@
-import { ref, Ref } from 'vue';
-import InterventionService from '@/services/InterventionService';
-import { Intervention } from '@/models/intervention';
-import { v4 as uuidv4 } from 'uuid';
-import useBasicStore, { StoreState } from './useBasicStore';
-import { DateTime } from 'luxon';
+import { ref, Ref } from "vue";
+import InterventionService from "@/services/InterventionService";
+import { Intervention } from "@/models/intervention";
+import { v4 as uuidv4 } from "uuid";
+import useBasicStore, { StoreState } from "./useBasicStore";
+import { DateTime } from "luxon";
 
 const state: Ref<Intervention[]> = ref([]);
 const store = useBasicStore(
   state,
   InterventionService.getInterventions,
-  'interventions'
+  "interventions"
 );
 
 export default () => {
-  const name = 'Interventions';
+  const name = "Interventions";
 
   /** Load data from GestSIS API */
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
     // Export validated interventions
     const interventions: Intervention[] = state.value.filter(
-      (e) => e.localStatus == 'validated'
+      (e) => e.localStatus == "validated"
     );
     await InterventionService.exportInterventions(interventions);
 
     // Manage errors and remove sync interventions
-    state.value = state.value.filter(i => i.localStatus != 'validated');
+    state.value = state.value.filter((i) => i.localStatus != "validated");
 
     // For now, we do not offer the possibility to edit intervention
-    store.lastSync.value = DateTime.now().toSQL();
+    store.lastSync.value = DateTime.now().toSQL() ?? "";
     await store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
@@ -42,8 +42,9 @@ export default () => {
   ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
-    intervention.localStatus = 'in_progress';
-    intervention.date_debut = date.toSQL({ includeOffset: false }).slice(0, 16);
+    intervention.localStatus = "in_progress";
+    intervention.date_debut =
+      date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
     intervention.lieu = lieu;
     intervention.objet = objet;
 
@@ -79,7 +80,7 @@ export default () => {
     ...store,
     name,
     state,
-    permission: 'intervention.modification',
+    permission: "intervention.modification",
 
     sync,
     newIntervention,

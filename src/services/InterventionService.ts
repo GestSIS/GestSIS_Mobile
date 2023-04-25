@@ -19,8 +19,8 @@ export default {
 
       return {
         ...i,
-        date_debut: i.date_debut.split(" ")[0],
-        heure_debut: i.date_debut.split(" ")[1],
+        date_debut: i.date_debut?.split(" ")[0],
+        heure_debut: i.date_debut?.split(" ")[1],
         date_fin: i.date_fin.split(" ")[0],
         heure_fin: i.date_fin.split(" ")[1],
         proprietaire:

@@ -146,7 +146,7 @@ export default function useExercices() {
 
     // Store loaded exercices
     state.value = conflictResolvedExercices;
-    store.lastSync.value = DateTime.now().toSQL();
+    store.lastSync.value = DateTime.now().toSQL() ?? "";
     store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);

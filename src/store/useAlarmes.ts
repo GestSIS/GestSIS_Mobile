@@ -14,7 +14,7 @@ export default function useAlarmes() {
   const forcedSync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
     state.value = await AlarmeService.fetchAlarmes(true);
-    store.lastSync.value = DateTime.now().toSQL();
+    store.lastSync.value = DateTime.now().toSQL() ?? "";
     await store.persist();
     store.syncStatus.value = StoreState.Synced;
     return Promise.resolve(true);
