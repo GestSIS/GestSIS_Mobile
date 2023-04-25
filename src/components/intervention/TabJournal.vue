@@ -5,7 +5,6 @@ import useDateFormatter from "@/tools/useDateFormatter";
 import {
   IonList,
   IonItem,
-  IonLabel,
   IonCheckbox,
   IonIcon,
   modalController,

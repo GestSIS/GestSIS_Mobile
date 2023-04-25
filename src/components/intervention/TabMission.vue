@@ -8,7 +8,6 @@ import {
   IonItem,
   IonIcon,
   IonCheckbox,
-  IonLabel,
   alertController,
 } from "@ionic/vue";
 import useActiveIntervention from "@/store/useActiveIntervention";
@@ -98,8 +97,7 @@ const nbMission = computed(() => intervention.value.missions.length);
         :name="mission.date_fin ? 'checkmark' : 'time'"
       ></ion-icon>
       <p>
-        {{ mission.titre }} - {{ mission.sapeur.nom }}
-        {{ mission.sapeur.prenom }}
+        {{ mission.titre }} - {{ mission.sapeur.designation }}
         <br />
         <span class="details">{{
           formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy")

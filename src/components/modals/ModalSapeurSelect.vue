@@ -3,7 +3,6 @@ import { defineProps, computed, ref, withDefaults } from "vue";
 import {
   IonToolbar,
   IonTitle,
-  IonLabel,
   IonCheckbox,
   IonSearchbar,
   IonButtons,

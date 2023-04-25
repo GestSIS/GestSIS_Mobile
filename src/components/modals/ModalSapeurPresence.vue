@@ -3,7 +3,6 @@ import { defineProps, reactive } from "vue";
 import {
   IonToolbar,
   IonIcon,
-  IonLabel,
   IonInput,
   IonTitle,
   IonButtons,
