@@ -46,7 +46,7 @@ const activeTab = ref(Tab.Journal);
       </ion-toolbar>
     </ion-header>
 
-    <ion-segment v-model="activeTab">
+    <ion-segment :scrollable="true" v-model="activeTab">
       <ion-segment-button :value="Tab.Journal">
         <ion-icon name="list"></ion-icon>
       </ion-segment-button>
