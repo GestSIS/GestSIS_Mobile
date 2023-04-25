@@ -20,7 +20,6 @@ import useGroupes from "@/store/useGroupes";
 import useSapeurs from "@/store/useSapeurs";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { ref, computed } from "vue";
-import { Sapeur } from "@/models/sapeur";
 import router from "@/router";
 import ModalSapeurPresenceVue from "../modals/ModalSapeurPresence.vue";
 import { usePresenceTab } from "@/store/usePresenceTabState";

@@ -18,17 +18,17 @@ import {
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
-import useAlarmes from "@/store/useAlarmes";
+// import useAlarmes from "@/store/useAlarmes";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { Intervention } from "@/models/intervention";
-import { Alarme } from "@/models/alarme";
+// import { Alarme } from "@/models/alarme";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
-const { state: alarmes, sync } = useAlarmes();
+// const { state: alarmes, sync } = useAlarmes();
 
 // sync();
 
@@ -83,9 +83,9 @@ const create = async () => {
   router.push("intervention");
 };
 
-const createFromAlarm = async (alarme: Alarme) => {
-  // TODO:
-};
+// const createFromAlarm = async (alarme: Alarme) => {
+//   // TODO:
+// };
 
 const displayAlarmModule = false;
 </script>
@@ -102,7 +102,7 @@ const displayAlarmModule = false;
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-list v-if="displayAlarmModule">
+      <!-- <ion-list v-if="displayAlarmModule">
         <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
         <ion-item
           :button="true"
@@ -112,13 +112,13 @@ const displayAlarmModule = false;
         >
           <ion-icon slot="start" name="fire"></ion-icon>
           <p>
-            <!-- TODO: Ajouter date, une fois disponible -->
+            TODO: Ajouter date, une fois disponible
             {{ alarme.address }}
             <br />
             <span class="details"></span>
           </p>
         </ion-item>
-      </ion-list>
+      </ion-list> -->
 
       <ion-row>
         <ion-col>

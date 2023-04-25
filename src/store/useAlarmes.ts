@@ -1,4 +1,4 @@
-import { readonly, Ref, ref } from "vue";
+import { Ref, ref } from "vue";
 import useBasicStore, { StoreState } from "./useBasicStore";
 import AlarmeService from "@/services/AlarmeService";
 import { Alarme } from "@/models/alarme";
