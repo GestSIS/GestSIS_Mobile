@@ -220,11 +220,9 @@ const save = () => {
 
       <ion-list>
         <ion-item v-for="sapeur of presences.sapeurs" :key="sapeur.id">
-          <ion-checkbox
-            v-model="sapeur.selected"
-            class="ion-margin-end"
-          ></ion-checkbox>
-          <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
+          <ion-checkbox v-model="sapeur.selected" class="ion-margin-end"
+            >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
+          >
         </ion-item>
       </ion-list>
     </ion-content>

@@ -146,14 +146,9 @@ const openEvent = async (event: Event) => {
 <template>
   <ion-list>
     <ion-item>
-      <ion-label text-right
-        >Afficher uniquement les missions en cours</ion-label
+      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"
+        >Afficher uniquement les missions en cours</ion-checkbox
       >
-      <ion-checkbox
-        color="primary"
-        slot="end"
-        v-model="onlyPendingMissions"
-      ></ion-checkbox>
     </ion-item>
   </ion-list>
   <section id="cd-timeline" class="cd-container">

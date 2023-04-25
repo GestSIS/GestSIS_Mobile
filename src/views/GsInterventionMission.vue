@@ -141,9 +141,10 @@ const save = () => {
         >
 
         <ion-item>
-          <ion-label position="floating">Responsable</ion-label>
           <ion-input
             type="text"
+            label="Responsable"
+            labelPlacement="floating"
             :readonly="true"
             @ionFocus="selectSapeur()"
             :value="mission.sapeur?.designation"
@@ -151,17 +152,19 @@ const save = () => {
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Mission</ion-label>
           <ion-input
             type="text"
+            label="Mission"
+            labelPlacement="floating"
             :value="mission.titre"
             @ionFocus="selectTitre()"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Résumé</ion-label>
           <ion-textarea
+            label="Résumé"
+            labelPlacement="floating"
             :rows="10"
             :auto-grow="true"
             v-model="mission.resume"

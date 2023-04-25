@@ -136,11 +136,9 @@ const autreSapeur = async () => {
         :key="sapeur.id"
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox
-          v-if="props.multiSelect"
-          class="ion-margin-end"
-        ></ion-checkbox>
-        <ion-label>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
+        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"
+          >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
+        >
       </ion-item>
     </ion-list>
     <ion-button v-if="autre && !multiSelect" expand="block" @click="autreSapeur"

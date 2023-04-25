@@ -120,8 +120,8 @@ const onSelectSis = async (sis: string) => {
     <ion-content>
       <ion-list lines="none">
         <ion-item v-if="state.data.sis.length > 1">
-          <ion-label>Sis</ion-label>
           <ion-select
+            label="Sis"
             @ion-change="onSelectSis($event.target.value)"
             :value="activeSisKey"
           >
@@ -142,8 +142,8 @@ const onSelectSis = async (sis: string) => {
           </p>
         </ion-item>
         <ion-item>
-          <ion-label>Thème</ion-label>
           <ion-select
+            label="Thème"
             @ion-change="switchTheme($event.target.value)"
             :value="activeTheme"
           >

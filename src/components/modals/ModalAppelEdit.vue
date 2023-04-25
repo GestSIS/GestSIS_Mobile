@@ -13,7 +13,7 @@ import {
   IonButton,
   IonItem,
   modalController,
-} from '@ionic/vue';
+} from "@ionic/vue";
 import { useNotify } from "@/tools/useToast";
 import { Appel } from "@/models/appel";
 import useActiveIntervention from "@/store/useActiveIntervention";
@@ -28,25 +28,24 @@ const appel = ref(props.appel || new Appel());
 
 const isPhoneNumber = (str: string): boolean => {
   return /^(?=.*\d)[\d ]+$/.test(str);
-}
+};
 
 const save = async () => {
-  if (appel.value?.nom == '' || appel.value.numero == '') {
-    notify.error('Veuillez remplir tous les champs');
+  if (appel.value?.nom == "" || appel.value.numero == "") {
+    notify.error("Veuillez remplir tous les champs");
     return;
-  } else if (!isPhoneNumber(appel.value.numero || '')) {
+  } else if (!isPhoneNumber(appel.value.numero || "")) {
     notify.error("Numéro de téléphone invalid");
     return;
   }
 
   updateAppel(appel.value);
   modalController.dismiss();
-}
+};
 
 const dismiss = () => {
   modalController.dismiss();
-}
-
+};
 </script>
 
 <template>
@@ -65,24 +64,34 @@ const dismiss = () => {
       <base-datetime v-model="appel.date">Date</base-datetime>
 
       <ion-item>
-        <ion-label position="fixed">Numéro</ion-label>
-        <ion-input v-model="appel.numero"></ion-input>
+        <ion-input
+          label="Numéro"
+          labelPlacement="fixed"
+          v-model="appel.numero"
+        ></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="fixed">Nom</ion-label>
-        <ion-input v-model="appel.nom"></ion-input>
+        <ion-input
+          label="Nom"
+          labelPlacement="fixed"
+          v-model="appel.nom"
+        ></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="fixed">Commentaire</ion-label>
-        <ion-textarea v-model="appel.commentaire"></ion-textarea>
+        <ion-textarea
+          label="Commentaire"
+          labelPlacement="fixed"
+          v-model="appel.commentaire"
+        ></ion-textarea>
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save">Modifier</ion-button>
+    <ion-button expand="full" class="ion-margin-top" @click="save"
+      >Modifier</ion-button
+    >
   </ion-content>
 </template>
 
-<style>
-</style>
+<style></style>

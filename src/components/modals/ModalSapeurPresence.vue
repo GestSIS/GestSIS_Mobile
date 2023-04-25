@@ -61,9 +61,10 @@ const save = () => {
   <ion-content class="ion-padding">
     <ion-list>
       <ion-item>
-        <ion-label fixed>Sapeur</ion-label>
         <ion-input
           type="text"
+          label="Sapeur"
+          labelPlacement="fixed"
           :readonly="true"
           :value="presence.nom + ' ' + presence.prenom"
         ></ion-input>

@@ -321,11 +321,11 @@ const dateDebutChanged = (date: string) => {
     <ion-row>
       <ion-col size="12" size-sm="6">
         <ion-item>
-          <ion-label :color="errors.objet ? 'primary' : ''" position="floating"
-            >Objet</ion-label
-          >
           <ion-input
             type="text"
+            :class="{ 'ion-invalid': errors.objet }"
+            label="Objet"
+            labelPlacement="floating"
             v-model="intervention.objet"
             :disabled="intervention.localStatus == 'validated'"
             @change="dateDebutChanged"
@@ -349,11 +349,10 @@ const dateDebutChanged = (date: string) => {
         </ion-item>
 
         <ion-item class="checkbox-item">
-          <ion-label>Rapport de police</ion-label>
           <ion-checkbox
             v-model="intervention.rapport_police"
             :disabled="intervention.localStatus == 'validated'"
-          >
+            >Rapport de police
           </ion-checkbox>
         </ion-item>
       </ion-col>

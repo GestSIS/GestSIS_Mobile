@@ -80,15 +80,10 @@ const nbMission = computed(() => intervention.value.missions.length);
   </ion-grid>
   <ion-list>
     <ion-item>
-      <ion-label text-right
+      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"
         >Afficher uniquement les missions en cours ({{ nbMissionEnCours }} /
-        {{ nbMission }})
-      </ion-label>
-      <ion-checkbox
-        color="primary"
-        slot="end"
-        v-model="onlyPendingMissions"
-      ></ion-checkbox>
+        {{ nbMission }})</ion-checkbox
+      >
     </ion-item>
     <ion-item v-if="!intervention.missions.length">Aucune mission</ion-item>
     <ion-item
