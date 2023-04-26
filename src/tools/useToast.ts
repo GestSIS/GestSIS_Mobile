@@ -1,9 +1,6 @@
 import { loadingController } from "@ionic/core";
 import { toastController } from "@ionic/vue";
 
-// const constructor(public toastCtrl: ToastController, public loadingCtrl: LoadingController) { }
-// loadingCtrl = null;
-
 export function useNotify() {
   let toast: any = null;
   let loader: any = null;
@@ -24,27 +21,7 @@ export function useNotify() {
       position: position,
       translucent: true,
       buttons: showCloseButton ? [{ text: "Fermer" }] : [],
-      // showCloseButton: showCloseButton,
-      // closeButtonText: 'Fermer',
-      // dismissOnPageChange: dismissOnPageChange
     });
-
-    // header?: string;
-    // message?: string | IonicSafeString;
-    // cssClass?: string | string[];
-    // duration?: number;
-    // buttons?: (ToastButton | string)[];
-    // position?: 'top' | 'bottom' | 'middle';
-    // translucent?: boolean;
-    // animated?: boolean;
-    // icon?: string;
-    // htmlAttributes?: ToastAttributes;
-    // color?: Color;
-    // mode?: Mode;
-    // keyboardClose?: boolean;
-    // id?: string;
-    // enterAnimation?: AnimationBuilder;
-    // leaveAnimation?: AnimationBuilder;
 
     await toast.present();
   };
@@ -64,20 +41,6 @@ export function useNotify() {
       animated: true,
     });
 
-    // spinner?: SpinnerTypes | null;
-    // message?: string | IonicSafeString;
-    // cssClass?: string | string[];
-    // showBackdrop?: boolean;
-    // duration?: number;
-    // translucent?: boolean;
-    // animated?: boolean;
-    // backdropDismiss?: boolean;
-    // mode?: Mode;
-    // keyboardClose?: boolean;
-    // id?: string;
-    // htmlAttributes?: LoadingAttributes;
-    // enterAnimation?: AnimationBuilder;
-    // leaveAnimation?: AnimationBuilder;
     loader.present();
   };
 
