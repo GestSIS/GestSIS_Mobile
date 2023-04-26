@@ -148,6 +148,7 @@ const addSapeurs = async () => {
   await modalSapeurSelect.present();
   const { data } = await modalSapeurSelect.onDidDismiss();
 
+  console.log(data);
   if (!data) {
     return;
   }
@@ -209,7 +210,7 @@ const save = () => {
             <h3>Sapeurs</h3>
           </ion-col>
           <ion-col v-if="mode == 'ARRIVEE'" size="4">
-            <ion-button expand="block" @click="addSapeurs()">
+            <ion-button expand="block" @click="addSapeurs">
               <ion-icon name="add" slot="start"></ion-icon>
               Autres sapeurs
             </ion-button>

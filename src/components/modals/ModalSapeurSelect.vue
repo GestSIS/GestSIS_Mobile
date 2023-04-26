@@ -7,6 +7,7 @@ import {
   IonSearchbar,
   IonButtons,
   IonHeader,
+  IonLabel,
   IonList,
   IonContent,
   IonButton,
@@ -30,7 +31,7 @@ const props = withDefaults(
 const exceptIds = new Set(props.exceptSapeurIds ?? []);
 const preSelectionSapeurIds = new Set(props.preSelectionSapeurIds ?? []);
 
-const selectedSapeurId = new Set();
+const selectedSapeurId = new Set<number>();
 
 const query = ref("");
 const sapeurModule = useSapeurs();
@@ -131,13 +132,18 @@ const autreSapeur = async () => {
 
     <ion-list>
       <ion-item
+        button
         v-for="sapeur of filteredSapeur"
         :key="sapeur.id"
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"
+        <ion-checkbox
+          v-if="props.multiSelect"
+          class="ion-margin-end"
+          @ionChange="selectSapeur(sapeur)"
           >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
         >
+        <ion-label v-else>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
       </ion-item>
     </ion-list>
     <ion-button v-if="autre && !multiSelect" expand="block" @click="autreSapeur"

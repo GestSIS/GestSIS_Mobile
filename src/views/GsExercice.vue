@@ -415,6 +415,18 @@ const sync = async () => {
           </ion-radio-group>
           <ion-row>
             <ion-col>Total : {{ computedSapeurs?.length }}</ion-col>
+            <ion-col class="col-radio">{{
+              computedSapeurs?.filter((s) => s.presenceStatut == 1)?.length
+            }}</ion-col>
+            <ion-col class="col-radio">{{
+              computedSapeurs?.filter((s) => s.presenceStatut == 2)?.length
+            }}</ion-col>
+            <ion-col class="col-radio">{{
+              computedSapeurs?.filter((s) => s.presenceStatut == 3)?.length
+            }}</ion-col>
+            <ion-col class="col-radio">{{
+              computedSapeurs?.filter((s) => s.presenceStatut == 4)?.length
+            }}</ion-col>
           </ion-row>
         </div>
       </ion-list>
