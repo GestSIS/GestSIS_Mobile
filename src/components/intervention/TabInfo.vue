@@ -140,15 +140,16 @@ const validate = async () => {
   // Check tous les sapeurs saisis dans les missions sont bien présent
   const sapeursSaisi = [
     ...new Set(
-      intervention.value.missions
-        .map((mission) => mission.sapeur)
-        .map((s) => s.id)
+      (intervention.value.missions ?? [])
+        ?.map((mission) => mission.sapeur)
+        ?.map((s) => s.id)
+        ?.filter((id) => id !== null)
     ),
   ];
-  const sapeursIdPotentiel = new Set(
+  const sapeursIdPotentiel = new Set<number>(
     intervention.value.sapeurs.map((sap) => sap.id)
   );
-  const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
+  const sapeursExistant = new Set<number>(sapeurs.value.map((sap) => sap.id));
   const sapeursSansPresenceExercices = sapeursSaisi.filter(
     (s) => s && !sapeursIdPotentiel.has(s) && sapeursExistant.has(s)
   );
@@ -321,11 +322,11 @@ const dateDebutChanged = (date: string) => {
     <ion-row>
       <ion-col size="12" size-sm="6">
         <ion-item>
+          <ion-label :color="errors.objet ? 'primary' : ''" position="floating"
+            >Objet</ion-label
+          >
           <ion-input
             type="text"
-            :class="{ 'ion-invalid': errors.objet }"
-            label="Objet"
-            labelPlacement="floating"
             v-model="intervention.objet"
             :disabled="intervention.localStatus == 'validated'"
             @change="dateDebutChanged"

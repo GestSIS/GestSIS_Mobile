@@ -148,12 +148,11 @@ const addSapeurs = async () => {
   await modalSapeurSelect.present();
   const { data } = await modalSapeurSelect.onDidDismiss();
 
-  console.log(data);
   if (!data) {
     return;
   }
 
-  const ids = new Set(data);
+  const ids = new Set<number>(data);
   const sapeurs = sapeurModule.state.value.filter((s) => ids.has(s.id));
   presences.sapeurs = [
     ...presences.sapeurs,
