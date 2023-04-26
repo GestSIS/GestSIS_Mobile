@@ -1,5 +1,5 @@
-import { loadingController } from '@ionic/core';
-import { toastController } from '@ionic/vue';
+import { loadingController } from "@ionic/core";
+import { toastController } from "@ionic/vue";
 
 // const constructor(public toastCtrl: ToastController, public loadingCtrl: LoadingController) { }
 // loadingCtrl = null;
@@ -10,9 +10,9 @@ export function useNotify() {
 
   const show = async (
     message: string,
-    position: 'top' | 'bottom' | 'middle' = 'top',
+    position: "top" | "bottom" | "middle" = "top",
     duration = 5000,
-    showCloseButton = false,
+    showCloseButton = false
   ) => {
     if (toast) {
       toast?.dismiss();
@@ -20,14 +20,10 @@ export function useNotify() {
 
     toast = await toastController.create({
       message: message,
-      duration: showCloseButton ? undefined : duration,
+      duration: duration,
       position: position,
       translucent: true,
-      // buttons: [
-      //   {
-      //     text: "Fermer",
-      //   }
-      // ]
+      buttons: showCloseButton ? [{ text: "Fermer" }] : [],
       // showCloseButton: showCloseButton,
       // closeButtonText: 'Fermer',
       // dismissOnPageChange: dismissOnPageChange
@@ -54,11 +50,11 @@ export function useNotify() {
   };
 
   const success = (message: string) => {
-    show(message, 'bottom', 5000, true);
+    show(message, "bottom", 5000, true);
   };
 
   const error = (error: string) => {
-    show(error, 'bottom', 10000);
+    show(error, "bottom", 10000);
   };
 
   const loading = (message: string) => {
