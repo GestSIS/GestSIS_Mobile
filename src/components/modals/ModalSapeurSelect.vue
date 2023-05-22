@@ -29,7 +29,7 @@ const props = withDefaults(
   { exceptSapeurIds: () => [], multiSelect: false }
 );
 const exceptIds = new Set(props.exceptSapeurIds ?? []);
-const preSelectionSapeurIds = new Set(props.preSelectionSapeurIds ?? []);
+const preSelectionIds = new Set(props.preSelectionSapeurIds ?? []);
 
 const selectedSapeurId = new Set<number>();
 
@@ -47,8 +47,8 @@ const filteredSapeur = computed(() => {
             .indexOf(
               query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
             ) > -1
-        : (preSelectionSapeurIds.size && preSelectionSapeurIds.has(s.id)) ||
-          !preSelectionSapeurIds.size
+        : (preSelectionIds.size && preSelectionIds.has(s.id)) ||
+          !preSelectionIds.size
     )
     .sort((a, b) =>
       (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
