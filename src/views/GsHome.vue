@@ -35,15 +35,17 @@ const navigateTo = async (name: string) => {
 
 const needSync = computed((): boolean => {
   return (
-    interventionStore.state.value.map(i => i.localStatus).includes("validated") ||
-    exerciceStore.state.value.map(e => e.localStatus).includes("validated")
+    interventionStore.state.value
+      .map((i) => i.localStatus)
+      .includes("validated") ||
+    exerciceStore.state.value.map((e) => e.localStatus).includes("validated")
   );
 });
 
 const sync = async () => {
   // Afficher loading
   const loading = await loadingController.create({
-    message: 'Chargement...',
+    message: "Chargement...",
   });
 
   await loading.present();
@@ -65,8 +67,12 @@ const sync = async () => {
 
 // Permissions checks
 const { hasPermission } = useAuth();
-const hasInterventionEditPermission = computed(() => hasPermission("intervention.modification"));
-const hasExercicePresencePermission = computed(() => hasPermission("exercice.presence"));
+const hasInterventionEditPermission = computed(() =>
+  hasPermission("intervention.modification")
+);
+const hasExercicePresencePermission = computed(() =>
+  hasPermission("exercice.presence")
+);
 </script>
 
 <template>
@@ -89,8 +95,15 @@ const hasExercicePresencePermission = computed(() => hasPermission("exercice.pre
                 <h2>⚠️ Certains éléments ne sont pas synchronisés.</h2>
               </ion-col>
               <ion-col col-12 col-md-4>
-                <ion-button ion-button color="light" block icon-start @click="sync">
-                  <ion-icon slot="start" name="syncOutline"></ion-icon>Synchroniser maintenant
+                <ion-button
+                  ion-button
+                  color="light"
+                  block
+                  icon-start
+                  @click="sync"
+                >
+                  <ion-icon slot="start" name="syncOutline"></ion-icon
+                  >Synchroniser maintenant
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -101,7 +114,6 @@ const hasExercicePresencePermission = computed(() => hasPermission("exercice.pre
       <ion-grid>
         <ion-row>
           <ion-col size="6" v-if="hasInterventionEditPermission">
-            <!-- v-if="user.hasRole('rapport_inter_all')"> -->
             <div class="tile" @click="navigateTo('interventions')">
               <div class="icon">
                 <ion-icon name="flame" color="white"></ion-icon>
@@ -110,12 +122,19 @@ const hasExercicePresencePermission = computed(() => hasPermission("exercice.pre
             </div>
           </ion-col>
           <ion-col size="6" v-if="hasExercicePresencePermission">
-            <!-- v-if="user.hasRole('presence_exe_all')"> -->
             <div class="tile" @click="navigateTo('exercices')">
               <div class="icon">
                 <ion-icon name="checkbox" color="white"></ion-icon>
               </div>
               <p class="label">Présences exercices</p>
+            </div>
+          </ion-col>
+          <ion-col size="6" v-if="hasInterventionEditPermission">
+            <div class="tile" @click="navigateTo('annuaire')">
+              <div class="icon">
+                <ion-icon name="call" color="white"></ion-icon>
+              </div>
+              <p class="label">Annuaire</p>
             </div>
           </ion-col>
           <ion-col size="6">
@@ -141,12 +160,12 @@ const hasExercicePresencePermission = computed(() => hasPermission("exercice.pre
 </template>
 
 <style scoped>
-ion-col>div {
+ion-col > div {
   background-color: #b90101;
   padding: 1px 5px;
 }
 
-ion-col>div>p:first-child {
+ion-col > div > p:first-child {
   line-height: 60px;
 }
 

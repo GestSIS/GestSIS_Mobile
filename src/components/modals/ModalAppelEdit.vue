@@ -23,22 +23,22 @@ const notify = useNotify();
 const { updateAppel } = useActiveIntervention();
 const props = defineProps<{ appel: Appel }>();
 
-const appel = ref(props.appel || new Appel());
+const activeAppel = ref(props.appel || new Appel());
 
 const isPhoneNumber = (str: string): boolean => {
   return /^(?=.*\d)[\d ]+$/.test(str);
 };
 
 const save = async () => {
-  if (appel.value?.nom == "" || appel.value.numero == "") {
+  if (activeAppel.value?.nom == "" || activeAppel.value.numero == "") {
     notify.error("Veuillez remplir tous les champs");
     return;
-  } else if (!isPhoneNumber(appel.value.numero || "")) {
+  } else if (!isPhoneNumber(activeAppel.value.numero || "")) {
     notify.error("Numéro de téléphone invalid");
     return;
   }
 
-  updateAppel(appel.value);
+  updateAppel(activeAppel.value);
   modalController.dismiss();
 };
 
@@ -60,13 +60,13 @@ const dismiss = () => {
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="appel.date">Date</base-datetime>
+      <base-datetime v-model="activeAppel.date">Date</base-datetime>
 
       <ion-item>
         <ion-input
           label="Numéro"
           labelPlacement="fixed"
-          v-model="appel.numero"
+          v-model="activeAppel.numero"
         ></ion-input>
       </ion-item>
 
@@ -74,7 +74,7 @@ const dismiss = () => {
         <ion-input
           label="Nom"
           labelPlacement="fixed"
-          v-model="appel.nom"
+          v-model="activeAppel.nom"
         ></ion-input>
       </ion-item>
 
@@ -82,7 +82,7 @@ const dismiss = () => {
         <ion-textarea
           label="Commentaire"
           labelPlacement="fixed"
-          v-model="appel.commentaire"
+          v-model="activeAppel.commentaire"
         ></ion-textarea>
       </ion-item>
     </ion-list>

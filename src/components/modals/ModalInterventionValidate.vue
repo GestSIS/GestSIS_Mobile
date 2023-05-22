@@ -22,7 +22,7 @@ import { DateTime } from "luxon";
 const notify = useNotify();
 
 const props = defineProps<{ date: string }>();
-const date = ref(
+const activeDate = ref(
   (
     props.date ??
     DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ??
@@ -31,12 +31,12 @@ const date = ref(
 );
 
 const save = async () => {
-  if (date.value == "") {
+  if (activeDate.value == "") {
     notify.error("Veuillez remplir tous les champs");
     return;
   }
 
-  modalController.dismiss(date.value.replace("T", " "));
+  modalController.dismiss(activeDate.value.replace("T", " "));
 };
 
 const dismiss = () => {
@@ -84,8 +84,8 @@ const dismiss = () => {
     <ion-modal :keep-contents-mounted="true">
       <ion-datetime
         id="datetime"
-        :value="date"
-        @ionChange="(ev: any) => date = ev.detail.value"
+        :value="activeDate"
+        @ionChange="(ev: any) => activeDate = ev.detail.value"
       ></ion-datetime>
     </ion-modal>
   </ion-content>

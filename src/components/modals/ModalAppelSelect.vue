@@ -12,81 +12,85 @@ import {
   IonItem,
   IonIcon,
   modalController,
-} from '@ionic/vue';
+} from "@ionic/vue";
 import useTelephones from "@/store/useTelephones";
 import { alertController } from "@ionic/core";
 import { useNotify } from "@/tools/useToast";
 
-
 const notify = useNotify();
 
-const query = ref("")
+const query = ref("");
 const telephoneModule = useTelephones();
 const filteredTelephone = computed(() => {
-  return telephoneModule.state.value.filter(m => (m.nom + " " + m.numero)
-    .toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-    .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1)
-})
+  return telephoneModule.state.value.filter(
+    (m) =>
+      (m.nom + " " + m.numero)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) >
+      -1
+  );
+});
 
 const search = (event: any) => {
   query.value = event.target.value.toLowerCase();
-}
+};
 
 const isPhoneNumber = (str: string): boolean => {
   return /^(?=.*\d)[\d ]+$/.test(str);
-}
+};
 
 const dismiss = () => {
   modalController.dismiss(null);
-}
+};
 const selectTelephone = (telephone: any) => {
   modalController.dismiss(telephone);
-}
+};
 
 const addTelephone = async () => {
   const promptTelephone = await alertController.create({
-    header: 'Nouveau numéro',
+    header: "Nouveau numéro",
     message: "Nom et numéro de la personne ou de l'entreprise appelée :",
     inputs: [
       {
-        name: 'nom',
-        placeholder: 'Nom',
-        type: 'text',
-      }, {
-        name: 'numero',
-        placeholder: 'Numéro',
-        type: 'text',
+        name: "nom",
+        placeholder: "Nom",
+        type: "text",
+      },
+      {
+        name: "numero",
+        placeholder: "Numéro",
+        type: "text",
       },
     ],
     buttons: [
       {
-        text: 'Annuler',
-        handler: values => ({ values, canceled: true })
+        text: "Annuler",
+        handler: (values) => ({ values, canceled: true }),
       },
       {
-        text: 'Valider',
-        handler: values => {
-          if (values.nom == '' || values.numero == '') {
-            notify.error('Veuillez remplir tous les champs');
+        text: "Valider",
+        handler: (values) => {
+          if (values.nom == "" || values.numero == "") {
+            notify.error("Veuillez remplir tous les champs");
             return false;
-          }
-          else if (!isPhoneNumber(values.numero)) {
-            notify.error('N° de téléphone invalide');
+          } else if (!isPhoneNumber(values.numero)) {
+            notify.error("N° de téléphone invalide");
             return false;
           } else {
             selectTelephone({
               nom: values.nom,
               numero: values.numero,
-              nouveau_numero: true
-            })
+              nouveau_numero: true,
+            });
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
   await promptTelephone.present();
-}
-
+};
 </script>
 
 <template>
@@ -101,7 +105,10 @@ const addTelephone = async () => {
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
+    <ion-searchbar
+      @ionInput="search($event)"
+      placeholder="Rechercher..."
+    ></ion-searchbar>
 
     <ion-list>
       <ion-item @click="addTelephone">
@@ -120,5 +127,4 @@ const addTelephone = async () => {
   </ion-content>
 </template>
 
-<style>
-</style>
+<style></style>

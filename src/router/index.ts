@@ -14,6 +14,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/GsHome.vue"),
   },
   {
+    path: "/annuaire",
+    name: "annuaire",
+    component: () => import("../views/GsAnnuaire.vue"),
+  },
+  {
     path: "/intervention",
     name: "intervention",
     component: () => import("../views/GsIntervention.vue"),
