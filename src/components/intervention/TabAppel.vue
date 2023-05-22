@@ -20,7 +20,7 @@
     <ion-item v-if="!intervention.appels.length">Aucun appel</ion-item>
     <ion-item
       :button="true"
-      v-for="appel in intervention.appels"
+      v-for="appel in sortedAppels"
       :key="appel.localUuid"
       :disabled="intervention.localStatus == 'validated'"
       @click="editCall(appel)"
@@ -65,10 +65,15 @@ import ModalAppelVue from "../modals/ModalAppelSelect.vue";
 import { DateTime } from "luxon";
 import { Appel } from "@/models/appel";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
+import { computed } from "vue";
 
 const { formatDate } = useDateFormatter();
 const { state, addAppel, removeAppel } = useActiveIntervention();
 const intervention = state;
+
+const sortedAppels = computed(() =>
+  intervention.value.appels.slice().sort((a, b) => b.date.localeCompare(a.date))
+);
 
 const addCall = async () => {
   const modalAppel = await modalController.create({
