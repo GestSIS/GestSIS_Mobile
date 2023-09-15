@@ -18,19 +18,27 @@ import {
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
-// import useAlarmes from "@/store/useAlarmes";
+import useAlarmes from "@/store/useAlarmes";
 import useDateFormatter from "@/tools/useDateFormatter";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { Intervention } from "@/models/intervention";
-// import { Alarme } from "@/models/alarme";
+import { Alarme } from "@/models/alarme";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
+import useSapeurs from "@/store/useSapeurs";
+import useGroupes from "@/store/useGroupes";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
-// const { state: alarmes, sync } = useAlarmes();
+const { state: alarmes, sync } = useAlarmes();
+const sapeursStore = useSapeurs();
+const groupesStore = useGroupes();
 
-// sync();
+const online = window.navigator.onLine;
+if (online) {
+  sapeursStore.sync().catch();
+  groupesStore.sync().catch();
+}
 
 const { setActiveIntervention } = useActiveIntervention();
 
@@ -83,11 +91,13 @@ const create = async () => {
   router.push("intervention");
 };
 
-// const createFromAlarm = async (alarme: Alarme) => {
-//   // TODO:
-// };
+const onAlarm = async (alarme: Alarme) => {
+  // TODO:
+};
 
-const displayAlarmModule = false;
+sync();
+
+const displayAlarmModule = true;
 </script>
 
 <template>
@@ -102,23 +112,25 @@ const displayAlarmModule = false;
     </ion-header>
 
     <ion-content class="ion-padding">
-      <!-- <ion-list v-if="displayAlarmModule">
+      <ion-list v-if="displayAlarmModule">
         <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
         <ion-item
           :button="true"
-          v-for="alarme in alarmes"
+          v-for="alarme in alarmes.filter(a => a.couleur != 'GRIS')"
           :key="alarme.id"
-          @click.prevent="createFromAlarm(alarme)"
+          @click.prevent="onAlarm(alarme)"
         >
-          <ion-icon slot="start" name="fire"></ion-icon>
+          <ion-icon slot="start" name="warning-sharp" color="warning"></ion-icon>
+          <ion-icon slot="end" name="warning-sharp" color="warning"></ion-icon>
           <p>
-            TODO: Ajouter date, une fois disponible
-            {{ alarme.address }}
+            <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> - <span class="details">{{ alarme.description }}</span>
             <br />
-            <span class="details"></span>
+            <span class="details">{{ alarme.address }}</span>
+            <span class="details">{{ alarme.location_wgs84.split(',').reverse().join(',') }}</span>
+            <span class="details">{{ alarme.location_lv95 }}</span>
           </p>
         </ion-item>
-      </ion-list> -->
+      </ion-list>
 
       <ion-row>
         <ion-col>

@@ -3,8 +3,15 @@ export class Alarme {
     address: string;
     complement: string;
     location_wgs84: string;
+    location_lv95: string,
     type: string;
     sis: string[];
+    description: string,
+    couleur: string,
+    code: string,
+    date_creation: string,
+    debut_alarme: string,
+    fin_alarme: string,
     has_been_read: boolean;
     groupes: number[]
     firefighters: Array<{

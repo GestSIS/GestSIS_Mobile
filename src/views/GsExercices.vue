@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Exercice } from '@/models/bundle';
+import { Exercice } from "@/models/bundle";
 
 import {
   IonButtons,
@@ -13,19 +13,28 @@ import {
   IonItem,
   IonIcon,
   loadingController,
-} from '@ionic/vue';
+} from "@ionic/vue";
 
-import { computed } from 'vue';
-import useExercices from '@/store/useExercices';
-import useLocalites from '@/store/useLocalites';
-import useExerciceCategories from '@/store/useExerciceCategories';
-import { useRouter } from 'vue-router';
-import useDateFormatter from '@/tools/useDateFormatter';
-import { DateTime } from 'luxon';
+import { computed } from "vue";
+import useExercices from "@/store/useExercices";
+import useLocalites from "@/store/useLocalites";
+import useExerciceCategories from "@/store/useExerciceCategories";
+import { useRouter } from "vue-router";
+import useDateFormatter from "@/tools/useDateFormatter";
+import { DateTime } from "luxon";
+import useSapeurs from "@/store/useSapeurs";
 
 const exercicesStore = useExercices();
+const sapeursStore = useSapeurs();
 const categoriesStore = useExerciceCategories();
 const localitesStore = useLocalites();
+
+const online = window.navigator.onLine;
+if (online) {
+  // Reload exercices and sapeurs
+  exercicesStore.sync().catch();
+  sapeursStore.sync().catch();
+}
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
   return exercices
@@ -49,13 +58,15 @@ const { formatDate } = useDateFormatter();
 const router = useRouter();
 const openDetails = async (exercice: Exercice) => {
   const loading = await loadingController.create({
-    message: 'Chargement...',
+    message: "Chargement...",
   });
 
   await loading.present();
-  router.push({ name: 'exercice', params: { uuid: exercice.localUuid } }).then(() => {
-    loading.dismiss();
-  });
+  router
+    .push({ name: "exercice", params: { uuid: exercice.localUuid } })
+    .then(() => {
+      loading.dismiss();
+    });
 };
 </script>
 
@@ -73,12 +84,24 @@ const openDetails = async (exercice: Exercice) => {
     <ion-content class="ion-padding">
       <ion-list lines="inset">
         <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
-        <ion-item tappable v-for="exercice in exercices" :key="exercice.id" @click="openDetails(exercice)">
-          <ion-icon slot="start" :name="
-            exercice.localStatus == 'empty' ? 'create' :
-              exercice.localStatus == 'in_progress' ? 'create' :
-                exercice.localStatus == 'validated' ? 'sync' : ''
-          "></ion-icon>
+        <ion-item
+          tappable
+          v-for="exercice in exercices"
+          :key="exercice.id"
+          @click="openDetails(exercice)"
+        >
+          <ion-icon
+            slot="start"
+            :name="
+              exercice.localStatus == 'empty'
+                ? 'create'
+                : exercice.localStatus == 'in_progress'
+                ? 'create'
+                : exercice.localStatus == 'validated'
+                ? 'sync'
+                : ''
+            "
+          ></ion-icon>
           <p>
             <!-- TODO: Optionnel See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
@@ -87,9 +110,13 @@ const openDetails = async (exercice: Exercice) => {
             <br />
             <span class="details statut">
               {{
-                exercice.localStatus == "empty" ? "A saisir" :
-                  exercice.localStatus == "in_progress" ? "En cours d'édition" :
-                    exercice.localStatus == "validated" ? 'Validé, en attente de synchronisation' : ""
+                exercice.localStatus == "empty"
+                  ? "A saisir"
+                  : exercice.localStatus == "in_progress"
+                  ? "En cours d'édition"
+                  : exercice.localStatus == "validated"
+                  ? "Validé, en attente de synchronisation"
+                  : ""
               }}
             </span>
             <br />
