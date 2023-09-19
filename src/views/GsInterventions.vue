@@ -15,6 +15,7 @@ import {
   loadingController,
   IonRow,
   IonCol,
+  actionSheetController,
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
@@ -25,6 +26,7 @@ import { useRouter } from "vue-router";
 import { Intervention } from "@/models/intervention";
 import { Alarme } from "@/models/alarme";
 import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
+import ModalQuittancesVue from "@/components/modals/ModalQuittances.vue";
 import useSapeurs from "@/store/useSapeurs";
 import useGroupes from "@/store/useGroupes";
 const { formatDate } = useDateFormatter();
@@ -74,7 +76,7 @@ const refresh = async () => {
   router.push("intervention");
 };
 
-const create = async () => {
+const create = async (alarme: Alarme) => {
   const modalIntervention = await modalController.create({
     component: ModalInterventionCreateVue,
   });
@@ -91,8 +93,46 @@ const create = async () => {
   router.push("intervention");
 };
 
+const showQuittances = async (alarme: Alarme) => {
+  const modalQuittances = await modalController.create({
+    component: ModalQuittancesVue,
+    componentProps: {
+      alarme,
+    }
+  });
+
+  await modalQuittances.present();
+};
+
 const onAlarm = async (alarme: Alarme) => {
-  // TODO:
+  const actionSheet = await actionSheetController.create({
+    header: "Action",
+    buttons: [{
+      icon: 'navigate',
+      text: "Ouvrir google maps",
+      role: '',
+      handler: () => {
+        if (!alarme.location_wgs84 || alarme.location_wgs84.split(',').length !== 2) {
+          window.open('https://www.google.ch/maps');
+        } else {
+          window.open('https://www.google.ch/maps/place/' + alarme.location_wgs84.split(',').reverse().join(','));
+        }
+        return true;
+      }
+    },
+    {
+      icon: 'add-circle',
+      text: "Créer une intervention",
+      handler: () => create(alarme),
+    },
+    {
+      icon: 'add-circle',
+      text: "Visualiser les quittances",
+      handler: () => showQuittances(alarme),
+    }],
+  });
+  await actionSheet.present();
+  await actionSheet.onDidDismiss();
 };
 
 sync();
@@ -114,20 +154,15 @@ const displayAlarmModule = true;
     <ion-content class="ion-padding">
       <ion-list v-if="displayAlarmModule">
         <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
-        <ion-item
-          :button="true"
-          v-for="alarme in alarmes.filter(a => a.couleur != 'GRIS')"
-          :key="alarme.id"
-          @click.prevent="onAlarm(alarme)"
-        >
+        <ion-item :button="true" v-for="alarme in alarmes.filter(a => a.couleur != 'GRIS').slice(0, 3)" :key="alarme.id"
+          @click.prevent="onAlarm(alarme)">
           <ion-icon slot="start" name="warning-sharp" color="warning"></ion-icon>
           <ion-icon slot="end" name="warning-sharp" color="warning"></ion-icon>
           <p>
-            <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> - <span class="details">{{ alarme.description }}</span>
+            <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> - <span class="details">{{ alarme.description
+            }}</span>
             <br />
             <span class="details">{{ alarme.address }}</span>
-            <span class="details">{{ alarme.location_wgs84.split(',').reverse().join(',') }}</span>
-            <span class="details">{{ alarme.location_lv95 }}</span>
           </p>
         </ion-item>
       </ion-list>
@@ -147,18 +182,10 @@ const displayAlarmModule = true;
 
       <ion-list>
         <ion-item v-if="!interventions.length">Aucune intervention</ion-item>
-        <ion-item
-          :button="true"
-          v-for="intervention in interventions"
-          :key="intervention.id"
-          @click.prevent="openDetails(intervention)"
-        >
-          <ion-icon
-            slot="start"
-            :name="
-              intervention.localStatus == 'in_progress' ? 'create' : 'sync'
-            "
-          ></ion-icon>
+        <ion-item :button="true" v-for="intervention in interventions" :key="intervention.id"
+          @click.prevent="openDetails(intervention)">
+          <ion-icon slot="start" :name="intervention.localStatus == 'in_progress' ? 'create' : 'sync'
+            "></ion-icon>
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
@@ -166,8 +193,8 @@ const displayAlarmModule = true;
             <span class="details">
               {{
                 intervention.localStatus == "in_progress"
-                  ? "En cours d'édition"
-                  : "Validé, en attente de synchronisation"
+                ? "En cours d'édition"
+                : "Validé, en attente de synchronisation"
               }}
             </span>
           </p>

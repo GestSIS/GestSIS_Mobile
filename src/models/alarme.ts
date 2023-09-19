@@ -22,4 +22,11 @@ export class Alarme {
         sis: string;
         id: string;
     }> = [];
+    unresolved: Array<{
+        fullname: string;
+        group_name: string;
+        group_number: string;
+        phone: string;
+        sis: string;
+    }> = [];
 }
