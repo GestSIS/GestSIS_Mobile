@@ -48,9 +48,6 @@ export default () => {
     intervention.lieu = lieu;
     intervention.objet = objet;
 
-    intervention.sauve_animaux = 0;
-    intervention.sauve_personne = 0;
-
     intervention.type_intervention_id = null as any;
     intervention.stat_federal_id = null as any;
     intervention.localite_id = localite_id;
@@ -64,11 +61,20 @@ export default () => {
     return intervention;
   };
 
-  const updateIntervention = (intervention: Intervention) => {
-    state.value = state.value.map((i) =>
-      i.localUuid == intervention.localUuid ? intervention : i
-    );
+  const updateIntervention = (intervention: Intervention): Intervention => {
+    if (!intervention.localUuid && !intervention.id) {
+      // Create intervention if no localUuid
+      intervention.localUuid = uuidv4();
+      intervention.localStatus = "in_progress";
+
+      state.value.push(intervention);
+    } else {
+      state.value = state.value.map((i) =>
+        i.localUuid == intervention.localUuid ? intervention : i
+      );
+    }
     store.persist();
+    return intervention;
   };
 
   const removeIntervention = (uuid: string) => {

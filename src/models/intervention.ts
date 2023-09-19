@@ -11,6 +11,7 @@ export class Intervention {
   date_fin: string;
   objet: string;
   lieu: string;
+  wgs84 = "";
 
   degre: number;
   stat_nb = 1; // Correspond au nombre d'interventions effectif
@@ -55,6 +56,7 @@ export class Intervention {
     }>;
   }> = [];
 
+  quittances: number[] = [];
   missions: Mission[] = [];
   appels: Appel[] = [];
   materiel: any; // id_materiel : quantite

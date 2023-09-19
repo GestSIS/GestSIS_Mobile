@@ -56,11 +56,7 @@ const intervention = reactive({
 });
 
 const save = async () => {
-  if (
-    intervention.date == "" ||
-    intervention.objet == "" ||
-    !intervention.localite_id
-  ) {
+  if (intervention.date == "" || intervention.objet == "" || !intervention.localite_id) {
     notify.error("Veuillez remplir tous les champs");
     return;
   }
@@ -120,9 +116,7 @@ const dismiss = () => {
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save"
-      >Créer</ion-button
-    >
+    <ion-button expand="full" class="ion-margin-top" @click="save">Créer</ion-button>
   </ion-content>
 </template>
 
