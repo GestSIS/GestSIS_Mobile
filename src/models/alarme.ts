@@ -13,7 +13,7 @@ export class Alarme {
   debut_alarme: string;
   fin_alarme: string;
   has_been_read: boolean;
-  groupes: Array<{
+  groups: Array<{
     name: string;
     number: string;
     sis: string;

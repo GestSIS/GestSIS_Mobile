@@ -29,10 +29,13 @@ import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCre
 import ModalQuittancesVue from "@/components/modals/ModalQuittances.vue";
 import useSapeurs from "@/store/useSapeurs";
 import useGroupes from "@/store/useGroupes";
+import useAuth from "@/store/useAuth";
+import { DateTime } from "luxon";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
 const { state: alarmes, sync } = useAlarmes();
+const { activeSisKey } = useAuth();
 const sapeursStore = useSapeurs();
 const groupesStore = useGroupes();
 
@@ -77,19 +80,23 @@ const refresh = async () => {
   router.push("intervention");
 };
 
-const activeSis = "TODO";
-
 const create = async (alarme: Alarme | null) => {
   if (alarme !== null) {
     // TODO:
     const intervention = new Intervention();
-    // intervention.date_debut = "TODO";
-    // intervention.description = "TODO";
+    const start = DateTime.fromISO(alarme.debut_alarme);
+    start.set({ second: 0, minute: (start.minute / 15) * 15 });
+    intervention.date_debut = start.toSQL({
+      includeOffset: false,
+    });
+    intervention.description = alarme.description;
     intervention.lieu = alarme.address;
     // intervention.localite_id = alarme.address; // TODO:
     intervention.quittances = alarme.firefighters.map((s) => s.id);
     const groupesNumeros = new Set(
-      alarme.groupes.filter((g) => g.sis == activeSis).map((g) => g.number)
+      alarme.groups
+        .filter((g) => g.sis == activeSisKey.value)
+        .map((g) => g.number)
     );
     intervention.groupes = groupesStore.state.value
       .filter((g) => g.no && groupesNumeros.has("" + g.no))
@@ -115,10 +122,9 @@ const create = async (alarme: Alarme | null) => {
     if (!intervention) {
       return;
     }
-
     setActiveIntervention(intervention);
-    router.push("intervention");
   }
+  router.push("intervention");
 };
 
 const showQuittances = async (alarme: Alarme) => {

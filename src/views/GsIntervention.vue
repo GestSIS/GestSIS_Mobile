@@ -57,7 +57,7 @@ const activeTab = ref(Tab.Journal);
         <ion-icon name="call"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Vehicule">
-        <ion-icon name="car"></ion-icon>
+        <!-- <ion-icon name="car"></ion-icon> -->
       </ion-segment-button>
       <ion-segment-button :value="Tab.Materiel">
         <ion-icon name="construct"></ion-icon>

@@ -59,7 +59,7 @@ export class Intervention {
   quittances: number[] = [];
   missions: Mission[] = [];
   appels: Appel[] = [];
-  materiel: any; // id_materiel : quantite
-  vehicules: number[];
+  materiel: any = {}; // id_materiel : quantite
+  vehicules: number[] = [];
   groupes: number[] = [];
 }
