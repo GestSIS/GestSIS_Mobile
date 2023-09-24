@@ -41,8 +41,19 @@ const groupesStore = useGroupes();
 
 const online = window.navigator.onLine;
 if (online) {
-  sapeursStore.sync().catch();
-  groupesStore.sync().catch();
+  try {
+    sapeursStore.sync().catch(() => {
+      // TODO: See what to do
+      console.log("Catch 1");
+    });
+    groupesStore.sync().catch(() => {
+      // TODO: See what to do
+      console.log("Catch 2");
+    });
+  } catch (error) {
+    // TODO:
+    console.log("Catch 3");
+  }
 }
 
 const { updateIntervention } = useInterventions();
@@ -167,7 +178,7 @@ const onAlarm = async (alarme: Alarme) => {
         handler: () => create(alarme),
       },
       {
-        icon: "add-circle",
+        icon: "people",
         text: "Visualiser les quittances",
         handler: () => showQuittances(alarme),
       },
@@ -200,7 +211,7 @@ const displayAlarmModule = true;
           :button="true"
           v-for="alarme in alarmes
             .filter((a) => a.couleur !== 'GRIS')
-            .slice(0, 3)"
+            .slice(alarmes.length - 5)"
           :key="alarme.id"
           @click.prevent="onAlarm(alarme)"
         >
