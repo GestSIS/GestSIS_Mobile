@@ -16,6 +16,7 @@ import {
   IonRow,
   IonCol,
   actionSheetController,
+  IonSpinner,
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
@@ -31,6 +32,9 @@ import useSapeurs from "@/store/useSapeurs";
 import useGroupes from "@/store/useGroupes";
 import useAuth from "@/store/useAuth";
 import { DateTime } from "luxon";
+// import { ref } from "vue";
+import { useNotify } from "@/tools/useToast";
+import { ref } from "vue";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
@@ -74,21 +78,20 @@ const openDetails = async (intervention: Intervention) => {
   });
 };
 
+// const refreshTimer = ref();
+const loading = ref(false);
 const refresh = async () => {
-  const modalIntervention = await modalController.create({
-    component: ModalInterventionCreateVue,
-  });
-
-  await modalIntervention.present();
-  const { data } = await modalIntervention.onDidDismiss();
-
-  const intervention = data;
-  if (!intervention) {
-    return;
+  const online = window.navigator.onLine;
+  if (online) {
+    loading.value = true;
+    sync()
+      .then(() => (loading.value = false))
+      .catch(() => (loading.value = false));
+  } else {
+    const { error } = useNotify();
+    error("Pas de connexion internet");
+    // TODO: Warning message not online
   }
-
-  setActiveIntervention(intervention);
-  router.push("intervention");
 };
 
 const create = async (alarme: Alarme | null) => {
@@ -188,8 +191,6 @@ const onAlarm = async (alarme: Alarme) => {
   await actionSheet.onDidDismiss();
 };
 
-sync();
-
 const displayAlarmModule = true;
 </script>
 
@@ -206,6 +207,10 @@ const displayAlarmModule = true;
 
     <ion-content class="ion-padding">
       <ion-list v-if="displayAlarmModule">
+        <ion-item v-if="loading">
+          <ion-label>Chargement des alarmes</ion-label>
+          <ion-spinner name="circles"></ion-spinner
+        ></ion-item>
         <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
         <ion-item
           :button="true"
@@ -238,7 +243,12 @@ const displayAlarmModule = true;
         </ion-col>
         <ion-col v-if="displayAlarmModule">
           <ion-button expand="full" @click="refresh()">
-            <ion-icon slot="start" name="sync"></ion-icon>Rafraîchir
+            <ion-spinner
+              v-if="loading"
+              name="circles"
+              slot="start"
+            ></ion-spinner>
+            <ion-icon v-else slot="start" name="sync"></ion-icon>Rafraîchir
           </ion-button>
         </ion-col>
       </ion-row>
