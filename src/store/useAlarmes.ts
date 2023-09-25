@@ -5,7 +5,7 @@ import { Alarme } from "@/models/alarme";
 import { DateTime } from "luxon";
 
 const state: Ref<Alarme[]> = ref([]);
-const store = useBasicStore(state, AlarmeService.fetchAlarmes, "localites");
+const store = useBasicStore(state, AlarmeService.fetchAlarmes, "alarmes");
 
 export default function useAlarmes() {
   const name = "Alarmes";

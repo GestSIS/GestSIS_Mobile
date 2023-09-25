@@ -17,6 +17,7 @@ import {
   IonCol,
   actionSheetController,
   IonSpinner,
+  IonLabel,
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
@@ -34,7 +35,7 @@ import useAuth from "@/store/useAuth";
 import { DateTime } from "luxon";
 // import { ref } from "vue";
 import { useNotify } from "@/tools/useToast";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
@@ -45,20 +46,16 @@ const groupesStore = useGroupes();
 
 const online = window.navigator.onLine;
 if (online) {
-  try {
-    sapeursStore.sync().catch(() => {
-      // TODO: See what to do
-      console.log("Catch 1");
-    });
-    groupesStore.sync().catch(() => {
-      // TODO: See what to do
-      console.log("Catch 2");
-    });
-  } catch (error) {
-    // TODO:
-    console.log("Catch 3");
-  }
+  sapeursStore.sync().catch();
+  groupesStore.sync().catch();
+  sync().catch();
 }
+
+const filteredAlarmes = computed(() =>
+  alarmes.value
+    .filter((a) => a.couleur !== "GRIS")
+    .filter((a) => DateTime.fromISO(a.debut_alarme).diffNow("days").days >= -7)
+);
 
 const { updateIntervention } = useInterventions();
 const { setActiveIntervention } = useActiveIntervention();
@@ -211,12 +208,12 @@ const displayAlarmModule = true;
           <ion-label>Chargement des alarmes</ion-label>
           <ion-spinner name="circles"></ion-spinner
         ></ion-item>
-        <ion-item v-if="!alarmes.length">Aucune alarme</ion-item>
+        <ion-item v-if="!loading && !filteredAlarmes.length"
+          >Aucune alarme</ion-item
+        >
         <ion-item
           :button="true"
-          v-for="alarme in alarmes
-            .filter((a) => a.couleur !== 'GRIS')
-            .slice(alarmes.length - 5)"
+          v-for="alarme in filteredAlarmes"
           :key="alarme.id"
           @click.prevent="onAlarm(alarme)"
         >
