@@ -409,7 +409,10 @@ const navigate = () => {
           </ion-input>
         </ion-item>
         <ion-item v-if="intervention.wgs84">
-          <ion-button @click="navigate">Google maps</ion-button>
+          <ion-button @click="navigate">
+            <ion-icon icon="navigate" slot="start"></ion-icon>
+            Google maps</ion-button
+          >
         </ion-item>
       </ion-col>
     </ion-row>
