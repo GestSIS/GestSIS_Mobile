@@ -34,25 +34,38 @@ import useGroupes from "@/store/useGroupes";
 import useAuth from "@/store/useAuth";
 import { DateTime } from "luxon";
 // import { ref } from "vue";
-import { useNotify } from "@/tools/useToast";
 import { computed, ref } from "vue";
+import useStore from "@/store/useStore";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
-const { state: alarmes, sync } = useAlarmes();
 const { activeSisKey } = useAuth();
+const alarmeStore = useAlarmes();
 const sapeursStore = useSapeurs();
 const groupesStore = useGroupes();
 
 const online = window.navigator.onLine;
 if (online) {
-  sapeursStore.sync().catch();
-  groupesStore.sync().catch();
-  sync().catch();
+  Promise.all([
+    sapeursStore.sync(),
+    groupesStore.sync(),
+    alarmeStore.sync(),
+  ]).catch(() => {
+    // Caught exception
+  });
 }
 
+// const refreshTimer = ref();
+const loading = ref(false);
+const refreshAlarmes = async () => {
+  const { syncModule } = useStore();
+  loading.value = true;
+  await syncModule({ sync: alarmeStore.forcedSync });
+  loading.value = false;
+};
+
 const filteredAlarmes = computed(() =>
-  alarmes.value
+  alarmeStore.state.value
     .filter((a) => a.couleur !== "GRIS")
     .filter((a) => DateTime.fromISO(a.debut_alarme).diffNow("days").days >= -7)
 );
@@ -73,22 +86,6 @@ const openDetails = async (intervention: Intervention) => {
   router.push("intervention").then(() => {
     loading.dismiss();
   });
-};
-
-// const refreshTimer = ref();
-const loading = ref(false);
-const refresh = async () => {
-  const online = window.navigator.onLine;
-  if (online) {
-    loading.value = true;
-    sync()
-      .then(() => (loading.value = false))
-      .catch(() => (loading.value = false));
-  } else {
-    const { error } = useNotify();
-    error("Pas de connexion internet");
-    // TODO: Warning message not online
-  }
 };
 
 const create = async (alarme: Alarme | null) => {
@@ -239,7 +236,7 @@ const displayAlarmModule = true;
           </ion-button>
         </ion-col>
         <ion-col v-if="displayAlarmModule">
-          <ion-button expand="full" @click="refresh()">
+          <ion-button expand="full" @click="refreshAlarmes()">
             <ion-spinner
               v-if="loading"
               name="circles"
@@ -257,6 +254,7 @@ const displayAlarmModule = true;
           v-for="intervention in interventions"
           :key="intervention.id"
           @click.prevent="openDetails(intervention)"
+          :disabled="loading"
         >
           <ion-icon
             slot="start"

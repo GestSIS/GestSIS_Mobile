@@ -1,24 +1,25 @@
-import useAuth from './useAuth';
-import useExcuseTypes from './useExcuseTypes';
-import useExerciceCategories from './useExerciceCategories';
-import useExexercices from './useExercices';
-import useGroupes from './useGroupes';
-import useHeureExerciceTypes from './useHeureExerciceTypes';
-import useInterventions from './useInterventions';
-import useLocalites from './useLocalites';
-import useLocalitesSis from './useLocalitesSis';
-import useMateriels from './useMateriels';
-import useMissionTypes from './useMissionTypes';
-import usePhaseTypes from './usePhaseTypes';
-import useSapeurs from './useSapeurs';
-import useStatsFederal from './useStatsFederal';
-import useTelephones from './useTelephones';
-import useTypesIntervention from './useTypesIntervention';
-import useUnitesType from './useUnitesTypes';
-import useVehicules from './useVehicules';
+import useAuth from "./useAuth";
+import useExcuseTypes from "./useExcuseTypes";
+import useExerciceCategories from "./useExerciceCategories";
+import useExexercices from "./useExercices";
+import useGroupes from "./useGroupes";
+import useHeureExerciceTypes from "./useHeureExerciceTypes";
+import useInterventions from "./useInterventions";
+import useLocalites from "./useLocalites";
+import useLocalitesSis from "./useLocalitesSis";
+import useMateriels from "./useMateriels";
+import useMissionTypes from "./useMissionTypes";
+import usePhaseTypes from "./usePhaseTypes";
+import useSapeurs from "./useSapeurs";
+import useStatsFederal from "./useStatsFederal";
+import useTelephones from "./useTelephones";
+import useTypesIntervention from "./useTypesIntervention";
+import useUnitesType from "./useUnitesTypes";
+import useVehicules from "./useVehicules";
 
-import { modalController } from '@ionic/vue';
-import ModalReconnectVue from '../components/modals/ModalReconnect.vue';
+import { modalController } from "@ionic/vue";
+import ModalReconnectVue from "../components/modals/ModalReconnect.vue";
+import { useNotify } from "@/tools/useToast";
 
 export default function useStore() {
   const modules = [
@@ -52,13 +53,12 @@ export default function useStore() {
   };
 
   const showReconnectModal = async () => {
-    const modalReconnect = await modalController
-      .create({
-        component: ModalReconnectVue,
-      })
+    const modalReconnect = await modalController.create({
+      component: ModalReconnectVue,
+    });
 
     await modalReconnect.present();
-  }
+  };
 
   /** Load all modules */
   const syncAll = async () => {
@@ -69,7 +69,7 @@ export default function useStore() {
       return;
     }
     const promises = modules
-      .filter(m => !m.permission || hasPermission(m.permission))
+      .filter((m) => !m.permission || hasPermission(m.permission))
       .map(({ sync }) => sync());
     try {
       const res = await Promise.all(promises);
@@ -82,21 +82,27 @@ export default function useStore() {
   };
 
   const syncModule = async (module: { sync: () => Promise<any> }) => {
-    const { isLoggedInExpired } = useAuth();
+    const online = window.navigator.onLine;
+    if (online) {
+      const { isLoggedInExpired } = useAuth();
 
-    if (isLoggedInExpired()) {
-      showReconnectModal();
-      return;
-    }
-    try {
-      const res = await module.sync();
-      return res;
-    } catch (e) {
       if (isLoggedInExpired()) {
         showReconnectModal();
+        return;
       }
+      try {
+        const res = await module.sync();
+        return res;
+      } catch (e) {
+        if (isLoggedInExpired()) {
+          showReconnectModal();
+        }
+      }
+    } else {
+      const { error } = useNotify();
+      error("Pas de connexion internet");
     }
-  }
+  };
 
   return {
     persist,
