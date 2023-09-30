@@ -92,6 +92,15 @@ const create = async (alarme: Alarme | null) => {
   if (alarme !== null) {
     // TODO:
     const intervention = new Intervention();
+    intervention.alarme = alarme;
+    intervention.quittances = [
+      ...new Set(
+        alarme.firefighters
+          .filter((f) => f.sis == activeSisKey.value)
+          .map((f) => f.id)
+      ),
+    ];
+
     const start = DateTime.fromISO(alarme.debut_alarme);
     start.set({ second: 0, minute: (start.minute / 15) * 15 });
     intervention.date_debut = start.toSQL({

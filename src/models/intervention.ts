@@ -1,6 +1,7 @@
 import { Mission } from "./mission";
 import { Appel } from "./appel";
 import { DateTime } from "luxon";
+import { Alarme } from "./alarme";
 
 export class Intervention {
   localUuid: string;
@@ -62,4 +63,6 @@ export class Intervention {
   materiel: any = {}; // id_materiel : quantite
   vehicules: number[] = [];
   groupes: number[] = [];
+
+  alarme: Alarme | null = null;
 }

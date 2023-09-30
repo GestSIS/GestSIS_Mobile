@@ -62,22 +62,28 @@ export default function useStore() {
 
   /** Load all modules */
   const syncAll = async () => {
-    const { hasPermission, isLoggedInExpired } = useAuth();
+    const online = window.navigator.onLine;
+    if (online) {
+      const { hasPermission, isLoggedInExpired } = useAuth();
 
-    if (isLoggedInExpired()) {
-      showReconnectModal();
-      return;
-    }
-    const promises = modules
-      .filter((m) => !m.permission || hasPermission(m.permission))
-      .map(({ sync }) => sync());
-    try {
-      const res = await Promise.all(promises);
-      return res;
-    } catch (e) {
       if (isLoggedInExpired()) {
         showReconnectModal();
+        return;
       }
+      const promises = modules
+        .filter((m) => !m.permission || hasPermission(m.permission))
+        .map(({ sync }) => sync());
+      try {
+        const res = await Promise.all(promises);
+        return res;
+      } catch (e) {
+        if (isLoggedInExpired()) {
+          showReconnectModal();
+        }
+      }
+    } else {
+      const { error } = useNotify();
+      error("Pas de connexion internet");
     }
   };
 

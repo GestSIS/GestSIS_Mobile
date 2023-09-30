@@ -23,6 +23,7 @@ import { ref, computed } from "vue";
 import router from "@/router";
 import ModalSapeurPresenceVue from "../modals/ModalSapeurPresence.vue";
 import { usePresenceTab } from "@/store/usePresenceTabState";
+import useAuth from "@/store/useAuth";
 
 const { formatDate } = useDateFormatter();
 const { activeTab } = usePresenceTab();
@@ -142,6 +143,12 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
   // Update data in store
   updatePresences(intervention.value.sapeurs);
 };
+
+const { activeSisKey } = useAuth();
+const groupeAlarmes =
+  intervention.value.alarme?.groups
+    ?.filter((g) => g.sis === activeSisKey.value)
+    ?.sort((g1, g2) => g1.number.localeCompare(g2.number)) ?? [];
 </script>
 
 <template>
@@ -149,6 +156,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
     <ion-segment v-model="activeTab">
       <ion-segment-button value="GROUPE">Groupes</ion-segment-button>
       <ion-segment-button value="SAPEUR">Sapeurs</ion-segment-button>
+      <ion-segment-button value="QUITTANCE">Quittances</ion-segment-button>
     </ion-segment>
   </div>
 
@@ -252,6 +260,46 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
           </ion-button>
         </ion-item>
       </ion-item-group>
+    </div>
+
+    <div v-if="activeTab == 'QUITTANCE'">
+      <ion-item v-if="!intervention.alarme">Aucune quittance</ion-item>
+      <ion-list v-if="intervention.alarme">
+        <ion-item-group v-for="g in groupeAlarmes" :key="g.sis">
+          <ion-item-divider>
+            <ion-label
+              >{{ g.sis.toUpperCase() }} : {{ g.number }} -
+              {{ g.name }}</ion-label
+            ><ion-badge slot="end"
+              >{{
+                intervention.alarme.firefighters.filter(
+                  (f) => f.group_name == g.name
+                ).length +
+                intervention.alarme.unresolved.filter(
+                  (f) => f.group_name == g.name
+                ).length
+              }}
+              quittances</ion-badge
+            >
+          </ion-item-divider>
+          <ion-item
+            v-for="s in intervention.alarme.firefighters.filter(
+              (f) => f.group_name == g.name
+            )"
+            :key="s.id"
+          >
+            {{ s.fullname }}
+          </ion-item>
+          <ion-item
+            v-for="s in intervention.alarme.unresolved.filter(
+              (f) => f.group_name == g.name
+            )"
+            :key="s.fullname"
+          >
+            {{ s.fullname }}
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
     </div>
   </div>
 </template>
