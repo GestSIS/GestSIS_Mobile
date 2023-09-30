@@ -92,7 +92,9 @@ const create = async (alarme: Alarme | null) => {
   if (alarme !== null) {
     // TODO:
     const intervention = new Intervention();
+    intervention.objet = alarme.description;
     intervention.alarme = alarme;
+    intervention.wgs84 = alarme.location_wgs84;
     intervention.quittances = [
       ...new Set(
         alarme.firefighters

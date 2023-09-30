@@ -270,6 +270,20 @@ const dateDebutChanged = (date: string) => {
 
   startDate.value = roundedDate;
 };
+
+const navigate = () => {
+  if (
+    !intervention.value.wgs84 ||
+    intervention.value.wgs84.split(",").length !== 2
+  ) {
+    window.open("https://www.google.ch/maps");
+  } else {
+    window.open(
+      "https://www.google.ch/maps/place/" +
+        intervention.value.wgs84.split(",").reverse().join(",")
+    );
+  }
+};
 </script>
 
 <template>
@@ -393,6 +407,9 @@ const dateDebutChanged = (date: string) => {
             :disabled="intervention.localStatus == 'validated'"
           >
           </ion-input>
+        </ion-item>
+        <ion-item v-if="intervention.wgs84">
+          <ion-button @click="navigate">Google maps</ion-button>
         </ion-item>
       </ion-col>
     </ion-row>
