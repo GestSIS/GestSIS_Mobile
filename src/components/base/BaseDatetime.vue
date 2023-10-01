@@ -8,8 +8,10 @@ import {
   IonIcon,
   IonModal,
   IonText,
+  // IonDatetimeButton,
 } from "@ionic/vue";
 
+import { v4 as uuidv4 } from "uuid";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
 import { defineProps, defineEmits, withDefaults, ref } from "vue";
@@ -67,6 +69,8 @@ function updateValue(value: string) {
     : "";
   emit("update:modelValue", formattedDate);
 }
+
+const dateTimeId = uuidv4();
 </script>
 
 <template>
@@ -74,15 +78,15 @@ function updateValue(value: string) {
     <ion-label :color="props.invalid ? 'primary' : ''">
       <slot>{{ props.label }}</slot>
     </ion-label>
-    <ion-text slot="end" id="open-modal"
-      >{{
+    <ion-text slot="end" id="open-modal">
+      {{
         props.modelValue ? formatDate(props.modelValue, "dd.LL.yy HH:mm") : ""
       }}
     </ion-text>
     <ion-button fill="clear" slot="end">
       <ion-icon slot="end" name="calendar" />
     </ion-button>
-    <ion-modal :is-open="openModal">
+    <ion-modal :id="dateTimeId" :is-open="openModal">
       <ion-datetime
         ref="input"
         presentation="time-date"
@@ -106,8 +110,8 @@ function updateValue(value: string) {
 </template>
 
 <style>
-body.dark ion-datetime {
-  color-scheme: light dark;
-  color: white;
+ion-modal {
+  --width: auto;
+  --height: auto;
 }
 </style>

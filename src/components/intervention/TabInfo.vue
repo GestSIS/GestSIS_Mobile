@@ -160,7 +160,6 @@ const validate = async () => {
     return;
   }
 
-  // TODO: Change into modal
   const modalValider = await modalController.create({
     component: ModalInterventionValidate,
     componentProps: {

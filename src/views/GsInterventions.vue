@@ -91,7 +91,6 @@ const openDetails = async (intervention: Intervention) => {
 
 const create = async (alarme: Alarme | null) => {
   if (alarme !== null) {
-    // TODO:
     const intervention = new Intervention();
     intervention.objet = alarme.description;
     intervention.alarme = alarme;
@@ -111,7 +110,7 @@ const create = async (alarme: Alarme | null) => {
     });
     intervention.description = alarme.description;
     intervention.lieu = alarme.address;
-    // intervention.localite_id = alarme.address; // TODO:
+    // intervention.localite_id = alarme.address; // TODO: parse localité
     intervention.quittances = alarme.firefighters.map((s) => s.id);
     const groupesNumeros = new Set(
       alarme.groups
