@@ -18,6 +18,7 @@ import {
   actionSheetController,
   IonSpinner,
   IonLabel,
+  IonBadge,
 } from "@ionic/vue";
 
 import useInterventions from "@/store/useInterventions";
@@ -236,6 +237,17 @@ const displayAlarmModule = true;
             <span class="details">{{ alarme.description }}</span>
             <br />
             <span class="details">{{ alarme.address }}</span>
+            <br />
+            <span>
+              <ion-badge
+                >{{
+                  alarme.firefighters.filter((f) => f.sis === activeSisKey)
+                    .length +
+                  alarme.unresolved.filter((f) => f.sis == activeSisKey).length
+                }}
+                quittances</ion-badge
+              >
+            </span>
           </p>
         </ion-item>
       </ion-list>

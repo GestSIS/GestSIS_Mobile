@@ -36,7 +36,9 @@ const groupes = props.alarme.groups
         >Quittances
         <ion-badge
           >{{
-            props.alarme.firefighters.length + props.alarme.unresolved.length
+            props.alarme.firefighters.filter((f) => f.sis === activeSisKey)
+              .length +
+            props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
           }}
         </ion-badge></ion-title
       >
