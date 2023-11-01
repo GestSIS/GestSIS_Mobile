@@ -1,6 +1,6 @@
 import useAuth from "@/store/useAuth";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
 
 const API_URL = process.env.VUE_APP_API_ENDPOINT;
@@ -16,7 +16,7 @@ const request = {
   _accessTokenValidity: null,
 
   setTokens(accessToken: string, refreshToken: string) {
-    const { exp } = jwt_decode(accessToken) as any;
+    const { exp } = jwtDecode(accessToken) as any;
     this._accessTokenValidity = exp;
     this._refreshToken = refreshToken;
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;

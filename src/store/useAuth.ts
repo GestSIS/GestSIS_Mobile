@@ -1,9 +1,9 @@
-import AuthService from '@/services/AuthService';
-import { reactive, ref } from 'vue';
-import { usePersistentStore } from '../hooks/usePersistentStore';
-import useStore from './useStore';
-import Api from '@/http/Request';
-import jwt_decode from 'jwt-decode';
+import AuthService from "@/services/AuthService";
+import { reactive, ref } from "vue";
+import { usePersistentStore } from "../hooks/usePersistentStore";
+import useStore from "./useStore";
+import Api from "@/http/Request";
+import { jwtDecode } from "jwt-decode";
 
 const { persistentStore } = usePersistentStore();
 const store = useStore();
@@ -28,8 +28,8 @@ export interface User {
 const emptyState = {
   pseudo: null,
   email: null,
-  accessToken: '',
-  refreshToken: '',
+  accessToken: "",
+  refreshToken: "",
   statut: UserStatus.disconnected,
   permissions: {},
   admin: false,
@@ -37,13 +37,13 @@ const emptyState = {
 };
 
 const state = reactive<{ data: User }>({ data: { ...emptyState } });
-const activeSisKey = ref<string>('');
+const activeSisKey = ref<string>("");
 const activePermissions = ref<string[]>([]);
 const lastSync = ref<Date | null>(null);
 
-const persistKey = 'auth';
-const persistActiveSisKey = 'auth-siskey';
-const lastSyncSuffixe = 'last_sync';
+const persistKey = "auth";
+const persistActiveSisKey = "auth-siskey";
+const lastSyncSuffixe = "last_sync";
 
 /** Load data from local storage */
 const init = async () => {
@@ -66,7 +66,7 @@ init();
 export default function useAuth() {
   const selectSis = async (sisKey: string): Promise<boolean> => {
     if (!sisKey || !(sisKey in state.data.permissions)) {
-      console.error('Invalid key :' + sisKey);
+      console.error("Invalid key :" + sisKey);
       return false;
     }
 
@@ -78,16 +78,28 @@ export default function useAuth() {
     return true;
   };
 
-  const setTokens = async (accessToken: string, refreshToken: string, email: string | null) => {
-    const { permissions, pseudo, mobiles, admin } = (jwt_decode(accessToken) as any).data;
+  const setTokens = async (
+    accessToken: string,
+    refreshToken: string,
+    email: string | null
+  ) => {
+    const { permissions, pseudo, mobiles, admin } = (
+      jwtDecode(accessToken) as any
+    ).data;
     const transformedMobiles = mobiles.map((sis: any) => sis.toString());
 
-    const availableSis = Object.keys(permissions).map(sis => sis.toString()).filter(sis => transformedMobiles.includes(sis));
-    const filteredPermissions = Object.fromEntries(Object.entries(permissions).filter(([sis]) => transformedMobiles.includes(sis)));
+    const availableSis = Object.keys(permissions)
+      .map((sis) => sis.toString())
+      .filter((sis) => transformedMobiles.includes(sis));
+    const filteredPermissions = Object.fromEntries(
+      Object.entries(permissions).filter(([sis]) =>
+        transformedMobiles.includes(sis)
+      )
+    );
 
     // Throw exception if no permissions and manage the result
     if (availableSis.length == 0) {
-      throw { message: 'GestSIS Mobile non disponible avec votre compte' };
+      throw { message: "GestSIS Mobile non disponible avec votre compte" };
     }
 
     // Update state
@@ -101,7 +113,7 @@ export default function useAuth() {
     state.data.statut = UserStatus.connected;
 
     await persist();
-  }
+  };
 
   /** Log in */
   const login = async (email: string, password: string) => {
@@ -161,7 +173,7 @@ export default function useAuth() {
 
   const loginExpired = async () => {
     state.data.statut = UserStatus.isExpired;
-  }
+  };
 
   /** Persist data in local storage */
   const persist = async () => {
@@ -175,23 +187,28 @@ export default function useAuth() {
   const logout = () => {
     store.reset();
     state.data = { ...emptyState };
-    Api.setSisKey('');
+    Api.setSisKey("");
     activePermissions.value = [];
-    activeSisKey.value = '';
+    activeSisKey.value = "";
     persist();
   };
 
   const isLoggedIn = () => {
-    return state.data.statut === UserStatus.connected || state.data.statut === UserStatus.isExpired;
+    return (
+      state.data.statut === UserStatus.connected ||
+      state.data.statut === UserStatus.isExpired
+    );
   };
 
   const isLoggedInExpired = () => {
     return state.data.statut === UserStatus.isExpired;
-  }
+  };
 
   const hasPermission = (permission: string) => {
-    return activePermissions.value?.includes(permission) || state.data.admin === true;
-  }
+    return (
+      activePermissions.value?.includes(permission) || state.data.admin === true
+    );
+  };
 
   return {
     state,
