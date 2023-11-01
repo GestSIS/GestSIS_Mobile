@@ -1656,6 +1656,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:7.5.3":
+  version: 7.5.3
+  resolution: "@ionic/core@npm:7.5.3"
+  dependencies:
+    "@stencil/core": ^4.6.0
+    ionicons: ^7.2.1
+    tslib: ^2.1.0
+  checksum: 2ecf340ad584de1f27dcddb29497b0fadae67b3ae81a7209b3659d0464379af24cae7d851c7aaa4d2da8dc98d4edf63eed47039adb6cdeeb658e0dad85471310
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^4.0.0":
   version: 4.0.0
   resolution: "@ionic/storage@npm:4.0.0"
@@ -1754,16 +1765,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue-router@npm:^7.4.2":
-  version: 7.4.2
-  resolution: "@ionic/vue-router@npm:7.4.2"
+"@ionic/vue-router@npm:^7.5.3":
+  version: 7.5.3
+  resolution: "@ionic/vue-router@npm:7.5.3"
   dependencies:
-    "@ionic/vue": 7.4.2
-  checksum: c2f407df92e4525d206be27a688783885a54c821aafecdcc6f4b6afa178292a03388566657ac0e49e0455a7dfcaa6774b5c343b65d97de9f06a93eb9765f53bb
+    "@ionic/vue": 7.5.3
+  checksum: cd1194f9288322d532d6219446f2387f6eb2c9f01641e39c6fa0422028eb3e075d98bfa66e3a2e2c77135a1caf9a2e1017e12d7f4bad4dc7ca7d1a3bf7723f77
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:7.4.2, @ionic/vue@npm:^7.4.2":
+"@ionic/vue@npm:7.5.3":
+  version: 7.5.3
+  resolution: "@ionic/vue@npm:7.5.3"
+  dependencies:
+    "@ionic/core": 7.5.3
+    ionicons: ^7.0.0
+  checksum: cf5a6aa821196182c128db9e17dd95e661ebc396452715c0c017c9b263d2cabf1b03948c13c2eded9913aeb85c2df2dc6da0e239f9b56a07b165cedbac1c30bc
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^7.4.2":
   version: 7.4.2
   resolution: "@ionic/vue@npm:7.4.2"
   dependencies:
@@ -2512,6 +2533,15 @@ __metadata:
   bin:
     stencil: bin/stencil
   checksum: b43fd0c0e10c8f6831821635de650f49c8d94eab75aa8e9214b723511cfd1f90fbf1ad33a79b4d2f165ef9ca6bee02839aac7b0a234ec6082b5959f98069f397
+  languageName: node
+  linkType: hard
+
+"@stencil/core@npm:^4.0.3, @stencil/core@npm:^4.6.0":
+  version: 4.7.0
+  resolution: "@stencil/core@npm:4.7.0"
+  bin:
+    stencil: bin/stencil
+  checksum: 53842a15a8f620cce0b5b9cded462f460b6082fbd7afcd337716b8523d0fc121b950b7acc904674a2ae2638841a0d80dfad1a7c55020448959ffed0d952d8efc
   languageName: node
   linkType: hard
 
@@ -3943,7 +3973,7 @@ __metadata:
     "@capacitor/status-bar": ^5.0.6
     "@ionic/storage": ^4.0.0
     "@ionic/vue": ^7.4.2
-    "@ionic/vue-router": ^7.4.2
+    "@ionic/vue-router": ^7.5.3
     "@types/jest": ^29.5.5
     "@types/luxon": ^3.3.2
     "@types/uuid": ^9.0.4
@@ -7894,6 +7924,15 @@ __metadata:
   dependencies:
     "@stencil/core": ^2.18.0
   checksum: 5462bab32a4ce7b5ecf84d55f44c7110791dfdf7233aec32b08f0baed88fdde3a3c3053e9b08074f72b3a1d080763e95c22fba350c518215a3df8c744b2b229a
+  languageName: node
+  linkType: hard
+
+"ionicons@npm:^7.2.1":
+  version: 7.2.1
+  resolution: "ionicons@npm:7.2.1"
+  dependencies:
+    "@stencil/core": ^4.0.3
+  checksum: 7db24528339f65481c1501b92ab788b4e4f2dffb953470c224ae3e01de950cf9c46db561acfc3706cb8c5dd18721ed1ec61f5bf09a5715883e5db5768249ad62
   languageName: node
   linkType: hard
 
