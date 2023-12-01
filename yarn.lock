@@ -1656,6 +1656,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:7.5.7":
+  version: 7.5.7
+  resolution: "@ionic/core@npm:7.5.7"
+  dependencies:
+    "@stencil/core": ^4.7.2
+    ionicons: ^7.2.1
+    tslib: ^2.1.0
+  checksum: 1b3350badf461ce9fe3cbd4d75c13c3270b318af594285f9caa0884f17c75bd986181eef29a3171b33b950e7602f74adc1664c0fe8a3c26a95311c051fc6eccf
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^4.0.0":
   version: 4.0.0
   resolution: "@ionic/storage@npm:4.0.0"
@@ -1754,16 +1765,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue-router@npm:^7.5.3":
-  version: 7.5.3
-  resolution: "@ionic/vue-router@npm:7.5.3"
+"@ionic/vue-router@npm:^7.5.7":
+  version: 7.5.7
+  resolution: "@ionic/vue-router@npm:7.5.7"
   dependencies:
-    "@ionic/vue": 7.5.3
-  checksum: cd1194f9288322d532d6219446f2387f6eb2c9f01641e39c6fa0422028eb3e075d98bfa66e3a2e2c77135a1caf9a2e1017e12d7f4bad4dc7ca7d1a3bf7723f77
+    "@ionic/vue": 7.5.7
+  checksum: 4bdd99308c688bcb89b2cacd6de23f98a71d92f834329f58a0340e440459e3ad82ae57fd335d7d5b31acf142718adb2412e75a980b81c650f62cdec026b515d0
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:7.5.3, @ionic/vue@npm:^7.5.3":
+"@ionic/vue@npm:7.5.7":
+  version: 7.5.7
+  resolution: "@ionic/vue@npm:7.5.7"
+  dependencies:
+    "@ionic/core": 7.5.7
+    ionicons: ^7.0.0
+  checksum: 11c711f487f11606a6076dc148204ba9607d08a195c6173cd1668381c459bf8d0dcc744acfd125ad77bbf8f3644003609fffb88c5678f28a0e798d4480edc391
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^7.5.3":
   version: 7.5.3
   resolution: "@ionic/vue@npm:7.5.3"
   dependencies:
@@ -2525,6 +2546,15 @@ __metadata:
   bin:
     stencil: bin/stencil
   checksum: 53842a15a8f620cce0b5b9cded462f460b6082fbd7afcd337716b8523d0fc121b950b7acc904674a2ae2638841a0d80dfad1a7c55020448959ffed0d952d8efc
+  languageName: node
+  linkType: hard
+
+"@stencil/core@npm:^4.7.2":
+  version: 4.8.0
+  resolution: "@stencil/core@npm:4.8.0"
+  bin:
+    stencil: bin/stencil
+  checksum: 5fb7f19077205f6993b1b501723b62e5edc9657b875efbb2a136c151aef0c6bf3df587d7674472c80cfe3a9891dbeaced68e70289a67c8354cda427da8ed4d53
   languageName: node
   linkType: hard
 
@@ -3960,7 +3990,7 @@ __metadata:
     "@capacitor/status-bar": ^5.0.6
     "@ionic/storage": ^4.0.0
     "@ionic/vue": ^7.5.3
-    "@ionic/vue-router": ^7.5.3
+    "@ionic/vue-router": ^7.5.7
     "@types/jest": ^29.5.7
     "@types/luxon": ^3.3.3
     "@types/uuid": ^9.0.6
