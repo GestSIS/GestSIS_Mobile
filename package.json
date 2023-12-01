@@ -23,7 +23,7 @@
     "@types/luxon": "^3.3.3",
     "axios": "1.6.0",
     "cordova-sqlite-storage": "^6.1.0",
-    "core-js": "^3.33.2",
+    "core-js": "^3.33.3",
     "jetifier": "^2.0.0",
     "jwt-decode": "^4.0.0",
     "localforage-cordovasqlitedriver": "^1.8.0",
