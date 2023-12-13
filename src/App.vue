@@ -20,9 +20,6 @@
                 class="hydrated"
                 :class="{ selected: p.url.name == activeRoute }"
               >
-                <!-- <ion-icon
-                  slot="start"
-                ></ion-icon>-->
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>

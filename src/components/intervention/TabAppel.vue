@@ -10,7 +10,8 @@
           @click="addCall()"
           :disabled="intervention.localStatus == 'validated'"
         >
-          <ion-icon name="add" slot="start"></ion-icon>Nouvel appel
+          <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon
+          >Nouvel appel
         </ion-button>
       </ion-col>
     </ion-row>
@@ -40,8 +41,9 @@
         color="dark"
         slot="end"
         :disabled="intervention.localStatus == 'validated'"
+        aria-label="Fermer"
       >
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" :icon="close" aria-hidden="true"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
@@ -59,6 +61,8 @@ import {
   modalController,
   alertController,
 } from "@ionic/vue";
+import { add, close } from "ionicons/icons";
+
 import useActiveIntervention from "@/store/useActiveIntervention";
 import useDateFormatter from "@/tools/useDateFormatter";
 import ModalAppelVue from "../modals/ModalAppelSelect.vue";
@@ -107,7 +111,7 @@ const addCall = async () => {
         handler: (data) => {
           const appel = {
             ...tel,
-            date: DateTime.now().toSQL({ includeOffset: false }).slice(0, 16),
+            date: DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16),
             commentaire: data.commentaire,
           };
           addAppel(appel);

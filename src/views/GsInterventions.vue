@@ -20,6 +20,7 @@ import {
   IonLabel,
   IonBadge,
 } from "@ionic/vue";
+import { create as createIcon, sync, warningSharp, add } from "ionicons/icons";
 
 import useInterventions from "@/store/useInterventions";
 import useAlarmes from "@/store/useAlarmes";
@@ -227,10 +228,16 @@ const displayAlarmModule = true;
         >
           <ion-icon
             slot="start"
-            name="warning-sharp"
+            :icon="warningSharp"
             color="warning"
+            aria-label="Attention"
           ></ion-icon>
-          <ion-icon slot="end" name="warning-sharp" color="warning"></ion-icon>
+          <ion-icon
+            slot="end"
+            :icon="warningSharp"
+            color="warning"
+            aria-hidden="true"
+          ></ion-icon>
           <p>
             <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> -
             <span class="details">{{ alarme.description }}</span>
@@ -254,7 +261,8 @@ const displayAlarmModule = true;
       <ion-row>
         <ion-col>
           <ion-button expand="full" @click="create(null)">
-            <ion-icon slot="start" name="add"></ion-icon>Nouveau
+            <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
+            >Nouveau
           </ion-button>
         </ion-col>
         <ion-col v-if="displayAlarmModule">
@@ -264,7 +272,13 @@ const displayAlarmModule = true;
               name="circles"
               slot="start"
             ></ion-spinner>
-            <ion-icon v-else slot="start" name="sync"></ion-icon>Rafraîchir
+            <ion-icon
+              v-else
+              slot="start"
+              :icon="sync"
+              aria-hidden="true"
+            ></ion-icon
+            >Rafraîchir
           </ion-button>
         </ion-col>
       </ion-row>
@@ -280,13 +294,18 @@ const displayAlarmModule = true;
         >
           <ion-icon
             slot="start"
-            :name="
-              intervention.localStatus == 'in_progress' ? 'create' : 'sync'
+            :icon="
+              intervention.localStatus == 'in_progress' ? createIcon : sync
+            "
+            :aria-label="
+              intervention.localStatus == 'in_progress'
+                ? 'Créer'
+                : 'Synchroniser'
             "
           ></ion-icon>
           <p>
             {{ intervention.objet }} –
-            {{ formatDate(intervention.date_debut, "dd.LL.yy HH:mm") }}
+            {{ formatDate(intervention.date_debut ?? "", "dd.LL.yy HH:mm") }}
             <br />
             <span class="details">
               {{

@@ -23,6 +23,11 @@ import {
   alertController,
   modalController,
 } from "@ionic/vue";
+import {
+  checkmarkCircle,
+  createOutline,
+  sync as syncIcon,
+} from "ionicons/icons";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ModalLocaliteSelectVue from "../modals/ModalLocaliteSelect.vue";
@@ -247,11 +252,11 @@ const roundDateToQuarter = (date: string) => {
     second: 0,
     millisecond: 0,
   });
-  return datetime.toSQL().slice(0, 16);
+  return datetime?.toSQL()?.slice(0, 16) || "";
 };
 
 const startDate = ref<string>(
-  roundDateToQuarter(intervention.value.date_debut)
+  roundDateToQuarter(intervention.value.date_debut ?? "")
 );
 const dateDebutChanged = (date: string) => {
   // Change date de début pour sapeurs saisies
@@ -293,17 +298,28 @@ const navigate = () => {
       </ion-col>
       <ion-col size="4" v-if="intervention.localStatus == 'validated'">
         <ion-button expand="block" @click="edit()">
-          <ion-icon slot="start" name="create-outline"></ion-icon>Modifier
+          <ion-icon
+            slot="start"
+            :icon="createOutline"
+            aria-hidden="true"
+          ></ion-icon
+          >Modifier
         </ion-button>
       </ion-col>
       <ion-col size="4" v-if="intervention.localStatus == 'validated'">
         <ion-button expand="block" @click="sync()">
-          <ion-icon slot="start" name="sync"></ion-icon>Synchroniser
+          <ion-icon slot="start" :icon="syncIcon" aria-hidden="true"></ion-icon
+          >Synchroniser
         </ion-button>
       </ion-col>
       <ion-col size="4" v-if="intervention.localStatus != 'validated'">
         <ion-button expand="block" @click="validate()">
-          <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
+          <ion-icon
+            slot="start"
+            :icon="checkmarkCircle"
+            aria-hidden="true"
+          ></ion-icon
+          >Valider
         </ion-button>
       </ion-col>
     </ion-row>
@@ -409,7 +425,11 @@ const navigate = () => {
         </ion-item>
         <ion-item v-if="intervention.wgs84">
           <ion-button @click="navigate">
-            <ion-icon icon="navigate" slot="start"></ion-icon>
+            <ion-icon
+              icon="navigate"
+              slot="start"
+              aria-hidden="true"
+            ></ion-icon>
             Google maps</ion-button
           >
         </ion-item>

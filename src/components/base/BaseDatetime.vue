@@ -11,6 +11,8 @@ import {
   // IonDatetimeButton,
 } from "@ionic/vue";
 
+import { calendar } from "ionicons/icons";
+
 import { v4 as uuidv4 } from "uuid";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { DateTime } from "luxon";
@@ -64,8 +66,8 @@ function updateValue(value: string) {
   }
   const formattedDate = value
     ? DateTime.fromISO(value || "")
-        .toSQL({ includeOffset: false })
-        .slice(0, 16)
+        ?.toSQL({ includeOffset: false })
+        ?.slice(0, 16)
     : "";
   emit("update:modelValue", formattedDate);
 }
@@ -84,7 +86,7 @@ const dateTimeId = uuidv4();
       }}
     </ion-text>
     <ion-button fill="clear" slot="end">
-      <ion-icon slot="end" name="calendar" />
+      <ion-icon slot="end" :icon="calendar" :aria-label="props.label" />
     </ion-button>
     <ion-modal :id="dateTimeId" :is-open="openModal">
       <ion-datetime

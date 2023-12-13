@@ -8,7 +8,7 @@ export class Intervention {
   localStatus: "in_progress" | "validated";
 
   id: number;
-  date_debut = DateTime.now().toISO();
+  date_debut = DateTime.now().toISO() ?? "";
   date_fin: string;
   objet: string;
   lieu: string;

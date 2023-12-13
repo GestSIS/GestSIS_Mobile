@@ -15,6 +15,12 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/vue";
+import {
+  sync,
+  alert as alertIcon,
+  checkmarkCircle,
+  warning,
+} from "ionicons/icons";
 
 import useDateFormatter from "@/tools/useDateFormatter";
 import useStore from "@/store/useStore";
@@ -27,18 +33,36 @@ const { hasPermission } = useAuth();
 const getSyncStatusIcon = (syncStatus: StoreState): string => {
   switch (syncStatus || StoreState.Synced) {
     case StoreState.Syncing:
-      return "sync";
+      return sync;
 
     case StoreState.NeedSync:
-      return "alert";
+      return alertIcon;
 
     case StoreState.Synced:
-      return "checkmark-circle";
+      return checkmarkCircle;
+
+    // case StoreState.NeedSync:
+    //   return warning;
+    default:
+      return warning;
+  }
+};
+
+const getSyncStatusLabel = (syncStatus: StoreState): string => {
+  switch (syncStatus || StoreState.Synced) {
+    case StoreState.Syncing:
+      return "En cours de synchronisation";
+
+    case StoreState.NeedSync:
+      return "Désynchronisée";
+
+    case StoreState.Synced:
+      return "Synchronisée";
 
     // case StoreState.NeedSync:
     //   return 'warning';
     default:
-      return "warning";
+      return "Désynchronisée";
   }
 };
 
@@ -87,8 +111,9 @@ const online = window.navigator.onLine;
             }}</span>
           </div>
           <ion-icon
-            :name="getSyncStatusIcon(syncStatus.value)"
+            :icon="getSyncStatusIcon(syncStatus.value)"
             slot="end"
+            :aria-label="getSyncStatusLabel(syncStatus.value)"
           ></ion-icon>
         </ion-item>
       </ion-list>

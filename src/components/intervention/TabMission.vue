@@ -10,6 +10,7 @@ import {
   IonCheckbox,
   alertController,
 } from "@ionic/vue";
+import { add, checkmark, time, close } from "ionicons/icons";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import useDateFormatter from "@/tools/useDateFormatter";
 import { useRouter } from "vue-router";
@@ -72,7 +73,8 @@ const nbMission = computed(() => intervention.value.missions.length);
           @click="addMission()"
           :disabled="intervention.localStatus == 'validated'"
         >
-          <ion-icon slot="start" name="add"></ion-icon>Nouvelle mission
+          <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
+          >Nouvelle mission
         </ion-button>
       </ion-col>
     </ion-row>
@@ -94,7 +96,8 @@ const nbMission = computed(() => intervention.value.missions.length);
     >
       <ion-icon
         slot="start"
-        :name="mission.date_fin ? 'checkmark' : 'time'"
+        :icon="mission.date_fin ? checkmark : time"
+        aria-hidden="true"
       ></ion-icon>
       <p>
         {{ mission.titre }} - {{ mission.sapeur.designation }}
@@ -112,7 +115,7 @@ const nbMission = computed(() => intervention.value.missions.length);
         color="dark"
         slot="end"
       >
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" :icon="close" aria-label="fermer"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>

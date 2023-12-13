@@ -12,6 +12,7 @@ import {
   IonIcon,
   IonSearchbar,
 } from "@ionic/vue";
+import { call } from "ionicons/icons";
 
 import useTelephones from "@/store/useTelephones";
 import { computed, ref } from "vue";
@@ -60,7 +61,7 @@ const search = (event: any) => {
           >Aucun numéro dans votre base de donnée</ion-item
         >
         <ion-item v-for="telephone of filteredTelephone" :key="telephone.id">
-          <ion-icon name="call" slot="start"></ion-icon>
+          <ion-icon :icon="call" slot="start" aria-hidden="true"></ion-icon>
           {{ telephone.nom }}
           <span slot="end">{{ telephone.numero }}</span>
         </ion-item>

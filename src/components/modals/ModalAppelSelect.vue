@@ -13,6 +13,7 @@ import {
   IonIcon,
   modalController,
 } from "@ionic/vue";
+import { add, call } from "ionicons/icons";
 import useTelephones from "@/store/useTelephones";
 import { alertController } from "@ionic/core";
 import { useNotify } from "@/tools/useToast";
@@ -112,14 +113,15 @@ const addTelephone = async () => {
 
     <ion-list>
       <ion-item @click="addTelephone">
-        <ion-icon name="add" slot="start"></ion-icon>Entrer un nouveau numéro
+        <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon>Entrer
+        un nouveau numéro
       </ion-item>
       <ion-item
         v-for="telephone of filteredTelephone"
         :key="telephone.id"
         @click="selectTelephone(telephone)"
       >
-        <ion-icon name="call" slot="start"></ion-icon>
+        <ion-icon :icon="call" slot="start" aria-hidden="true"></ion-icon>
         {{ telephone.nom }}
         <span slot="end">{{ telephone.numero }}</span>
       </ion-item>

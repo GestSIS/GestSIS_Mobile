@@ -16,6 +16,7 @@ import {
   modalController,
   alertController,
 } from "@ionic/vue";
+import { arrowBack } from "ionicons/icons";
 import useSapeurs from "@/store/useSapeurs";
 import { Sapeur } from "@/models/sapeur";
 
@@ -111,7 +112,7 @@ const autreSapeur = async () => {
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-button slot="start" @click="dismiss()">
-          <ion-icon name="arrow-back"></ion-icon>
+          <ion-icon :icon="arrowBack" aria-label="fermer"></ion-icon>
         </ion-button>
       </ion-buttons>
 

@@ -14,6 +14,7 @@ import {
   IonIcon,
   loadingController,
 } from "@ionic/vue";
+import { create, warning, sync } from "ionicons/icons";
 
 import { computed } from "vue";
 import useExercices from "@/store/useExercices";
@@ -92,13 +93,22 @@ const openDetails = async (exercice: Exercice) => {
         >
           <ion-icon
             slot="start"
-            :name="
+            :icon="
               exercice.localStatus == 'empty'
-                ? 'create'
+                ? create
                 : exercice.localStatus == 'in_progress'
-                ? 'create'
+                ? create
                 : exercice.localStatus == 'validated'
-                ? 'sync'
+                ? sync
+                : warning
+            "
+            :aria-label="
+              exercice.localStatus == 'empty'
+                ? 'vide'
+                : exercice.localStatus == 'in_progress'
+                ? 'en cours de création'
+                : exercice.localStatus == 'validated'
+                ? 'validé, à synchroniser'
                 : ''
             "
           ></ion-icon>

@@ -21,6 +21,15 @@ import {
   IonSegment,
   IonSegmentButton,
 } from "@ionic/vue";
+import {
+  list,
+  body,
+  call,
+  car,
+  construct,
+  time,
+  informationCircle,
+} from "ionicons/icons";
 
 // Define tabs
 const enum Tab {
@@ -48,25 +57,28 @@ const activeTab = ref(Tab.Journal);
 
     <ion-segment :scrollable="true" v-model="activeTab">
       <ion-segment-button :value="Tab.Journal">
-        <ion-icon name="list"></ion-icon>
+        <ion-icon :icon="list" aria-label="Journal d'intervention"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Mission">
-        <ion-icon name="body"></ion-icon>
+        <ion-icon :icon="body" aria-label="Missions"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Appel">
-        <ion-icon name="call"></ion-icon>
+        <ion-icon :icon="call" aria-label="Appels"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Vehicule">
-        <ion-icon name="car"></ion-icon>
+        <ion-icon :icon="car" aria-label="Véhicules"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Materiel">
-        <ion-icon name="construct"></ion-icon>
+        <ion-icon :icon="construct" aria-label="Matériels"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Presence">
-        <ion-icon name="time"></ion-icon>
+        <ion-icon :icon="time" aria-label="Présences"></ion-icon>
       </ion-segment-button>
       <ion-segment-button :value="Tab.Info">
-        <ion-icon name="information-circle"></ion-icon>
+        <ion-icon
+          :icon="informationCircle"
+          aria-label="Informations"
+        ></ion-icon>
       </ion-segment-button>
     </ion-segment>
 

@@ -24,6 +24,8 @@ import {
   actionSheetController,
   modalController,
 } from "@ionic/vue";
+import { add, refresh, checkmarkCircle } from "ionicons/icons";
+
 import useDateFormatter from "@/tools/useDateFormatter";
 import useExexercices from "@/store/useExercices";
 import { useRoute } from "vue-router";
@@ -435,7 +437,8 @@ const sync = async () => {
         <ion-row>
           <ion-col>
             <ion-button expand="block" @click="addSapeur">
-              <ion-icon slot="start" name="add"></ion-icon>Ajouter une présence
+              <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
+              >Ajouter une présence
             </ion-button>
           </ion-col>
         </ion-row>
@@ -447,7 +450,12 @@ const sync = async () => {
               color="light"
               :disabled="exercice?.localStatus == 'empty'"
             >
-              <ion-icon slot="start" name="refresh"></ion-icon>Réinitialiser
+              <ion-icon
+                slot="start"
+                :icon="refresh"
+                aria-hidden="true"
+              ></ion-icon
+              >Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
@@ -457,14 +465,23 @@ const sync = async () => {
               v-if="exercice?.localStatus != 'validated'"
               :disabled="exercice?.localStatus == 'empty'"
             >
-              <ion-icon slot="start" name="checkmark-circle"></ion-icon>Valider
+              <ion-icon
+                slot="start"
+                :icon="checkmarkCircle"
+                aria-hidden="true"
+              ></ion-icon
+              >Valider
             </ion-button>
             <ion-button
               expand="block"
               @click="sync"
               v-if="exercice?.localStatus == 'validated'"
             >
-              <ion-icon slot="start" name="checkmark-circle"></ion-icon
+              <ion-icon
+                slot="start"
+                :icon="checkmarkCircle"
+                aria-hidden="true"
+              ></ion-icon
               >Synchroniser
             </ion-button>
           </ion-col>

@@ -13,7 +13,7 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-
+import { arrowBack } from "ionicons/icons";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
 interface Presence {
@@ -46,7 +46,7 @@ const save = () => {
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-button @click="dismiss()">
-          <ion-icon name="arrow-back"></ion-icon>
+          <ion-icon :icon="arrowBack" aria-label="fermer"></ion-icon>
         </ion-button>
       </ion-buttons>
       <ion-title>Détails d'une présence</ion-title>

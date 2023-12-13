@@ -15,6 +15,15 @@ import {
   modalController,
 } from "@ionic/vue";
 
+import {
+  checkmarkCircle,
+  radioButtonOff,
+  logIn,
+  logOut,
+  close,
+  warning,
+} from "ionicons/icons";
+
 import useActiveIntervention from "@/store/useActiveIntervention";
 import useGroupes from "@/store/useGroupes";
 import useSapeurs from "@/store/useSapeurs";
@@ -174,11 +183,12 @@ const groupeAlarmes =
           {{ (groupe.no ? groupe.no + " - " : "") + groupe.designation }}
           <ion-icon
             slot="end"
-            :name="
+            :icon="
               groupesIntervention.has(groupe.id)
-                ? 'checkmark-circle'
-                : 'radio-button-off'
+                ? checkmarkCircle
+                : radioButtonOff
             "
+            aria-hidden="true"
           ></ion-icon>
         </ion-item>
       </ion-list>
@@ -200,7 +210,8 @@ const groupeAlarmes =
               @click="addPresenceExercice('ARRIVEE')"
               :disabled="intervention.localStatus == 'validated'"
             >
-              <ion-icon slot="start" name="log-in"></ion-icon>Arrivée
+              <ion-icon slot="start" :icon="logIn" aria-hidden="true"></ion-icon
+              >Arrivée
             </ion-button>
           </ion-col>
           <ion-col size="4">
@@ -209,7 +220,12 @@ const groupeAlarmes =
               @click="addPresenceExercice('DEPART')"
               :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0"
             >
-              <ion-icon slot="start" name="log-out"></ion-icon>Départ
+              <ion-icon
+                slot="start"
+                :icon="logOut"
+                aria-hidden="true"
+              ></ion-icon
+              >Départ
             </ion-button>
           </ion-col>
         </ion-row>
@@ -224,7 +240,12 @@ const groupeAlarmes =
           @click="addMissingSapeur(sapeur.id ?? 0)"
           :disabled="intervention.localStatus == 'validated'"
         >
-          <ion-icon color="warning" name="warning" slot="start"></ion-icon>
+          <ion-icon
+            color="warning"
+            :icon="warning"
+            slot="start"
+            aria-label="Attention"
+          ></ion-icon>
           <ion-text color="warning"
             >{{ sapeur.designation }} - Présence manquante</ion-text
           >
@@ -256,7 +277,11 @@ const groupeAlarmes =
             color="dark"
             slot="end"
           >
-            <ion-icon slot="icon-only" name="close"></ion-icon>
+            <ion-icon
+              slot="icon-only"
+              :icon="close"
+              aria-label="fermer"
+            ></ion-icon>
           </ion-button>
         </ion-item>
       </ion-item-group>

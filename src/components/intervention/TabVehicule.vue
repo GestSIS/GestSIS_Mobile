@@ -18,10 +18,13 @@
       {{ vehicule.designation }}
       <ion-icon
         slot="end"
-        :name="
+        :icon="
           vehiculesIntervention.has(vehicule.id)
-            ? 'checkmark-circle'
-            : 'radio-button-off'
+            ? checkmarkCircle
+            : radioButtonOff
+        "
+        :aria-label="
+          vehiculesIntervention.has(vehicule.id) ? 'engagé' : 'non engagé'
         "
       ></ion-icon>
     </ion-item>
@@ -30,6 +33,7 @@
 
 <script lang="ts" setup>
 import { IonList, IonGrid, IonCol, IonRow, IonItem, IonIcon } from "@ionic/vue";
+import { checkmarkCircle, radioButtonOff } from "ionicons/icons";
 import useActiveIntervention from "@/store/useActiveIntervention";
 import useVehicules from "@/store/useVehicules";
 import { computed, ref } from "vue";

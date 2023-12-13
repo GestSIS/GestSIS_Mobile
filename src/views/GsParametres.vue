@@ -15,15 +15,16 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonLabel,
   IonList,
   IonItem,
   IonIcon,
-  IonAvatar,
   IonSelect,
   IonSelectOption,
   loadingController,
   alertController,
 } from "@ionic/vue";
+import { personOutline, flame, contrastOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
 
 const { switchTheme, activeTheme } = useTheme();
@@ -119,6 +120,7 @@ const onSelectSis = async (sis: string) => {
     <ion-content>
       <ion-list lines="none">
         <ion-item v-if="state.data.sis.length > 1">
+          <ion-icon slot="start" :icon="flame" aria-hidden="true"></ion-icon>
           <ion-select
             label="Sis"
             @ion-change="onSelectSis($event.target.value)"
@@ -130,17 +132,26 @@ const onSelectSis = async (sis: string) => {
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-avatar slot="end">
-            <!-- <img v-if="state.data.photo" :src="user.photo" /> -->
-            <ion-icon name="contact"></ion-icon>
-          </ion-avatar>
-          <p>
-            <span>{{ state.data.pseudo }}</span>
-            <br />
-            <span>{{ state.data.email }}</span>
-          </p>
+          <!-- <ion-avatar slot="start">
+            <img v-if="state.data.photo" :src="user.photo" />
+          </ion-avatar> -->
+          <ion-icon
+            slot="start"
+            :icon="personOutline"
+            aria-hidden="true"
+          ></ion-icon>
+          <ion-label>
+            {{ state.data.pseudo }}
+            -
+            {{ state.data.email }}
+          </ion-label>
         </ion-item>
         <ion-item>
+          <ion-icon
+            slot="start"
+            :icon="contrastOutline"
+            aria-hidden="true"
+          ></ion-icon>
           <ion-select
             label="Thème"
             @ion-change="switchTheme($event.target.value)"
@@ -162,7 +173,7 @@ const onSelectSis = async (sis: string) => {
 
     <ion-footer>
       <div class="ion-padding copyright">
-        Version 2.2.0
+        Version 2.3.0
         <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
         <br />
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés

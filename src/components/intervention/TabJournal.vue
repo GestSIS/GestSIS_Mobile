@@ -9,6 +9,7 @@ import {
   IonIcon,
   modalController,
 } from "@ionic/vue";
+import { body, call, play } from "ionicons/icons";
 import { computed, ref } from "vue";
 import { DateTime } from "luxon";
 import useSapeurs from "@/store/useSapeurs";
@@ -32,10 +33,10 @@ const colorMapping = {
   [EventType.Info]: "grey",
 };
 const iconMapping = {
-  [EventType.OngoingMission]: "body",
-  [EventType.EndedMission]: "body",
-  [EventType.Appel]: "call",
-  [EventType.Info]: "play",
+  [EventType.OngoingMission]: body,
+  [EventType.EndedMission]: body,
+  [EventType.Appel]: call,
+  [EventType.Info]: play,
 };
 
 const router = useRouter();
@@ -106,7 +107,9 @@ const evenements = computed(() => {
         auteur: m.sapeur?.designation,
       })),
   ].sort((a, b) =>
-    DateTime.fromSQL(b.date).diff(DateTime.fromSQL(a.date)).toMillis()
+    DateTime.fromSQL(b.date ?? "")
+      .diff(DateTime.fromSQL(a.date ?? ""))
+      .toMillis()
   ) as Event[];
 });
 
@@ -157,7 +160,7 @@ const openEvent = async (event: Event) => {
       :key="event.uuid"
     >
       <div class="cd-timeline-icon positive text-center">
-        <ion-icon :name="iconMapping[event.type]"></ion-icon>
+        <ion-icon :icon="iconMapping[event.type]" aria-hidden="true"></ion-icon>
       </div>
       <div
         class="cd-timeline-content timeline-text positive"

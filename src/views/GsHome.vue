@@ -21,6 +21,16 @@ import {
   IonCardContent,
   loadingController,
 } from "@ionic/vue";
+
+import {
+  flame,
+  checkbox,
+  call,
+  sync as syncIcon,
+  syncOutline,
+  settings,
+} from "ionicons/icons";
+
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 
@@ -102,7 +112,11 @@ const hasExercicePresencePermission = computed(() =>
                   icon-start
                   @click="sync"
                 >
-                  <ion-icon slot="start" name="syncOutline"></ion-icon
+                  <ion-icon
+                    slot="start"
+                    :icon="syncOutline"
+                    aria-hidden="true"
+                  ></ion-icon
                   >Synchroniser maintenant
                 </ion-button>
               </ion-col>
@@ -116,7 +130,11 @@ const hasExercicePresencePermission = computed(() =>
           <ion-col size="6" v-if="hasInterventionEditPermission">
             <div class="tile" @click="navigateTo('interventions')">
               <div class="icon">
-                <ion-icon name="flame" color="white"></ion-icon>
+                <ion-icon
+                  :icon="flame"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
               </div>
               <p class="label">Rapports d'intervention</p>
             </div>
@@ -124,7 +142,11 @@ const hasExercicePresencePermission = computed(() =>
           <ion-col size="6" v-if="hasExercicePresencePermission">
             <div class="tile" @click="navigateTo('exercices')">
               <div class="icon">
-                <ion-icon name="checkbox" color="white"></ion-icon>
+                <ion-icon
+                  :icon="checkbox"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
               </div>
               <p class="label">Présences exercices</p>
             </div>
@@ -132,7 +154,11 @@ const hasExercicePresencePermission = computed(() =>
           <ion-col size="6" v-if="hasInterventionEditPermission">
             <div class="tile" @click="navigateTo('annuaire')">
               <div class="icon">
-                <ion-icon name="call" color="white"></ion-icon>
+                <ion-icon
+                  :icon="call"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
               </div>
               <p class="label">Annuaire</p>
             </div>
@@ -140,7 +166,11 @@ const hasExercicePresencePermission = computed(() =>
           <ion-col size="6">
             <div class="tile" @click="navigateTo('synchronisation')">
               <div class="icon">
-                <ion-icon name="sync" color="white"></ion-icon>
+                <ion-icon
+                  :icon="syncIcon"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
               </div>
               <p class="label">Synchronisation</p>
             </div>
@@ -148,7 +178,11 @@ const hasExercicePresencePermission = computed(() =>
           <ion-col size="6">
             <div class="tile" @click="navigateTo('parametres')">
               <div class="icon">
-                <ion-icon name="settings" color="white"></ion-icon>
+                <ion-icon
+                  :icon="settings"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
               </div>
               <p class="label">Paramètres</p>
             </div>

@@ -18,6 +18,7 @@ import {
   modalController,
   IonIcon,
 } from "@ionic/vue";
+import { add } from "ionicons/icons";
 
 import { useRoute, useRouter } from "vue-router";
 import useActiveIntervention from "@/store/useActiveIntervention";
@@ -59,7 +60,7 @@ const sapeurModule = useSapeurs();
 let date: DateTime = null as any;
 if (mode == "ARRIVEE") {
   // Défault à date de début d'intervention
-  date = DateTime.fromSQL(state.value.date_debut);
+  date = DateTime.fromSQL(state.value.date_debut ?? "");
   date = date.set({
     minute: date.minute - (date.minute % 15),
     second: 0,
@@ -131,7 +132,7 @@ sapeurs.sort((a, b) =>
 );
 
 const presences: Presences = reactive({
-  date: date.toSQL({ includeOffset: false }).slice(0, 16),
+  date: date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "",
   sapeurs,
   mode,
 });
@@ -210,7 +211,7 @@ const save = () => {
           </ion-col>
           <ion-col v-if="mode == 'ARRIVEE'" size="4">
             <ion-button expand="block" @click="addSapeurs">
-              <ion-icon name="add" slot="start"></ion-icon>
+              <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon>
               Autres sapeurs
             </ion-button>
           </ion-col>
