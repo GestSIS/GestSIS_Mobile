@@ -69,6 +69,7 @@ const validate = () => {
 };
 
 const selectSapeur = (sapeur: Sapeur) => {
+  console.log(sapeur, sapeur.id);
   if (!props.multiSelect) {
     modalController.dismiss(sapeur.id);
     return;
@@ -138,10 +139,7 @@ const autreSapeur = async () => {
         :key="sapeur.id"
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox
-          v-if="props.multiSelect"
-          class="ion-margin-end"
-          @ionChange="selectSapeur(sapeur)"
+        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"
           >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
         >
         <ion-label v-else>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
