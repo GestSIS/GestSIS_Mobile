@@ -117,6 +117,7 @@ const addTelephone = async () => {
         un nouveau numéro
       </ion-item>
       <ion-item
+        button
         v-for="telephone of filteredTelephone"
         :key="telephone.id"
         @click="selectTelephone(telephone)"

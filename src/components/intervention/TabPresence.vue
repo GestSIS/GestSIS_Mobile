@@ -13,6 +13,8 @@ import {
   IonSegmentButton,
   IonIcon,
   modalController,
+  IonBadge,
+  IonLabel,
 } from "@ionic/vue";
 
 import {

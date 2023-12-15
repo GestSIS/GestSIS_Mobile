@@ -11,25 +11,27 @@ import {
   IonButton,
   IonItem,
   modalController,
-} from '@ionic/vue';
+} from "@ionic/vue";
 import useMateriels from "@/store/useMateriels";
 
-const query = ref("")
+const query = ref("");
 const materielModule = useMateriels();
 const filteredMateriel = computed(() => {
-  return materielModule.state.value.filter(m => m.designation.toLowerCase().indexOf(query.value) > -1)
-})
+  return materielModule.state.value.filter(
+    (m) => m.designation.toLowerCase().indexOf(query.value) > -1
+  );
+});
 
 const search = (event: any) => {
   query.value = event.target.value.toLowerCase();
-}
+};
 
 const dismiss = () => {
   modalController.dismiss(null);
-}
+};
 const selectMateriel = (materiel: any) => {
   modalController.dismiss(materiel);
-}
+};
 </script>
 
 <template>
@@ -44,17 +46,21 @@ const selectMateriel = (materiel: any) => {
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar @ionInput="search($event)" placeholder="Rechercher..."></ion-searchbar>
+    <ion-searchbar
+      @ionInput="search($event)"
+      placeholder="Rechercher..."
+    ></ion-searchbar>
 
     <ion-list>
       <ion-item
+        button
         v-for="materiel of filteredMateriel"
         :key="materiel.id"
         @click="selectMateriel(materiel)"
-      >{{ materiel.designation }}</ion-item>
+        >{{ materiel.designation }}</ion-item
+      >
     </ion-list>
   </ion-content>
 </template>
 
-<style>
-</style>
+<style></style>

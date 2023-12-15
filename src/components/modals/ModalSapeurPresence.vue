@@ -22,6 +22,7 @@ interface Presence {
   prenom: string;
   date_debut: string;
   date_fin: string;
+  piquet: boolean;
 }
 
 const props: Presence = defineProps<Presence>();

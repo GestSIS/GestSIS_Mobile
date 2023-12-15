@@ -111,7 +111,7 @@ const dateTimeId = uuidv4();
   </ion-item>
 </template>
 
-<style>
+<style scoped>
 ion-modal {
   --width: auto;
   --height: auto;

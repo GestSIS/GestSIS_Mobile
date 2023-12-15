@@ -27,6 +27,7 @@ import {
   checkmarkCircle,
   createOutline,
   sync as syncIcon,
+  navigate as navigateIcon,
 } from "ionicons/icons";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -415,8 +416,8 @@ const navigate = () => {
         </ion-item>
 
         <ion-item v-if="intervention.rapport_police">
-          <ion-label position="floating">Nom et prénom de l'agent</ion-label>
           <ion-input
+            label="Nom et prénom de l'agent"
             type="text"
             v-model="intervention.agent"
             :disabled="intervention.localStatus == 'validated'"
@@ -426,7 +427,7 @@ const navigate = () => {
         <ion-item v-if="intervention.wgs84">
           <ion-button @click="navigate">
             <ion-icon
-              icon="navigate"
+              :icon="navigateIcon"
               slot="start"
               aria-hidden="true"
             ></ion-icon>
@@ -527,10 +528,9 @@ const navigate = () => {
             :disabled="intervention.localStatus == 'validated'"
           ></ion-input>
         </ion-item>
-
         <ion-item>
-          <ion-label position="floating">Nombre de personnes sauvées</ion-label>
           <ion-input
+            label="Nombre de personnes sauvées"
             type="number"
             inputmode="numeric"
             :min="0"
@@ -542,8 +542,8 @@ const navigate = () => {
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Nombre d'animaux sauvés</ion-label>
           <ion-input
+            label="Nombre d'animaux sauvés"
             type="number"
             inputmode="numeric"
             :min="0"
@@ -565,24 +565,24 @@ const navigate = () => {
         </ion-col>
         <ion-col size-sm="6" size="12">
           <ion-item>
-            <ion-label position="floating">Nom</ion-label>
             <ion-input
+              label="Nom"
               type="text"
               v-model="intervention.proprietaire.nom"
               :disabled="intervention.localStatus == 'validated'"
             ></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Adresse</ion-label>
             <ion-input
+              label="Adresse"
               type="text"
               v-model="intervention.proprietaire.adresse"
               :disabled="intervention.localStatus == 'validated'"
             ></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Téléphone</ion-label>
             <ion-input
+              label="Téléphone"
               type="text"
               v-model="intervention.proprietaire.telephone"
               :disabled="intervention.localStatus == 'validated'"
@@ -591,16 +591,16 @@ const navigate = () => {
         </ion-col>
         <ion-col size-sm="6" size="12">
           <ion-item>
-            <ion-label position="floating">Prénom</ion-label>
             <ion-input
+              label="Prénom"
               type="text"
               v-model="intervention.proprietaire.prenom"
               :disabled="intervention.localStatus == 'validated'"
             ></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">NPA / Localité</ion-label>
             <ion-input
+              label="NPA / Localité"
               type="text"
               readonly
               @ionFocus="selectLocaliteProprietaire()"
@@ -611,8 +611,8 @@ const navigate = () => {
             ></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">E-mail</ion-label>
             <ion-input
+              label="E-mail"
               type="text"
               inputmode="email"
               v-model="intervention.proprietaire.email"

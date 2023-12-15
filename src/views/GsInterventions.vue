@@ -106,9 +106,10 @@ const create = async (alarme: Alarme | null) => {
 
     const start = DateTime.fromISO(alarme.debut_alarme);
     start.set({ second: 0, minute: (start.minute / 15) * 15 });
-    intervention.date_debut = start.toSQL({
-      includeOffset: false,
-    });
+    intervention.date_debut =
+      start.toSQL({
+        includeOffset: false,
+      }) ?? "";
     intervention.description = alarme.description;
     intervention.lieu = alarme.address;
     // intervention.localite_id = alarme.address; // TODO: parse localité
