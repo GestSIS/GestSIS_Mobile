@@ -21,7 +21,7 @@
     "@ionic/vue": "^7.6.1",
     "@ionic/vue-router": "^7.6.1",
     "@types/luxon": "^3.3.7",
-    "axios": "1.6.2",
+    "axios": "1.6.3",
     "cordova-sqlite-storage": "^6.1.0",
     "core-js": "^3.34.0",
     "ionicons": "^7.2.2",
