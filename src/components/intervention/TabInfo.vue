@@ -626,7 +626,7 @@ const navigate = () => {
           <h2>Responsables</h2>
           <ion-textarea
             :rows="5"
-            v-model="intervention.responsables"
+            v-model="intervention.responsable"
             :disabled="intervention.localStatus == 'validated'"
           ></ion-textarea>
         </ion-col>

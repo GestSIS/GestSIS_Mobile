@@ -43,7 +43,7 @@ export class Intervention {
     email: null as any,
   };
 
-  responsables: string; // Utile ?
+  responsable: string; // Utile ?
 
   description = "";
   sapeurs: Array<{
