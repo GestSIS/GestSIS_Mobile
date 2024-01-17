@@ -623,7 +623,7 @@ const navigate = () => {
       </ion-row>
       <ion-row>
         <ion-col size="12">
-          <h2>Responsables</h2>
+          <h2>Responsable</h2>
           <ion-textarea
             :rows="5"
             v-model="intervention.responsable"
