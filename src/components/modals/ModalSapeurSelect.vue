@@ -38,6 +38,7 @@ const query = ref("");
 const sapeurModule = useSapeurs();
 const filteredSapeur = computed(() => {
   return sapeurModule.state.value
+    .filter((s) => s.actif)
     .filter((s) => !exceptIds.has(s.id))
     .filter((s) =>
       query.value !== ""
