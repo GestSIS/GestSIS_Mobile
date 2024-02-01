@@ -1493,12 +1493,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@capacitor/keyboard@npm:^5.0.7":
-  version: 5.0.7
-  resolution: "@capacitor/keyboard@npm:5.0.7"
+"@capacitor/keyboard@npm:^5.0.8":
+  version: 5.0.8
+  resolution: "@capacitor/keyboard@npm:5.0.8"
   peerDependencies:
     "@capacitor/core": ^5.0.0
-  checksum: 4bf172b2702dddb79c5e496986ca1e3ed5cdf57c39ea1dda78fc46e8f8f9969d240dfc364fe7393db18e38406d0334c42ee20e31773bebfb83fef51dd8ca62b1
+  checksum: 78c7a1a3f596f07af2f67123bda8c2cdce5ad0d17adf4696c6d8828679b182742b0688240e7bdee8bc527b9433e87dfede9cb9cecc3d0b191dee5abf8f652025
   languageName: node
   linkType: hard
 
@@ -3965,7 +3965,7 @@ __metadata:
     "@capacitor/cli": "npm:^5.6.0"
     "@capacitor/core": "npm:^5.6.0"
     "@capacitor/haptics": "npm:^5.0.6"
-    "@capacitor/keyboard": "npm:^5.0.7"
+    "@capacitor/keyboard": "npm:^5.0.8"
     "@capacitor/status-bar": "npm:^5.0.6"
     "@ionic/storage": "npm:^4.0.0"
     "@ionic/vue": "npm:^7.6.5"
