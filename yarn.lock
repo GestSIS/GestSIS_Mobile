@@ -1666,6 +1666,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:7.7.0":
+  version: 7.7.0
+  resolution: "@ionic/core@npm:7.7.0"
+  dependencies:
+    "@stencil/core": "npm:^4.12.0"
+    ionicons: "npm:^7.2.2"
+    tslib: "npm:^2.1.0"
+  checksum: c1752ae330f4dbb07964d659b68e07761f7d2a2eb784a259a86442d799b8952052d51f77e7bf08a6a8e98fff7fab84e0563de034b69c1ee86231b46193dfc8e8
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^4.0.0":
   version: 4.0.0
   resolution: "@ionic/storage@npm:4.0.0"
@@ -1790,13 +1801,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:7.6.5, @ionic/vue@npm:^7.6.5":
+"@ionic/vue@npm:7.6.5":
   version: 7.6.5
   resolution: "@ionic/vue@npm:7.6.5"
   dependencies:
     "@ionic/core": "npm:7.6.5"
     ionicons: "npm:^7.0.0"
   checksum: 33c08c08fb30a3e8d1b5cc95cbe11d55b2fa591a5a1965fc04ee039290b4e60d4269ac7565d6d4d7e752852bdc83202495cdc25fdf0f4cbcc9eba56a14eca340
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@ionic/vue@npm:7.7.0"
+  dependencies:
+    "@ionic/core": "npm:7.7.0"
+    ionicons: "npm:^7.0.0"
+  checksum: 52b0c8319a083b1102728d4f4f03ffc8a1fde693d8b1a4fde2eb2bf6b0709833ac170dab682d2c0124610f9b4e80ced000fca24667a36cf6d6800c44357e7ada
   languageName: node
   linkType: hard
 
@@ -2552,6 +2573,15 @@ __metadata:
   bin:
     stencil: bin/stencil
   checksum: 84869637067a5aa411f6fb5105125264ef9a03eeec8fd5f8cca422a3648fc067dbc56a43fef3ac42c8bcd8b62f6704a8f7ce20efbf3f5f3c86a216e0e5fbb14f
+  languageName: node
+  linkType: hard
+
+"@stencil/core@npm:^4.12.0":
+  version: 4.12.0
+  resolution: "@stencil/core@npm:4.12.0"
+  bin:
+    stencil: bin/stencil
+  checksum: ad4f1058ac81b42d1c8e9e306f2f270a47a03fdabfaf7db89282f5e28b7b96bcd6f60c4bff9de35bf80fa7b6de062a7c7ed6515209793446c795e50d0cf7090e
   languageName: node
   linkType: hard
 
@@ -3968,7 +3998,7 @@ __metadata:
     "@capacitor/keyboard": "npm:^5.0.7"
     "@capacitor/status-bar": "npm:^5.0.6"
     "@ionic/storage": "npm:^4.0.0"
-    "@ionic/vue": "npm:^7.6.5"
+    "@ionic/vue": "npm:^7.7.0"
     "@ionic/vue-router": "npm:^7.6.5"
     "@types/jest": "npm:^29.5.11"
     "@types/luxon": "npm:^3.4.1"
