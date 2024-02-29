@@ -25,6 +25,9 @@ const email = ref(state.data.email ?? "");
 const password = ref("");
 
 const wrappedReconnect = () => {
+  if (!window.navigator.onLine) {
+    return notify.error("Aucune connexion internet !");
+  }
   reconnect(email.value, password.value)
     .then(() => {
       modalController.dismiss();
