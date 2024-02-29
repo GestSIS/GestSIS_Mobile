@@ -31,7 +31,7 @@ export function useNotify() {
   };
 
   const error = (error: string) => {
-    show(error, "bottom", 10000);
+    show(error, "bottom", 10000, true);
   };
 
   const loading = (message: string) => {

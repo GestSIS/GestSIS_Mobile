@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import useAuth, { UserStatus } from '@/store/useAuth';
+import { useRouter } from "vue-router";
+import useAuth, { UserStatus } from "@/store/useAuth";
 import {
   IonContent,
   IonPage,
@@ -12,51 +12,59 @@ import {
   IonToolbar,
   IonButton,
   loadingController,
-} from '@ionic/vue';
-import { ref, watchEffect } from 'vue';
-import useStore from '@/store/useStore';
-import { useNotify } from '@/tools/useToast';
+} from "@ionic/vue";
+import { ref, watchEffect } from "vue";
+import useStore from "@/store/useStore";
+import { useNotify } from "@/tools/useToast";
 
 const router = useRouter();
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 
 const { login, state } = useAuth();
 
 // If connected redirect to home page
 watchEffect(() => {
-  if (state.data.statut == UserStatus.connected && router.currentRoute.value.name == 'login') {
-    router.push({ name: 'accueil' });
+  if (
+    state.data.statut == UserStatus.connected &&
+    router.currentRoute.value.name == "login"
+  ) {
+    router.push({ name: "accueil" });
   }
 });
 
 const wrappedLogin = async () => {
+  const notify = useNotify();
+  if (!window.navigator.onLine) {
+    return notify.error("Aucune connexion internet !");
+  }
+
   try {
     await login(email.value, password.value);
 
     // Afficher loading
-    const loading = await loadingController
-      .create({
-        cssClass: 'my-custom-class',
-        message: 'Chargement...',
-      });
+    const loading = await loadingController.create({
+      cssClass: "my-custom-class",
+      message: "Chargement...",
+    });
 
     await loading.present();
 
     // Load data
-    const store = useStore()
+    const store = useStore();
     await store.syncAll();
 
     // Hide loading
     await loading.dismiss();
 
-    router.push({ name: 'accueil' });
+    router.push({ name: "accueil" });
   } catch (error: any) {
-    const notify = useNotify()
-    notify.error(error?.message ?? "Identifiants incorrect")
+    notify.error(error?.message ?? "Identifiants incorrect");
     // errorMessage.value = error?.message ?? "Identifiants incorrect";
   }
 };
+
+const online = window.navigator.onLine;
 </script>
 
 <template>
@@ -67,16 +75,40 @@ const wrappedLogin = async () => {
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+      <ion-card v-if="!online" color="warning">
+        <ion-card-content>
+          <ion-grid>
+            <h2>⚠️ Aucune connexion internet détectée</h2>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
       <form @submit.prevent="wrappedLogin">
         <ion-list class="ion-padding">
           <ion-item>
-            <ion-input type="text" inputmode="email" v-model="email" name="email" placeholder="Adresse e-mail">
+            <ion-input
+              type="text"
+              inputmode="email"
+              v-model="email"
+              name="email"
+              placeholder="Adresse e-mail"
+            >
             </ion-input>
           </ion-item>
           <ion-item>
-            <ion-input type="password" v-model="password" name="password" placeholder="Mot de passe"></ion-input>
+            <ion-input
+              type="password"
+              v-model="password"
+              name="password"
+              placeholder="Mot de passe"
+            ></ion-input>
           </ion-item>
-          <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">Connexion</ion-button>
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            class="ion-margin-top"
+            >Connexion</ion-button
+          >
         </ion-list>
       </form>
     </ion-content>
