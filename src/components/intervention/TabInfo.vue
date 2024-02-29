@@ -15,7 +15,6 @@ import {
   IonGrid,
   IonInput,
   IonItem,
-  IonLabel,
   IonSelect,
   IonSelectOption,
   IonCheckbox,
@@ -328,7 +327,7 @@ const navigate = () => {
     <ion-row>
       <ion-col size-sm="6" size="12">
         <base-datetime
-          :invalid="errors.date_debut"
+          :invalid="!!errors.date_debut"
           :disabled="intervention.localStatus == 'validated'"
           :max="intervention.date_fin"
           v-model="intervention.date_debut"
@@ -352,11 +351,11 @@ const navigate = () => {
     <ion-row>
       <ion-col size="12" size-sm="6">
         <ion-item>
-          <ion-label :color="errors.objet ? 'primary' : ''" position="floating"
-            >Objet</ion-label
-          >
           <ion-input
             type="text"
+            label-placement="floating"
+            label="Objet"
+            :class="{ invalid: !!errors?.objet }"
             v-model="intervention.objet"
             :disabled="intervention.localStatus == 'validated'"
             @change="dateDebutChanged"
@@ -365,13 +364,11 @@ const navigate = () => {
         </ion-item>
 
         <ion-item>
-          <ion-label
-            :color="errors.localite_id ? 'primary' : ''"
-            position="floating"
-            >NPA Localité</ion-label
-          >
           <ion-input
             type="text"
+            label-placement="floating"
+            label="NPA Localité"
+            :class="{ invalid: !!errors?.localite_id }"
             readonly
             @ionFocus="selectLocaliteIntervention"
             :value="getLocaliteFormattedValue(intervention.localite_id)"
@@ -389,13 +386,11 @@ const navigate = () => {
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label
-            :color="errors.sapeur_id ? 'primary' : ''"
-            position="floating"
-            >Chef d'intervention</ion-label
-          >
           <ion-input
             type="text"
+            label-placement="floating"
+            label="Chef d'intervention"
+            :class="{ invalid: !!errors?.sapeur_id }"
             :readonly="true"
             @ionFocus="selectChefIntervention()"
             :value="getSapeurFormattedValue(intervention.sapeur_id)"
@@ -404,11 +399,11 @@ const navigate = () => {
         </ion-item>
 
         <ion-item>
-          <ion-label :color="errors.lieu ? 'primary' : ''" position="floating"
-            >Lieu du sinistre</ion-label
-          >
           <ion-input
             type="text"
+            label-placement="floating"
+            label="Lieu du sinistre"
+            :class="{ invalid: !!errors?.lieu }"
             v-model="intervention.lieu"
             :disabled="intervention.localStatus == 'validated'"
           >
@@ -417,8 +412,9 @@ const navigate = () => {
 
         <ion-item v-if="intervention.rapport_police">
           <ion-input
-            label="Nom et prénom de l'agent"
             type="text"
+            label-placement="floating"
+            label="Nom et prénom de l'agent"
             v-model="intervention.agent"
             :disabled="intervention.localStatus == 'validated'"
           >
@@ -445,12 +441,10 @@ const navigate = () => {
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label
-            :color="errors.type_intervention_id ? 'primary' : ''"
-            position="floating"
-            >Type</ion-label
-          >
           <ion-select
+            label-placement="floating"
+            label="Type"
+            :class="{ invalid: !!errors?.type_intervention_id }"
             interface="action-sheet"
             v-model="intervention.type_intervention_id"
             okText="Ok"
@@ -466,10 +460,10 @@ const navigate = () => {
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label :color="errors.degre ? 'primary' : ''" position="floating"
-            >Degré</ion-label
-          >
           <ion-select
+            label-placement="floating"
+            label="Degré"
+            :class="{ invalid: !!errors?.degre }"
             interface="action-sheet"
             v-model="intervention.degre"
             okText="Ok"
@@ -490,12 +484,10 @@ const navigate = () => {
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label
-            :color="errors.stat_federal_id ? 'primary' : ''"
-            position="floating"
-            >Statistiques fédérales
-          </ion-label>
           <ion-select
+            label-placement="floating"
+            label="Statistiques fédérales"
+            :class="{ invalid: !!errors?.stat_federal_id }"
             interface="action-sheet"
             v-model="intervention.stat_federal_id"
             okText="Ok"
@@ -513,13 +505,11 @@ const navigate = () => {
       </ion-col>
       <ion-col size-sm="6" size="12">
         <ion-item>
-          <ion-label
-            :color="errors.stat_nb ? 'primary' : ''"
-            position="floating"
-            >Nombre d'interventions</ion-label
-          >
           <ion-input
             type="number"
+            label-placement="floating"
+            label="Nombre d'interventions"
+            :class="{ invalid: !!errors?.stat_nb }"
             inputmode="numeric"
             :min="0"
             @ionChange="(ev: any) => intervention.stat_nb = parseInt(ev.target.value)"
@@ -530,6 +520,7 @@ const navigate = () => {
         </ion-item>
         <ion-item>
           <ion-input
+            label-placement="floating"
             label="Nombre de personnes sauvées"
             type="number"
             inputmode="numeric"
@@ -540,11 +531,11 @@ const navigate = () => {
             :disabled="intervention.localStatus == 'validated'"
           ></ion-input>
         </ion-item>
-
         <ion-item>
           <ion-input
-            label="Nombre d'animaux sauvés"
             type="number"
+            label-placement="floating"
+            label="Nombre d'animaux sauvés"
             inputmode="numeric"
             :min="0"
             @ionChange="(ev: any) => intervention.sauve_animaux = parseInt(ev.target.value)"
@@ -566,6 +557,7 @@ const navigate = () => {
         <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="Nom"
               type="text"
               v-model="intervention.proprietaire.nom"
@@ -574,6 +566,7 @@ const navigate = () => {
           </ion-item>
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="Adresse"
               type="text"
               v-model="intervention.proprietaire.adresse"
@@ -582,6 +575,7 @@ const navigate = () => {
           </ion-item>
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="Téléphone"
               type="text"
               v-model="intervention.proprietaire.telephone"
@@ -592,6 +586,7 @@ const navigate = () => {
         <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="Prénom"
               type="text"
               v-model="intervention.proprietaire.prenom"
@@ -600,6 +595,7 @@ const navigate = () => {
           </ion-item>
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="NPA / Localité"
               type="text"
               readonly
@@ -612,6 +608,7 @@ const navigate = () => {
           </ion-item>
           <ion-item>
             <ion-input
+              label-placement="floating"
               label="E-mail"
               type="text"
               inputmode="email"
@@ -625,6 +622,7 @@ const navigate = () => {
         <ion-col size="12">
           <h2>Responsable</h2>
           <ion-textarea
+            aria-label="Responsable"
             :rows="5"
             v-model="intervention.responsable"
             :disabled="intervention.localStatus == 'validated'"
@@ -633,6 +631,7 @@ const navigate = () => {
         <ion-col size="12">
           <h2>Description de l'intervention et commentaires</h2>
           <ion-textarea
+            aria-label="Description de l'intervention et commentaires"
             :rows="8"
             v-model="intervention.description"
             :disabled="intervention.localStatus == 'validated'"
@@ -646,3 +645,9 @@ const navigate = () => {
     </ion-grid>
   </form>
 </template>
+
+<style scoped>
+.invalid {
+  --color: var(--ion-color-primary);
+}
+</style>

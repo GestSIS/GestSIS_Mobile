@@ -70,7 +70,6 @@ const validate = () => {
 };
 
 const selectSapeur = (sapeur: Sapeur) => {
-  console.log(sapeur, sapeur.id);
   if (!props.multiSelect) {
     modalController.dismiss(sapeur.id);
     return;

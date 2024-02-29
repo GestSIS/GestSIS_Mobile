@@ -139,9 +139,6 @@ const create = async (alarme: Alarme | null) => {
   } else {
     const modalIntervention = await modalController.create({
       component: ModalInterventionCreateVue,
-      componentProps: {
-        alarme,
-      },
     });
 
     await modalIntervention.present();

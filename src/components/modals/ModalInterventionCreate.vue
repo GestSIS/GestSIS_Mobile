@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import {
   IonToolbar,
   IonTitle,
@@ -33,9 +33,6 @@ const formatLocalite = (localiteId: number | null) => {
 const selectLocalite = async () => {
   const modalLocaliteSelect = await modalController.create({
     component: ModalLocaliteSelectVue,
-    componentProps: {
-      exceptSapeurIds: [],
-    },
   });
 
   await modalLocaliteSelect.present();
@@ -49,14 +46,18 @@ const selectLocalite = async () => {
 };
 
 const intervention = reactive({
-  date: DateTime.now().toSQL({ includeOffset: false }).slice(0, 16),
+  date: DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "",
   objet: "",
   localite_id: null,
   lieu: "",
 });
 
+const errors: any = ref({});
 const save = async () => {
-  if (intervention.date == "" || intervention.objet == "" || !intervention.localite_id) {
+  errors.value.date = !intervention.date;
+  errors.value.objet = !intervention.objet;
+  errors.value.localite_id = !intervention.localite_id;
+  if (errors.value.date || errors.value.objet || !intervention.localite_id) {
     notify.error("Veuillez remplir tous les champs");
     return;
   }
@@ -95,6 +96,7 @@ const dismiss = () => {
           v-model="intervention.objet"
           label="Objet"
           labelPlacement="fixed"
+          :class="{ invalid: !!errors.objet }"
         ></ion-input>
       </ion-item>
 
@@ -103,6 +105,7 @@ const dismiss = () => {
           :value="formatLocalite(intervention.localite_id)"
           label="Localité"
           labelPlacement="fixed"
+          :class="{ invalid: !!errors.localite_id }"
           readonly
         ></ion-input>
       </ion-item>
@@ -112,12 +115,19 @@ const dismiss = () => {
           v-model="intervention.lieu"
           label="Adresse, lieu"
           labelPlacement="fixed"
+          :class="{ invalid: !!errors.lieu }"
         ></ion-textarea>
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save">Créer</ion-button>
+    <ion-button expand="full" class="ion-margin-top" @click="save"
+      >Créer</ion-button
+    >
   </ion-content>
 </template>
 
-<style></style>
+<style scoped>
+.invalid {
+  --color: var(--ion-color-primary);
+}
+</style>

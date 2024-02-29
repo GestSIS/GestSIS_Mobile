@@ -60,7 +60,11 @@ const search = (event: any) => {
         <ion-item v-if="filteredTelephone.length === 0 && query === ''"
           >Aucun numéro dans votre base de donnée</ion-item
         >
-        <ion-item v-for="telephone of filteredTelephone" :key="telephone.id">
+        <ion-item
+          v-for="telephone of filteredTelephone"
+          :key="telephone.id"
+          :href="'tel:' + telephone.numero"
+        >
           <ion-icon :icon="call" slot="start" aria-hidden="true"></ion-icon>
           {{ telephone.nom }}
           <span slot="end">{{ telephone.numero }}</span>

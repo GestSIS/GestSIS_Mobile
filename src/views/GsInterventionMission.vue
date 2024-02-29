@@ -40,9 +40,8 @@ const loadedMission = Object.assign(
 );
 const mission: Ref<Mission> = ref(loadedMission || new Mission());
 if (!mission.value.date_debut) {
-  mission.value.date_debut = DateTime.now()
-    .toSQL({ includeOffset: false })
-    .slice(0, 16);
+  mission.value.date_debut =
+    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
 }
 
 const title = route.params.mission ? "Détail mission" : "Nouvelle mission";

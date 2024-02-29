@@ -86,7 +86,7 @@ const evenements = computed(() => {
     // Début de mission
     ...missions.map((m) => ({
       ...m,
-      uuid: m.localUuid,
+      uuid: m.localUuid + "-debut",
       date: m.date_debut,
       type: !m.date_fin ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
@@ -97,7 +97,7 @@ const evenements = computed(() => {
       .filter((m) => m.date_fin)
       .map((m) => ({
         ...m,
-        uuid: m.localUuid,
+        uuid: m.localUuid + "-fin",
         date: m.date_fin,
         type:
           m.date_fin == null

@@ -111,7 +111,7 @@ const addMateriel = async () => {
         name: "quantite",
         placeholder: "Quantité",
         type: "number",
-        // value: 0,
+        value: 1,
         min: 0,
       },
     ],

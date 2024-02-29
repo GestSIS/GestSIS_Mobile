@@ -2,6 +2,9 @@
 import { useRouter } from "vue-router";
 import useAuth, { UserStatus } from "@/store/useAuth";
 import {
+  IonCard,
+  IonCardContent,
+  IonGrid,
   IonContent,
   IonPage,
   IonTitle,
@@ -87,19 +90,21 @@ const online = window.navigator.onLine;
           <ion-item>
             <ion-input
               type="text"
+              label-placement="floating"
+              label="Adresse e-mail"
               inputmode="email"
               v-model="email"
               name="email"
-              placeholder="Adresse e-mail"
             >
             </ion-input>
           </ion-item>
           <ion-item>
             <ion-input
               type="password"
+              label-placement="floating"
+              label="Mot de passe"
               v-model="password"
               name="password"
-              placeholder="Mot de passe"
             ></ion-input>
           </ion-item>
           <ion-button
