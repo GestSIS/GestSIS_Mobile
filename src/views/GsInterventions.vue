@@ -20,7 +20,15 @@ import {
   IonLabel,
   IonBadge,
 } from "@ionic/vue";
-import { create as createIcon, sync, warningSharp, add } from "ionicons/icons";
+import {
+  create as createIcon,
+  sync,
+  warningSharp,
+  add,
+  addCircle,
+  people,
+  navigate,
+} from "ionicons/icons";
 
 import useInterventions from "@/store/useInterventions";
 import useAlarmes from "@/store/useAlarmes";
@@ -164,7 +172,7 @@ const onAlarm = async (alarme: Alarme) => {
     header: "Action",
     buttons: [
       {
-        icon: "navigate",
+        icon: navigate,
         text: "Ouvrir google maps",
         role: "",
         handler: () => {
@@ -183,12 +191,12 @@ const onAlarm = async (alarme: Alarme) => {
         },
       },
       {
-        icon: "add-circle",
+        icon: addCircle,
         text: "Créer une intervention",
         handler: () => create(alarme),
       },
       {
-        icon: "people",
+        icon: people,
         text: "Visualiser les quittances",
         handler: () => showQuittances(alarme),
       },
