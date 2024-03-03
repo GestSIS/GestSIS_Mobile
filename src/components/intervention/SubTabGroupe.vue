@@ -42,7 +42,6 @@ const changeGroupeStatus = (groupeId: number) => {
       :disabled="intervention.localStatus == 'validated'"
       @click="changeGroupeStatus(groupe.id)"
     >
-      <!-- <span>{{ groupe.prefix }}</span> -->
       {{ (groupe.no ? groupe.no + " - " : "") + groupe.designation }}
       <ion-icon
         slot="end"
@@ -55,8 +54,4 @@ const changeGroupeStatus = (groupeId: number) => {
   </ion-list>
 </template>
 
-<style scoped>
-.details {
-  color: var(--ion-color-medium);
-}
-</style>
+<style></style>
