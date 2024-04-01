@@ -1475,12 +1475,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@capacitor/core@npm:^5.7.1":
-  version: 5.7.1
-  resolution: "@capacitor/core@npm:5.7.1"
+"@capacitor/core@npm:^5.7.4":
+  version: 5.7.4
+  resolution: "@capacitor/core@npm:5.7.4"
   dependencies:
     tslib: "npm:^2.1.0"
-  checksum: 10/e803641b5f76d3291056d1d711fc08275ef18e5e2fe2e6756534e8ad447db6bc043a08b98706ce813e215a38fad6b93e82c554b9987293e96bd347fe665ee8d2
+  checksum: 10/df1ec05c4aa443652530ac2ec1b576e0763a508093e0407554001cbd554595b85009d0cdf28743d6cd91dd8e3c5dbc4994987f1691e24d97abd80dadab542db5
   languageName: node
   linkType: hard
 
@@ -4103,7 +4103,7 @@ __metadata:
     "@capacitor/android": "npm:^5.7.1"
     "@capacitor/app": "npm:^5.0.7"
     "@capacitor/cli": "npm:^5.7.1"
-    "@capacitor/core": "npm:^5.7.1"
+    "@capacitor/core": "npm:^5.7.4"
     "@capacitor/haptics": "npm:^5.0.7"
     "@capacitor/keyboard": "npm:^5.0.8"
     "@capacitor/status-bar": "npm:^5.0.7"
