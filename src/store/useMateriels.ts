@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Materiel } from '../models/bundle';
-import MaterielService from '@/services/MaterielService';
+import MaterielService from '../services/MaterielService';
 
 const state: Ref<Materiel[]> = ref([]);
 const store = useBasicStore(

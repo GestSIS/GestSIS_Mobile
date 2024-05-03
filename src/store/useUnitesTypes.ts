@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { UniteType } from '../models/bundle';
-import UniteService from '@/services/UniteService';
+import UniteService from '../services/UniteService';
 
 const state: Ref<UniteType[]> = ref([]);
 const store = useBasicStore(

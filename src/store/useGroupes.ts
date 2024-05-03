@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Groupe } from '../models/groupe';
-import GroupeService from '@/services/GroupeService';
+import GroupeService from '../services/GroupeService';
 
 const state: Ref<Groupe[]> = ref([]);
 const store = useBasicStore(

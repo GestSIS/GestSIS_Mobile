@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import LocaliteService from '@/services/LocaliteService';
+import LocaliteService from '../services/LocaliteService';
 
 const state: Ref<number[]> = ref([]);
 const store = useBasicStore(

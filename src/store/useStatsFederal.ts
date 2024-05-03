@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { StatFederal } from '../models/bundle';
-import StatFederalService from '@/services/StatFederalService';
+import StatFederalService from '../services/StatFederalService';
 
 const state: Ref<StatFederal[]> = ref([]);
 const store = useBasicStore(

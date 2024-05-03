@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Vehicule } from '../models/bundle';
-import VehiculeService from '@/services/VehiculeService';
+import VehiculeService from '../services/VehiculeService';
 
 const state: Ref<Vehicule[]> = ref([]);
 const store = useBasicStore(

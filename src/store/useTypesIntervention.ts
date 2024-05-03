@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { TypeIntervention } from '../models/bundle';
-import TypeInterventionService from '@/services/TypeInterventionService';
+import TypeInterventionService from '../services/TypeInterventionService';
 
 const state: Ref<TypeIntervention[]> = ref([]);
 const store = useBasicStore(

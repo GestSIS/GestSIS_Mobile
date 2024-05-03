@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { MissionType } from '../models/bundle';
-import MissionService from '@/services/MissionService';
+import MissionService from '../services/MissionService';
 
 const state: Ref<MissionType[]> = ref([]);
 const store = useBasicStore(

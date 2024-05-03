@@ -1,7 +1,7 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { Sapeur } from '../models/bundle';
-import SapeurService from '@/services/SapeurService';
+import SapeurService from '../services/SapeurService';
 
 const state: Ref<Sapeur[]> = ref([]);
 const store = useBasicStore(
