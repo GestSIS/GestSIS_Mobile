@@ -1,7 +1,7 @@
 import Api from "../http/Request";
 import { Intervention } from "../models/bundle";
-import useGroupes from "@/store/useGroupes";
-import useLocalites from "@/store/useLocalites";
+import useGroupes from "../store/useGroupes";
+import useLocalites from "../store/useLocalites";
 
 export default {
   //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)

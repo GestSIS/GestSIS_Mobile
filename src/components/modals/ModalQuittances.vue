@@ -15,8 +15,8 @@ import {
   IonItemDivider,
   IonBadge,
 } from "@ionic/vue";
-import { Alarme } from "@/models/alarme";
-import useAuth from "@/store/useAuth";
+import { Alarme } from "../../models/alarme";
+import useAuth from "../../store/useAuth";
 const { activeSisKey } = useAuth();
 const props = defineProps<{ alarme: Alarme }>();
 

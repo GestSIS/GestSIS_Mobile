@@ -12,9 +12,9 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useLocalites from "@/store/useLocalites";
-import useLocalitesSis from "@/store/useLocalitesSis";
-import { Localite } from "@/models/localite";
+import useLocalites from "../../store/useLocalites";
+import useLocalitesSis from "../../store/useLocalitesSis";
+import { Localite } from "../../models/localite";
 
 const query = ref("");
 const localiteModule = useLocalites();

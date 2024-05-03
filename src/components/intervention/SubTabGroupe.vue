@@ -3,8 +3,8 @@ import { IonList, IonItem, IonIcon } from "@ionic/vue";
 
 import { checkmarkCircle, radioButtonOff } from "ionicons/icons";
 
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useGroupes from "@/store/useGroupes";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useGroupes from "../../store/useGroupes";
 import { ref, computed } from "vue";
 
 const { state, updateGroupes } = useActiveIntervention();

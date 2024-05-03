@@ -11,8 +11,8 @@ import {
   alertController,
 } from "@ionic/vue";
 import { add, checkmark, time, close } from "ionicons/icons";
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useDateFormatter from "../../tools/useDateFormatter";
 import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
 

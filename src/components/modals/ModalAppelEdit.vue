@@ -13,9 +13,9 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import { useNotify } from "@/tools/useToast";
-import { Appel } from "@/models/appel";
-import useActiveIntervention from "@/store/useActiveIntervention";
+import { useNotify } from "../../tools/useToast";
+import { Appel } from "../../models/appel";
+import useActiveIntervention from "../../store/useActiveIntervention";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
 const notify = useNotify();

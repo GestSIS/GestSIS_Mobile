@@ -14,9 +14,9 @@ import {
   modalController,
 } from "@ionic/vue";
 import { add, call } from "ionicons/icons";
-import useTelephones from "@/store/useTelephones";
+import useTelephones from "../../store/useTelephones";
 import { alertController } from "@ionic/core";
-import { useNotify } from "@/tools/useToast";
+import { useNotify } from "../../tools/useToast";
 
 const notify = useNotify();
 

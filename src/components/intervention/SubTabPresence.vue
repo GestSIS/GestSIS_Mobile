@@ -14,11 +14,11 @@ import {
 
 import { logIn, logOut, close, warning } from "ionicons/icons";
 
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useSapeurs from "@/store/useSapeurs";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useSapeurs from "../../store/useSapeurs";
+import useDateFormatter from "../../tools/useDateFormatter";
 import { computed } from "vue";
-import router from "@/router";
+import router from "../../router";
 import ModalSapeurPresenceVue from "../modals/ModalSapeurPresence.vue";
 
 const { formatDate } = useDateFormatter();

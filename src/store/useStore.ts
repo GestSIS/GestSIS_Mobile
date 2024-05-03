@@ -19,7 +19,7 @@ import useVehicules from "./useVehicules";
 
 import { modalController } from "@ionic/vue";
 import ModalReconnectVue from "../components/modals/ModalReconnect.vue";
-import { useNotify } from "@/tools/useToast";
+import { useNotify } from "../tools/useToast";
 
 export default function useStore() {
   const modules = [

@@ -14,7 +14,7 @@ import {
 import { calendar } from "ionicons/icons";
 
 import { v4 as uuidv4 } from "uuid";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useDateFormatter from "../../tools/useDateFormatter";
 import { DateTime } from "luxon";
 import { defineProps, defineEmits, withDefaults, ref } from "vue";
 

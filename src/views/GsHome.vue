@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import useAuth from "@/store/useAuth";
-import useExercices from "@/store/useExercices";
-import useInterventions from "@/store/useInterventions";
-import useStore from "@/store/useStore";
-import { useNotify } from "@/tools/useToast";
+import useAuth from "../store/useAuth";
+import useExercices from "../store/useExercices";
+import useInterventions from "../store/useInterventions";
+import useStore from "../store/useStore";
+import { useNotify } from "../tools/useToast";
 import {
   IonButtons,
   IonContent,

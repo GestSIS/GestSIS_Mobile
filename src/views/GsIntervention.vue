@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
-import TabMateriel from "@/components/intervention/TabMateriel.vue";
-import TabVehicule from "@/components/intervention/TabVehicule.vue";
-import TabMission from "@/components/intervention/TabMission.vue";
-import TabAppel from "@/components/intervention/TabAppel.vue";
-import TabPresence from "@/components/intervention/TabPresence.vue";
-import TabInfo from "@/components/intervention/TabInfo.vue";
-import TabJournal from "@/components/intervention/TabJournal.vue";
+import TabMateriel from "../components/intervention/TabMateriel.vue";
+import TabVehicule from "../components/intervention/TabVehicule.vue";
+import TabMission from "../components/intervention/TabMission.vue";
+import TabAppel from "../components/intervention/TabAppel.vue";
+import TabPresence from "../components/intervention/TabPresence.vue";
+import TabInfo from "../components/intervention/TabInfo.vue";
+import TabJournal from "../components/intervention/TabJournal.vue";
 
 import {
   IonButtons,

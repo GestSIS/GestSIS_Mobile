@@ -30,22 +30,22 @@ import {
   navigate,
 } from "ionicons/icons";
 
-import useInterventions from "@/store/useInterventions";
-import useAlarmes from "@/store/useAlarmes";
-import useDateFormatter from "@/tools/useDateFormatter";
-import useActiveIntervention from "@/store/useActiveIntervention";
+import useInterventions from "../store/useInterventions";
+import useAlarmes from "../store/useAlarmes";
+import useDateFormatter from "../tools/useDateFormatter";
+import useActiveIntervention from "../store/useActiveIntervention";
 import { useRouter } from "vue-router";
-import { Intervention } from "@/models/intervention";
-import { Alarme } from "@/models/alarme";
-import ModalInterventionCreateVue from "@/components/modals/ModalInterventionCreate.vue";
-import ModalQuittancesVue from "@/components/modals/ModalQuittances.vue";
-import useSapeurs from "@/store/useSapeurs";
-import useGroupes from "@/store/useGroupes";
-import useAuth from "@/store/useAuth";
+import { Intervention } from "../models/intervention";
+import { Alarme } from "../models/alarme";
+import ModalInterventionCreateVue from "../components/modals/ModalInterventionCreate.vue";
+import ModalQuittancesVue from "../components/modals/ModalQuittances.vue";
+import useSapeurs from "../store/useSapeurs";
+import useGroupes from "../store/useGroupes";
+import useAuth from "../store/useAuth";
 import { DateTime } from "luxon";
 // import { ref } from "vue";
 import { computed, ref } from "vue";
-import useStore from "@/store/useStore";
+import useStore from "../store/useStore";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();

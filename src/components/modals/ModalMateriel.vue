@@ -12,7 +12,7 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useMateriels from "@/store/useMateriels";
+import useMateriels from "../../store/useMateriels";
 
 const query = ref("");
 const materielModule = useMateriels();

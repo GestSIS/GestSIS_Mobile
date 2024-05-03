@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Exercice } from "@/models/bundle";
+import { Exercice } from "../models/bundle";
 
 import {
   IonButtons,
@@ -17,13 +17,13 @@ import {
 import { create, warning, sync } from "ionicons/icons";
 
 import { computed } from "vue";
-import useExercices from "@/store/useExercices";
-import useLocalites from "@/store/useLocalites";
-import useExerciceCategories from "@/store/useExerciceCategories";
+import useExercices from "../store/useExercices";
+import useLocalites from "../store/useLocalites";
+import useExerciceCategories from "../store/useExerciceCategories";
 import { useRouter } from "vue-router";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useDateFormatter from "../tools/useDateFormatter";
 import { DateTime } from "luxon";
-import useSapeurs from "@/store/useSapeurs";
+import useSapeurs from "../store/useSapeurs";
 
 const exercicesStore = useExercices();
 const sapeursStore = useSapeurs();

@@ -57,9 +57,9 @@ import {
   alertController,
 } from "@ionic/vue";
 import { add, close } from "ionicons/icons";
-import useActiveIntervention from "@/store/useActiveIntervention";
+import useActiveIntervention from "../../store/useActiveIntervention";
 import ModalMaterielVue from "../modals/ModalMateriel.vue";
-import useMateriels from "@/store/useMateriels";
+import useMateriels from "../../store/useMateriels";
 
 const materielModule = useMateriels();
 const materiels = materielModule.state;

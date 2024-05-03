@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { v4 as uuidv4 } from "uuid";
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useDateFormatter from "../../tools/useDateFormatter";
 import {
   IonList,
   IonItem,
@@ -12,7 +12,7 @@ import {
 import { body, call, play } from "ionicons/icons";
 import { computed, ref } from "vue";
 import { DateTime } from "luxon";
-import useSapeurs from "@/store/useSapeurs";
+import useSapeurs from "../../store/useSapeurs";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 import { useRouter } from "vue-router";
 

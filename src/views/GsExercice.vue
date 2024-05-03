@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { PresenceExercice, HeureExerciceType } from "@/models/bundle";
-import useExerciceCategories from "@/store/useExerciceCategories";
+import { PresenceExercice, HeureExerciceType } from "../models/bundle";
+import useExerciceCategories from "../store/useExerciceCategories";
 
 import {
   IonButtons,
@@ -26,17 +26,17 @@ import {
 } from "@ionic/vue";
 import { add, refresh, checkmarkCircle } from "ionicons/icons";
 
-import useDateFormatter from "@/tools/useDateFormatter";
-import useExexercices from "@/store/useExercices";
+import useDateFormatter from "../tools/useDateFormatter";
+import useExexercices from "../store/useExercices";
 import { useRoute } from "vue-router";
-import router from "@/router";
-import useExcuseTypes from "@/store/useExcuseTypes";
-import useSapeurs from "@/store/useSapeurs";
+import router from "../router";
+import useExcuseTypes from "../store/useExcuseTypes";
+import useSapeurs from "../store/useSapeurs";
 import { computed, nextTick, ref } from "vue";
-import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
-import useHeureExerciceTypes from "@/store/useHeureExerciceTypes";
-import useUnitesType from "@/store/useUnitesTypes";
-import { useNotify } from "@/tools/useToast";
+import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
+import useHeureExerciceTypes from "../store/useHeureExerciceTypes";
+import useUnitesType from "../store/useUnitesTypes";
+import { useNotify } from "../tools/useToast";
 
 const { formatDate } = useDateFormatter();
 

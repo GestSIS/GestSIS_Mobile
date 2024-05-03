@@ -17,8 +17,8 @@ import {
   alertController,
 } from "@ionic/vue";
 import { arrowBack } from "ionicons/icons";
-import useSapeurs from "@/store/useSapeurs";
-import { Sapeur } from "@/models/sapeur";
+import useSapeurs from "../../store/useSapeurs";
+import { Sapeur } from "../../models/sapeur";
 
 const props = withDefaults(
   defineProps<{

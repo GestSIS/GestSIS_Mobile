@@ -47,7 +47,7 @@ import {
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import useAuth from "./store/useAuth";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "./hooks/useTheme";
 
 const route = useRoute();
 const activeRoute = ref(route.name);

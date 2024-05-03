@@ -10,11 +10,11 @@ import {
   IonButton,
 } from "@ionic/vue";
 
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useSapeurs from "@/store/useSapeurs";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useSapeurs from "../../store/useSapeurs";
 import { computed } from "vue";
-import router from "@/router";
-import useAuth from "@/store/useAuth";
+import router from "../../router";
+import useAuth from "../../store/useAuth";
 
 const { state } = useActiveIntervention();
 // const { state, updatePresences } = useActiveIntervention();

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import useAuth, { UserStatus } from "@/store/useAuth";
+import useAuth, { UserStatus } from "../store/useAuth";
 import {
   IonCard,
   IonCardContent,
@@ -17,8 +17,8 @@ import {
   loadingController,
 } from "@ionic/vue";
 import { ref, watchEffect } from "vue";
-import useStore from "@/store/useStore";
-import { useNotify } from "@/tools/useToast";
+import useStore from "../store/useStore";
+import { useNotify } from "../tools/useToast";
 
 const router = useRouter();
 const email = ref("");

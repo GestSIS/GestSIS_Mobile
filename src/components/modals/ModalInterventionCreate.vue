@@ -13,11 +13,11 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import { useNotify } from "@/tools/useToast";
+import { useNotify } from "../../tools/useToast";
 import { DateTime } from "luxon";
 
-import useInterventions from "@/store/useInterventions";
-import useLocalites from "@/store/useLocalites";
+import useInterventions from "../../store/useInterventions";
+import useLocalites from "../../store/useLocalites";
 import ModalLocaliteSelectVue from "./ModalLocaliteSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
 

@@ -16,7 +16,7 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/vue";
-import { useNotify } from "@/tools/useToast";
+import { useNotify } from "../../tools/useToast";
 import { DateTime } from "luxon";
 
 const notify = useNotify();

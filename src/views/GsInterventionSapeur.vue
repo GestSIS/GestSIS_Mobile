@@ -21,12 +21,12 @@ import {
 import { add } from "ionicons/icons";
 
 import { useRoute, useRouter } from "vue-router";
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useGroupes from "@/store/useGroupes";
-import useSapeurs from "@/store/useSapeurs";
+import useActiveIntervention from "../store/useActiveIntervention";
+import useGroupes from "../store/useGroupes";
+import useSapeurs from "../store/useSapeurs";
 import { DateTime } from "luxon";
-import ModalSapeurSelectVue from "@/components/modals/ModalSapeurSelect.vue";
-import BaseDatetime from "@/components/base/BaseDatetime.vue";
+import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
+import BaseDatetime from "../components/base/BaseDatetime.vue";
 
 const router = useRouter();
 const route = useRoute();

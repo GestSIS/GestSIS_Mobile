@@ -63,11 +63,11 @@ import {
 } from "@ionic/vue";
 import { add, close } from "ionicons/icons";
 
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useDateFormatter from "@/tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useDateFormatter from "../../tools/useDateFormatter";
 import ModalAppelVue from "../modals/ModalAppelSelect.vue";
 import { DateTime } from "luxon";
-import { Appel } from "@/models/appel";
+import { Appel } from "../../models/appel";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 import { computed } from "vue";
 

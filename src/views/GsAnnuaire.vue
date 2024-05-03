@@ -14,7 +14,7 @@ import {
 } from "@ionic/vue";
 import { call } from "ionicons/icons";
 
-import useTelephones from "@/store/useTelephones";
+import useTelephones from "../store/useTelephones";
 import { computed, ref } from "vue";
 
 const query = ref("");

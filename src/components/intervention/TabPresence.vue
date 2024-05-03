@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { IonSegment, IonSegmentButton } from "@ionic/vue";
 
-import { usePresenceTab } from "@/store/usePresenceTabState";
+import { usePresenceTab } from "../../store/usePresenceTabState";
 import SubTabGroupe from "./SubTabGroupe.vue";
 import SubTabQuittance from "./SubTabQuittance.vue";
 import SubTabPresence from "./SubTabPresence.vue";

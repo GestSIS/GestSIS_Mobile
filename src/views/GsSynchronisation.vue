@@ -22,10 +22,10 @@ import {
   warning,
 } from "ionicons/icons";
 
-import useDateFormatter from "@/tools/useDateFormatter";
-import useStore from "@/store/useStore";
-import { StoreState } from "@/store/useBasicStore";
-import useAuth from "@/store/useAuth";
+import useDateFormatter from "../tools/useDateFormatter";
+import useStore from "../store/useStore";
+import { StoreState } from "../store/useBasicStore";
+import useAuth from "../store/useAuth";
 const { formatDate } = useDateFormatter();
 const { modules, syncAll, syncModule } = useStore();
 const { hasPermission } = useAuth();

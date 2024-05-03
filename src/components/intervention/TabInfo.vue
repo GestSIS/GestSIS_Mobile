@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import useActiveIntervention from "@/store/useActiveIntervention";
-import useInterventions from "@/store/useInterventions";
-import useLocalites from "@/store/useLocalites";
-// import usePhaseTypes from '@/store/usePhaseTypes';
-import useSapeurs from "@/store/useSapeurs";
-import useStatsFederal from "@/store/useStatsFederal";
-import useTypesIntervention from "@/store/useTypesIntervention";
-import { useNotify } from "@/tools/useToast";
+import useActiveIntervention from "../../store/useActiveIntervention";
+import useInterventions from "../../store/useInterventions";
+import useLocalites from "../../store/useLocalites";
+// import usePhaseTypes from '../../store/usePhaseTypes';
+import useSapeurs from "../../store/useSapeurs";
+import useStatsFederal from "../../store/useStatsFederal";
+import useTypesIntervention from "../../store/useTypesIntervention";
+import { useNotify } from "../../tools/useToast";
 import {
   IonButton,
   IonTextarea,
@@ -33,7 +33,7 @@ import { useRouter } from "vue-router";
 import ModalLocaliteSelectVue from "../modals/ModalLocaliteSelect.vue";
 import ModalSapeurSelectVue from "../modals/ModalSapeurSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
-import useStore from "@/store/useStore";
+import useStore from "../../store/useStore";
 import { DateTime } from "luxon";
 import ModalInterventionValidate from "../modals/ModalInterventionValidate.vue";
 

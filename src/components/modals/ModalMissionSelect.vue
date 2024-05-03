@@ -12,8 +12,8 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useMissionsTypes from "@/store/useMissionTypes";
-import { MissionType } from "@/models/missiontype";
+import useMissionsTypes from "../../store/useMissionTypes";
+import { MissionType } from "../../models/missiontype";
 
 const query = ref("");
 const missionModule = useMissionsTypes();
