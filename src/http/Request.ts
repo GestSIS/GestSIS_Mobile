@@ -3,8 +3,8 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
 
-const API_URL = process.env.VUE_APP_API_ENDPOINT;
-const AUTH_URL = process.env.VUE_APP_AUTH_ENDPOINT;
+const API_URL = import.meta.env.VITE_APP_API_ENDPOINT;
+const AUTH_URL = import.meta.env.VITE_APP_AUTH_ENDPOINT;
 
 const refreshTokenPromise = ref<any>("");
 const refreshTokenCountAwait = ref<any>("");

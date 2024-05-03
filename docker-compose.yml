@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ionic-dev:1.0
+    image: ionic-dev:1.1
     container_name: gestsis-mobile
     restart: unless-stopped
     tty: true
