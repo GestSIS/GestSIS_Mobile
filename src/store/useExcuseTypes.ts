@@ -1,4 +1,4 @@
-import { readonly, Ref, ref } from 'vue';
+import { readonly, type Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { ExcuseType } from '../models/excusetype';
 import ExcuseTypeService from '../services/ExcuseTypeService';

@@ -1,4 +1,4 @@
-import { readonly, Ref, ref } from 'vue';
+import { readonly, type Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { HeureExerciceType } from '../models/heureexercicetype';
 import ExerciceHeureTypeService from '../services/ExerciceHeureTypeService';

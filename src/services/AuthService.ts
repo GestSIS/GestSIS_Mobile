@@ -1,5 +1,5 @@
 import Api from '../http/Request';
-import { Sis } from '../models/sis';
+import type { Sis } from '../models/sis.ts';
 
 export default {
   login(payload: any): Promise<any> {

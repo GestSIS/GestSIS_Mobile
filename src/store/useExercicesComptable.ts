@@ -1,4 +1,4 @@
-import { readonly, Ref, ref } from 'vue';
+import { readonly, type Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
 import { ExerciceComptable } from '../models/exercicecomptable';
 import ExerciceComptableService from '../services/ExerciceComptableService';

@@ -2,6 +2,9 @@ import pluginVue from 'eslint-plugin-vue'
 export default [
   ...pluginVue.configs['flat/recommended'],
   {
+  parserOptions: {
+    project: ["./tsconfig.json"],
+  },
   rules: {
     // 'no-console': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 'no-debugger': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',

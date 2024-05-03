@@ -2,6 +2,7 @@
   "name": "GestsisMobile",
   "version": "2.5.0",
   "private": true,
+  "type": "module",
   "description": "An Ionic project",
   "scripts": {
     "dev": "vite",

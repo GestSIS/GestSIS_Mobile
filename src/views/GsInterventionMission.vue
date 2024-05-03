@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { type Ref, ref } from "vue";
 import {
   IonPage,
   IonTitle,
