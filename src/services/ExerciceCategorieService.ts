@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { ExerciceCategorie } from '@/models/bundle';
+import Api from '../http/Request';
+import { ExerciceCategorie } from '../models/bundle';
 
 export default {
   getCategories(): Promise<ExerciceCategorie[]> {

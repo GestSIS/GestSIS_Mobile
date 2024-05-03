@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { StatFederal } from '@/models/bundle';
+import { StatFederal } from '../models/bundle';
 import StatFederalService from '@/services/StatFederalService';
 
 const state: Ref<StatFederal[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useStatsFederal() {
   const name = "Statistiques fédérales";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

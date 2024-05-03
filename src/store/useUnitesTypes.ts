@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { UniteType } from '@/models/bundle';
+import { UniteType } from '../models/bundle';
 import UniteService from '@/services/UniteService';
 
 const state: Ref<UniteType[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useUnitesType() {
   const name = "Unités";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

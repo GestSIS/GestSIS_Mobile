@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { Ref, ref } from "vue";
+import { type Ref, ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore";
 
 const { persistentStore } = usePersistentStore();
@@ -29,8 +29,8 @@ export default function useBasicStore<Type>(
         value instanceof Set
           ? [...value]
           : value instanceof Map
-          ? { ...value }
-          : value
+            ? { ...value }
+            : value
       )
     );
     await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);

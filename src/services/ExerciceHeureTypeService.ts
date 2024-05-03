@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { HeureExerciceType } from '@/models/bundle';
+import Api from '../http/Request';
+import { HeureExerciceType } from '../models/bundle';
 
 export default {
   getHeuresTypes(): Promise<HeureExerciceType[]> {

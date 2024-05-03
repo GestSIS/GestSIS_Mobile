@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { ExerciceComptable } from '@/models/exercicecomptable';
+import { ExerciceComptable } from '../models/exercicecomptable';
 import ExerciceComptableService from '@/services/ExerciceComptableService';
 
 const state: Ref<ExerciceComptable[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useExexercicesComptable() {
   const name = "Exercices comptable";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
   };

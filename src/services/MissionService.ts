@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { MissionType } from '@/models/missiontype';
+import Api from '../http/Request';
+import { MissionType } from '../models/missiontype';
 
 export default {
   getMissions(): Promise<MissionType[]> {

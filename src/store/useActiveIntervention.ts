@@ -1,11 +1,11 @@
-import { Ref, ref } from 'vue';
+import { type Ref, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Intervention } from '@/models/intervention';
+import { Intervention } from '../models/intervention';
 
 import useInterventions from './useInterventions';
-import { Mission } from '@/models/mission';
-import { Appel } from '@/models/appel';
+import { Mission } from '../models/mission';
+import { Appel } from '../models/appel';
 
 const state: Ref<Intervention> = ref({ ...new Intervention() });
 
@@ -144,8 +144,8 @@ export default function useActiveIntervention() {
         const presence = sapeursMapping.get(s.id);
         if (presence) {
           presence.presences = presence.presences
-            .map(p => ({...p, date_fin: p.date_fin == "" ? presences.date : p.date_fin }));
-            sapeursMapping.set(s.id, presence);
+            .map(p => ({ ...p, date_fin: p.date_fin == "" ? presences.date : p.date_fin }));
+          sapeursMapping.set(s.id, presence);
         } else {
           console.error("Hum seems like we are trying to remove a sapeur which is not there")
         }

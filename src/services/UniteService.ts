@@ -1,8 +1,8 @@
-import Api from '@/http/Request';
-import { UniteType } from '@/models/bundle';
+import Api from '../http/Request';
+import { UniteType } from '../models/bundle';
 
 export default {
-  getUnites() : Promise<UniteType[]> {
+  getUnites(): Promise<UniteType[]> {
     return Api.api().get('/unites');
   },
 };

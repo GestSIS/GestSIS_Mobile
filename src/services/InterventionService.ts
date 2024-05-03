@@ -1,5 +1,5 @@
-import Api from "@/http/Request";
-import { Intervention } from "@/models/bundle";
+import Api from "../http/Request";
+import { Intervention } from "../models/bundle";
 import useGroupes from "@/store/useGroupes";
 import useLocalites from "@/store/useLocalites";
 
@@ -25,11 +25,9 @@ export default {
         heure_fin: i.date_fin.split(" ")[1],
         proprietaire:
           `${i.proprietaire.nom ?? ""} ${i.proprietaire.prenom ?? ""}\n` +
-          `${
-            i.proprietaire.adresse ? (i.proprietaire.adresse ?? "") + ", " : ""
+          `${i.proprietaire.adresse ? (i.proprietaire.adresse ?? "") + ", " : ""
           }${formattedLocalite ?? ""}\n` +
-          `${i.proprietaire.email ? i.proprietaire.email ?? "" + ", " : ""}${
-            i.proprietaire.telephone ?? ""
+          `${i.proprietaire.email ? i.proprietaire.email ?? "" + ", " : ""}${i.proprietaire.telephone ?? ""
           }`,
         sapeurs: i.sapeurs.flatMap((sapeur) =>
           sapeur.presences.map((p) => ({

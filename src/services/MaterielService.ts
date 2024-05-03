@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { Materiel } from '@/models/materiel';
+import Api from '../http/Request';
+import { Materiel } from '../models/materiel';
 
 export default {
   getMateriels(): Promise<Materiel[]> {

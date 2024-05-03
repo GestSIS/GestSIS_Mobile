@@ -1,4 +1,4 @@
-import useAuth from "@/store/useAuth";
+import useAuth from "../store/useAuth";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";

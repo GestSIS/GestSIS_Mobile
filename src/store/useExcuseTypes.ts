@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { ExcuseType } from '@/models/excusetype';
+import { ExcuseType } from '../models/excusetype';
 import ExcuseTypeService from '@/services/ExcuseTypeService';
 
 const state: Ref<ExcuseType[]> = ref([]);

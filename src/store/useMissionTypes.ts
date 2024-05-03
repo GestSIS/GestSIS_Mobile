@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { MissionType } from '@/models/bundle';
+import { MissionType } from '../models/bundle';
 import MissionService from '@/services/MissionService';
 
 const state: Ref<MissionType[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useMissionTypes() {
   const name = "Missions";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

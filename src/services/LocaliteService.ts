@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { Localite } from '@/models/localite';
+import Api from '../http/Request';
+import { Localite } from '../models/localite';
 
 export default {
   getLocalites(): Promise<Localite[]> {

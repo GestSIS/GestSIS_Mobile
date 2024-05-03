@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { HeureExerciceType } from '@/models/heureexercicetype';
+import { HeureExerciceType } from '../models/heureexercicetype';
 import ExerciceHeureTypeService from '@/services/ExerciceHeureTypeService';
 
 const state: Ref<HeureExerciceType[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useHeureExerciceTypes() {
   const name = "Heures exercice types";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'exercice.presence',

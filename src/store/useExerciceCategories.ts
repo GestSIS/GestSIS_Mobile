@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { ExerciceCategorie } from '@/models/exercicecategorie';
+import { ExerciceCategorie } from '../models/exercicecategorie';
 import ExerciceCategorieService from '@/services/ExerciceCategorieService';
 
 const state: Ref<ExerciceCategorie[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useExerciceCategories() {
   const name = "Catégories d'exercices";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'exercice.presence',

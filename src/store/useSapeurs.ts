@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { Sapeur } from '@/models/bundle';
+import { Sapeur } from '../models/bundle';
 import SapeurService from '@/services/SapeurService';
 
 const state: Ref<Sapeur[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useSapeurs() {
   const name = "Sapeurs";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
   };

@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { Localite } from '@/models/localite';
+import { Localite } from '../models/localite';
 import LocaliteService from '@/services/LocaliteService';
 
 const state: Ref<Localite[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useLocalites() {
   const name = "Localités";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
   };

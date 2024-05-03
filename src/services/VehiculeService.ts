@@ -1,5 +1,5 @@
-import Api from '@/http/Request';
-import { Vehicule } from '@/models/bundle';
+import Api from '../http/Request';
+import { Vehicule } from '../models/bundle';
 
 export default {
   getVehicules(): Promise<Vehicule[]> {

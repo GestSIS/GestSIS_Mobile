@@ -1,8 +1,8 @@
-import AuthService from "@/services/AuthService";
+import AuthService from "../services/AuthService";
 import { reactive, ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore";
 import useStore from "./useStore";
-import Api from "@/http/Request";
+import Api from "../http/Request";
 import { jwtDecode } from "jwt-decode";
 
 const { persistentStore } = usePersistentStore();

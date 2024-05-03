@@ -1,4 +1,4 @@
-import { PhaseType } from '@/models/phasetype';
+import { PhaseType } from '../models/phasetype';
 import PhaseTypeService from '@/services/PhaseTypeService';
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
@@ -14,7 +14,7 @@ export default function usePhaseTypes() {
   const name = "Phases";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

@@ -1,5 +1,5 @@
-import Api from "@/http/Request";
-import { Sapeur } from "@/models/sapeur";
+import Api from "../http/Request";
+import { Sapeur } from "../models/sapeur";
 
 export default {
   getSapeurs(): Promise<Sapeur[]> {

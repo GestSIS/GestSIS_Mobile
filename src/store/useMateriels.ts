@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { Materiel } from '@/models/bundle';
+import { Materiel } from '../models/bundle';
 import MaterielService from '@/services/MaterielService';
 
 const state: Ref<Materiel[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useMateriels() {
   const name = "Matériel";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

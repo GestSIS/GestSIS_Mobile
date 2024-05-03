@@ -1,6 +1,6 @@
 import { readonly, Ref, ref } from 'vue';
 import useBasicStore from './useBasicStore';
-import { Groupe } from '@/models/groupe';
+import { Groupe } from '../models/groupe';
 import GroupeService from '@/services/GroupeService';
 
 const state: Ref<Groupe[]> = ref([]);
@@ -14,7 +14,7 @@ export default function useGroupes() {
   const name = "Groupes";
 
   return {
-    ...store,  
+    ...store,
     name,
     state: readonly(state),
     permission: 'intervention.modification',

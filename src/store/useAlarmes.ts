@@ -1,7 +1,7 @@
-import { Ref, ref } from "vue";
+import { type Ref, ref } from "vue";
 import useBasicStore, { StoreState } from "./useBasicStore";
-import AlarmeService from "@/services/AlarmeService";
-import { Alarme } from "@/models/alarme";
+import AlarmeService from "../services/AlarmeService";
+import { Alarme } from "../models/alarme";
 import { DateTime } from "luxon";
 
 const state: Ref<Alarme[]> = ref([]);

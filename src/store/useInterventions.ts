@@ -1,6 +1,6 @@
-import { ref, Ref } from "vue";
-import InterventionService from "@/services/InterventionService";
-import { Intervention } from "@/models/intervention";
+import { type Ref, ref } from "vue";
+import InterventionService from "../services/InterventionService";
+import { Intervention } from "../models/intervention";
 import { v4 as uuidv4 } from "uuid";
 import useBasicStore, { StoreState } from "./useBasicStore";
 import { DateTime } from "luxon";
