@@ -1,6 +1,6 @@
 FROM openjdk:17-oraclelinux8
 
-RUN microdnf module enable nodejs:18
+RUN microdnf module enable nodejs:20
 RUN microdnf install npm wget unzip curl
 
 RUN npm add -g yarn
