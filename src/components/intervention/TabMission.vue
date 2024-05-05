@@ -87,6 +87,15 @@ const nbMission = computed(() => intervention.value.missions.length);
       >
     </ion-item>
     <ion-item v-if="!intervention.missions.length">Aucune mission</ion-item>
+    <ion-item v-else-if="!missions.length">
+      <p>
+        Aucune mission en cours !
+        <br />
+        <span class="details"
+          >Désactivez le filtre pour afficher les missions terminées</span
+        >
+      </p>
+    </ion-item>
     <ion-item
       :button="true"
       v-for="(mission, i) in missions"
