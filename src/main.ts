@@ -6,7 +6,7 @@ import { IonicVue } from "@ionic/vue";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css";
-import '@ionic/vue/css/palettes/dark.system.css';
+import "@ionic/vue/css/palettes/dark.class.css";
 
 /* Basic CSS for apps built with Ionic */
 import "@ionic/vue/css/normalize.css";

@@ -89,7 +89,7 @@ const online = window.navigator.onLine;
         </ion-card-content>
       </ion-card>
 
-      <ion-button expand="full" color="light" @click="syncAll"
+      <ion-button expand="full" color="primary" @click="syncAll"
         >Tout synchroniser</ion-button
       >
       <ion-list>

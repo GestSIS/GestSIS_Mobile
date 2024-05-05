@@ -128,64 +128,84 @@ const hasExercicePresencePermission = computed(() =>
       <ion-grid>
         <ion-row>
           <ion-col size="6" v-if="hasInterventionEditPermission">
-            <div class="tile" @click="navigateTo('interventions')">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('interventions')"
+            >
               <div class="icon">
                 <ion-icon
                   :icon="flame"
                   color="white"
                   aria-hidden="true"
                 ></ion-icon>
+                <p class="label">Rapports d'intervention</p>
               </div>
-              <p class="label">Rapports d'intervention</p>
-            </div>
+            </ion-button>
           </ion-col>
           <ion-col size="6" v-if="hasExercicePresencePermission">
-            <div class="tile" @click="navigateTo('exercices')">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('exercices')"
+            >
               <div class="icon">
                 <ion-icon
                   :icon="checkbox"
                   color="white"
                   aria-hidden="true"
                 ></ion-icon>
+                <p class="label">Présences exercices</p>
               </div>
-              <p class="label">Présences exercices</p>
-            </div>
+            </ion-button>
           </ion-col>
           <ion-col size="6" v-if="hasInterventionEditPermission">
-            <div class="tile" @click="navigateTo('annuaire')">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('annuaire')"
+            >
               <div class="icon">
                 <ion-icon
                   :icon="call"
                   color="white"
                   aria-hidden="true"
                 ></ion-icon>
+                <p class="label">Annuaire</p>
               </div>
-              <p class="label">Annuaire</p>
-            </div>
+            </ion-button>
           </ion-col>
           <ion-col size="6">
-            <div class="tile" @click="navigateTo('synchronisation')">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('synchronisation')"
+            >
               <div class="icon">
                 <ion-icon
                   :icon="syncIcon"
                   color="white"
                   aria-hidden="true"
                 ></ion-icon>
+                <p class="label">Synchronisation</p>
               </div>
-              <p class="label">Synchronisation</p>
-            </div>
+            </ion-button>
           </ion-col>
           <ion-col size="6">
-            <div class="tile" @click="navigateTo('parametres')">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('parametres')"
+            >
               <div class="icon">
                 <ion-icon
                   :icon="settings"
                   color="white"
                   aria-hidden="true"
                 ></ion-icon>
+                <p class="label">Paramètres</p>
               </div>
-              <p class="label">Paramètres</p>
-            </div>
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -213,13 +233,7 @@ ion-col > div > p:first-child {
 }
 
 .tile {
-  color: #fff;
-  text-align: center;
-  height: 100%;
-}
-
-.tile .icon {
-  padding-top: 5px;
+  text-transform: none;
 }
 
 .tile .icon ion-icon {
@@ -227,7 +241,7 @@ ion-col > div > p:first-child {
 }
 
 .tile .label {
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 
 @media screen and (max-width: 400px) {

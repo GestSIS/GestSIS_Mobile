@@ -4,20 +4,11 @@ http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
-  --ion-color-primary: #b90101;/**#3880ff;**/
+  --ion-color-primary: #b90101; /**#3880ff;**/
+  --ion-color-primary-contrast: #fff; /** #428cff; **/
 }
 
-@media (prefers-color-scheme: dark) {
-  /*
-   * Dark Colors
-   * -------------------------------------------
-   */
-
-  body {
-    --ion-color-primary: #b90101;/** #428cff; **/
-  }
-}
-
-body.dark {
-  --ion-color-primary: #b90101;/** #428cff; **/
+.ion-palette-dark {
+  --ion-color-primary: #b90101; /** #428cff; **/
+  --ion-color-primary-contrast: #fff; /** #428cff; **/
 }
