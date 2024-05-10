@@ -30,7 +30,6 @@ intervention.value.sapeurs.sort((a, b) =>
 );
 
 const moduleSapeur = useSapeurs();
-const sapeurs = moduleSapeur.state;
 
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.value.sapeurs.filter(
@@ -41,22 +40,21 @@ const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   )
 );
 
-const sapeursSansPresenceExercices = computed(() => {
-  const sapeursSaisi = [
-    ...new Map(
-      intervention.value.missions
-        .filter((mission) => mission.sapeur.id)
-        .map((mission) => mission.sapeur)
-        .map((s) => [s.id, { ...s, type: 0 }])
-    ).values(),
-  ];
+const sapeursManquants = computed(() => {
+  const sapeurIdsSaisi = new Set([
+    ...intervention.value.missions.map((mission) => mission.sapeur.id),
+    intervention.value.sapeur_id,
+  ]);
   const sapeursIdPotentiel = new Set(
     intervention.value.sapeurs.map((sap) => sap.id)
   );
-  const sapeursExistant = new Set(sapeurs.value.map((sap) => sap.id));
-  return sapeursSaisi.filter(
-    (s) => s.id && !sapeursIdPotentiel.has(s.id) && sapeursExistant.has(s.id)
+  const indexedSapeurs = new Map(
+    moduleSapeur.state.value.map((s) => [s.id, s])
   );
+  return [...sapeurIdsSaisi]
+    .filter((id) => id && !sapeursIdPotentiel.has(id))
+    .map((id) => indexedSapeurs.get(id) ?? null)
+    .filter((s) => s);
 });
 
 const addMissingSapeur = (sapeurId: number) => {
@@ -159,7 +157,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
   <ion-item-group>
     <ion-item
       lines="full"
-      v-for="(sapeur, i) of sapeursSansPresenceExercices"
+      v-for="(sapeur, i) of sapeursManquants"
       :key="i"
       @click="addMissingSapeur(sapeur.id ?? 0)"
       :disabled="intervention.localStatus == 'validated'"
@@ -171,7 +169,7 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
         aria-label="Attention"
       ></ion-icon>
       <ion-text color="warning"
-        >{{ sapeur.designation }} - Présence manquante</ion-text
+        >{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text
       >
     </ion-item>
   </ion-item-group>
