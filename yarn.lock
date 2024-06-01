@@ -820,6 +820,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ionic/core@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@ionic/core@npm:8.2.0"
+  dependencies:
+    "@stencil/core": "npm:^4.17.2"
+    ionicons: "npm:^7.2.2"
+    tslib: "npm:^2.1.0"
+  checksum: 10/4ba40533efa7298ded67a1d105b2f116af9083b39a35ae583ba730a6f1ffe49f1f58c437cd6f187e56c068b7b086ef6794afbff9299f18d3017c629b121f10ae
+  languageName: node
+  linkType: hard
+
 "@ionic/storage@npm:^4.0.0":
   version: 4.0.0
   resolution: "@ionic/storage@npm:4.0.0"
@@ -980,13 +991,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:8.1.0, @ionic/vue@npm:^8.1.0":
+"@ionic/vue@npm:8.1.0":
   version: 8.1.0
   resolution: "@ionic/vue@npm:8.1.0"
   dependencies:
     "@ionic/core": "npm:8.1.0"
     ionicons: "npm:^7.0.0"
   checksum: 10/d0c27d7053bb2c0c730e99d32371ce6f2a0c923f9d33ec99e977bf41bbdd7a2f4c4f046e797faf77f8b8925db97716b4a95ecacf6c1094ba5e9f95e7cc9f01dd
+  languageName: node
+  linkType: hard
+
+"@ionic/vue@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@ionic/vue@npm:8.2.0"
+  dependencies:
+    "@ionic/core": "npm:8.2.0"
+    ionicons: "npm:^7.0.0"
+  checksum: 10/546dbcba9a407e762143bfe05f091e7adca22c3661ac3af300bed20767d343b86af7a68b8e75f0ef6815ddd75b6a94754ccefa9f32f8bb54641025009cc296ec
   languageName: node
   linkType: hard
 
@@ -2035,7 +2056,7 @@ __metadata:
     "@capacitor/keyboard": "npm:^6.0.0"
     "@capacitor/status-bar": "npm:^6.0.0"
     "@ionic/storage": "npm:^4.0.0"
-    "@ionic/vue": "npm:^8.1.0"
+    "@ionic/vue": "npm:^8.2.0"
     "@ionic/vue-router": "npm:^8.1.0"
     "@types/jest": "npm:^29.5.12"
     "@types/luxon": "npm:^3.4.2"
