@@ -29,8 +29,8 @@ export default function useBasicStore<Type>(
         value instanceof Set
           ? [...value]
           : value instanceof Map
-            ? { ...value }
-            : value
+          ? { ...value }
+          : value
       )
     );
     await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
