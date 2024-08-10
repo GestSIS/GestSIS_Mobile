@@ -1,5 +1,13 @@
 # GestSIS Mobile
 
+## Dev
+
+Just run :
+
+```sh
+docker compose up -d
+```
+
 ## Build
 
 ### En utilisant Docker (Manière privilégiée)
@@ -37,6 +45,7 @@ gradlew bundle
 The output of the bundle is in `<project-name>/app/build/outputs/bundle/`
 
 Source:
+
 - https://stackoverflow.com/a/57204818
 
 ## Signing the bundle
