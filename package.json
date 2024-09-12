@@ -23,7 +23,7 @@
     "@ionic/vue-router": "^8.2.6",
     "@types/luxon": "^3.4.2",
     "@vitejs/plugin-vue": "^5.1.2",
-    "axios": "1.7.3",
+    "axios": "1.7.4",
     "cordova-sqlite-storage": "^6.1.0",
     "ionicons": "^7.4.0",
     "jetifier": "^2.0.0",
