@@ -7,7 +7,7 @@ import useHeureExerciceTypes from "./useHeureExerciceTypes";
 import useInterventions from "./useInterventions";
 import useLocalites from "./useLocalites";
 import useLocalitesSis from "./useLocalitesSis";
-import useMateriels from "./useMateriels";
+import useMaterielsIntervention from "./useMaterielsIntervention";
 import useMissionTypes from "./useMissionTypes";
 import usePhaseTypes from "./usePhaseTypes";
 import useSapeurs from "./useSapeurs";
@@ -37,7 +37,7 @@ export default function useStore() {
     useTelephones(),
     useStatsFederal(),
     useTypesIntervention(),
-    useMateriels(),
+    useMaterielsIntervention(),
     useVehicules(),
     usePhaseTypes(),
   ];

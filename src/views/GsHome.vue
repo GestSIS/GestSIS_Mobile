@@ -29,6 +29,7 @@ import {
   sync as syncIcon,
   syncOutline,
   settings,
+  shirt,
 } from "ionicons/icons";
 
 import { computed } from "vue";
@@ -82,6 +83,9 @@ const hasInterventionEditPermission = computed(() =>
 );
 const hasExercicePresencePermission = computed(() =>
   hasPermission("exercice.presence")
+);
+const hasMaterielEditPermission = computed(() =>
+  hasPermission("mat_perso.modification")
 );
 </script>
 
@@ -172,6 +176,22 @@ const hasExercicePresencePermission = computed(() =>
                   aria-hidden="true"
                 ></ion-icon>
                 <p class="label">Annuaire</p>
+              </div>
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" v-if="hasMaterielEditPermission">
+            <ion-button
+              class="tile"
+              expand="full"
+              @click="navigateTo('materiel')"
+            >
+              <div class="icon">
+                <ion-icon
+                  :icon="shirt"
+                  color="white"
+                  aria-hidden="true"
+                ></ion-icon>
+                <p class="label">Matériel</p>
               </div>
             </ion-button>
           </ion-col>

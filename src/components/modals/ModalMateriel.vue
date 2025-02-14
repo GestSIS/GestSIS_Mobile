@@ -12,10 +12,10 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useMateriels from "../../store/useMateriels";
+import useMaterielsIntervention from "../../store/useMaterielsIntervention";
 
 const query = ref("");
-const materielModule = useMateriels();
+const materielModule = useMaterielsIntervention();
 const filteredMateriel = computed(() => {
   return materielModule.state.value.filter(
     (m) => m.designation.toLowerCase().indexOf(query.value) > -1

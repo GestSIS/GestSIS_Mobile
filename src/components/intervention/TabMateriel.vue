@@ -58,10 +58,10 @@ import {
 } from "@ionic/vue";
 import { add, close } from "ionicons/icons";
 import useActiveIntervention from "../../store/useActiveIntervention";
+import useMaterielsIntervention from "../../store/useMaterielsIntervention";
 import ModalMaterielVue from "../modals/ModalMateriel.vue";
-import useMateriels from "../../store/useMateriels";
 
-const materielModule = useMateriels();
+const materielModule = useMaterielsIntervention();
 const materiels = materielModule.state;
 const interventionModule = useActiveIntervention();
 const intervention = interventionModule.state;
