@@ -1,5 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "GestsisMobile",
-  "webDir": "dist"
+	"appId": "io.ionic.starter",
+	"appName": "GestsisMobile",
+	"webDir": "dist",
+	"bundledWebRuntime": false
 }
