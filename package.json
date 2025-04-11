@@ -8,7 +8,9 @@
     "dev": "vite",
     "preview": "vite preview",
     "build": "vite build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "ionic:build": "npm run build",
+    "ionic:serve": "vite dev --port 8100 --host"
   },
   "dependencies": {
     "@capacitor-mlkit/barcode-scanning": "^7.2.1",
@@ -41,6 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.29.1",
     "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
