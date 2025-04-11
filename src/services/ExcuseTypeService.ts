@@ -1,8 +1,8 @@
-import Api from '../http/Request';
-import { ExcuseType } from '../models/bundle';
+import Api from "../http/Request";
+import type { ExcuseType } from "../models/excusetype";
 
 export default {
   getExcuses(): Promise<ExcuseType[]> {
-    return Api.api().get('/excuses-types');
+    return Api.api().get("/excuses-types");
   },
 };

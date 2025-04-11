@@ -1,4 +1,4 @@
-export class Sis {
-    id: number;
-    nom: string;
+export interface Sis {
+  id: number;
+  nom: string;
 }

@@ -9,11 +9,11 @@
 
   <ion-list>
     <ion-item
-      :button="true"
       v-for="(vehicule, i) in vehicules"
       :key="i"
-      @click="changeVehiculeStatut(vehicule.id)"
+      :button="true"
       :disabled="intervention.localStatus == 'validated'"
+      @click="changeVehiculeStatut(vehicule.id)"
     >
       {{ vehicule.designation }}
       <ion-icon
@@ -26,7 +26,7 @@
         :aria-label="
           vehiculesIntervention.has(vehicule.id) ? 'engagé' : 'non engagé'
         "
-      ></ion-icon>
+      />
     </ion-item>
   </ion-list>
 </template>
@@ -51,6 +51,6 @@ const changeVehiculeStatut = (vehiculeId: number) => {
   } else {
     vehiculesIntervention.value.add(vehiculeId);
   }
-  updateVehicules([...(vehiculesIntervention.value as any)]);
+  updateVehicules([...vehiculesIntervention.value]);
 };
 </script>

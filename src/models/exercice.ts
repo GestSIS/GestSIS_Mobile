@@ -1,9 +1,9 @@
-import { PresenceExercice } from "./presence-exercice";
+import type { PresenceExercice } from "./presence-exercice";
 
-export class Exercice {
+export interface Exercice {
   // Local data for modification
   localUuid: string;
-  localStatus: "empty"|"in_progress"|"validated"
+  localStatus: "empty" | "in_progress" | "validated";
   initialSapeurs: PresenceExercice[];
 
   // Remote data

@@ -53,43 +53,51 @@ const dismiss = () => {
       <ion-title>Modifier appel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="activeAppel.date">Date</base-datetime>
+      <base-datetime v-model="activeAppel.date">
+        Date
+      </base-datetime>
 
       <ion-item>
         <ion-input
-          label="Numéro"
-          labelPlacement="fixed"
           v-model="activeAppel.numero"
-        ></ion-input>
+          label="Numéro"
+          label-placement="fixed"
+        />
       </ion-item>
 
       <ion-item>
         <ion-input
-          label="Nom"
-          labelPlacement="fixed"
           v-model="activeAppel.nom"
-        ></ion-input>
+          label="Nom"
+          label-placement="fixed"
+        />
       </ion-item>
 
       <ion-item>
         <ion-textarea
-          label="Commentaire"
-          labelPlacement="fixed"
           v-model="activeAppel.commentaire"
-        ></ion-textarea>
+          label="Commentaire"
+          label-placement="fixed"
+        />
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save"
-      >Modifier</ion-button
+    <ion-button
+      expand="full"
+      class="ion-margin-top"
+      @click="save"
     >
+      Modifier
+    </ion-button>
   </ion-content>
 </template>
 

@@ -41,7 +41,7 @@ const search = (event: any) => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button defaultHref="accueil"></ion-back-button>
+          <ion-back-button default-href="accueil" />
         </ion-buttons>
         <ion-title>Annuaire</ion-title>
       </ion-toolbar>
@@ -49,23 +49,27 @@ const search = (event: any) => {
 
     <ion-content class="ion-padding">
       <ion-searchbar
-        @ionInput="search($event)"
         placeholder="Rechercher..."
-      ></ion-searchbar>
+        @ion-input="search($event)"
+      />
 
       <ion-list>
-        <ion-item v-if="filteredTelephone.length === 0 && query !== ''"
-          >Aucun numéro correspondant</ion-item
-        >
-        <ion-item v-if="filteredTelephone.length === 0 && query === ''"
-          >Aucun numéro dans votre base de donnée</ion-item
-        >
+        <ion-item v-if="filteredTelephone.length === 0 && query !== ''">
+          Aucun numéro correspondant
+        </ion-item>
+        <ion-item v-if="filteredTelephone.length === 0 && query === ''">
+          Aucun numéro dans votre base de donnée
+        </ion-item>
         <ion-item
           v-for="telephone of filteredTelephone"
           :key="telephone.id"
           :href="'tel:' + telephone.numero"
         >
-          <ion-icon :icon="call" slot="start" aria-hidden="true"></ion-icon>
+          <ion-icon
+            slot="start"
+            :icon="call"
+            aria-hidden="true"
+          />
           {{ telephone.nom }}
           <span slot="end">{{ telephone.numero }}</span>
         </ion-item>

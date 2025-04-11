@@ -1,16 +1,19 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main-content">
-      <ion-menu content-id="main-content" type="overlay">
+      <ion-menu
+        content-id="main-content"
+        type="overlay"
+      >
         <ion-content>
           <ion-list id="inbox-list">
             <ion-list-header>Menu</ion-list-header>
             <!-- <ion-note>hi@ionicframework.com</ion-note> -->
 
             <ion-menu-toggle
-              :auto-hide="false"
               v-for="(p, i) in appPages"
               :key="i"
+              :auto-hide="false"
             >
               <ion-item
                 router-direction="root"
@@ -26,7 +29,7 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
+      <ion-router-outlet id="main-content" />
     </ion-split-pane>
   </ion-app>
 </template>

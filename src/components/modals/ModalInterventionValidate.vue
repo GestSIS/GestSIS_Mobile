@@ -50,7 +50,9 @@ const dismiss = () => {
       <ion-title>Valider l'intervention</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -66,17 +68,25 @@ const dismiss = () => {
 
     <ion-item no-lines>
       <ion-label>Date de fin</ion-label>
-      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      <ion-datetime-button datetime="datetime" />
     </ion-item>
 
     <ion-row>
       <ion-col>
-        <ion-button expand="full" class="ion-margin-top" @click="dismiss">
+        <ion-button
+          expand="full"
+          class="ion-margin-top"
+          @click="dismiss"
+        >
           Annuler
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="full" class="ion-margin-top" @click="save">
+        <ion-button
+          expand="full"
+          class="ion-margin-top"
+          @click="save"
+        >
           Valider
         </ion-button>
       </ion-col>
@@ -85,8 +95,8 @@ const dismiss = () => {
       <ion-datetime
         id="datetime"
         :value="activeDate"
-        @ionChange="(ev: any) => activeDate = ev.detail.value"
-      ></ion-datetime>
+        @ion-change="(ev: any) => activeDate = ev.detail.value"
+      />
     </ion-modal>
   </ion-content>
 </template>

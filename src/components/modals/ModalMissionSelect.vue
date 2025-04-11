@@ -13,7 +13,7 @@ import {
   modalController,
 } from "@ionic/vue";
 import useMissionsTypes from "../../store/useMissionTypes";
-import { MissionType } from "../../models/missiontype";
+import type { MissionType } from "../../models/missiontype";
 
 const query = ref("");
 const missionModule = useMissionsTypes();
@@ -51,30 +51,34 @@ const dismiss = () => {
       <ion-title>Sélection du titre de la mission</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-searchbar
-      @ionInput="search($event)"
       placeholder="Saisir"
-    ></ion-searchbar>
+      @ion-input="search($event)"
+    />
 
     <ion-list>
       <ion-item
         v-if="query.length > 0"
         @click="selectMission({ titre: query, id: 0 })"
-        >{{ query }}</ion-item
       >
+        {{ query }}
+      </ion-item>
       <ion-item
-        button
         v-for="mission of filteredMission"
         :key="mission.id"
+        button
         @click="selectMission(mission)"
-        >{{ mission.titre }}</ion-item
       >
+        {{ mission.titre }}
+      </ion-item>
     </ion-list>
   </ion-content>
 </template>

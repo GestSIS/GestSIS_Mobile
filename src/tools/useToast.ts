@@ -2,8 +2,8 @@ import { loadingController } from "@ionic/core";
 import { toastController } from "@ionic/vue";
 
 export function useNotify() {
-  let toast: any = null;
-  let loader: any = null;
+  let toast: HTMLIonToastElement | null = null;
+  let loader: HTMLIonLoadingElement | null = null;
 
   const show = async (
     message: string,
@@ -34,8 +34,8 @@ export function useNotify() {
     show(error, "bottom", 10000, true);
   };
 
-  const loading = (message: string) => {
-    loader = loadingController.create({
+  const loading = async (message: string) => {
+    loader = await loadingController.create({
       message,
       translucent: true,
       animated: true,

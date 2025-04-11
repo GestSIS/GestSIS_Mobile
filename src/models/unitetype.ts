@@ -1,6 +1,6 @@
-export class UniteType {
-    id: number;
-    comptable: boolean;
-    unite: string;
-    abreviation: string;
+export interface UniteType {
+  id: number;
+  comptable: boolean;
+  unite: string;
+  abreviation: string;
 }

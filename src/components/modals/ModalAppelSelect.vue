@@ -17,6 +17,7 @@ import { add, call } from "ionicons/icons";
 import useTelephones from "../../store/useTelephones";
 import { alertController } from "@ionic/core";
 import { useNotify } from "../../tools/useToast";
+import type { Appel } from "../../models/appel";
 
 const notify = useNotify();
 
@@ -100,29 +101,39 @@ const addTelephone = async () => {
       <ion-title>Nouvel appel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-searchbar
-      @ionInput="search($event)"
       placeholder="Rechercher..."
-    ></ion-searchbar>
+      @ion-input="search($event)"
+    />
 
     <ion-list>
       <ion-item @click="addTelephone">
-        <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon>Entrer
-        un nouveau numéro
+        <ion-icon
+          slot="start"
+          :icon="add"
+          aria-hidden="true"
+        />Entrer un
+        nouveau numéro
       </ion-item>
       <ion-item
-        button
         v-for="telephone of filteredTelephone"
         :key="telephone.id"
+        button
         @click="selectTelephone(telephone)"
       >
-        <ion-icon :icon="call" slot="start" aria-hidden="true"></ion-icon>
+        <ion-icon
+          slot="start"
+          :icon="call"
+          aria-hidden="true"
+        />
         {{ telephone.nom }}
         <span slot="end">{{ telephone.numero }}</span>
       </ion-item>

@@ -1,4 +1,4 @@
-export class ExerciceComptable {
+export interface ExerciceComptable {
   id: number;
   designation: string;
   annee: number;

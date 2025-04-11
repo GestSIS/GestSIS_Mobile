@@ -1,14 +1,10 @@
-import { readonly, type Ref, ref } from 'vue';
-import useBasicStore from './useBasicStore';
-import { Vehicule } from '../models/bundle';
-import VehiculeService from '../services/VehiculeService';
+import { readonly, type Ref, ref } from "vue";
+import useBasicStore from "./useBasicStore";
+import type { Vehicule } from "../models/vehicule";
+import VehiculeService from "../services/VehiculeService";
 
 const state: Ref<Vehicule[]> = ref([]);
-const store = useBasicStore(
-  state,
-  VehiculeService.getVehicules,
-  'vehicules'
-);
+const store = useBasicStore(state, VehiculeService.getVehicules, "vehicules");
 
 export default function useVehicules() {
   const name = "Véhicules";
@@ -17,6 +13,6 @@ export default function useVehicules() {
     ...store,
     name,
     state: readonly(state),
-    permission: 'intervention.modification',
+    permission: "intervention.modification",
   };
 }

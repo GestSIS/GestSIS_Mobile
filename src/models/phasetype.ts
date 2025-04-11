@@ -1,5 +1,5 @@
-export class PhaseType {
-    id: number;
-    designation: string;
-    tri: number;
+export interface PhaseType {
+  id: number;
+  designation: string;
+  tri: number;
 }

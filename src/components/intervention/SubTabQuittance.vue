@@ -56,7 +56,9 @@ const groupeAlarmes =
 </script>
 
 <template>
-  <ion-item v-if="!intervention.alarme">Aucune quittance</ion-item>
+  <ion-item v-if="!intervention.alarme">
+    Aucune quittance
+  </ion-item>
   <ion-item>
     {{ sapeursSansPresence.length }} sapeur{{
       sapeursSansPresence.length > 1 ? "s" : ""
@@ -66,24 +68,28 @@ const groupeAlarmes =
       slot="end"
       :disabled="!sapeursSansPresence.length"
       @click="importerDepuisQuittance"
-      >Importer</ion-button
     >
+      Importer
+    </ion-button>
   </ion-item>
   <ion-list v-if="intervention.alarme">
-    <ion-item-group v-for="g in groupeAlarmes" :key="g.sis">
+    <ion-item-group
+      v-for="g in groupeAlarmes"
+      :key="g.sis"
+    >
       <ion-item-divider>
-        <ion-label
-          >{{ g.sis.toUpperCase() }} : {{ g.number }} - {{ g.name }}</ion-label
-        ><ion-badge slot="end"
-          >{{
+        <ion-label>
+          {{ g.sis.toUpperCase() }} : {{ g.number }} - {{ g.name }}
+        </ion-label><ion-badge slot="end">
+          {{
             intervention.alarme.firefighters.filter(
               (f) => f.group_name == g.name
             ).length +
-            intervention.alarme.unresolved.filter((f) => f.group_name == g.name)
-              .length
+              intervention.alarme.unresolved.filter((f) => f.group_name == g.name)
+                .length
           }}
-          quittances</ion-badge
-        >
+          quittances
+        </ion-badge>
       </ion-item-divider>
       <ion-item
         v-for="s in intervention.alarme.firefighters.filter(

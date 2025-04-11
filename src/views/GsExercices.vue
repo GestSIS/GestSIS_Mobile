@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Exercice } from "../models/bundle";
+import type { Exercice } from "../models/exercice";
 
 import {
   IonButtons,
@@ -76,7 +76,7 @@ const openDetails = async (exercice: Exercice) => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+          <ion-back-button :default-href="{ name: 'accueil' }" />
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -84,11 +84,13 @@ const openDetails = async (exercice: Exercice) => {
 
     <ion-content class="ion-padding">
       <ion-list lines="inset">
-        <ion-item v-if="!exercices.length">Aucun exercice</ion-item>
+        <ion-item v-if="!exercices.length">
+          Aucun exercice
+        </ion-item>
         <ion-item
-          tappable
           v-for="exercice in exercices"
           :key="exercice.id"
+          tappable
           @click="openDetails(exercice)"
         >
           <ion-icon
@@ -97,39 +99,39 @@ const openDetails = async (exercice: Exercice) => {
               exercice.localStatus == 'empty'
                 ? create
                 : exercice.localStatus == 'in_progress'
-                ? create
-                : exercice.localStatus == 'validated'
-                ? sync
-                : warning
+                  ? create
+                  : exercice.localStatus == 'validated'
+                    ? sync
+                    : warning
             "
             :aria-label="
               exercice.localStatus == 'empty'
                 ? 'vide'
                 : exercice.localStatus == 'in_progress'
-                ? 'en cours de création'
-                : exercice.localStatus == 'validated'
-                ? 'validé, à synchroniser'
-                : ''
+                  ? 'en cours de création'
+                  : exercice.localStatus == 'validated'
+                    ? 'validé, à synchroniser'
+                    : ''
             "
-          ></ion-icon>
+          />
           <p>
             <!-- TODO: Optionnel See if display can be improved -->
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}
-            <br />
+            <br>
             <span class="details statut">
               {{
                 exercice.localStatus == "empty"
                   ? "A saisir"
                   : exercice.localStatus == "in_progress"
-                  ? "En cours d'édition"
-                  : exercice.localStatus == "validated"
-                  ? "Validé, en attente de synchronisation"
-                  : ""
+                    ? "En cours d'édition"
+                    : exercice.localStatus == "validated"
+                      ? "Validé, en attente de synchronisation"
+                      : ""
               }}
             </span>
-            <br />
+            <br>
             <span class="details">
               {{ getFormattedLocalite(exercice.localite_id) }} -
               {{ getFormattedCategorie(exercice.exercice_categorie_id) }}

@@ -1,49 +1,50 @@
-import { Mission } from "./mission";
-import { Appel } from "./appel";
+import type { Mission } from "./mission";
+import type { Appel } from "./appel";
 import { DateTime } from "luxon";
-import { Alarme } from "./alarme";
+import type { Alarme } from "./alarme";
+import { v4 as uuidv4 } from "uuid";
 
 export class Intervention {
-  localUuid: string;
-  localStatus: "in_progress" | "validated";
+  localUuid: string = uuidv4();
+  localStatus: "in_progress" | "validated" = "in_progress";
 
-  id: number;
+  id: number | null = null;
   date_debut = DateTime.now().toISO() ?? "";
-  date_fin: string;
-  objet: string;
-  lieu: string;
+  date_fin: string = "";
+  objet: string = "";
+  lieu: string = "";
   wgs84 = "";
 
-  degre: number;
+  degre: number | null = null;
   stat_nb = 1; // Correspond au nombre d'interventions effectif
   sauve_personne = 0;
   sauve_animaux = 0;
 
   rapport_police = false;
-  agent: string;
+  agent: string = "";
 
-  type_intervention_id: number;
-  stat_federal_id: number;
-  localite_id: number;
-  sapeur_id: number;
+  type_intervention_id: number | null = null;
+  stat_federal_id: number | null = null;
+  localite_id: number | null = null;
+  sapeur_id: number | null = null;
 
   proprietaire: {
     nom: string;
     prenom: string;
     adresse: string;
-    localite_id: number;
+    localite_id: number | null;
     telephone: string;
     email: string;
   } = {
-    nom: null as any,
-    prenom: null as any,
-    adresse: null as any,
-    localite_id: null as any,
-    telephone: null as any,
-    email: null as any,
+    nom: "",
+    prenom: "",
+    adresse: "",
+    localite_id: null,
+    telephone: "",
+    email: "",
   };
 
-  responsable: string; // Utile ?
+  responsable: string = ""; // Utile ?
 
   description = "";
   sapeurs: Array<{

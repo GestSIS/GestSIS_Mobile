@@ -18,7 +18,7 @@ import {
 } from "@ionic/vue";
 import { arrowBack } from "ionicons/icons";
 import useSapeurs from "../../store/useSapeurs";
-import { Sapeur } from "../../models/sapeur";
+import type { Sapeur } from "../../models/sapeur";
 
 const props = withDefaults(
   defineProps<{
@@ -112,42 +112,62 @@ const autreSapeur = async () => {
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button slot="start" @click="dismiss()">
-          <ion-icon :icon="arrowBack" aria-label="fermer"></ion-icon>
+        <ion-button
+          slot="start"
+          @click="dismiss()"
+        >
+          <ion-icon
+            :icon="arrowBack"
+            aria-label="fermer"
+          />
         </ion-button>
       </ion-buttons>
 
       <ion-title>Ajouter un sapeur</ion-title>
 
-      <ion-buttons v-if="props.multiSelect" slot="end">
-        <ion-button @click="validate()">Valider</ion-button>
+      <ion-buttons
+        v-if="props.multiSelect"
+        slot="end"
+      >
+        <ion-button @click="validate()">
+          Valider
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-searchbar
-      @ionInput="search($event)"
-      placeholder="Rechercher..."
       ref="searchbar"
-    ></ion-searchbar>
+      placeholder="Rechercher..."
+      @ion-input="search($event)"
+    />
 
     <ion-list>
       <ion-item
-        button
         v-for="sapeur of filteredSapeur"
         :key="sapeur.id"
+        button
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end"
-          >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
+        <ion-checkbox
+          v-if="props.multiSelect"
+          class="ion-margin-end"
         >
-        <ion-label v-else>{{ sapeur.nom }} {{ sapeur.prenom }}</ion-label>
+          {{ sapeur.nom }} {{ sapeur.prenom }}
+        </ion-checkbox>
+        <ion-label v-else>
+          {{ sapeur.nom }} {{ sapeur.prenom }}
+        </ion-label>
       </ion-item>
     </ion-list>
-    <ion-button v-if="autre && !multiSelect" expand="block" @click="autreSapeur"
-      >Autre</ion-button
+    <ion-button
+      v-if="autre && !multiSelect"
+      expand="block"
+      @click="autreSapeur"
     >
+      Autre
+    </ion-button>
   </ion-content>
 </template>
 

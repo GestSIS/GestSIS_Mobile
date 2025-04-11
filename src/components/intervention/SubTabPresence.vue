@@ -53,8 +53,8 @@ const sapeursManquants = computed(() => {
   );
   return [...sapeurIdsSaisi]
     .filter((id) => id && !sapeursIdPotentiel.has(id))
-    .map((id) => indexedSapeurs.get(id) ?? null)
-    .filter((s) => s);
+    .map((id) => indexedSapeurs.get(id ?? 0) ?? null)
+    .filter((s) => s !== null);
 });
 
 const addMissingSapeur = (sapeurId: number) => {
@@ -133,21 +133,19 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
       <ion-col size="4">
         <ion-button
           expand="block"
-          @click="addPresenceExercice('ARRIVEE')"
           :disabled="intervention.localStatus == 'validated'"
+          @click="addPresenceExercice('ARRIVEE')"
         >
-          <ion-icon slot="start" :icon="logIn" aria-hidden="true"></ion-icon
-          >Arrivée
+          <ion-icon slot="start" :icon="logIn" aria-hidden="true" />Arrivée
         </ion-button>
       </ion-col>
       <ion-col size="4">
         <ion-button
           expand="block"
-          @click="addPresenceExercice('DEPART')"
           :disabled="sapeursAvecPresenceExercicesIncompletes.length == 0"
+          @click="addPresenceExercice('DEPART')"
         >
-          <ion-icon slot="start" :icon="logOut" aria-hidden="true"></ion-icon
-          >Départ
+          <ion-icon slot="start" :icon="logOut" aria-hidden="true" />Départ
         </ion-button>
       </ion-col>
     </ion-row>
@@ -156,48 +154,48 @@ const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
   <!-- Sapeurs dont il manque la présence -->
   <ion-item-group>
     <ion-item
-      lines="full"
       v-for="(sapeur, i) of sapeursManquants"
       :key="i"
-      @click="addMissingSapeur(sapeur.id ?? 0)"
+      lines="full"
       :disabled="intervention.localStatus == 'validated'"
+      @click="addMissingSapeur(sapeur.id ?? 0)"
     >
       <ion-icon
+        slot="start"
         color="warning"
         :icon="warning"
-        slot="start"
         aria-label="Attention"
-      ></ion-icon>
-      <ion-text color="warning"
-        >{{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante</ion-text
-      >
+      />
+      <ion-text color="warning">
+        {{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante
+      </ion-text>
     </ion-item>
   </ion-item-group>
 
   <!-- Présences des sapeurs -->
   <ion-item-group v-for="(sapeur, i) in intervention.sapeurs" :key="i">
-    <ion-item-divider color="light"
-      >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-item-divider
-    >
+    <ion-item-divider color="light">
+      {{ sapeur.nom }} {{ sapeur.prenom }}
+    </ion-item-divider>
     <ion-item
-      :button="true"
       v-for="(presence, j) in sapeur.presences"
       :key="j"
-      @click="editPresenceExercice(i, j)"
+      :button="true"
       :disabled="intervention.localStatus == 'validated'"
+      @click="editPresenceExercice(i, j)"
     >
       <p>
         {{ formatDate(presence.date_debut, "HH:mm") }} -
         {{ presence.date_fin ? formatDate(presence.date_fin, "HH:mm") : "" }}
       </p>
       <ion-button
-        @click.stop="removePresenceExercice(i, j)"
+        slot="end"
         :disabled="intervention.localStatus == 'validated'"
         fill="clear"
         color="dark"
-        slot="end"
+        @click.stop="removePresenceExercice(i, j)"
       >
-        <ion-icon slot="icon-only" :icon="close" aria-label="fermer"></ion-icon>
+        <ion-icon slot="icon-only" :icon="close" aria-label="fermer" />
       </ion-button>
     </ion-item>
   </ion-item-group>

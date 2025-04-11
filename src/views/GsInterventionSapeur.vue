@@ -57,7 +57,7 @@ const groupeModule = useGroupes();
 const sapeurModule = useSapeurs();
 
 // Init date with current date rounded to nearest quarter
-let date: DateTime = null as any;
+let date: DateTime | null = null;
 if (mode == "ARRIVEE") {
   // Défault à date de début d'intervention
   date = DateTime.fromSQL(state.value.date_debut ?? "");
@@ -130,7 +130,6 @@ if (mode == "ARRIVEE") {
 sapeurs.sort((a, b) =>
   (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
 );
-
 const presences: Presences = reactive({
   date: date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "",
   sapeurs,
@@ -181,14 +180,12 @@ const save = () => {
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button
-            :defaultHref="{ name: 'intervention' }"
-          ></ion-back-button>
+          <ion-back-button :default-href="{ name: 'intervention' }" />
         </ion-buttons>
         <ion-title>Présences</ion-title>
 
         <ion-buttons slot="end">
-          <ion-button slot="end" @click="save()">Valider</ion-button>
+          <ion-button slot="end" @click="save()"> Valider </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -196,12 +193,13 @@ const save = () => {
     <ion-content class="ion-padding">
       <ion-list>
         <base-datetime
-          :per-quarter="true"
           v-model="presences.date"
+          :per-quarter="true"
           :clearable="true"
-          >Heure
-          {{ mode == "ARRIVEE" ? "d'arrivée" : "de départ" }}</base-datetime
         >
+          Heure
+          {{ mode == "ARRIVEE" ? "d'arrivée" : "de départ" }}
+        </base-datetime>
       </ion-list>
 
       <ion-grid>
@@ -211,7 +209,7 @@ const save = () => {
           </ion-col>
           <ion-col v-if="mode == 'ARRIVEE'" size="4">
             <ion-button expand="block" @click="addSapeurs">
-              <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon>
+              <ion-icon slot="start" :icon="add" aria-hidden="true" />
               Autres sapeurs
             </ion-button>
           </ion-col>
@@ -220,9 +218,9 @@ const save = () => {
 
       <ion-list>
         <ion-item v-for="sapeur of presences.sapeurs" :key="sapeur.id">
-          <ion-checkbox v-model="sapeur.selected" class="ion-margin-end"
-            >{{ sapeur.nom }} {{ sapeur.prenom }}</ion-checkbox
-          >
+          <ion-checkbox v-model="sapeur.selected" class="ion-margin-end">
+            {{ sapeur.nom }} {{ sapeur.prenom }}
+          </ion-checkbox>
         </ion-item>
       </ion-list>
     </ion-content>

@@ -36,7 +36,7 @@ import useDateFormatter from "../tools/useDateFormatter";
 import useActiveIntervention from "../store/useActiveIntervention";
 import { useRouter } from "vue-router";
 import { Intervention } from "../models/intervention";
-import { Alarme } from "../models/alarme";
+import type { Alarme } from "../models/alarme";
 import ModalInterventionCreateVue from "../components/modals/ModalInterventionCreate.vue";
 import ModalQuittancesVue from "../components/modals/ModalQuittances.vue";
 import useSapeurs from "../store/useSapeurs";
@@ -134,7 +134,7 @@ const create = async (alarme: Alarme | null) => {
     // intervention.stat_federal_id = "TODO";
     // intervention.type_intervention_id = "TODO";
     intervention.degre =
-      { BLEU: 2, JAUNE: 3, ROUGE: 4 }[alarme.couleur] ?? (null as any);
+      { BLEU: 2, JAUNE: 3, ROUGE: 4 }[alarme.couleur] ?? null;
     setActiveIntervention(updateIntervention(intervention));
   } else {
     const modalIntervention = await modalController.create({
@@ -211,7 +211,7 @@ const displayAlarmModule = true;
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button defaultHref="accueil"></ion-back-button>
+          <ion-back-button default-href="accueil" />
         </ion-buttons>
         <ion-title>Rapports d'intervention</ion-title>
       </ion-toolbar>
@@ -221,15 +221,15 @@ const displayAlarmModule = true;
       <ion-list v-if="displayAlarmModule">
         <ion-item v-if="loading">
           <ion-label>Chargement des alarmes</ion-label>
-          <ion-spinner name="circles"></ion-spinner
-        ></ion-item>
-        <ion-item v-if="!loading && !filteredAlarmes.length"
-          >Aucune alarme</ion-item
-        >
+          <ion-spinner name="circles" />
+        </ion-item>
+        <ion-item v-if="!loading && !filteredAlarmes.length">
+          Aucune alarme
+        </ion-item>
         <ion-item
-          :button="true"
           v-for="alarme in filteredAlarmes"
           :key="alarme.id"
+          :button="true"
           @click.prevent="onAlarm(alarme)"
         >
           <ion-icon
@@ -237,28 +237,26 @@ const displayAlarmModule = true;
             :icon="warningSharp"
             color="warning"
             aria-label="Attention"
-          ></ion-icon>
+          />
           <ion-icon
             slot="end"
             :icon="warningSharp"
             color="warning"
             aria-hidden="true"
-          ></ion-icon>
+          />
           <p>
             <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> -
             <span class="details">{{ alarme.description }}</span>
-            <br />
+            <br>
             <span class="details">{{ alarme.address }}</span>
-            <br />
+            <br>
             <span>
-              <ion-badge
-                >{{
-                  alarme.firefighters.filter((f) => f.sis === activeSisKey)
-                    .length +
+              <ion-badge>{{
+                alarme.firefighters.filter((f) => f.sis === activeSisKey)
+                  .length +
                   alarme.unresolved.filter((f) => f.sis == activeSisKey).length
-                }}
-                quittances</ion-badge
-              >
+              }}
+                quittances</ion-badge>
             </span>
           </p>
         </ion-item>
@@ -266,37 +264,47 @@ const displayAlarmModule = true;
 
       <ion-row>
         <ion-col>
-          <ion-button expand="full" @click="create(null)">
-            <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
-            >Nouveau
+          <ion-button
+            expand="full"
+            @click="create(null)"
+          >
+            <ion-icon
+              slot="start"
+              :icon="add"
+              aria-hidden="true"
+            />Nouveau
           </ion-button>
         </ion-col>
         <ion-col v-if="displayAlarmModule">
-          <ion-button expand="full" @click="refreshAlarmes()">
+          <ion-button
+            expand="full"
+            @click="refreshAlarmes()"
+          >
             <ion-spinner
               v-if="loading"
-              name="circles"
               slot="start"
-            ></ion-spinner>
+              name="circles"
+            />
             <ion-icon
               v-else
               slot="start"
               :icon="sync"
               aria-hidden="true"
-            ></ion-icon
-            >Rafraîchir
+            />Rafraîchir
           </ion-button>
         </ion-col>
       </ion-row>
 
       <ion-list>
-        <ion-item v-if="!interventions.length">Aucune intervention</ion-item>
+        <ion-item v-if="!interventions.length">
+          Aucune intervention
+        </ion-item>
         <ion-item
-          :button="true"
           v-for="intervention in interventions"
-          :key="intervention.id"
-          @click.prevent="openDetails(intervention)"
+          :key="intervention.localUuid"
+          :button="true"
           :disabled="loading"
+          @click.prevent="openDetails(intervention)"
         >
           <ion-icon
             slot="start"
@@ -308,11 +316,11 @@ const displayAlarmModule = true;
                 ? 'Créer'
                 : 'Synchroniser'
             "
-          ></ion-icon>
+          />
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut ?? "", "dd.LL.yy HH:mm") }}
-            <br />
+            <br>
             <span class="details">
               {{
                 intervention.localStatus == "in_progress"

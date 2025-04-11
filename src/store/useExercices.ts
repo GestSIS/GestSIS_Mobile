@@ -1,6 +1,6 @@
 import { type Ref, ref } from "vue";
 import useBasicStore, { StoreState } from "./useBasicStore";
-import { Exercice } from "../models/bundle";
+import type { Exercice } from "../models/exercice";
 import ExerciceService from "../services/ExerciceService";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";

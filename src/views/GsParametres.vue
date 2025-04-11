@@ -112,7 +112,7 @@ const onSelectSis = async (sis: string) => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+          <ion-back-button :default-href="{ name: 'accueil' }" />
         </ion-buttons>
         <ion-title>{{ $route.params.id }}</ion-title>
       </ion-toolbar>
@@ -120,13 +120,20 @@ const onSelectSis = async (sis: string) => {
     <ion-content>
       <ion-list lines="none">
         <ion-item v-if="state.data.sis.length > 1">
-          <ion-icon slot="start" :icon="flame" aria-hidden="true"></ion-icon>
+          <ion-icon
+            slot="start"
+            :icon="flame"
+            aria-hidden="true"
+          />
           <ion-select
             label="Sis"
-            @ion-change="onSelectSis($event.target.value)"
             :value="activeSisKey"
+            @ion-change="onSelectSis($event.target.value)"
           >
-            <ion-select-option v-for="sis in state.data.sis" :key="sis">
+            <ion-select-option
+              v-for="sis in state.data.sis"
+              :key="sis"
+            >
               {{ sis }}
             </ion-select-option>
           </ion-select>
@@ -139,7 +146,7 @@ const onSelectSis = async (sis: string) => {
             slot="start"
             :icon="personOutline"
             aria-hidden="true"
-          ></ion-icon>
+          />
           <ion-label>
             {{ state.data.pseudo }}
             -
@@ -151,31 +158,40 @@ const onSelectSis = async (sis: string) => {
             slot="start"
             :icon="contrastOutline"
             aria-hidden="true"
-          ></ion-icon>
+          />
           <ion-select
             label="Thème"
-            @ion-change="switchTheme($event.target.value)"
             :value="activeTheme"
+            @ion-change="switchTheme($event.target.value)"
           >
-            <ion-select-option key="dark" value="dark"
-              >Sombre</ion-select-option
+            <ion-select-option
+              key="dark"
+              value="dark"
             >
-            <ion-select-option key="light" value="light"
-              >Clair</ion-select-option
+              Sombre
+            </ion-select-option>
+            <ion-select-option
+              key="light"
+              value="light"
             >
+              Clair
+            </ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-button expand="full" @click="wrappedLogout"
-          >Déconnexion</ion-button
+        <ion-button
+          expand="full"
+          @click="wrappedLogout"
         >
+          Déconnexion
+        </ion-button>
       </ion-list>
     </ion-content>
 
     <ion-footer>
       <div class="ion-padding copyright">
         Version 2.5.1
-        <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
-        <br />
+        <br>Application créée par Bastien Wermeille <br>support@gestsis.ch
+        <br>
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
       </div>
     </ion-footer>

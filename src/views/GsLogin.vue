@@ -78,7 +78,10 @@ const online = window.navigator.onLine;
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-card v-if="!online" color="warning">
+      <ion-card
+        v-if="!online"
+        color="warning"
+      >
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>
@@ -89,31 +92,31 @@ const online = window.navigator.onLine;
         <ion-list class="ion-padding">
           <ion-item>
             <ion-input
+              v-model="email"
               type="text"
               label-placement="floating"
               label="Adresse e-mail"
               inputmode="email"
-              v-model="email"
               name="email"
-            >
-            </ion-input>
+            />
           </ion-item>
           <ion-item>
             <ion-input
+              v-model="password"
               type="password"
               label-placement="floating"
               label="Mot de passe"
-              v-model="password"
               name="password"
-            ></ion-input>
+            />
           </ion-item>
           <ion-button
             type="submit"
             color="primary"
             expand="block"
             class="ion-margin-top"
-            >Connexion</ion-button
           >
+            Connexion
+          </ion-button>
         </ion-list>
       </form>
     </ion-content>

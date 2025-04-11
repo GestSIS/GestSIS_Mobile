@@ -1,9 +1,14 @@
 <script lang="ts" setup>
-import { PresenceExercice, HeureExerciceType } from "../models/bundle";
+import type { PresenceExercice } from "../models/presence-exercice";
+import type { HeureExerciceType } from "../models/heureexercicetype";
+
 import useExerciceCategories from "../store/useExerciceCategories";
+
+import { trashOutline } from "ionicons/icons";
 
 import {
   IonButtons,
+  IonBadge,
   IonInput,
   IonLabel,
   IonItem,
@@ -84,15 +89,7 @@ if (!exercice.value) {
   // Compute data pour affichage
   exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
     ...p,
-    presenceStatut: p.present
-      ? 1
-      : p.absent
-      ? 2
-      : p.excuse_type_id
-      ? 3
-      : p.remplace
-      ? 4
-      : 0,
+    presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
     excuse_type: p.excuse_type_id
       ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)?.designation ||
         ""
@@ -101,15 +98,7 @@ if (!exercice.value) {
   exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map(
     (p: any) => ({
       ...p,
-      presenceStatut: p.present
-        ? 1
-        : p.absent
-        ? 2
-        : p.excuse_type_id
-        ? 3
-        : p.remplace
-        ? 4
-        : 0,
+      presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
       excuse_type: p.excuse_type_id
         ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)
             ?.designation || ""
@@ -153,9 +142,9 @@ const addSapeur = async () => {
   }
 
   exercice.value.sapeurs.push({
-    id: null as any,
+    id: null,
     sapeur_id: sapeurId,
-    excuse_type_id: null as any,
+    excuse_type_id: null,
     convoque: false,
     present: false,
     amende: false,
@@ -174,8 +163,6 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.absent = false;
   sapeur.present = true;
   sapeur.excuse = false;
-  sapeur.excuse_type_id = null as any;
-  sapeur.excuse_type = null as any;
   sapeur.remplace = false;
 };
 
@@ -183,9 +170,6 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   sapeur.present = false;
   sapeur.absent = true;
-  sapeur.excuse = false;
-  sapeur.excuse_type_id = null as any;
-  sapeur.excuse_type = null as any;
   sapeur.remplace = false;
 };
 
@@ -193,26 +177,33 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   sapeur.absent = false;
   sapeur.present = false;
-  sapeur.excuse = false;
-  sapeur.excuse_type_id = null as any;
-  sapeur.excuse_type = null as any;
   sapeur.remplace = true;
 };
 
-const selectExcuse = async (sapeur: PresenceExercice) => {
+const removeExcuse = async (sapeur: PresenceExercice) => {
+  const sap = exercice.value?.sapeurs.find(
+    (s) => s.sapeur_id === sapeur.sapeur_id
+  );
+  if (sap === undefined) return;
+  sap.excuse_type = "";
+  sap.excuse_type_id = null;
+};
+
+const addExcuse = async (sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   sapeur.present = false;
-  sapeur.absent = false;
+  sapeur.absent = true;
   sapeur.remplace = false;
-  sapeur.excuse = true;
 
   const buttons = excusesTypes.value.map((excuse) => ({
     text: excuse.designation,
     handler: () => {
-      if (!exercice.value) return;
-      sapeur.excuse = true;
-      sapeur.excuse_type_id = excuse.id;
-      sapeur.excuse_type = excuse.designation;
+      const sap = exercice.value?.sapeurs.find(
+        (s) => s.sapeur_id === sapeur.sapeur_id
+      );
+      if (!exercice.value || sap === undefined) return;
+      sap.excuse_type_id = excuse.id;
+      sap.excuse_type = excuse.designation;
     },
   }));
 
@@ -220,6 +211,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
     header: "Excuses",
     buttons: buttons,
   });
+
   await actionSheet.present();
   await actionSheet.onDidDismiss();
   if (!sapeur.excuse_type_id) {
@@ -228,7 +220,7 @@ const selectExcuse = async (sapeur: PresenceExercice) => {
 };
 
 const resetting = ref(false);
-const select = async (statut: number, sapeur: PresenceExercice) => {
+const selectOption = async (statut: number, sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   if (statut == null) {
     // Unselect
@@ -236,7 +228,7 @@ const select = async (statut: number, sapeur: PresenceExercice) => {
   if (resetting.value) {
     return;
   }
-  const actions = [selectPresent, selectAbsent, selectExcuse, selectRemplace];
+  const actions = [selectPresent, selectAbsent, selectRemplace];
   await actions[statut - 1](sapeur);
 
   // Save changes
@@ -309,9 +301,7 @@ const sync = async () => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button
-            :defaultHref="{ name: 'exercices' }"
-          ></ion-back-button>
+          <ion-back-button :default-href="{ name: 'exercices' }" />
         </ion-buttons>
         <ion-title>Exercices</ion-title>
       </ion-toolbar>
@@ -326,46 +316,16 @@ const sync = async () => {
         }}
         - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
       </h3>
-      <!-- <p v-if="exercice?.id_exe_lie != null">
-        Lié à l'exercice
-        {{
-          exercice?.communications != "-"
-            ? exercice?.communications
-            : exercice?.categorie
-        }}
-        - {{ formatDate(exerciceLie.date) }}
-      </p>
-      <ion-button
-        block
-        @click="linkExercice"
-        v-if="!(exercice?.id_exe_lie != null || !exercice?.en_creation)"
-      >
-        Lier un exercice
-      </ion-button>-->
-      <!-- <ion-button
-        block
-        @click="unlinkExercice"
-        v-if="
-          !(
-            exercice?.id_exe_lie == null ||
-            !exercice?.en_creation ||
-            !exerciceLie.en_creation
-          )
-        "
-      >
-        Délier l'exercice
-      </ion-button>-->
-
       <ion-list>
         <ion-row class="sap-item list-header">
           <ion-col>Sapeur</ion-col>
-          <ion-col class="col-radio">Présent</ion-col>
-          <ion-col class="col-radio">Absent</ion-col>
-          <ion-col class="col-radio">Excusé</ion-col>
-          <ion-col class="col-radio">Remplacé</ion-col>
-          <ion-col v-for="heure in heuresTypes" :key="heure.id">{{
-            heure.designation
-          }}</ion-col>
+          <ion-col class="col-radio"> Présent </ion-col>
+          <ion-col class="col-radio"> Absent </ion-col>
+          <ion-col class="col-radio"> Remplacé </ion-col>
+          <ion-col class="col-radio"> Excuse </ion-col>
+          <ion-col v-for="heure in heuresTypes" :key="heure.id">
+            {{ heure.designation }}
+          </ion-col>
         </ion-row>
 
         <div class="sapeurs">
@@ -373,27 +333,40 @@ const sync = async () => {
             v-for="(sapeur, i) in computedSapeurs"
             :key="sapeur.id"
             v-model="sapeur.presenceStatut"
-            @ionChange="select($event.target.value, sapeur)"
+            @ion-change="($event) => selectOption($event.target.value, sapeur)"
           >
             <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
               <ion-col>
                 {{ sapeur?.nomPrenom }}
                 <br />
-                <span v-if="sapeur.excuse_type" class="details">{{
-                  sapeur.excuse_type
-                }}</span>
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio mode="md" :value="1"></ion-radio>
+                <ion-radio mode="md" :value="1" />
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio mode="md" :value="2"></ion-radio>
+                <ion-radio mode="md" :value="2" />
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio mode="md" :value="3"></ion-radio>
+                <ion-radio mode="md" :value="3" />
               </ion-col>
               <ion-col class="col-radio">
-                <ion-radio mode="md" :value="4"></ion-radio>
+                <ion-badge v-if="sapeur.excuse_type">
+                  {{ sapeur.excuse_type }}
+                </ion-badge>
+                <ion-button
+                  v-if="sapeur.excuse_type_id"
+                  size="small"
+                  @click="removeExcuse(sapeur)"
+                >
+                  <ion-icon
+                    :icon="trashOutline"
+                    size=""
+                    color="white"
+                  ></ion-icon>
+                </ion-button>
+                <ion-badge v-else size="small" @click="addExcuse(sapeur)">
+                  +
+                </ion-badge>
               </ion-col>
               <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
                 <ion-item lines="none">
@@ -406,29 +379,40 @@ const sync = async () => {
                         (h) => h.heure_exercice_type_id == heure.id
                       )?.quantite
                     "
-                    @ionChange.stop="
+                    @ion-change.stop="
                       heureInput($event.target.value ?? '', sapeur, heure)
                     "
-                  ></ion-input>
-                  <ion-label slot="end">{{ heure.abreviation }}</ion-label>
+                  />
+                  <ion-label slot="end">
+                    {{ heure.abreviation }}
+                  </ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
           </ion-radio-group>
           <ion-row>
             <ion-col>Total : {{ computedSapeurs?.length }}</ion-col>
-            <ion-col class="col-radio">{{
-              computedSapeurs?.filter((s) => s.presenceStatut == 1)?.length
-            }}</ion-col>
-            <ion-col class="col-radio">{{
-              computedSapeurs?.filter((s) => s.presenceStatut == 2)?.length
-            }}</ion-col>
-            <ion-col class="col-radio">{{
-              computedSapeurs?.filter((s) => s.presenceStatut == 3)?.length
-            }}</ion-col>
-            <ion-col class="col-radio">{{
-              computedSapeurs?.filter((s) => s.presenceStatut == 4)?.length
-            }}</ion-col>
+            <ion-col class="col-radio">
+              {{
+                computedSapeurs?.filter((s) => s.presenceStatut === 1)?.length
+              }}
+            </ion-col>
+            <ion-col class="col-radio">
+              {{
+                computedSapeurs?.filter((s) => s.presenceStatut === 2)?.length
+              }}
+            </ion-col>
+            <ion-col class="col-radio">
+              {{
+                computedSapeurs?.filter((s) => s.presenceStatut === 3)?.length
+              }}
+            </ion-col>
+            <ion-col class="col-radio">
+              {{
+                computedSapeurs?.filter((s) => s.excuse_type_id !== null)
+                  ?.length
+              }}
+            </ion-col>
           </ion-row>
         </div>
       </ion-list>
@@ -437,8 +421,8 @@ const sync = async () => {
         <ion-row>
           <ion-col>
             <ion-button expand="block" @click="addSapeur">
-              <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
-              >Ajouter une présence
+              <ion-icon slot="start" :icon="add" aria-hidden="true" />Ajouter
+              une présence
             </ion-button>
           </ion-col>
         </ion-row>
@@ -446,43 +430,40 @@ const sync = async () => {
           <ion-col>
             <ion-button
               expand="block"
-              @click="reset"
               color="light"
               :disabled="exercice?.localStatus == 'empty'"
+              @click="reset"
             >
               <ion-icon
                 slot="start"
                 :icon="refresh"
                 aria-hidden="true"
-              ></ion-icon
-              >Réinitialiser
+              />Réinitialiser
             </ion-button>
           </ion-col>
           <ion-col>
             <ion-button
-              expand="block"
-              @click="validate"
               v-if="exercice?.localStatus != 'validated'"
+              expand="block"
               :disabled="exercice?.localStatus == 'empty'"
+              @click="validate"
             >
               <ion-icon
                 slot="start"
                 :icon="checkmarkCircle"
                 aria-hidden="true"
-              ></ion-icon
-              >Valider
+              />Valider
             </ion-button>
             <ion-button
+              v-if="exercice?.localStatus == 'validated'"
               expand="block"
               @click="sync"
-              v-if="exercice?.localStatus == 'validated'"
             >
               <ion-icon
                 slot="start"
                 :icon="checkmarkCircle"
                 aria-hidden="true"
-              ></ion-icon
-              >Synchroniser
+              />Synchroniser
             </ion-button>
           </ion-col>
         </ion-row>
@@ -504,7 +485,12 @@ const sync = async () => {
 }
 
 .col-radio {
-  text-align: center;
+  justify-content: center;
+}
+
+.sap-item ion-col {
+  display: flex;
+  align-items: center;
 }
 
 .row {

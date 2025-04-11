@@ -1,14 +1,22 @@
-import pluginVue from 'eslint-plugin-vue'
-export default [
-  ...pluginVue.configs['flat/recommended'],
+// eslint.config.mjs
+import pluginVue from "eslint-plugin-vue";
+import {
+  defineConfigWithVueTs,
+  // globalIgnores,
+  vueTsConfigs,
+} from "@vue/eslint-config-typescript";
+import { globalIgnores } from "eslint/config";
+
+export default defineConfigWithVueTs(
+  pluginVue.configs["flat/recommended"],
+  vueTsConfigs.recommended,
+  globalIgnores(["android*", "Android*"]),
   {
-  parserOptions: {
-    project: ["./tsconfig.json"],
-  },
-  rules: {
-    // 'no-console': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    // 'no-debugger': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    // 'vue/no-deprecated-slot-attribute': 'off',
-    // '@typescript-eslint/no-explicit-any': 'off',
-  },
-}];
+    rules: {
+      // 'no-console': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      // 'no-debugger': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      "vue/no-deprecated-slot-attribute": "off",
+      // '@typescript-eslint/no-explicit-any': 'off',
+    },
+  }
+);

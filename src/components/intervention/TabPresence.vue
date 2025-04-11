@@ -12,9 +12,15 @@ const { activeTab } = usePresenceTab();
 <template>
   <div>
     <ion-segment v-model="activeTab">
-      <ion-segment-button value="GROUPE">Groupes</ion-segment-button>
-      <ion-segment-button value="SAPEUR">Sapeurs</ion-segment-button>
-      <ion-segment-button value="QUITTANCE">Quittances</ion-segment-button>
+      <ion-segment-button value="GROUPE">
+        Groupes
+      </ion-segment-button>
+      <ion-segment-button value="SAPEUR">
+        Sapeurs
+      </ion-segment-button>
+      <ion-segment-button value="QUITTANCE">
+        Quittances
+      </ion-segment-button>
     </ion-segment>
   </div>
 

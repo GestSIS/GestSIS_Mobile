@@ -47,13 +47,18 @@ const save = () => {
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-button @click="dismiss()">
-          <ion-icon :icon="arrowBack" aria-label="fermer"></ion-icon>
+          <ion-icon
+            :icon="arrowBack"
+            aria-label="fermer"
+          />
         </ion-button>
       </ion-buttons>
       <ion-title>Détails d'une présence</ion-title>
 
       <ion-buttons slot="end">
-        <ion-button @click="save()">Enregistrer</ion-button>
+        <ion-button @click="save()">
+          Enregistrer
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -64,26 +69,28 @@ const save = () => {
         <ion-input
           type="text"
           label="Sapeur"
-          labelPlacement="fixed"
+          label-placement="fixed"
           :readonly="true"
           :value="presence.nom + ' ' + presence.prenom"
-        ></ion-input>
+        />
       </ion-item>
 
       <base-datetime
+        v-model="presence.date_debut"
         :per-quarter="true"
         :max="presence.date_fin"
-        v-model="presence.date_debut"
-        >Heure d'arrivée</base-datetime
       >
+        Heure d'arrivée
+      </base-datetime>
 
       <base-datetime
+        v-model="presence.date_fin"
         :per-quarter="true"
         :min="presence.date_debut"
-        v-model="presence.date_fin"
         label="Heure de départ"
-        >Heure de départ</base-datetime
       >
+        Heure de départ
+      </base-datetime>
     </ion-list>
   </ion-content>
 </template>

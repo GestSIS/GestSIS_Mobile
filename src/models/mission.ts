@@ -1,14 +1,14 @@
 export class Mission {
-  localUuid: string;
-  date_debut: string;
-  date_fin: string;
+  localUuid: string = "";
+  date_debut: string = "";
+  date_fin: string = "";
   sapeur: {
     id: number | null;
     designation: string | null;
   } = {
-    id: null as any,
-    designation: null as any,
+    id: null,
+    designation: null,
   };
-  titre: string;
-  resume: string;
+  titre: string = "";
+  resume: string = "";
 }

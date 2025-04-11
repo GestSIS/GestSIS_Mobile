@@ -1,5 +1,5 @@
 import Api from "../http/Request";
-import { Exercice } from "../models/bundle";
+import type { Exercice } from "../models/exercice";
 
 export default {
   getExercices(): Promise<Exercice[]> {

@@ -1,14 +1,10 @@
-import { readonly, type Ref, ref } from 'vue';
-import useBasicStore from './useBasicStore';
-import { Groupe } from '../models/groupe';
-import GroupeService from '../services/GroupeService';
+import { readonly, type Ref, ref } from "vue";
+import useBasicStore from "./useBasicStore";
+import type { Groupe } from "../models/groupe";
+import GroupeService from "../services/GroupeService";
 
 const state: Ref<Groupe[]> = ref([]);
-const store = useBasicStore(
-  state,
-  GroupeService.getGroupes,
-  'groupes'
-);
+const store = useBasicStore(state, GroupeService.getGroupes, "groupes");
 
 export default function useGroupes() {
   const name = "Groupes";
@@ -17,6 +13,6 @@ export default function useGroupes() {
     ...store,
     name,
     state: readonly(state),
-    permission: 'intervention.modification',
+    permission: "intervention.modification",
   };
 }

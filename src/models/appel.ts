@@ -1,8 +1,8 @@
 export class Appel {
-    localUuid: string;
-    date: string;
-    numero: string;
-    nom: string;
-    commentaire: string;
-    nouveau_numero: boolean;
+  localUuid: string = "";
+  date: string = "";
+  nom: string = "";
+  numero: string = "";
+  commentaire: string = "";
+  nouveau_numero: boolean = false;
 }

@@ -148,30 +148,45 @@ const openEvent = async (event: Event) => {
 <template>
   <ion-list>
     <ion-item>
-      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"
-        >Afficher uniquement les missions en cours</ion-checkbox
+      <ion-checkbox
+        slot="end"
+        v-model="onlyPendingMissions"
+        color="primary"
       >
+        Afficher uniquement les missions en cours
+      </ion-checkbox>
     </ion-item>
   </ion-list>
-  <section id="cd-timeline" class="cd-container">
+  <section
+    id="cd-timeline"
+    class="cd-container"
+  >
     <div
-      :class="['cd-timeline-block', colorMapping[event.type]]"
       v-for="event of evenements"
       :key="event.uuid"
+      :class="['cd-timeline-block', colorMapping[event.type]]"
     >
       <div class="cd-timeline-icon positive text-center">
-        <ion-icon :icon="iconMapping[event.type]" aria-hidden="true"></ion-icon>
+        <ion-icon
+          :icon="iconMapping[event.type]"
+          aria-hidden="true"
+        />
       </div>
       <div
         class="cd-timeline-content timeline-text positive"
         @click="openEvent(event)"
       >
-        <h4 class="title">{{ event.titre }}</h4>
+        <h4 class="title">
+          {{ event.titre }}
+        </h4>
         <p class="date">
           {{ formatDate(event.date, "dd.LL.yy HH:mm") }}
           <span v-if="event.auteur">par {{ event.auteur }}</span>
         </p>
-        <p class="description" v-if="event.description">
+        <p
+          v-if="event.description"
+          class="description"
+        >
           {{ event.description }}
         </p>
       </div>

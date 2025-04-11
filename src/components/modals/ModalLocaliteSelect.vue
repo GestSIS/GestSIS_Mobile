@@ -14,7 +14,7 @@ import {
 } from "@ionic/vue";
 import useLocalites from "../../store/useLocalites";
 import useLocalitesSis from "../../store/useLocalitesSis";
-import { Localite } from "../../models/localite";
+import type { Localite } from "../../models/localite";
 
 const query = ref("");
 const localiteModule = useLocalites();
@@ -60,25 +60,28 @@ const selectLocalite = (localite: Localite) => {
       <ion-title>Sélection de la localité</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-searchbar
-      @ionInput="search($event)"
       placeholder="Saisir..."
-    ></ion-searchbar>
+      @ion-input="search($event)"
+    />
 
     <ion-list>
       <ion-item
-        button
         v-for="localite of filteredLocalite"
         :key="localite.id"
+        button
         @click="selectLocalite(localite)"
-        >{{ localite.npa }} {{ localite.designation }}</ion-item
       >
+        {{ localite.npa }} {{ localite.designation }}
+      </ion-item>
     </ion-list>
   </ion-content>
 </template>

@@ -1,4 +1,4 @@
-export class ExcuseType {
+export interface ExcuseType {
   id: number;
   designation: string;
   abreviation: string;

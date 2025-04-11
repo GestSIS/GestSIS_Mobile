@@ -1,5 +1,5 @@
 import Api from "../http/Request";
-import { Exercice } from "../models/bundle";
+import type { Exercice } from "../models/exercice";
 import type { EventType } from "../models/event-type";
 import type { Materiel } from "../models/materiel";
 
@@ -10,7 +10,7 @@ export default {
   getMateriel(): Promise<Materiel[]> {
     return Api.api().get("/mat-perso");
   },
-  createEvent(exerciceData: Exercice): Promise<Boolean> {
+  createEvent(exerciceData: Exercice): Promise<boolean> {
     return Api.api().post("/mat-perso-event", exerciceData);
   },
 };

@@ -15,7 +15,7 @@ import {
   IonItemDivider,
   IonBadge,
 } from "@ionic/vue";
-import { Alarme } from "../../models/alarme";
+import type { Alarme } from "../../models/alarme";
 import useAuth from "../../store/useAuth";
 const { activeSisKey } = useAuth();
 const props = defineProps<{ alarme: Alarme }>();
@@ -32,38 +32,43 @@ const groupes = props.alarme.groups
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title
-        >Quittances
-        <ion-badge
-          >{{
+      <ion-title>
+        Quittances
+        <ion-badge>
+          {{
             props.alarme.firefighters.filter((f) => f.sis === activeSisKey)
               .length +
-            props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
+              props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
           }}
-        </ion-badge></ion-title
-      >
+        </ion-badge>
+      </ion-title>
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
     <ion-list>
-      <ion-item-group v-for="g in groupes" :key="g.sis">
+      <ion-item-group
+        v-for="g in groupes"
+        :key="g.sis"
+      >
         <ion-item-divider>
-          <ion-label
-            >{{ g.sis.toUpperCase() }} : {{ g.number }} -
-            {{ g.name }}</ion-label
-          ><ion-badge slot="end"
-            >{{
+          <ion-label>
+            {{ g.sis.toUpperCase() }} : {{ g.number }} -
+            {{ g.name }}
+          </ion-label><ion-badge slot="end">
+            {{
               props.alarme.firefighters.filter((f) => f.group_name == g.name)
                 .length +
-              props.alarme.unresolved.filter((f) => f.group_name == g.name)
-                .length
+                props.alarme.unresolved.filter((f) => f.group_name == g.name)
+                  .length
             }}
-            quittances</ion-badge
-          >
+            quittances
+          </ion-badge>
         </ion-item-divider>
         <ion-item
           v-for="s in props.alarme.firefighters.filter(

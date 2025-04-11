@@ -1,13 +1,13 @@
-import { readonly, type Ref, ref } from 'vue';
-import useBasicStore from './useBasicStore';
-import { TypeIntervention } from '../models/bundle';
-import TypeInterventionService from '../services/TypeInterventionService';
+import { readonly, type Ref, ref } from "vue";
+import useBasicStore from "./useBasicStore";
+import type { TypeIntervention } from "../models/typeintervention";
+import TypeInterventionService from "../services/TypeInterventionService";
 
 const state: Ref<TypeIntervention[]> = ref([]);
 const store = useBasicStore(
   state,
   TypeInterventionService.getTypes,
-  'types-interventions'
+  "types-interventions"
 );
 
 export default function useTypesIntervention() {
@@ -17,6 +17,6 @@ export default function useTypesIntervention() {
     ...store,
     name,
     state: readonly(state),
-    permission: 'intervention.modification',
+    permission: "intervention.modification",
   };
 }

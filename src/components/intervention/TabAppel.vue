@@ -7,43 +7,50 @@
       <ion-col size="4">
         <ion-button
           expand="block"
-          @click="addCall()"
           :disabled="intervention.localStatus == 'validated'"
+          @click="addCall()"
         >
-          <ion-icon :icon="add" slot="start" aria-hidden="true"></ion-icon
-          >Nouvel appel
+          <ion-icon
+            slot="start"
+            :icon="add"
+            aria-hidden="true"
+          />Nouvel appel
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-list>
-    <ion-item v-if="!intervention.appels.length">Aucun appel</ion-item>
+    <ion-item v-if="!intervention.appels.length">
+      Aucun appel
+    </ion-item>
     <ion-item
-      :button="true"
       v-for="appel in sortedAppels"
       :key="appel.localUuid"
+      :button="true"
       :disabled="intervention.localStatus == 'validated'"
       @click="editCall(appel)"
     >
       <p>
         {{ appel.nom }} - {{ appel.numero }}
-        <br />
-        <span class="details"
-          >Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span
-        >
-        <br />
+        <br>
+        <span class="details">Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span>
+        <br>
         <span class="details">{{ appel.commentaire }}</span>
       </p>
       <ion-button
-        @click.stop="removeCall(appel)"
+        slot="end"
         fill="clear"
         color="dark"
-        slot="end"
         :disabled="intervention.localStatus == 'validated'"
         aria-label="Fermer"
+        @click.stop="removeCall(appel)"
       >
-        <ion-icon slot="icon-only" :icon="close" aria-hidden="true"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          :icon="close"
+          aria-hidden="true"
+        />
       </ion-button>
     </ion-item>
   </ion-list>
@@ -67,7 +74,7 @@ import useActiveIntervention from "../../store/useActiveIntervention";
 import useDateFormatter from "../../tools/useDateFormatter";
 import ModalAppelVue from "../modals/ModalAppelSelect.vue";
 import { DateTime } from "luxon";
-import { Appel } from "../../models/appel";
+import type { Appel } from "../../models/appel";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 import { computed } from "vue";
 

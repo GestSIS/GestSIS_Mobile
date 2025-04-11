@@ -29,7 +29,7 @@ import {
   sync as syncIcon,
   syncOutline,
   settings,
-  shirt,
+  // shirt,
 } from "ionicons/icons";
 
 import { computed } from "vue";
@@ -84,9 +84,9 @@ const hasInterventionEditPermission = computed(() =>
 const hasExercicePresencePermission = computed(() =>
   hasPermission("exercice.presence")
 );
-const hasMaterielEditPermission = computed(() =>
-  hasPermission("mat_perso.modification")
-);
+// const hasMaterielEditPermission = computed(() =>
+//   hasPermission("mat_perso.modification")
+// );
 </script>
 
 <template>
@@ -94,21 +94,30 @@ const hasMaterielEditPermission = computed(() =>
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
+          <ion-menu-button color="primary" />
         </ion-buttons>
         <ion-title>GestSIS Mobile</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-card v-if="needSync" color="warning">
+      <ion-card
+        v-if="needSync"
+        color="warning"
+      >
         <ion-card-content>
           <ion-grid>
             <ion-row>
-              <ion-col col-12 col-md-8>
+              <ion-col
+                col-12
+                col-md-8
+              >
                 <h2>⚠️ Certains éléments ne sont pas synchronisés.</h2>
               </ion-col>
-              <ion-col col-12 col-md-4>
+              <ion-col
+                col-12
+                col-md-4
+              >
                 <ion-button
                   ion-button
                   color="light"
@@ -120,8 +129,7 @@ const hasMaterielEditPermission = computed(() =>
                     slot="start"
                     :icon="syncOutline"
                     aria-hidden="true"
-                  ></ion-icon
-                  >Synchroniser maintenant
+                  />Synchroniser maintenant
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -131,7 +139,10 @@ const hasMaterielEditPermission = computed(() =>
 
       <ion-grid>
         <ion-row>
-          <ion-col size="6" v-if="hasInterventionEditPermission">
+          <ion-col
+            v-if="hasInterventionEditPermission"
+            size="6"
+          >
             <ion-button
               class="tile"
               expand="full"
@@ -142,12 +153,17 @@ const hasMaterielEditPermission = computed(() =>
                   :icon="flame"
                   color="white"
                   aria-hidden="true"
-                ></ion-icon>
-                <p class="label">Rapports d'intervention</p>
+                />
+                <p class="label">
+                  Rapports d'intervention
+                </p>
               </div>
             </ion-button>
           </ion-col>
-          <ion-col size="6" v-if="hasExercicePresencePermission">
+          <ion-col
+            v-if="hasExercicePresencePermission"
+            size="6"
+          >
             <ion-button
               class="tile"
               expand="full"
@@ -158,12 +174,17 @@ const hasMaterielEditPermission = computed(() =>
                   :icon="checkbox"
                   color="white"
                   aria-hidden="true"
-                ></ion-icon>
-                <p class="label">Présences exercices</p>
+                />
+                <p class="label">
+                  Présences exercices
+                </p>
               </div>
             </ion-button>
           </ion-col>
-          <ion-col size="6" v-if="hasInterventionEditPermission">
+          <ion-col
+            v-if="hasInterventionEditPermission"
+            size="6"
+          >
             <ion-button
               class="tile"
               expand="full"
@@ -174,12 +195,14 @@ const hasMaterielEditPermission = computed(() =>
                   :icon="call"
                   color="white"
                   aria-hidden="true"
-                ></ion-icon>
-                <p class="label">Annuaire</p>
+                />
+                <p class="label">
+                  Annuaire
+                </p>
               </div>
             </ion-button>
           </ion-col>
-          <ion-col size="6" v-if="hasMaterielEditPermission">
+          <!-- <ion-col size="6" v-if="hasMaterielEditPermission">
             <ion-button
               class="tile"
               expand="full"
@@ -194,7 +217,7 @@ const hasMaterielEditPermission = computed(() =>
                 <p class="label">Matériel</p>
               </div>
             </ion-button>
-          </ion-col>
+          </ion-col> -->
           <ion-col size="6">
             <ion-button
               class="tile"
@@ -206,8 +229,10 @@ const hasMaterielEditPermission = computed(() =>
                   :icon="syncIcon"
                   color="white"
                   aria-hidden="true"
-                ></ion-icon>
-                <p class="label">Synchronisation</p>
+                />
+                <p class="label">
+                  Synchronisation
+                </p>
               </div>
             </ion-button>
           </ion-col>
@@ -222,8 +247,10 @@ const hasMaterielEditPermission = computed(() =>
                   :icon="settings"
                   color="white"
                   aria-hidden="true"
-                ></ion-icon>
-                <p class="label">Paramètres</p>
+                />
+                <p class="label">
+                  Paramètres
+                </p>
               </div>
             </ion-button>
           </ion-col>

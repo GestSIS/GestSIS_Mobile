@@ -23,7 +23,7 @@ const request = {
   },
 
   setSisKey: (sis_key: string) => {
-    axios.defaults.headers.common["Sis-Id"] = sis_key;
+    axios.defaults.headers.common["Sis-Key"] = sis_key;
   },
 
   api() {

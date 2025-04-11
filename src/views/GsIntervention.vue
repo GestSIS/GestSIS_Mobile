@@ -49,61 +49,82 @@ const activeTab = ref(Tab.Journal);
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button defaultHref="interventions"></ion-back-button>
+          <ion-back-button default-href="interventions" />
         </ion-buttons>
         <ion-title>Rapport d'intervention</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-segment :scrollable="true" v-model="activeTab">
+    <ion-segment
+      v-model="activeTab"
+      :scrollable="true"
+    >
       <ion-segment-button :value="Tab.Journal">
-        <ion-icon :icon="list" aria-label="Journal d'intervention"></ion-icon>
+        <ion-icon
+          :icon="list"
+          aria-label="Journal d'intervention"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Mission">
-        <ion-icon :icon="body" aria-label="Missions"></ion-icon>
+        <ion-icon
+          :icon="body"
+          aria-label="Missions"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Appel">
-        <ion-icon :icon="call" aria-label="Appels"></ion-icon>
+        <ion-icon
+          :icon="call"
+          aria-label="Appels"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Vehicule">
-        <ion-icon :icon="car" aria-label="Véhicules"></ion-icon>
+        <ion-icon
+          :icon="car"
+          aria-label="Véhicules"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Materiel">
-        <ion-icon :icon="construct" aria-label="Matériels"></ion-icon>
+        <ion-icon
+          :icon="construct"
+          aria-label="Matériels"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Presence">
-        <ion-icon :icon="time" aria-label="Présences"></ion-icon>
+        <ion-icon
+          :icon="time"
+          aria-label="Présences"
+        />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Info">
         <ion-icon
           :icon="informationCircle"
           aria-label="Informations"
-        ></ion-icon>
+        />
       </ion-segment-button>
     </ion-segment>
 
     <ion-content class="padding">
       <div>
         <div v-if="activeTab == Tab.Journal">
-          <tab-journal></tab-journal>
+          <tab-journal />
         </div>
         <div v-if="activeTab == Tab.Mission">
-          <tab-mission></tab-mission>
+          <tab-mission />
         </div>
         <div v-if="activeTab == Tab.Appel">
-          <tab-appel></tab-appel>
+          <tab-appel />
         </div>
         <div v-if="activeTab == Tab.Vehicule">
-          <tab-vehicule></tab-vehicule>
+          <tab-vehicule />
         </div>
         <div v-if="activeTab == Tab.Materiel">
-          <tab-materiel></tab-materiel>
+          <tab-materiel />
         </div>
         <div v-if="activeTab == Tab.Presence">
-          <tab-presence></tab-presence>
+          <tab-presence />
         </div>
         <div v-if="activeTab == Tab.Info">
-          <tab-info></tab-info>
+          <tab-info />
         </div>
       </div>
     </ion-content>

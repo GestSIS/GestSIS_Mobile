@@ -40,25 +40,28 @@ const selectMateriel = (materiel: any) => {
       <ion-title>Sélection du matériel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-searchbar
-      @ionInput="search($event)"
       placeholder="Rechercher..."
-    ></ion-searchbar>
+      @ion-input="search($event)"
+    />
 
     <ion-list>
       <ion-item
-        button
         v-for="materiel of filteredMateriel"
         :key="materiel.id"
+        button
         @click="selectMateriel(materiel)"
-        >{{ materiel.designation }}</ion-item
       >
+        {{ materiel.designation }}
+      </ion-item>
     </ion-list>
   </ion-content>
 </template>

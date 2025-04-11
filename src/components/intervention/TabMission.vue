@@ -70,36 +70,43 @@ const nbMission = computed(() => intervention.value.missions.length);
       <ion-col size="4">
         <ion-button
           expand="block"
-          @click="addMission()"
           :disabled="intervention.localStatus == 'validated'"
+          @click="addMission()"
         >
-          <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
-          >Nouvelle mission
+          <ion-icon
+            slot="start"
+            :icon="add"
+            aria-hidden="true"
+          />Nouvelle mission
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-list>
     <ion-item>
-      <ion-checkbox color="primary" slot="end" v-model="onlyPendingMissions"
-        >Afficher uniquement les missions en cours ({{ nbMissionEnCours }} /
-        {{ nbMission }})</ion-checkbox
+      <ion-checkbox
+        slot="end"
+        v-model="onlyPendingMissions"
+        color="primary"
       >
+        Afficher uniquement les missions en cours ({{ nbMissionEnCours }} /
+        {{ nbMission }})
+      </ion-checkbox>
     </ion-item>
-    <ion-item v-if="!intervention.missions.length">Aucune mission</ion-item>
+    <ion-item v-if="!intervention.missions.length">
+      Aucune mission
+    </ion-item>
     <ion-item v-else-if="!missions.length">
       <p>
         Aucune mission en cours !
-        <br />
-        <span class="details"
-          >Désactivez le filtre pour afficher les missions terminées</span
-        >
+        <br>
+        <span class="details">Désactivez le filtre pour afficher les missions terminées</span>
       </p>
     </ion-item>
     <ion-item
-      :button="true"
       v-for="(mission, i) in missions"
       :key="i"
+      :button="true"
       :disabled="intervention.localStatus == 'validated'"
       @click="editMission(mission)"
     >
@@ -107,24 +114,28 @@ const nbMission = computed(() => intervention.value.missions.length);
         slot="start"
         :icon="mission.date_fin ? checkmark : time"
         aria-hidden="true"
-      ></ion-icon>
+      />
       <p>
         {{ mission.titre }} - {{ mission.sapeur.designation }}
-        <br />
+        <br>
         <span class="details">{{
           formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy")
         }}</span>
-        <br />
+        <br>
         <span class="details">{{ mission.resume }}</span>
       </p>
       <ion-button
+        slot="end"
         :disabled="intervention.localStatus == 'validated'"
-        @click.stop="deleteMission(mission)"
         fill="clear"
         color="dark"
-        slot="end"
+        @click.stop="deleteMission(mission)"
       >
-        <ion-icon slot="icon-only" :icon="close" aria-label="fermer"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          :icon="close"
+          aria-label="fermer"
+        />
       </ion-button>
     </ion-item>
   </ion-list>

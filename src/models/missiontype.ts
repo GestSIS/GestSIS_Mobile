@@ -1,4 +1,4 @@
-export class MissionType {
-    id: number;
-    titre: string;
+export interface MissionType {
+  id: number;
+  titre: string;
 }

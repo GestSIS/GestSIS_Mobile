@@ -1,13 +1,13 @@
-import { readonly, type Ref, ref } from 'vue';
-import useBasicStore from './useBasicStore';
-import { MaterielIntervention } from '../models/bundle';
-import MaterielInterventionService from '../services/MaterielInterventionService';
+import { readonly, type Ref, ref } from "vue";
+import useBasicStore from "./useBasicStore";
+import type { MaterielIntervention } from "../models/materiel-intervention";
+import MaterielInterventionService from "../services/MaterielInterventionService";
 
 const state: Ref<MaterielIntervention[]> = ref([]);
 const store = useBasicStore(
   state,
   MaterielInterventionService.getMateriels,
-  'materiel-intervention'
+  "materiel-intervention"
 );
 
 export default function useMaterielsIntervention() {
@@ -17,6 +17,6 @@ export default function useMaterielsIntervention() {
     ...store,
     name,
     state: readonly(state),
-    permission: 'intervention.modification',
+    permission: "intervention.modification",
   };
 }

@@ -20,10 +20,10 @@ import {
 import type { Barcode } from "@capacitor-mlkit/barcode-scanning";
 import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
-import { create, warning, sync } from "ionicons/icons";
-import { computed, ref, type Ref } from "vue";
+import { ref, type Ref } from "vue";
 import MaterielService from "../services/MaterielService";
-import type { Materiel, EventType } from "../models/bundle";
+import type { Materiel } from "../models/materiel";
+import type { EventType } from "../models/event-type";
 
 const online = window.navigator.onLine;
 if (!online) {
@@ -38,8 +38,8 @@ MaterielService.getMateriel().then(
 );
 MaterielService.getEventsTypes().then((data) => (types = [...data]));
 
-let isSupported = ref(false);
-let barcodes: Ref<Barcode[]> = ref([]);
+const isSupported = ref(false);
+const barcodes: Ref<Barcode[]> = ref([]);
 
 BarcodeScanner.isSupported().then((result) => {
   isSupported.value = result.supported;
@@ -76,7 +76,7 @@ const presentAlert = async (): Promise<void> => {
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+          <ion-back-button :default-href="{ name: 'accueil' }" />
         </ion-buttons>
         <ion-title>Matériel</ion-title>
       </ion-toolbar>
@@ -85,21 +85,39 @@ const presentAlert = async (): Promise<void> => {
     <ion-content class="ion-padding">
       <ion-title>Ajouter un événement</ion-title>
 
-      <ion-list v-for="t in types" :key="t.id">
+      <ion-list
+        v-for="t in types"
+        :key="t.id"
+      >
         <ion-item>{{ t.nom }}</ion-item>
       </ion-list>
     </ion-content>
     <!-- {{ materiel.map((m) => m.materiel.numero) }} -->
     <ion-content>
       <ion-list>
-        <ion-item v-for="barcode in barcodes" :key="barcode">
-          <ion-label position="stacked">{{ barcode.format }}</ion-label>
-          <ion-input type="text" :value="barcode.rawValue"></ion-input>
+        <ion-item
+          v-for="barcode in barcodes"
+          :key="barcode"
+        >
+          <ion-label position="stacked">
+            {{ barcode.format }}
+          </ion-label>
+          <ion-input
+            type="text"
+            :value="barcode.rawValue"
+          />
         </ion-item>
       </ion-list>
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button @click="scan()" :disabled="!isSupported">
-          <ion-icon name="scan"></ion-icon>
+      <ion-fab
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end"
+      >
+        <ion-fab-button
+          :disabled="!isSupported"
+          @click="scan()"
+        >
+          <ion-icon name="scan" />
         </ion-fab-button>
       </ion-fab>
     </ion-content>

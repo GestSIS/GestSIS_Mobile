@@ -1,4 +1,4 @@
-export class Alarme {
+export interface Alarme {
   id: string;
   address: string;
   complement: string;
@@ -17,7 +17,7 @@ export class Alarme {
     name: string;
     number: string;
     sis: string;
-  }> = [];
+  }>;
   firefighters: Array<{
     fullname: string;
     group_name: string;
@@ -25,12 +25,12 @@ export class Alarme {
     phone: string;
     sis: string;
     id: number;
-  }> = [];
+  }>;
   unresolved: Array<{
     fullname: string;
     group_name: string;
     group_number: string;
     phone: string;
     sis: string;
-  }> = [];
+  }>;
 }

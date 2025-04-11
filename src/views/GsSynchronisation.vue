@@ -74,14 +74,17 @@ const online = window.navigator.onLine;
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :defaultHref="{ name: 'accueil' }"></ion-back-button>
+          <ion-back-button :default-href="{ name: 'accueil' }" />
         </ion-buttons>
         <ion-title>{{ $route.params.id }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <ion-card v-if="!online" color="warning">
+      <ion-card
+        v-if="!online"
+        color="warning"
+      >
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>
@@ -89,21 +92,25 @@ const online = window.navigator.onLine;
         </ion-card-content>
       </ion-card>
 
-      <ion-button expand="full" color="primary" @click="syncAll"
-        >Tout synchroniser</ion-button
+      <ion-button
+        expand="full"
+        color="primary"
+        @click="syncAll"
       >
+        Tout synchroniser
+      </ion-button>
       <ion-list>
         <ion-item
-          :button="true"
           v-for="{ name, lastSync, syncStatus, sync } in modules.filter(
             (m) => !m.permission || hasPermission(m.permission)
           )"
           :key="name"
+          :button="true"
           @click="syncModule({ sync })"
         >
           <div>
             {{ name }}
-            <br />
+            <br>
             <span class="details">{{
               syncStatus
                 ? formatDate(lastSync.value, "dd.MM.yyyy H:mm:ss")
@@ -111,10 +118,10 @@ const online = window.navigator.onLine;
             }}</span>
           </div>
           <ion-icon
-            :icon="getSyncStatusIcon(syncStatus.value)"
             slot="end"
+            :icon="getSyncStatusIcon(syncStatus.value)"
             :aria-label="getSyncStatusLabel(syncStatus.value)"
-          ></ion-icon>
+          />
         </ion-item>
       </ion-list>
     </ion-content>

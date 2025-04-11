@@ -1,6 +1,6 @@
-export class Telephone {
-    id: number;
-    numero: string;
-    nom: string;
-    tri: number;
+export interface Telephone {
+  id: number;
+  numero: string;
+  nom: string;
+  tri: number;
 }

@@ -1,5 +1,5 @@
-export class Localite {
-    id: number;
-    npa: string;
-    designation: string;
+export interface Localite {
+  id: number;
+  npa: string;
+  designation: string;
 }

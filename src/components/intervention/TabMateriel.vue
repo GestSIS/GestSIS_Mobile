@@ -7,20 +7,23 @@
       <ion-col size="4">
         <ion-button
           expand="block"
-          @click="addMateriel()"
           :disabled="intervention.localStatus == 'validated'"
+          @click="addMateriel()"
         >
-          <ion-icon slot="start" :icon="add" aria-hidden="true"></ion-icon
-          >Ajouter du matériel
+          <ion-icon
+            slot="start"
+            :icon="add"
+            aria-hidden="true"
+          />Ajouter du matériel
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-list>
-    <ion-item v-if="!Object.entries(intervention.materiel).length"
-      >Aucun matériel</ion-item
-    >
+    <ion-item v-if="!Object.entries(intervention.materiel).length">
+      Aucun matériel
+    </ion-item>
     <ion-item
       v-for="([id, quantite], i) in (Object.entries(intervention.materiel) as [string, number][])"
       :key="i"
@@ -34,11 +37,15 @@
       <ion-button
         slot="end"
         :disabled="intervention.localStatus == 'validated'"
-        @click.stop="removeMateriel(parseInt(id))"
         fill="clear"
         color="dark"
+        @click.stop="removeMateriel(parseInt(id))"
       >
-        <ion-icon slot="icon-only" :icon="close" aria-label="fermer"></ion-icon>
+        <ion-icon
+          slot="icon-only"
+          :icon="close"
+          aria-label="fermer"
+        />
       </ion-button>
     </ion-item>
   </ion-list>

@@ -1,11 +1,11 @@
-import { type Ref, ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
+import { type Ref, ref } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
-import { Intervention } from '../models/intervention';
+import { Intervention } from "../models/intervention";
 
-import useInterventions from './useInterventions';
-import { Mission } from '../models/mission';
-import { Appel } from '../models/appel';
+import useInterventions from "./useInterventions";
+import type { Mission } from "../models/mission";
+import type { Appel } from "../models/appel";
 
 const state: Ref<Intervention> = ref({ ...new Intervention() });
 
@@ -96,14 +96,18 @@ export default function useActiveIntervention() {
     const sapeursMapping = state.value.sapeurs.reduce((acc, s) => {
       acc.set(s.id, s);
       return acc;
-    }, new Map<number, Intervention['sapeurs'][0]>());
+    }, new Map<number, Intervention["sapeurs"][0]>());
     presences.sapeurs
       .filter((s) => s.selected)
       .forEach((s) => {
         let presence = sapeursMapping.get(s.id);
         // Get sapeur presence and either create a new entry or complete the existing one
         if (presence) {
-          presence.presences.push({ date_debut: presences.date, date_fin: '', piquet: false });
+          presence.presences.push({
+            date_debut: presences.date,
+            date_fin: "",
+            piquet: false,
+          });
         } else {
           presence = {
             id: s.id,
@@ -112,7 +116,7 @@ export default function useActiveIntervention() {
             presences: [
               {
                 date_debut: presences.date,
-                date_fin: '',
+                date_fin: "",
                 piquet: false,
               },
             ],
@@ -137,17 +141,21 @@ export default function useActiveIntervention() {
     const sapeursMapping = state.value.sapeurs.reduce((acc, s) => {
       acc.set(s.id, s);
       return acc;
-    }, new Map<number, Intervention['sapeurs'][0]>());
+    }, new Map<number, Intervention["sapeurs"][0]>());
     presences.sapeurs
       .filter((s) => s.selected)
       .forEach((s) => {
         const presence = sapeursMapping.get(s.id);
         if (presence) {
-          presence.presences = presence.presences
-            .map(p => ({ ...p, date_fin: p.date_fin == "" ? presences.date : p.date_fin }));
+          presence.presences = presence.presences.map((p) => ({
+            ...p,
+            date_fin: p.date_fin == "" ? presences.date : p.date_fin,
+          }));
           sapeursMapping.set(s.id, presence);
         } else {
-          console.error("Hum seems like we are trying to remove a sapeur which is not there")
+          console.error(
+            "Hum seems like we are trying to remove a sapeur which is not there"
+          );
         }
       });
 
@@ -158,7 +166,7 @@ export default function useActiveIntervention() {
   const updatePresences = (sapeurs: Intervention["sapeurs"]) => {
     state.value.sapeurs = sapeurs;
     persist();
-  }
+  };
 
   return {
     state,

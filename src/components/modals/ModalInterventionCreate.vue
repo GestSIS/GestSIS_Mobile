@@ -82,47 +82,55 @@ const dismiss = () => {
       <ion-title>Nouvelle intervention</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">Annuler</ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="intervention.date">Début</base-datetime>
+      <base-datetime v-model="intervention.date">
+        Début
+      </base-datetime>
 
       <ion-item>
         <ion-input
           v-model="intervention.objet"
           label="Objet"
-          labelPlacement="fixed"
+          label-placement="fixed"
           :class="{ invalid: !!errors.objet }"
-        ></ion-input>
+        />
       </ion-item>
 
       <ion-item @click="selectLocalite">
         <ion-input
           :value="formatLocalite(intervention.localite_id)"
           label="Localité"
-          labelPlacement="fixed"
+          label-placement="fixed"
           :class="{ invalid: !!errors.localite_id }"
           readonly
-        ></ion-input>
+        />
       </ion-item>
 
       <ion-item>
         <ion-textarea
           v-model="intervention.lieu"
           label="Adresse, lieu"
-          labelPlacement="fixed"
+          label-placement="fixed"
           :class="{ invalid: !!errors.lieu }"
-        ></ion-textarea>
+        />
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save"
-      >Créer</ion-button
+    <ion-button
+      expand="full"
+      class="ion-margin-top"
+      @click="save"
     >
+      Créer
+    </ion-button>
   </ion-content>
 </template>
 

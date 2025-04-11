@@ -1,13 +1,13 @@
-import { readonly, type Ref, ref } from 'vue';
-import useBasicStore from './useBasicStore';
-import { ExerciceCategorie } from '../models/exercicecategorie';
-import ExerciceCategorieService from '../services/ExerciceCategorieService';
+import { readonly, type Ref, ref } from "vue";
+import useBasicStore from "./useBasicStore";
+import type { ExerciceCategorie } from "../models/exercicecategorie";
+import ExerciceCategorieService from "../services/ExerciceCategorieService";
 
 const state: Ref<ExerciceCategorie[]> = ref([]);
 const store = useBasicStore(
   state,
   ExerciceCategorieService.getCategories,
-  'exerciceCategorie'
+  "exerciceCategorie"
 );
 
 export default function useExerciceCategories() {
@@ -17,6 +17,6 @@ export default function useExerciceCategories() {
     ...store,
     name,
     state: readonly(state),
-    permission: 'exercice.presence',
+    permission: "exercice.presence",
   };
 }

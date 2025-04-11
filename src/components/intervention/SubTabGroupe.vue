@@ -36,9 +36,9 @@ const changeGroupeStatus = (groupeId: number) => {
 <template>
   <ion-list>
     <ion-item
-      button
       v-for="(groupe, i) of filteredGroupes"
       :key="i"
+      button
       :disabled="intervention.localStatus == 'validated'"
       @click="changeGroupeStatus(groupe.id)"
     >
@@ -49,7 +49,7 @@ const changeGroupeStatus = (groupeId: number) => {
           groupesIntervention.has(groupe.id) ? checkmarkCircle : radioButtonOff
         "
         aria-hidden="true"
-      ></ion-icon>
+      />
     </ion-item>
   </ion-list>
 </template>

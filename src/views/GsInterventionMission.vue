@@ -121,60 +121,69 @@ const save = () => {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button
-            :defaultHref="{ name: 'exercices' }"
-          ></ion-back-button>
+            :default-href="{ name: 'exercices' }"
+          />
         </ion-buttons>
         <ion-title>{{ title }}</ion-title>
 
         <ion-buttons slot="end">
-          <ion-button slot="end" @click="save()">Enregistrer</ion-button>
+          <ion-button
+            slot="end"
+            @click="save()"
+          >
+            Enregistrer
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime :max="mission.date_fin" v-model="mission.date_debut"
-          >Début</base-datetime
+        <base-datetime
+          v-model="mission.date_debut"
+          :max="mission.date_fin"
         >
+          Début
+        </base-datetime>
 
         <ion-item>
           <ion-input
             type="text"
             label="Responsable"
-            labelPlacement="floating"
+            label-placement="floating"
             :readonly="true"
-            @ionFocus="selectSapeur()"
             :value="mission.sapeur?.designation"
-          ></ion-input>
+            @ion-focus="selectSapeur()"
+          />
         </ion-item>
 
         <ion-item>
           <ion-input
             type="text"
             label="Mission"
-            labelPlacement="floating"
+            label-placement="floating"
             :value="mission.titre"
-            @ionFocus="selectTitre()"
-          ></ion-input>
+            @ion-focus="selectTitre()"
+          />
         </ion-item>
 
         <ion-item>
           <ion-textarea
+            v-model="mission.resume"
             label="Résumé"
-            labelPlacement="floating"
+            label-placement="floating"
             :rows="10"
             :auto-grow="true"
-            v-model="mission.resume"
-          ></ion-textarea>
+          />
         </ion-item>
 
         <base-datetime
-          :min="mission.date_debut"
           v-model="mission.date_fin"
+          :min="mission.date_debut"
           :clearable="true"
-          >Quittancer</base-datetime
         >
+          Quittancer
+        </base-datetime>
       </ion-list>
     </ion-content>
   </ion-page>

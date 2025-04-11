@@ -1,4 +1,4 @@
-export class MaterielIntervention {
-    id: number;
-    designation: string;
+export interface MaterielIntervention {
+  id: number;
+  designation: string;
 }

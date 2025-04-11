@@ -1,4 +1,4 @@
-export class Sapeur {
+export interface Sapeur {
   id: number;
   nom: string;
   prenom: string;

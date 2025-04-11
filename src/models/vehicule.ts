@@ -1,4 +1,4 @@
-export class Vehicule {
-    id: number;
-    designation: string;
+export interface Vehicule {
+  id: number;
+  designation: string;
 }
