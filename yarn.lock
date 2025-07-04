@@ -494,6 +494,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@capawesome/capacitor-android-edge-to-edge-support@npm:^7.2.2":
+  version: 7.2.2
+  resolution: "@capawesome/capacitor-android-edge-to-edge-support@npm:7.2.2"
+  peerDependencies:
+    "@capacitor/core": ">=7.0.0"
+  checksum: 10/c14fb9568d695210b7f98334f4b67da320af69403f094553e8ce79ceb4e8b4b83ffbffac76d2122ba39f5d057107379f1271a586a5f6e320ab5b32c0535e3140
+  languageName: node
+  linkType: hard
+
 "@cypress/request@npm:^3.0.8":
   version: 3.0.8
   resolution: "@cypress/request@npm:3.0.8"
@@ -2587,6 +2596,7 @@ __metadata:
     "@capacitor/haptics": "npm:^7.0.1"
     "@capacitor/keyboard": "npm:^7.0.1"
     "@capacitor/status-bar": "npm:^7.0.1"
+    "@capawesome/capacitor-android-edge-to-edge-support": "npm:^7.2.2"
     "@eslint/js": "npm:^9.30.1"
     "@ionic/storage": "npm:^4.0.0"
     "@ionic/vue": "npm:^8.6.3"
