@@ -25,7 +25,7 @@ docker run --rm -it -v /app/node_modules -v $(pwd):/app mobile-build
 
 Le script qui sera lancé vous demandera de saisir la clé de déchiffrement du fichier `.jks` pour signer l'apk.
 
-L'apk généré se trouve ici './app/build/outputs/bundle/release/gestsis-2.0.x.aab'.
+L'apk généré se trouve ici `./app/build/outputs/bundle/release/gestsis-2.0.x.aab`.
 
 ### OLD Method
 
