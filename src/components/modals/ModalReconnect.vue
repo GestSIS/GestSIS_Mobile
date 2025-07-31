@@ -4,6 +4,8 @@ import useAuth from "../../store/useAuth";
 import {
   IonToolbar,
   IonTitle,
+  IonCol,
+  IonRow,
   IonButtons,
   IonHeader,
   IonList,
@@ -49,9 +51,7 @@ const dismiss = () => {
       <ion-title>Reconnexion</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -115,5 +115,3 @@ const dismiss = () => {
     </form>
   </ion-content>
 </template>
-
-<style></style>
