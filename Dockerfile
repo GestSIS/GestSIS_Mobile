@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:24
 
 WORKDIR /app
 RUN npm install -g @ionic/cli
