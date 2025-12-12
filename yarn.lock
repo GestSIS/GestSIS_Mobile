@@ -393,15 +393,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@capacitor-mlkit/barcode-scanning@npm:^7.4.0":
-  version: 7.4.0
-  resolution: "@capacitor-mlkit/barcode-scanning@npm:7.4.0"
-  peerDependencies:
-    "@capacitor/core": ">=7.0.0"
-  checksum: 10/462de0851d6e3885479328c14ce3bfc73ffa8bd86308aea5229791bc9850dc306f9d48f1ac6a4f56e8d572bae4e520f811387a472d9c7add2bdbe9d21c011d3b
-  languageName: node
-  linkType: hard
-
 "@capacitor/android@npm:^7.4.4":
   version: 7.4.4
   resolution: "@capacitor/android@npm:7.4.4"
@@ -2594,7 +2585,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "GestsisMobile@workspace:."
   dependencies:
-    "@capacitor-mlkit/barcode-scanning": "npm:^7.4.0"
     "@capacitor/android": "npm:^7.4.4"
     "@capacitor/app": "npm:^7.1.1"
     "@capacitor/cli": "npm:^7.4.4"

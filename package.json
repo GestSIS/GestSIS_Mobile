@@ -1,6 +1,6 @@
 {
   "name": "GestsisMobile",
-  "version": "2.6.1",
+  "version": "2.6.3",
   "private": true,
   "type": "module",
   "description": "An Ionic project",
@@ -13,7 +13,6 @@
     "ionic:serve": "vite dev --port 8100 --host"
   },
   "dependencies": {
-    "@capacitor-mlkit/barcode-scanning": "^7.4.0",
     "@capacitor/android": "^7.4.4",
     "@capacitor/app": "^7.1.1",
     "@capacitor/core": "^7.4.4",

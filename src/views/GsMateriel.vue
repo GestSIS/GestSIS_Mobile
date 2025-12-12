@@ -17,8 +17,8 @@ import {
   IonFabButton,
 } from "@ionic/vue";
 
-import type { Barcode } from "@capacitor-mlkit/barcode-scanning";
-import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
+// import type { Barcode } from "@capacitor-mlkit/barcode-scanning";
+// import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
 import { ref, type Ref } from "vue";
 import MaterielService from "../services/MaterielService";
@@ -39,24 +39,24 @@ MaterielService.getMateriel().then(
 MaterielService.getEventsTypes().then((data) => (types = [...data]));
 
 const isSupported = ref(false);
-const barcodes: Ref<Barcode[]> = ref([]);
+// const barcodes: Ref<Barcode[]> = ref([]);
 
-BarcodeScanner.isSupported().then((result) => {
-  isSupported.value = result.supported;
-});
+// BarcodeScanner.isSupported().then((result) => {
+//   isSupported.value = result.supported;
+// });
 
 const scan = async (): Promise<void> => {
-  const granted = await requestPermissions();
-  if (!granted) {
-    presentAlert();
-    return;
-  }
-  const scan = await BarcodeScanner.scan();
-  barcodes.value.push(...scan.barcodes);
+  // const granted = await requestPermissions();
+  // if (!granted) {
+  //   presentAlert();
+  //   return;
+  // }
+  // const scan = await BarcodeScanner.scan();
+  // barcodes.value.push(...scan.barcodes);
 };
 
 const requestPermissions = async (): Promise<boolean> => {
-  const { camera } = await BarcodeScanner.requestPermissions();
+  // const { camera } = await BarcodeScanner.requestPermissions();
   return camera === "granted" || camera === "limited";
 };
 
@@ -85,38 +85,22 @@ const presentAlert = async (): Promise<void> => {
     <ion-content class="ion-padding">
       <ion-title>Ajouter un événement</ion-title>
 
-      <ion-list
-        v-for="t in types"
-        :key="t.id"
-      >
+      <ion-list v-for="t in types" :key="t.id">
         <ion-item>{{ t.nom }}</ion-item>
       </ion-list>
     </ion-content>
     <!-- {{ materiel.map((m) => m.materiel.numero) }} -->
     <ion-content>
       <ion-list>
-        <ion-item
-          v-for="barcode in barcodes"
-          :key="barcode"
-        >
+        <ion-item v-for="barcode in barcodes" :key="barcode">
           <ion-label position="stacked">
             {{ barcode.format }}
           </ion-label>
-          <ion-input
-            type="text"
-            :value="barcode.rawValue"
-          />
+          <ion-input type="text" :value="barcode.rawValue" />
         </ion-item>
       </ion-list>
-      <ion-fab
-        slot="fixed"
-        vertical="bottom"
-        horizontal="end"
-      >
-        <ion-fab-button
-          :disabled="!isSupported"
-          @click="scan()"
-        >
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button :disabled="!isSupported" @click="scan()">
           <ion-icon name="scan" />
         </ion-fab-button>
       </ion-fab>
