@@ -120,29 +120,19 @@ const save = () => {
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button
-            :default-href="{ name: 'exercices' }"
-          />
+          <ion-back-button :default-href="{ name: 'exercices' }" />
         </ion-buttons>
         <ion-title>{{ title }}</ion-title>
 
         <ion-buttons slot="end">
-          <ion-button
-            slot="end"
-            @click="save()"
-          >
-            Enregistrer
-          </ion-button>
+          <ion-button slot="end" @click="save()"> Enregistrer </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime
-          v-model="mission.date_debut"
-          :max="mission.date_fin"
-        >
+        <base-datetime v-model="mission.date_debut" :max="mission.date_fin">
           Début
         </base-datetime>
 
@@ -153,7 +143,7 @@ const save = () => {
             label-placement="floating"
             :readonly="true"
             :value="mission.sapeur?.designation"
-            @ion-focus="selectSapeur()"
+            @click="selectSapeur()"
           />
         </ion-item>
 
@@ -163,7 +153,7 @@ const save = () => {
             label="Mission"
             label-placement="floating"
             :value="mission.titre"
-            @ion-focus="selectTitre()"
+            @click="selectTitre()"
           />
         </ion-item>
 

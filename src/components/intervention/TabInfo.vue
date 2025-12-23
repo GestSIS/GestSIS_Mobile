@@ -296,14 +296,8 @@ const navigate = () => {
       <ion-col :size="intervention.localStatus == 'validated' ? '4' : '8'">
         <h2>Informations générales</h2>
       </ion-col>
-      <ion-col
-        v-if="intervention.localStatus == 'validated'"
-        size="4"
-      >
-        <ion-button
-          expand="block"
-          @click="edit()"
-        >
+      <ion-col v-if="intervention.localStatus == 'validated'" size="4">
+        <ion-button expand="block" @click="edit()">
           <ion-icon
             slot="start"
             :icon="createOutline"
@@ -311,14 +305,8 @@ const navigate = () => {
           />Modifier
         </ion-button>
       </ion-col>
-      <ion-col
-        v-if="intervention.localStatus == 'validated'"
-        size="4"
-      >
-        <ion-button
-          expand="block"
-          @click="sync()"
-        >
+      <ion-col v-if="intervention.localStatus == 'validated'" size="4">
+        <ion-button expand="block" @click="sync()">
           <ion-icon
             slot="start"
             :icon="syncIcon"
@@ -326,14 +314,8 @@ const navigate = () => {
           />Synchroniser
         </ion-button>
       </ion-col>
-      <ion-col
-        v-if="intervention.localStatus != 'validated'"
-        size="4"
-      >
-        <ion-button
-          expand="block"
-          @click="validate()"
-        >
+      <ion-col v-if="intervention.localStatus != 'validated'" size="4">
+        <ion-button expand="block" @click="validate()">
           <ion-icon
             slot="start"
             :icon="checkmarkCircle"
@@ -344,10 +326,7 @@ const navigate = () => {
     </ion-row>
 
     <ion-row>
-      <ion-col
-        size-sm="6"
-        size="12"
-      >
+      <ion-col size-sm="6" size="12">
         <base-datetime
           v-model="intervention.date_debut"
           :invalid="!!errors.date_debut"
@@ -358,10 +337,7 @@ const navigate = () => {
           Début
         </base-datetime>
       </ion-col>
-      <ion-col
-        size-sm="6"
-        size="12"
-      >
+      <ion-col size-sm="6" size="12">
         <base-datetime
           v-model="intervention.date_fin"
           :invalid="!!errors.date_fin"
@@ -375,10 +351,7 @@ const navigate = () => {
     </ion-row>
 
     <ion-row>
-      <ion-col
-        size="12"
-        size-sm="6"
-      >
+      <ion-col size="12" size-sm="6">
         <ion-item>
           <ion-input
             v-model="intervention.objet"
@@ -400,7 +373,7 @@ const navigate = () => {
             readonly
             :value="getLocaliteFormattedValue(intervention.localite_id)"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-focus="selectLocaliteIntervention"
+            @click="selectLocaliteIntervention"
           />
         </ion-item>
 
@@ -413,10 +386,7 @@ const navigate = () => {
           </ion-checkbox>
         </ion-item>
       </ion-col>
-      <ion-col
-        size-sm="6"
-        size="12"
-      >
+      <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-input
             type="text"
@@ -426,7 +396,7 @@ const navigate = () => {
             :readonly="true"
             :value="getSapeurFormattedValue(intervention.sapeur_id)"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-focus="selectChefIntervention()"
+            @click="selectChefIntervention()"
           />
         </ion-item>
 
@@ -452,11 +422,7 @@ const navigate = () => {
         </ion-item>
         <ion-item v-if="intervention.wgs84">
           <ion-button @click="navigate">
-            <ion-icon
-              slot="start"
-              :icon="navigateIcon"
-              aria-hidden="true"
-            />
+            <ion-icon slot="start" :icon="navigateIcon" aria-hidden="true" />
             Google maps
           </ion-button>
         </ion-item>
@@ -469,10 +435,7 @@ const navigate = () => {
       <ion-col size="12">
         <h2>Statistiques</h2>
       </ion-col>
-      <ion-col
-        size-sm="6"
-        size="12"
-      >
+      <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-select
             v-model="intervention.type_intervention_id"
@@ -539,10 +502,7 @@ const navigate = () => {
           </ion-select>
         </ion-item>
       </ion-col>
-      <ion-col
-        size-sm="6"
-        size="12"
-      >
+      <ion-col size-sm="6" size="12">
         <ion-item>
           <ion-input
             type="number"
@@ -593,10 +553,7 @@ const navigate = () => {
         <ion-col size="12">
           <h2>Propriétaire</h2>
         </ion-col>
-        <ion-col
-          size-sm="6"
-          size="12"
-        >
+        <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-input
               v-model="intervention.proprietaire.nom"
@@ -625,10 +582,7 @@ const navigate = () => {
             />
           </ion-item>
         </ion-col>
-        <ion-col
-          size-sm="6"
-          size="12"
-        >
+        <ion-col size-sm="6" size="12">
           <ion-item>
             <ion-input
               v-model="intervention.proprietaire.prenom"
@@ -648,7 +602,7 @@ const navigate = () => {
                 getLocaliteFormattedValue(intervention.proprietaire.localite_id)
               "
               :disabled="intervention.localStatus == 'validated'"
-              @ion-focus="selectLocaliteProprietaire()"
+              @click="selectLocaliteProprietaire()"
             />
           </ion-item>
           <ion-item>
@@ -681,10 +635,7 @@ const navigate = () => {
             :rows="8"
             :disabled="intervention.localStatus == 'validated'"
           />
-          <ion-button
-            expand="full"
-            @click="supprimerRapport"
-          >
+          <ion-button expand="full" @click="supprimerRapport">
             Supprimer ce rapport
           </ion-button>
         </ion-col>
