@@ -86,7 +86,7 @@ const evenements = computed(() => {
     // Début de mission
     ...missions.map((m) => ({
       ...m,
-      uuid: m.localUuid + "-debut",
+      uuid: m.localUuid,
       date: m.date_debut,
       type: !m.date_fin ? EventType.OngoingMission : EventType.EndedMission,
       description: m.resume,
@@ -97,12 +97,9 @@ const evenements = computed(() => {
       .filter((m) => m.date_fin)
       .map((m) => ({
         ...m,
-        uuid: m.localUuid + "-fin",
+        uuid: m.localUuid,
         date: m.date_fin,
-        type:
-          m.date_fin == null
-            ? EventType.OngoingMission
-            : EventType.EndedMission,
+        type: EventType.EndedMission,
         description: m.resume,
         auteur: m.sapeur?.designation,
       })),
@@ -155,8 +152,8 @@ const openEvent = async (event: Event) => {
   </ion-list>
   <section id="cd-timeline" class="cd-container">
     <div
-      v-for="event of evenements"
-      :key="event.uuid"
+      v-for="(event, i) of evenements"
+      :key="i"
       :class="['cd-timeline-block', colorMapping[event.type]]"
     >
       <div class="cd-timeline-icon positive text-center">

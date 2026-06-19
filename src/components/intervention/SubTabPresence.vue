@@ -10,6 +10,7 @@ import {
   IonItemDivider,
   IonIcon,
   modalController,
+  alertController,
 } from "@ionic/vue";
 
 import { logIn, logOut, close, warning } from "ionicons/icons";
@@ -102,21 +103,33 @@ const editPresenceExercice = async (
   }
 };
 
-const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {
+const removePresenceExercice = async (sapeurIndex: number, presenceIndex: number) => {
   const sapeur = intervention.value.sapeurs[sapeurIndex];
   if (!sapeur) {
     return;
   }
 
-  // Supprime le sapeur s'il n'a plus aucune présence
-  if (sapeur.presences.length == 1) {
-    intervention.value.sapeurs.splice(sapeurIndex, 1);
-  } else {
-    sapeur.presences.splice(presenceIndex, 1);
-  }
-
-  // Update data in store
-  updatePresences(intervention.value.sapeurs);
+  const confirm = await alertController.create({
+    header: "Supprimer présence",
+    message: `Êtes-vous sûr de vouloir supprimer la présence de ${sapeur.nom} ${sapeur.prenom} ?`,
+    buttons: [
+      { text: "Annuler", role: "cancel" },
+      {
+        text: "Supprimer",
+        role: "destructive",
+        handler: () => {
+          // Supprime le sapeur s'il n'a plus aucune présence
+          if (sapeur.presences.length == 1) {
+            intervention.value.sapeurs.splice(sapeurIndex, 1);
+          } else {
+            sapeur.presences.splice(presenceIndex, 1);
+          }
+          updatePresences(intervention.value.sapeurs);
+        },
+      },
+    ],
+  });
+  await confirm.present();
 };
 </script>
 
