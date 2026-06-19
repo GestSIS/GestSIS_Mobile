@@ -76,7 +76,7 @@ export default function useStore() {
       try {
         const res = await Promise.all(promises);
         return res;
-      } catch (e) {
+      } catch {
         if (isLoggedInExpired()) {
           showReconnectModal();
         }
@@ -87,7 +87,7 @@ export default function useStore() {
     }
   };
 
-  const syncModule = async (module: { sync: () => Promise<any> }) => {
+  const syncModule = async (module: { sync: () => Promise<unknown> }) => {
     const online = window.navigator.onLine;
     if (online) {
       const { isLoggedInExpired } = useAuth();
@@ -99,7 +99,7 @@ export default function useStore() {
       try {
         const res = await module.sync();
         return res;
-      } catch (e) {
+      } catch {
         if (isLoggedInExpired()) {
           showReconnectModal();
         }

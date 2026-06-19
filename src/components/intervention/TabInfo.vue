@@ -42,7 +42,7 @@ const { syncModule } = useStore();
 const interventionStore = useInterventions();
 const { state, persist } = useActiveIntervention();
 const intervention = state;
-const errors: any = ref({});
+const errors = ref<Record<string, string>>({});
 
 const moduleSapeur = useSapeurs();
 const moduleType = useTypesIntervention();
@@ -261,9 +261,9 @@ const startDate = ref<string>(
 const dateDebutChanged = (date: string) => {
   // Change date de début pour sapeurs saisies
   const roundedDate = roundDateToQuarter(date);
-  intervention.value.sapeurs = intervention.value.sapeurs.map((s: any) => ({
+  intervention.value.sapeurs = intervention.value.sapeurs.map((s) => ({
     ...s,
-    presences: s.presences.map((p: any) => ({
+    presences: s.presences.map((p) => ({
       ...p,
       date_debut:
         p.date_debut.slice(0, 16) === startDate.value

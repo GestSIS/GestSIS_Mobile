@@ -66,10 +66,10 @@ export default () => {
     intervention.lieu = lieu;
     intervention.objet = objet;
 
-    intervention.type_intervention_id = null as any;
-    intervention.stat_federal_id = null as any;
+    intervention.type_intervention_id = null;
+    intervention.stat_federal_id = null;
     intervention.localite_id = localite_id;
-    intervention.sapeur_id = null as any;
+    intervention.sapeur_id = null;
 
     intervention.materiel = {};
     intervention.vehicules = [];

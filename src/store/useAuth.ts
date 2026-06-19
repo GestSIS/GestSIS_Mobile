@@ -5,6 +5,15 @@ import useStore from "./useStore.ts";
 import Api from "../http/Request.ts";
 import { jwtDecode } from "jwt-decode";
 
+interface JwtAuthPayload {
+  data: {
+    permissions: Record<string, string[]>;
+    pseudo: string;
+    mobiles: (number | string)[];
+    admin: boolean;
+  };
+}
+
 const { persistentStore } = usePersistentStore();
 const store = useStore();
 
@@ -20,9 +29,9 @@ export interface User {
   accessToken: string;
   refreshToken: string;
   statut: UserStatus;
-  permissions: any;
+  permissions: Record<string, string[]>;
   admin: boolean;
-  sis: any[];
+  sis: string[];
 }
 
 const emptyState = {
@@ -83,10 +92,9 @@ export default function useAuth() {
     refreshToken: string,
     email: string | null,
   ) => {
-    const { permissions, pseudo, mobiles, admin } = (
-      jwtDecode(accessToken) as any
-    ).data;
-    const transformedMobiles = mobiles?.map((sis: any) => sis.toString()) ?? [];
+    const { permissions, pseudo, mobiles, admin } =
+      jwtDecode<JwtAuthPayload>(accessToken).data;
+    const transformedMobiles = mobiles.map((sis) => String(sis));
 
     const availableSis = Object.keys(permissions)
       .map((sis) => sis.toString())

@@ -123,7 +123,7 @@ const addCall = async () => {
   await prompt.present();
 };
 
-const editCall = async (appel: any) => {
+const editCall = async (appel: Appel) => {
   const modalAppel = await modalController.create({
     component: ModalAppelEditVue,
     componentProps: {

@@ -87,7 +87,7 @@ if (!exercice.value) {
   router.back();
 } else {
   // Compute data pour affichage
-  exercice.value.sapeurs = exercice.value.sapeurs.map((p: any) => ({
+  exercice.value.sapeurs = exercice.value.sapeurs.map((p) => ({
     ...p,
     presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
     excuse_type: p.excuse_type_id
@@ -96,7 +96,7 @@ if (!exercice.value) {
       : "",
   }));
   exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map(
-    (p: any) => ({
+    (p) => ({
       ...p,
       presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
       excuse_type: p.excuse_type_id
@@ -129,7 +129,7 @@ const addSapeur = async () => {
   const modalSapeurSelect = await modalController.create({
     component: ModalSapeurSelectVue,
     componentProps: {
-      exceptSapeurIds: exercice.value.sapeurs.map((s: any) => s?.sapeur_id),
+      exceptSapeurIds: exercice.value.sapeurs.map((s) => s.sapeur_id),
     },
   });
 
@@ -277,7 +277,7 @@ const reset = () => {
   if (!exercice.value) return;
   resetting.value = true;
   exercice.value.sapeurs = [
-    ...exercice.value.initialSapeurs.map((e: any) => ({ ...e })),
+    ...exercice.value.initialSapeurs.map((e) => ({ ...e })),
   ];
   exercice.value.localStatus = "empty";
 
@@ -295,7 +295,7 @@ const sync = async () => {
     await exercicesStore.sync();
     router.push({ name: "accueil" });
     success("Exercices synchronisés");
-  } catch (exception) {
+  } catch {
     error("Erreur lors des la synchronisation des exercices");
   }
 };

@@ -15,9 +15,9 @@ import {
 } from "@ionic/vue";
 import { add, call } from "ionicons/icons";
 import useTelephones from "../../store/useTelephones.ts";
-import { alertController } from "@ionic/core";
+import { alertController, type SearchbarCustomEvent } from "@ionic/core";
 import { useNotify } from "../../tools/useToast.ts";
-import type { Appel } from "../../models/appel.ts";
+import type { Telephone } from "../../models/telephone.ts";
 
 const notify = useNotify();
 
@@ -35,8 +35,8 @@ const filteredTelephone = computed(() => {
   );
 });
 
-const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
+const search = (event: SearchbarCustomEvent) => {
+  query.value = event.target.value?.toLowerCase() ?? "";
 };
 
 const isPhoneNumber = (str: string): boolean => {
@@ -46,7 +46,7 @@ const isPhoneNumber = (str: string): boolean => {
 const dismiss = () => {
   modalController.dismiss(null);
 };
-const selectTelephone = (telephone: any) => {
+const selectTelephone = (telephone: Telephone | { nom: string; numero: string; nouveau_numero: true }) => {
   modalController.dismiss(telephone);
 };
 

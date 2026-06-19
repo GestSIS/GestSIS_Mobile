@@ -11,6 +11,7 @@ import {
   IonButton,
   IonItem,
   modalController,
+  type SearchbarCustomEvent,
 } from "@ionic/vue";
 import useMissionsTypes from "../../store/useMissionTypes.ts";
 import type { MissionType } from "../../models/missiontype.ts";
@@ -26,14 +27,17 @@ const filteredMission = computed(() => {
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
           .indexOf(
-            query.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+            query.value
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/\p{Diacritic}/gu, ""),
           ) > -1,
     )
     .sort((a, b) => a.titre.localeCompare(b.titre));
 });
 
-const search = (event: any) => {
-  query.value = event.target.value;
+const search = (event: SearchbarCustomEvent) => {
+  query.value = event.target.value?.toLowerCase() ?? "";
 };
 
 const selectMission = (mission: MissionType) => {

@@ -65,9 +65,9 @@ const sync = async () => {
   const store = useStore();
   try {
     await store.syncAll();
-  } catch (e: any) {
+  } catch (e: unknown) {
     // Catch Refresh token expired
-    if (e?.status === 401) {
+    if ((e as { status?: number })?.status === 401) {
       notify.error("Vous avez été déconnecté pour cause d'absence prolongée.");
     }
   }

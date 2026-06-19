@@ -64,7 +64,7 @@ export class Intervention {
   quittances: number[] = [];
   missions: Mission[] = [];
   appels: Appel[] = [];
-  materiel: any = {}; // id_materiel : quantite
+  materiel: Record<number, number> = {}; // id_materiel : quantite
   vehicules: number[] = [];
   groupes: number[] = [];
 

@@ -56,7 +56,7 @@ export default function useBasicStore<Type>(
       lastSync.value =
         (await persistentStore.get(persistKey + lastSyncSuffixe)) || "";
       syncStatus.value = StoreState.Synced;
-    } catch (e) {
+    } catch {
       // Missing or corrupted local data: start empty and flag for resync.
       state.value = [];
       lastSync.value = "";

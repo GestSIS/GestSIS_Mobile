@@ -61,8 +61,8 @@ const wrappedLogin = async () => {
     await loading.dismiss();
 
     router.push({ name: "accueil" });
-  } catch (error: any) {
-    notify.error(error?.message ?? "Identifiants incorrect");
+  } catch (error: unknown) {
+    notify.error((error as { message?: string })?.message ?? "Identifiants incorrect");
     // errorMessage.value = error?.message ?? "Identifiants incorrect";
   }
 };

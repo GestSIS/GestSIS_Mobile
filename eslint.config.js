@@ -10,7 +10,7 @@ import { globalIgnores } from "eslint/config";
 export default defineConfigWithVueTs(
   pluginVue.configs["flat/recommended"],
   vueTsConfigs.recommended,
-  globalIgnores(["android*", "Android*"]),
+  globalIgnores(["android*", "Android*", "dist/**"]),
   {
     rules: {
       // 'no-console': import.meta.env.NODE_ENV === 'production' ? 'warn' : 'off',

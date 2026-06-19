@@ -1,7 +1,7 @@
-import Api from '../http/Request';
+import Api from '../http/Request.ts';
 
 export default {
-  getTraitements(): Promise<any[]> {
+  getTraitements(): Promise<unknown[]> {
     return Api.api().get('/intervention-traitement');
   },
 };

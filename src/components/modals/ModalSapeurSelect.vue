@@ -15,6 +15,7 @@ import {
   IonItem,
   modalController,
   alertController,
+  type SearchbarCustomEvent,
 } from "@ionic/vue";
 import { arrowBack } from "ionicons/icons";
 import useSapeurs from "../../store/useSapeurs.ts";
@@ -57,8 +58,8 @@ const filteredSapeur = computed(() => {
     );
 });
 
-const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
+const search = (event: SearchbarCustomEvent) => {
+  query.value = event.target.value?.toLowerCase() ?? "";
 };
 
 const dismiss = () => {

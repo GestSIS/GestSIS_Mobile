@@ -11,6 +11,7 @@ import {
   IonItem,
   IonIcon,
   IonSearchbar,
+  type SearchbarCustomEvent,
 } from "@ionic/vue";
 import { call } from "ionicons/icons";
 
@@ -31,8 +32,8 @@ const filteredTelephone = computed(() => {
   );
 });
 
-const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
+const search = (event: SearchbarCustomEvent) => {
+  query.value = event.target.value?.toLowerCase() ?? "";
 };
 </script>
 

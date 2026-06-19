@@ -1,21 +1,21 @@
 import useAuth from "../store/useAuth.ts";
-import axios from "axios";
+import axios, { type AxiosResponse, type AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
 
 const API_URL = import.meta.env.VITE_APP_API_ENDPOINT;
 const AUTH_URL = import.meta.env.VITE_APP_AUTH_ENDPOINT;
 
-const refreshTokenPromise = ref<any>("");
+const refreshTokenPromise = ref<Promise<string> | string>("");
 
 const request = {
   _refreshToken: "",
   _refreshFailed: null,
 
-  _accessTokenValidity: null,
+  _accessTokenValidity: null as number | null,
 
   setTokens(accessToken: string, refreshToken: string) {
-    const { exp } = jwtDecode(accessToken) as any;
+    const { exp } = jwtDecode<{ exp: number }>(accessToken);
     this._accessTokenValidity = exp;
     this._refreshToken = refreshToken;
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -49,20 +49,24 @@ const request = {
       if (refreshTokenPromise.value === "") {
         refreshTokenPromise.value = this.auth()
           .post("refresh-token", { token: this._refreshToken })
-          .then((response: any) => {
+          .then((res) => {
+            const response = res as unknown as {
+              accessToken: string;
+              refreshToken: string;
+            };
             this.setTokens(response.accessToken, response.refreshToken);
             auth.setTokens(response.accessToken, response.refreshToken, null);
-            return response.accessToken as string;
+            return response.accessToken;
           });
       }
 
       let accessToken: string;
       try {
         accessToken = await refreshTokenPromise.value;
-      } catch (e: any) {
+      } catch (e: unknown) {
         // Refresh failed (expired refresh token, network error, 5xx, ...).
         // Surface the error instead of falling through with no token.
-        if (e?.status === 401) {
+        if ((e as { status?: number })?.status === 401) {
           auth.loginExpired();
         }
         return Promise.reject(e);
@@ -80,13 +84,13 @@ const request = {
     });
 
     api.interceptors.response.use(
-      (response: any) => {
+      (response: AxiosResponse) => {
         if (response.data.error !== undefined) {
           throw response.data.error;
         }
         return response.data?.data || response.data;
       },
-      async (error: any) => {
+      async (error: AxiosError) => {
         return Promise.reject(error);
       },
     );
@@ -105,19 +109,19 @@ const request = {
     });
 
     auth.interceptors.response.use(
-      function (response: any) {
+      function (response: AxiosResponse) {
         if (response.status === 401) {
           console.log("Should never happen");
           return Promise.reject(response);
         }
         return Promise.resolve(response.data);
       },
-      function (error: any) {
+      function (error: AxiosError) {
         if (error.response?.status === 401) {
           return Promise.reject(error.response);
         }
         // Do something with response error
-        return Promise.reject(error.response.data);
+        return Promise.reject(error.response?.data);
       },
     );
     return auth;

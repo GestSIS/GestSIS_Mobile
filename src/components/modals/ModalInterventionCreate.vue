@@ -52,7 +52,7 @@ const intervention = reactive({
   lieu: "",
 });
 
-const errors: any = ref({});
+const errors = ref<Record<string, boolean>>({});
 const save = async () => {
   errors.value.date = !intervention.date;
   errors.value.objet = !intervention.objet;

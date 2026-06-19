@@ -11,8 +11,10 @@ import {
   IonButton,
   IonItem,
   modalController,
+  type SearchbarCustomEvent,
 } from "@ionic/vue";
 import useMaterielsIntervention from "../../store/useMaterielsIntervention.ts";
+import type { MaterielIntervention } from "../../models/materiel-intervention.ts";
 
 const query = ref("");
 const materielModule = useMaterielsIntervention();
@@ -28,14 +30,14 @@ const filteredMateriel = computed(() => {
   );
 });
 
-const search = (event: any) => {
-  query.value = event.target.value.toLowerCase();
+const search = (event: SearchbarCustomEvent) => {
+  query.value = event.detail.value?.toLowerCase() ?? "";
 };
 
 const dismiss = () => {
   modalController.dismiss(null);
 };
-const selectMateriel = (materiel: any) => {
+const selectMateriel = (materiel: MaterielIntervention) => {
   modalController.dismiss(materiel);
 };
 </script>

@@ -55,13 +55,14 @@ export default {
             sapeur_id: m.sapeur.id,
             sapeur: m.sapeur.designation,
           }))
-          .map((m: any) => {
-            if (m.sapeur_id) {
-              delete m.sapeur;
+          .map((m) => {
+            const entry = m as { titre: string; resume: string; debut: string; fin: string; sapeur_id?: number | null; sapeur?: string | null };
+            if (entry.sapeur_id) {
+              delete entry.sapeur;
             } else {
-              delete m.sapeur_id;
+              delete entry.sapeur_id;
             }
-            return m;
+            return entry;
           }),
       };
     });
@@ -81,20 +82,20 @@ export default {
       .map((i) => i.localUuid)
       .filter((uuid): uuid is string => !!uuid);
   },
-  createIntervention(interventionData: any) {
+  createIntervention(interventionData: object) {
     return Api.api().post("/interventions", interventionData);
   },
-  saveIntervention(interventionId: number, interventionData: any) {
+  saveIntervention(interventionId: number, interventionData: object) {
     return Api.api().put("/interventions/" + interventionId, interventionData);
   },
 
   //Matériel
-  addMateriel(interventionId: number, materielData: any) {
+  addMateriel(interventionId: number, materielData: object) {
     return Api.api().post("/interventions/" + interventionId + "/materiels", {
       materiels: [materielData],
     });
   },
-  editMateriel(interventionId: number, materielData: any) {
+  editMateriel(interventionId: number, materielData: object) {
     return Api.api().put("/interventions/" + interventionId + "/materiels", {
       materiels: [materielData],
     });
@@ -106,7 +107,7 @@ export default {
   },
 
   //Vehicules
-  addVehicules(interventionId: number, vehiculesData: any) {
+  addVehicules(interventionId: number, vehiculesData: object) {
     return Api.api().post("/interventions/" + interventionId + "/vehicules", {
       vehicules: vehiculesData,
     });
@@ -118,7 +119,7 @@ export default {
   },
 
   //Groupes
-  addGroupes(interventionId: number, groupesData: any) {
+  addGroupes(interventionId: number, groupesData: object) {
     return Api.api().post("/interventions/" + interventionId + "/groupes", {
       groupes: groupesData,
     });
@@ -130,7 +131,7 @@ export default {
   },
 
   //Quittances
-  addQuittances(interventionId: number, quittancesData: any) {
+  addQuittances(interventionId: number, quittancesData: object) {
     return Api.api().post("/interventions/" + interventionId + "/quittances", {
       quittances: quittancesData,
     });
@@ -145,13 +146,13 @@ export default {
   },
 
   //Sapeurs
-  addSapeurs(interventionId: number, sapeursData: any) {
+  addSapeurs(interventionId: number, sapeursData: object) {
     return Api.api().post(
       "/interventions/" + interventionId + "/sapeurs",
       sapeursData,
     );
   },
-  editSapeurs(interventionId: number, sapeursData: any) {
+  editSapeurs(interventionId: number, sapeursData: object) {
     return Api.api().put(
       "/interventions/" + interventionId + "/sapeurs",
       sapeursData,
@@ -164,12 +165,12 @@ export default {
   },
 
   //Appel
-  addAppel(interventionId: number, appelData: any) {
+  addAppel(interventionId: number, appelData: object) {
     return Api.api().post("/interventions/" + interventionId + "/appels", {
       appels: [appelData],
     });
   },
-  editAppel(interventionId: number, appelData: any) {
+  editAppel(interventionId: number, appelData: object) {
     return Api.api().put("/interventions/" + interventionId + "/appels", {
       appels: [appelData],
     });
@@ -181,12 +182,12 @@ export default {
   },
 
   //Mission
-  addMission(interventionId: number, missionData: any) {
+  addMission(interventionId: number, missionData: object) {
     return Api.api().post("/interventions/" + interventionId + "/missions", {
       missions: [missionData],
     });
   },
-  editMission(interventionId: number, missionData: any) {
+  editMission(interventionId: number, missionData: object) {
     return Api.api().put("/interventions/" + interventionId + "/missions", {
       missions: [missionData],
     });
@@ -198,12 +199,12 @@ export default {
   },
 
   //Phase
-  addPhase(interventionId: number, phaseData: any) {
+  addPhase(interventionId: number, phaseData: object) {
     return Api.api().post("/interventions/" + interventionId + "/phases", {
       phases: [phaseData],
     });
   },
-  editPhase(interventionId: number, phaseData: any) {
+  editPhase(interventionId: number, phaseData: object) {
     return Api.api().put("/interventions/" + interventionId + "/phases", {
       phases: [phaseData],
     });

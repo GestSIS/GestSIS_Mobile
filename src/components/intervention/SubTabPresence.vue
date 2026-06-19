@@ -70,7 +70,7 @@ const addPresenceExercice = (mode: "ARRIVEE" | "DEPART") => {
 };
 const editPresenceExercice = async (
   sapeurIndex: number,
-  presenceIndex: any,
+  presenceIndex: number,
 ) => {
   const sapeur = intervention.value.sapeurs[sapeurIndex];
   if (!sapeur) {

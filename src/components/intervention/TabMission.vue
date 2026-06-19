@@ -15,6 +15,7 @@ import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useDateFormatter from "../../tools/useDateFormatter.ts";
 import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
+import type { Mission } from "../../models/mission.ts";
 
 const { formatDate } = useDateFormatter();
 const { state, removeMission } = useActiveIntervention();
@@ -24,10 +25,10 @@ const router = useRouter();
 const addMission = async () => {
   router.push({ name: "mission", params: { uuid: "null" } });
 };
-const editMission = (mission: any) => {
+const editMission = (mission: Mission) => {
   router.push({ name: "mission", params: { uuid: mission.localUuid } });
 };
-const deleteMission = async (mission: any) => {
+const deleteMission = async (mission: Mission) => {
   const confirm = await alertController.create({
     header: "Supprimer mission",
     message:

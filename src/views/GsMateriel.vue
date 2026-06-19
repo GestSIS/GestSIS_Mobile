@@ -7,11 +7,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  alertController,
+  // alertController,
   IonItem,
   IonList,
-  IonLabel,
-  IonInput,
   IonIcon,
   IonFab,
   IonFabButton,
@@ -20,7 +18,7 @@ import {
 // import type { Barcode } from "@capacitor-mlkit/barcode-scanning";
 // import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
-import { ref, type Ref } from "vue";
+import { ref } from "vue";
 import MaterielService from "../services/MaterielService.ts";
 import type { Materiel } from "../models/materiel.ts";
 import type { EventType } from "../models/event-type.ts";
@@ -61,15 +59,15 @@ const scan = async (): Promise<void> => {
 //   return camera === "granted" || camera === "limited";
 // };
 
-const presentAlert = async (): Promise<void> => {
-  const alert = await alertController.create({
-    header: "Permissions manquantes",
-    message:
-      "Veuillez donner les permissions d'accès à la caméra pour scanner les code-barres.",
-    buttons: ["OK"],
-  });
-  await alert.present();
-};
+// const presentAlert = async (): Promise<void> => {
+//   const alert = await alertController.create({
+//     header: "Permissions manquantes",
+//     message:
+//       "Veuillez donner les permissions d'accès à la caméra pour scanner les code-barres.",
+//     buttons: ["OK"],
+//   });
+//   await alert.present();
+// };
 </script>
 
 <template>
