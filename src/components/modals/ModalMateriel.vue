@@ -17,8 +17,14 @@ import useMaterielsIntervention from "../../store/useMaterielsIntervention.ts";
 const query = ref("");
 const materielModule = useMaterielsIntervention();
 const filteredMateriel = computed(() => {
+  const needle = query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
   return materielModule.state.value.filter(
-    (m) => m.designation.toLowerCase().indexOf(query.value) > -1,
+    (m) =>
+      m.designation
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .indexOf(needle) > -1,
   );
 });
 

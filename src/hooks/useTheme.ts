@@ -18,7 +18,9 @@ const activeTheme = ref("light");
 const init = () => {
   persistentStore.get(themeStoreKey).then((value) => {
     // Use matchMedia to check the user preference
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
     const preferedTheme = prefersDark ? "dark" : "light";
 
     let theme = value ?? preferedTheme;

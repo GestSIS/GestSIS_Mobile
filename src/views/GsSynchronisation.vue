@@ -105,7 +105,7 @@ const online = window.navigator.onLine;
             {{ name }}
             <br />
             <span class="details">{{
-              syncStatus
+              lastSync.value
                 ? formatDate(lastSync.value, "dd.MM.yyyy H:mm:ss")
                 : "Pas encore synchronisé"
             }}</span>

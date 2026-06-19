@@ -360,7 +360,6 @@ const navigate = () => {
             label="Objet"
             :class="{ invalid: !!errors?.objet }"
             :disabled="intervention.localStatus == 'validated'"
-            @change="dateDebutChanged"
           />
         </ion-item>
 

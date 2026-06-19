@@ -183,7 +183,8 @@ const changeMaterielQuantity = async (
   }
 
   const quantite = parseInt(res.data?.values?.quantite);
-  if (quantite == 0) {
+  // Empty/invalid (NaN) or non-positive → remove instead of writing NaN.
+  if (!quantite || quantite < 0) {
     interventionModule.removeMateriel(materielId);
   } else {
     interventionModule.updateMaterielQuantity(materielId, quantite);

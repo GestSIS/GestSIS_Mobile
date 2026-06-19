@@ -34,19 +34,22 @@ const route = useRoute();
 const missionUuid = route.params.uuid;
 const interventionStore = useActiveIntervention();
 
-const loadedMission = Object.assign(
-  {},
-  interventionStore.state.value.missions.find(
-    (m) => m.localUuid == missionUuid,
-  ),
+const foundMission = interventionStore.state.value.missions.find(
+  (m) => m.localUuid == missionUuid,
 );
-const mission: Ref<Mission> = ref(loadedMission || new Mission());
+// Start from a full Mission (with all model defaults), overlaying the existing
+// mission's values when editing. We must NOT do `Object.assign({}, found)`:
+// when `found` is undefined (new mission) it returns a truthy `{}`, so the
+// `|| new Mission()` fallback never ran and new missions lacked every default.
+const mission: Ref<Mission> = ref(
+  foundMission ? Object.assign(new Mission(), foundMission) : new Mission(),
+);
 if (!mission.value.date_debut) {
   mission.value.date_debut =
     DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
 }
 
-const title = route.params.mission ? "Détail mission" : "Nouvelle mission";
+const title = foundMission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
   return (
@@ -122,7 +125,7 @@ const save = () => {
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :default-href="{ name: 'exercices' }" />
+          <ion-back-button :default-href="{ name: 'intervention' }" />
         </ion-buttons>
         <ion-title>{{ title }}</ion-title>
 
@@ -181,17 +184,4 @@ const save = () => {
   </ion-page>
 </template>
 
-<style>
-/* ion-popover.popover-bottom::part(content) {
-  top: unset !important;
-  left: 0 !important;
-  bottom: 0;
-  width: 100vw;
-  border-radius: 0;
-}
-ion-popover.popover-bottom ion-datetime {
-  margin-left: auto;
-  margin-right: auto;
-  
-} */
-</style>
+<style></style>

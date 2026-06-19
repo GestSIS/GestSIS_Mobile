@@ -15,6 +15,16 @@ export default function useExercices() {
   // Override load to prevent overriding existing exercices
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
+    try {
+      return await doSync();
+    } catch (e) {
+      // Never leave the store stuck on "Syncing" when the export/fetch throws.
+      store.syncStatus.value = StoreState.NeedSync;
+      throw e;
+    }
+  };
+
+  const doSync = async (): Promise<boolean> => {
     // Exercice validé directly exported for sync
     // We assume that they are sure of their modifications
     const exercices: Exercice[] = state.value.filter(
@@ -136,7 +146,7 @@ export default function useExercices() {
           removedSapeurs?.filter((s) => s.present || s.heures.length > 0) || [];
 
         e.initialSapeurs = e.sapeurs;
-        e.localStatus == inProgressExercice?.localStatus;
+        e.localStatus = inProgressExercice?.localStatus ?? "empty";
         e.sapeurs = [
           ...addedSapeursToKeep,
           ...updatedSapeursToKeep,

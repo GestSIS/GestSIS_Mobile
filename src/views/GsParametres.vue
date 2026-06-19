@@ -42,10 +42,10 @@ const onSelectSis = async (sis: string) => {
   // Check if some exercices/interventions need to be synced if so then confirm that the modifications will be lost
   const exerciceStore = useExercices();
   const interventionStore = useInterventions();
-  const hasInProgressExercices = exerciceStore.state.value.every(
+  const hasInProgressExercices = exerciceStore.state.value.some(
     (e) => e.localStatus == "in_progress",
   );
-  const hasInProgressInterventions = interventionStore.state.value.every(
+  const hasInProgressInterventions = interventionStore.state.value.some(
     (e) => e.localStatus == "in_progress",
   );
 
@@ -57,22 +57,18 @@ const onSelectSis = async (sis: string) => {
       buttons: [
         {
           text: "Non",
-          handler: () => {
-            return false;
-          },
+          role: "cancel",
         },
         {
           text: "Oui",
-          handler: () => {
-            return true;
-          },
+          role: "confirm",
         },
       ],
     });
 
     await confirm.present();
-    const confirmed = await confirm.onDidDismiss();
-    if (!confirmed) {
+    const { role } = await confirm.onDidDismiss();
+    if (role !== "confirm") {
       return;
     }
   }

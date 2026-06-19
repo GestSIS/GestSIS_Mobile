@@ -97,8 +97,8 @@ const nbMission = computed(() => intervention.value.missions.length);
       </p>
     </ion-item>
     <ion-item
-      v-for="(mission, i) in missions"
-      :key="i"
+      v-for="mission in missions"
+      :key="mission.localUuid"
       :button="true"
       :disabled="intervention.localStatus == 'validated'"
       @click="editMission(mission)"

@@ -9,8 +9,8 @@
 
   <ion-list>
     <ion-item
-      v-for="(vehicule, i) in vehicules"
-      :key="i"
+      v-for="vehicule in vehicules"
+      :key="vehicule.id"
       :button="true"
       :disabled="intervention.localStatus == 'validated'"
       @click="changeVehiculeStatut(vehicule.id)"
@@ -36,21 +36,24 @@ import { IonList, IonGrid, IonCol, IonRow, IonItem, IonIcon } from "@ionic/vue";
 import { checkmarkCircle, radioButtonOff } from "ionicons/icons";
 import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useVehicules from "../../store/useVehicules.ts";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 const { state, updateVehicules } = useActiveIntervention();
 const intervention = state;
-const vehiculesIntervention = ref(new Set(state.value.vehicules.slice()));
+// Derive selection from the store so it always reflects the active
+// intervention (instead of a one-time snapshot taken at setup).
+const vehiculesIntervention = computed(() => new Set(state.value.vehicules));
 
 const vehiculeStore = useVehicules();
-const vehicules = computed(() => new Set(vehiculeStore.state.value));
+const vehicules = computed(() => vehiculeStore.state.value);
 
 const changeVehiculeStatut = (vehiculeId: number) => {
-  if (vehiculesIntervention.value.has(vehiculeId)) {
-    vehiculesIntervention.value.delete(vehiculeId);
+  const next = new Set(state.value.vehicules);
+  if (next.has(vehiculeId)) {
+    next.delete(vehiculeId);
   } else {
-    vehiculesIntervention.value.add(vehiculeId);
+    next.add(vehiculeId);
   }
-  updateVehicules([...vehiculesIntervention.value]);
+  updateVehicules([...next]);
 };
 </script>

@@ -52,7 +52,9 @@ const { activeSisKey } = useAuth();
 const groupeAlarmes =
   intervention.value.alarme?.groups
     ?.filter((g) => g.sis === activeSisKey.value)
-    ?.sort((g1, g2) => g1.number.localeCompare(g2.number)) ?? [];
+    ?.sort((g1, g2) =>
+      g1.number.localeCompare(g2.number, undefined, { numeric: true }),
+    ) ?? [];
 </script>
 
 <template>
@@ -71,7 +73,7 @@ const groupeAlarmes =
     </ion-button>
   </ion-item>
   <ion-list v-if="intervention.alarme">
-    <ion-item-group v-for="g in groupeAlarmes" :key="g.sis">
+    <ion-item-group v-for="g in groupeAlarmes" :key="g.sis + '-' + g.number">
       <ion-item-divider>
         <ion-label>
           {{ g.sis.toUpperCase() }} : {{ g.number }} - {{ g.name }} </ion-label

@@ -33,8 +33,8 @@ const localitesStore = useLocalites();
 const online = window.navigator.onLine;
 if (online) {
   // Reload exercices and sapeurs
-  exercicesStore.sync().catch();
-  sapeursStore.sync().catch();
+  exercicesStore.sync().catch(() => {});
+  sapeursStore.sync().catch(() => {});
 }
 
 const sortExercices = (exercices: Exercice[]): Exercice[] => {

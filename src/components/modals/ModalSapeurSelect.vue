@@ -32,7 +32,7 @@ const props = withDefaults(
 const exceptIds = new Set(props.exceptSapeurIds ?? []);
 const preSelectionIds = new Set(props.preSelectionSapeurIds ?? []);
 
-const selectedSapeurId = new Set<number>();
+const selectedSapeurId = ref(new Set<number>());
 
 const query = ref("");
 const sapeurModule = useSapeurs();
@@ -66,7 +66,7 @@ const dismiss = () => {
 };
 
 const validate = () => {
-  modalController.dismiss([...selectedSapeurId]);
+  modalController.dismiss([...selectedSapeurId.value]);
 };
 
 const selectSapeur = (sapeur: Sapeur) => {
@@ -75,10 +75,10 @@ const selectSapeur = (sapeur: Sapeur) => {
     return;
   }
 
-  if (selectedSapeurId.has(sapeur.id)) {
-    selectedSapeurId.delete(sapeur.id);
+  if (selectedSapeurId.value.has(sapeur.id)) {
+    selectedSapeurId.value.delete(sapeur.id);
   } else {
-    selectedSapeurId.add(sapeur.id);
+    selectedSapeurId.value.add(sapeur.id);
   }
 };
 
@@ -139,7 +139,11 @@ const autreSapeur = async () => {
         button
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end">
+        <ion-checkbox
+          v-if="props.multiSelect"
+          class="ion-margin-end"
+          :checked="selectedSapeurId.has(sapeur.id)"
+        >
           {{ sapeur.nom }} {{ sapeur.prenom }}
         </ion-checkbox>
         <ion-label v-else> {{ sapeur.nom }} {{ sapeur.prenom }} </ion-label>

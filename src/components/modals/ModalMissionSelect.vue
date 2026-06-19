@@ -26,7 +26,7 @@ const filteredMission = computed(() => {
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
           .indexOf(
-            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+            query.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""),
           ) > -1,
     )
     .sort((a, b) => a.titre.localeCompare(b.titre));

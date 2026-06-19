@@ -94,12 +94,12 @@ const editPresenceExercice = async (
     sapeur.presences[presenceIndex] = {
       date_debut: data.date_debut,
       date_fin: data.date_fin,
-      piquet: false,
+      piquet: data.piquet,
     };
-  }
 
-  // Update data in store
-  updatePresences(intervention.value.sapeurs);
+    // Update data in store (only when an edit was actually confirmed)
+    updatePresences(intervention.value.sapeurs);
+  }
 };
 
 const removePresenceExercice = (sapeurIndex: number, presenceIndex: number) => {

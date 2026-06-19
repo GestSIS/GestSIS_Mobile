@@ -86,7 +86,7 @@ export default function useAuth() {
     const { permissions, pseudo, mobiles, admin } = (
       jwtDecode(accessToken) as any
     ).data;
-    const transformedMobiles = mobiles.map((sis: any) => sis.toString());
+    const transformedMobiles = mobiles?.map((sis: any) => sis.toString()) ?? [];
 
     const availableSis = Object.keys(permissions)
       .map((sis) => sis.toString())
@@ -127,7 +127,7 @@ export default function useAuth() {
     await setTokens(accessToken, refreshToken, email);
 
     // Select first sis;
-    const res = selectSis(state.data.sis[0]);
+    const res = await selectSis(state.data.sis[0]);
     if (!res) {
       throw "Vous n'avez pas les droits requis pour utiliser cette application";
     }
@@ -155,7 +155,7 @@ export default function useAuth() {
 
     // Check si l'utilisateur à toujours les droits pour ce SIS
     if (!state.data.sis.includes(activeSisKey.value)) {
-      const res = selectSis(state.data.sis[0]);
+      const res = await selectSis(state.data.sis[0]);
       if (!res) {
         throw "Vous n'avez plus les droits requis pour utiliser cette application";
       }

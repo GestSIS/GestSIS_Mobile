@@ -13,10 +13,16 @@ export default function useAlarmes() {
   /** Load data from GestSIS API */
   const forcedSync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-    state.value = await AlarmeService.fetchAlarmes(true);
-    store.lastSync.value = DateTime.now().toSQL() ?? "";
-    await store.persist();
-    store.syncStatus.value = StoreState.Synced;
+    try {
+      state.value = await AlarmeService.fetchAlarmes(true);
+      store.lastSync.value = DateTime.now().toSQL() ?? "";
+      await store.persist();
+      store.syncStatus.value = StoreState.Synced;
+    } catch (e) {
+      // Never leave the store stuck on "Syncing" when the fetch throws.
+      store.syncStatus.value = StoreState.NeedSync;
+      throw e;
+    }
     return Promise.resolve(true);
   };
 

@@ -24,8 +24,8 @@ const notify = useNotify();
 const props = defineProps<{ date: string }>();
 const activeDate = ref(
   (
-    props.date ??
-    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ??
+    props.date ||
+    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ||
     ""
   ).replace(" ", "T"),
 );

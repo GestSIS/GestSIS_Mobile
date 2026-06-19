@@ -8,9 +8,8 @@ const persistentStore = new Storage({
     Drivers.LocalStorage,
   ],
 });
-// TODO: See if await should be added !
-persistentStore.create();
+const storageReady = persistentStore.create();
 
 export function usePersistentStore() {
-  return { persistentStore };
+  return { persistentStore, storageReady };
 }

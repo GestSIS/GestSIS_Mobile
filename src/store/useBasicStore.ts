@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { type Ref, ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 
-const { persistentStore } = usePersistentStore();
+const { persistentStore, storageReady } = usePersistentStore();
 const lastSyncSuffixe = "last_sync";
 
 export enum StoreState {
@@ -46,6 +46,7 @@ export default function useBasicStore<Type>(
 
   /** Load data from local storage */
   const init = async () => {
+    await storageReady;
     syncStatus.value = StoreState.Syncing;
     try {
       const data = await persistentStore.get(persistKey);
@@ -73,10 +74,15 @@ export default function useBasicStore<Type>(
     // init() could resolve after the fetch and clobber the synced data.
     await ready;
     syncStatus.value = StoreState.Syncing;
-    state.value = await loader();
-    lastSync.value = DateTime.now().toSQL() ?? "";
-    await persist();
-    syncStatus.value = StoreState.Synced;
+    try {
+      state.value = await loader();
+      lastSync.value = DateTime.now().toSQL() ?? "";
+      await persist();
+      syncStatus.value = StoreState.Synced;
+    } catch (e) {
+      syncStatus.value = StoreState.NeedSync;
+      throw e;
+    }
     return Promise.resolve(true);
   };
 

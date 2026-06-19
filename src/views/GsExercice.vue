@@ -76,7 +76,7 @@ const enhancedHeuresTypes = computed(() =>
 );
 
 const formatCategorie = (categorieId: number) => {
-  categories.value.find((c) => c.id == categorieId)?.designation;
+  return categories.value.find((c) => c.id == categorieId)?.designation;
 };
 
 const route = useRoute();
@@ -184,9 +184,10 @@ const removeExcuse = async (sapeur: PresenceExercice) => {
   const sap = exercice.value?.sapeurs.find(
     (s) => s.sapeur_id === sapeur.sapeur_id,
   );
-  if (sap === undefined) return;
+  if (sap === undefined || !exercice.value) return;
   sap.excuse_type = "";
   sap.excuse_type_id = null;
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const addExcuse = async (sapeur: PresenceExercice) => {
@@ -198,12 +199,8 @@ const addExcuse = async (sapeur: PresenceExercice) => {
   const buttons = excusesTypes.value.map((excuse) => ({
     text: excuse.designation,
     handler: () => {
-      const sap = exercice.value?.sapeurs.find(
-        (s) => s.sapeur_id === sapeur.sapeur_id,
-      );
-      if (!exercice.value || sap === undefined) return;
-      sap.excuse_type_id = excuse.id;
-      sap.excuse_type = excuse.designation;
+      sapeur.excuse_type_id = excuse.id;
+      sapeur.excuse_type = excuse.designation;
     },
   }));
 
@@ -217,6 +214,14 @@ const addExcuse = async (sapeur: PresenceExercice) => {
   if (!sapeur.excuse_type_id) {
     sapeur.excuse = false;
   }
+
+  // Persist the change (also flips localStatus to in_progress), like the
+  // other handlers. Without this the edits stay on the displayed copy and
+  // are lost on the next render/sync.
+  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
+  );
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const resetting = ref(false);

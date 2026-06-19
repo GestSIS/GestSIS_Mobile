@@ -30,13 +30,14 @@ if (!online) {
   // TODO: Warning message to activate internet
 }
 
-let materiel: Materiel[] = [];
-let types: EventType[] = [];
+const materiel = ref<Materiel[]>([]);
+const types = ref<EventType[]>([]);
 
 MaterielService.getMateriel().then(
-  (data) => (materiel = [...data.filter((m) => m.materiel.uuid !== undefined)]),
+  (data) =>
+    (materiel.value = data.filter((m) => m.materiel.uuid !== undefined)),
 );
-MaterielService.getEventsTypes().then((data) => (types = [...data]));
+MaterielService.getEventsTypes().then((data) => (types.value = [...data]));
 
 const isSupported = ref(false);
 // const barcodes: Ref<Barcode[]> = ref([]);
