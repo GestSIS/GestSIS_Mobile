@@ -12,6 +12,7 @@ export default function useAlarmes() {
 
   /** Load data from GestSIS API */
   const forcedSync = async (): Promise<boolean> => {
+    await store.ready;
     store.syncStatus.value = StoreState.Syncing;
     try {
       state.value = await AlarmeService.fetchAlarmes(true);

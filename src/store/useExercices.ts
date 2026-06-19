@@ -25,6 +25,10 @@ export default function useExercices() {
   };
 
   const doSync = async (): Promise<boolean> => {
+    // Wait for cached exercices to finish loading before reading state, so a
+    // sync triggered before init() resolves cannot drop in-progress edits.
+    await store.ready;
+
     // Exercice validé directly exported for sync
     // We assume that they are sure of their modifications
     const exercices: Exercice[] = state.value.filter(

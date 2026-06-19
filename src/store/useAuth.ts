@@ -14,7 +14,7 @@ interface JwtAuthPayload {
   };
 }
 
-const { persistentStore } = usePersistentStore();
+const { persistentStore, storageReady } = usePersistentStore();
 const store = useStore();
 
 export enum UserStatus {
@@ -56,17 +56,27 @@ const lastSyncSuffixe = "last_sync";
 
 /** Load data from local storage */
 const init = async () => {
-  const data = await persistentStore.get(persistKey);
-  const sisKey = await persistentStore.get(persistActiveSisKey);
+  // Wait for the storage driver to be ready, otherwise get() can resolve to
+  // undefined before the DB is created and the stored session is lost
+  // (tokens never restored -> every API/sync call goes out unauthenticated).
+  await storageReady;
+  try {
+    const data = await persistentStore.get(persistKey);
+    const sisKey = await persistentStore.get(persistActiveSisKey);
 
-  state.data = JSON.parse(data) || { ...emptyState };
-  activePermissions.value = state.data.permissions[sisKey] ?? [];
-  activeSisKey.value = sisKey;
-  lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
+    // Guard against missing/corrupted cached values (JSON.parse(undefined) throws).
+    state.data = data ? JSON.parse(data) : { ...emptyState };
+    activePermissions.value = state.data.permissions[sisKey] ?? [];
+    activeSisKey.value = sisKey;
+    lastSync.value = await persistentStore.get(persistKey + lastSyncSuffixe);
 
-  if (state.data?.accessToken) {
-    Api.setTokens(state.data.accessToken, state.data.refreshToken);
-    Api.setSisKey(sisKey);
+    if (state.data?.accessToken) {
+      Api.setTokens(state.data.accessToken, state.data.refreshToken);
+      Api.setSisKey(sisKey);
+    }
+  } catch {
+    // Corrupted session data: start logged out rather than crashing init.
+    state.data = { ...emptyState };
   }
 };
 

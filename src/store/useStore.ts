@@ -63,28 +63,42 @@ export default function useStore() {
   /** Load all modules */
   const syncAll = async () => {
     const online = window.navigator.onLine;
-    if (online) {
-      const { hasPermission, isLoggedInExpired } = useAuth();
-
-      if (isLoggedInExpired()) {
-        showReconnectModal();
-        return;
-      }
-      const promises = modules
-        .filter((m) => !m.permission || hasPermission(m.permission))
-        .map(({ sync }) => sync());
-      try {
-        const res = await Promise.all(promises);
-        return res;
-      } catch {
-        if (isLoggedInExpired()) {
-          showReconnectModal();
-        }
-      }
-    } else {
+    if (!online) {
       const { error } = useNotify();
       error("Pas de connexion internet");
+      return;
     }
+
+    const { hasPermission, isLoggedInExpired } = useAuth();
+
+    if (isLoggedInExpired()) {
+      showReconnectModal();
+      return;
+    }
+
+    // allSettled (not all): one failing module must not abort the others,
+    // which would otherwise hide successful syncs and give no feedback.
+    const results = await Promise.allSettled(
+      modules
+        .filter((m) => !m.permission || hasPermission(m.permission))
+        .map(({ sync }) => sync()),
+    );
+
+    // A refresh-token expiry can surface mid-sync.
+    if (isLoggedInExpired()) {
+      showReconnectModal();
+      return results;
+    }
+
+    const failures = results.filter((r) => r.status === "rejected").length;
+    if (failures > 0) {
+      const { error } = useNotify();
+      error(
+        `La synchronisation de ${failures} élément(s) a échoué, veuillez réessayer.`,
+      );
+    }
+
+    return results;
   };
 
   const syncModule = async (module: { sync: () => Promise<unknown> }) => {

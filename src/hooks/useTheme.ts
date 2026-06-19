@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore.ts";
-const { persistentStore } = usePersistentStore();
+const { persistentStore, storageReady } = usePersistentStore();
 
 const themeStoreKey = "local-theme";
 
@@ -15,21 +15,22 @@ const switchTheme = (mode: string) => {
 
 const activeTheme = ref("light");
 
-const init = () => {
-  persistentStore.get(themeStoreKey).then((value) => {
-    // Use matchMedia to check the user preference
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    const preferedTheme = prefersDark ? "dark" : "light";
+const init = async () => {
+  // Wait for the storage driver before reading the stored theme, otherwise
+  // get() can resolve to undefined before the DB is created.
+  await storageReady;
+  const value = await persistentStore.get(themeStoreKey);
 
-    let theme = value ?? preferedTheme;
-    if (theme === "") {
-      theme = preferedTheme;
-    }
+  // Use matchMedia to check the user preference
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const preferedTheme = prefersDark ? "dark" : "light";
 
-    switchTheme(theme);
-  });
+  let theme = value ?? preferedTheme;
+  if (theme === "") {
+    theme = preferedTheme;
+  }
+
+  switchTheme(theme);
 };
 
 init();
