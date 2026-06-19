@@ -18,7 +18,7 @@ import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useSapeurs from "../../store/useSapeurs.ts";
 import useDateFormatter from "../../tools/useDateFormatter.ts";
 import { computed } from "vue";
-import router from "../../router.ts";
+import router from "../../router/index.ts";
 import ModalSapeurPresenceVue from "../modals/ModalSapeurPresence.vue";
 
 const { formatDate } = useDateFormatter();

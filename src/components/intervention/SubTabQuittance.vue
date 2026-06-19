@@ -13,7 +13,7 @@ import {
 import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useSapeurs from "../../store/useSapeurs.ts";
 import { computed } from "vue";
-import router from "../../router.ts";
+import router from "../../router/index.ts";
 import useAuth from "../../store/useAuth.ts";
 
 const { state } = useActiveIntervention();
