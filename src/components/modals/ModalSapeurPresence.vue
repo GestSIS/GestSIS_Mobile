@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, reactive } from "vue";
+import { reactive } from "vue";
 import {
   IonToolbar,
   IonIcon,
@@ -47,18 +47,13 @@ const save = () => {
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-button @click="dismiss()">
-          <ion-icon
-            :icon="arrowBack"
-            aria-label="fermer"
-          />
+          <ion-icon :icon="arrowBack" aria-label="fermer" />
         </ion-button>
       </ion-buttons>
       <ion-title>Détails d'une présence</ion-title>
 
       <ion-buttons slot="end">
-        <ion-button @click="save()">
-          Enregistrer
-        </ion-button>
+        <ion-button @click="save()"> Enregistrer </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>

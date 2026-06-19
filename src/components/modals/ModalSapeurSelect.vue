@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, computed, ref, withDefaults } from "vue";
+import { computed, ref } from "vue";
 import {
   IonToolbar,
   IonTitle,
