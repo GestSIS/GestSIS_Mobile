@@ -1,10 +1,7 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main-content">
-      <ion-menu
-        content-id="main-content"
-        type="overlay"
-      >
+      <ion-menu content-id="main-content" type="overlay">
         <ion-content>
           <ion-list id="inbox-list">
             <ion-list-header>Menu</ion-list-header>
@@ -49,8 +46,8 @@ import {
 } from "@ionic/vue";
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
-import useAuth from "./store/useAuth";
-import { useTheme } from "./hooks/useTheme";
+import useAuth from "./store/useAuth.ts";
+import { useTheme } from "./hooks/useTheme.ts";
 
 const route = useRoute();
 const activeRoute = ref(route.name);
@@ -63,7 +60,7 @@ watch(
   () => route.name,
   (newValue) => {
     activeRoute.value = newValue;
-  }
+  },
 );
 
 const appPages = computed(() =>
@@ -104,8 +101,8 @@ const appPages = computed(() =>
     (p) =>
       ((p.connectedOnly && isLoggedIn()) ||
         (p.disconnectedOnly && !isLoggedIn())) &&
-      (!p.permission || hasPermission(p.permission))
-  )
+      (!p.permission || hasPermission(p.permission)),
+  ),
 );
 </script>
 

@@ -1,11 +1,11 @@
 import { type Ref, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
-import { Intervention } from "../models/intervention";
+import { Intervention } from "../models/intervention.ts";
 
-import useInterventions from "./useInterventions";
-import type { Mission } from "../models/mission";
-import type { Appel } from "../models/appel";
+import useInterventions from "./useInterventions.ts";
+import type { Mission } from "../models/mission.ts";
+import type { Appel } from "../models/appel.ts";
 
 const state: Ref<Intervention> = ref({ ...new Intervention() });
 
@@ -39,7 +39,7 @@ export default function useActiveIntervention() {
 
   const removeMission = (mission: Mission) => {
     state.value.missions = state.value.missions.filter(
-      (m) => m.localUuid != mission.localUuid
+      (m) => m.localUuid != mission.localUuid,
     );
     persist();
   };
@@ -67,14 +67,14 @@ export default function useActiveIntervention() {
 
   const updateAppel = (appel: Appel) => {
     state.value.appels = state.value.appels.map((a) =>
-      a.localUuid == appel.localUuid ? appel : a
+      a.localUuid == appel.localUuid ? appel : a,
     );
     persist();
   };
 
   const removeAppel = (appel: Appel) => {
     state.value.appels = state.value.appels.filter(
-      (a) => a.localUuid != appel.localUuid
+      (a) => a.localUuid != appel.localUuid,
     );
     persist();
   };
@@ -154,7 +154,7 @@ export default function useActiveIntervention() {
           sapeursMapping.set(s.id, presence);
         } else {
           console.error(
-            "Hum seems like we are trying to remove a sapeur which is not there"
+            "Hum seems like we are trying to remove a sapeur which is not there",
           );
         }
       });

@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { TypeIntervention } from "../models/typeintervention";
+import Api from "../http/Request.ts";
+import type { TypeIntervention } from "../models/typeintervention.ts";
 
 export default {
   getTypes(): Promise<TypeIntervention[]> {

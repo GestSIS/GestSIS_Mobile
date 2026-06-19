@@ -12,13 +12,13 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useMaterielsIntervention from "../../store/useMaterielsIntervention";
+import useMaterielsIntervention from "../../store/useMaterielsIntervention.ts";
 
 const query = ref("");
 const materielModule = useMaterielsIntervention();
 const filteredMateriel = computed(() => {
   return materielModule.state.value.filter(
-    (m) => m.designation.toLowerCase().indexOf(query.value) > -1
+    (m) => m.designation.toLowerCase().indexOf(query.value) > -1,
   );
 });
 
@@ -40,18 +40,13 @@ const selectMateriel = (materiel: any) => {
       <ion-title>Sélection du matériel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar
-      placeholder="Rechercher..."
-      @ion-input="search($event)"
-    />
+    <ion-searchbar placeholder="Rechercher..." @ion-input="search($event)" />
 
     <ion-list>
       <ion-item

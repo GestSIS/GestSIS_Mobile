@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { Localite } from "../models/localite";
+import Api from "../http/Request.ts";
+import type { Localite } from "../models/localite.ts";
 
 export default {
   getLocalites(): Promise<Localite[]> {

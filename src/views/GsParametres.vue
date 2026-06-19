@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import useAuth from "../store/useAuth";
-import useExercices from "../store/useExercices";
-import useInterventions from "../store/useInterventions";
-import useStore from "../store/useStore";
-import { useTheme } from "../hooks/useTheme";
-import { useNotify } from "../tools/useToast";
+import useAuth from "../store/useAuth.ts";
+import useExercices from "../store/useExercices.ts";
+import useInterventions from "../store/useInterventions.ts";
+import useStore from "../store/useStore.ts";
+import { useTheme } from "../hooks/useTheme.ts";
+import { useNotify } from "../tools/useToast.ts";
 import {
   IonButtons,
   IonButton,
@@ -43,10 +43,10 @@ const onSelectSis = async (sis: string) => {
   const exerciceStore = useExercices();
   const interventionStore = useInterventions();
   const hasInProgressExercices = exerciceStore.state.value.every(
-    (e) => e.localStatus == "in_progress"
+    (e) => e.localStatus == "in_progress",
   );
   const hasInProgressInterventions = interventionStore.state.value.every(
-    (e) => e.localStatus == "in_progress"
+    (e) => e.localStatus == "in_progress",
   );
 
   if (hasInProgressExercices || hasInProgressInterventions) {

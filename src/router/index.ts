@@ -1,4 +1,4 @@
-import useAuth from "../store/useAuth";
+import useAuth from "../store/useAuth.ts";
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import type { RouteRecordRaw } from "vue-router";
 

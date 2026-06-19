@@ -1,13 +1,13 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { MissionType } from "../models/missiontype";
-import MissionService from "../services/MissionService";
+import useBasicStore from "./useBasicStore.ts";
+import type { MissionType } from "../models/missiontype.ts";
+import MissionService from "../services/MissionService.ts";
 
 const state: Ref<MissionType[]> = ref([]);
 const store = useBasicStore(
   state,
   MissionService.getMissions,
-  "missions-types"
+  "missions-types",
 );
 
 export default function useMissionTypes() {

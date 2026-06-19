@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useInterventions from "../../store/useInterventions";
-import useLocalites from "../../store/useLocalites";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useInterventions from "../../store/useInterventions.ts";
+import useLocalites from "../../store/useLocalites.ts";
 // import usePhaseTypes from '../../store/usePhaseTypes';
-import useSapeurs from "../../store/useSapeurs";
-import useStatsFederal from "../../store/useStatsFederal";
-import useTypesIntervention from "../../store/useTypesIntervention";
-import { useNotify } from "../../tools/useToast";
+import useSapeurs from "../../store/useSapeurs.ts";
+import useStatsFederal from "../../store/useStatsFederal.ts";
+import useTypesIntervention from "../../store/useTypesIntervention.ts";
+import { useNotify } from "../../tools/useToast.ts";
 import {
   IonButton,
   IonTextarea,
@@ -33,7 +33,7 @@ import { useRouter } from "vue-router";
 import ModalLocaliteSelectVue from "../modals/ModalLocaliteSelect.vue";
 import ModalSapeurSelectVue from "../modals/ModalSapeurSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
-import useStore from "../../store/useStore";
+import useStore from "../../store/useStore.ts";
 import { DateTime } from "luxon";
 import ModalInterventionValidate from "../modals/ModalInterventionValidate.vue";
 
@@ -60,7 +60,7 @@ watch(
   () => {
     persist();
   },
-  { deep: true }
+  { deep: true },
 );
 
 const supprimerRapport = async () => {
@@ -125,7 +125,7 @@ const validate = async () => {
   // Check toutes les missions sont terminées
   if (!intervention.value.missions.every((m) => m.date_fin)) {
     notify.error(
-      "Certaines missions sont toujours en cours ! Veillez à toutes les quittancer afin de pouvoir valider cette intervention."
+      "Certaines missions sont toujours en cours ! Veillez à toutes les quittancer afin de pouvoir valider cette intervention.",
     );
     return;
   }
@@ -133,11 +133,11 @@ const validate = async () => {
   // Check toutes les présences sont complètes
   if (
     !intervention.value.sapeurs.every((s) =>
-      s.presences.every((p) => p.date_fin)
+      s.presences.every((p) => p.date_fin),
     )
   ) {
     notify.error(
-      "Certaines présences sont incomplètes ! Veillez à compléter toutes les présences afin de pouvoir valider cette intervention."
+      "Certaines présences sont incomplètes ! Veillez à compléter toutes les présences afin de pouvoir valider cette intervention.",
     );
     return;
   }
@@ -148,19 +148,19 @@ const validate = async () => {
       (intervention.value.missions ?? [])
         ?.map((mission) => mission.sapeur)
         ?.map((s) => s.id)
-        ?.filter((id) => id !== null)
+        ?.filter((id) => id !== null),
     ),
   ];
   const sapeursIdPotentiel = new Set<number>(
-    intervention.value.sapeurs.map((sap) => sap.id)
+    intervention.value.sapeurs.map((sap) => sap.id),
   );
   const sapeursExistant = new Set<number>(sapeurs.value.map((sap) => sap.id));
   const sapeursSansPresenceExercices = sapeursSaisi.filter(
-    (s) => s && !sapeursIdPotentiel.has(s) && sapeursExistant.has(s)
+    (s) => s && !sapeursIdPotentiel.has(s) && sapeursExistant.has(s),
   );
   if (sapeursSansPresenceExercices.length > 0) {
     notify.error(
-      "Sapeurs manquants ! Saisissez les sapeurs manquant ayant effectués des missions afin de pouvoir valider cette intervention."
+      "Sapeurs manquants ! Saisissez les sapeurs manquant ayant effectués des missions afin de pouvoir valider cette intervention.",
     );
     return;
   }
@@ -256,7 +256,7 @@ const roundDateToQuarter = (date: string) => {
 };
 
 const startDate = ref<string>(
-  roundDateToQuarter(intervention.value.date_debut ?? "")
+  roundDateToQuarter(intervention.value.date_debut ?? ""),
 );
 const dateDebutChanged = (date: string) => {
   // Change date de début pour sapeurs saisies
@@ -284,7 +284,7 @@ const navigate = () => {
   } else {
     window.open(
       "https://www.google.ch/maps/place/" +
-        intervention.value.wgs84.split(",").reverse().join(",")
+        intervention.value.wgs84.split(",").reverse().join(","),
     );
   }
 };
@@ -513,7 +513,9 @@ const navigate = () => {
             :min="0"
             :value="intervention.stat_nb"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="(ev: any) => intervention.stat_nb = parseInt(ev.target.value)"
+            @ion-change="
+              (ev: any) => (intervention.stat_nb = parseInt(ev.target.value))
+            "
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>
@@ -526,7 +528,10 @@ const navigate = () => {
             :min="0"
             :value="intervention.sauve_personne"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="(ev: any) => intervention.sauve_personne = parseInt(ev.target.value)"
+            @ion-change="
+              (ev: any) =>
+                (intervention.sauve_personne = parseInt(ev.target.value))
+            "
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>
@@ -539,7 +544,10 @@ const navigate = () => {
             :min="0"
             :value="intervention.sauve_animaux"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="(ev: any) => intervention.sauve_animaux = parseInt(ev.target.value)"
+            @ion-change="
+              (ev: any) =>
+                (intervention.sauve_animaux = parseInt(ev.target.value))
+            "
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>

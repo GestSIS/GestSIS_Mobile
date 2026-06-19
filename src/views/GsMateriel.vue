@@ -21,9 +21,9 @@ import {
 // import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 
 import { ref, type Ref } from "vue";
-import MaterielService from "../services/MaterielService";
-import type { Materiel } from "../models/materiel";
-import type { EventType } from "../models/event-type";
+import MaterielService from "../services/MaterielService.ts";
+import type { Materiel } from "../models/materiel.ts";
+import type { EventType } from "../models/event-type.ts";
 
 const online = window.navigator.onLine;
 if (!online) {
@@ -34,7 +34,7 @@ let materiel: Materiel[] = [];
 let types: EventType[] = [];
 
 MaterielService.getMateriel().then(
-  (data) => (materiel = [...data.filter((m) => m.materiel.uuid !== undefined)])
+  (data) => (materiel = [...data.filter((m) => m.materiel.uuid !== undefined)]),
 );
 MaterielService.getEventsTypes().then((data) => (types = [...data]));
 
@@ -55,10 +55,10 @@ const scan = async (): Promise<void> => {
   // barcodes.value.push(...scan.barcodes);
 };
 
-const requestPermissions = async (): Promise<boolean> => {
-  // const { camera } = await BarcodeScanner.requestPermissions();
-  return camera === "granted" || camera === "limited";
-};
+// const requestPermissions = async (): Promise<boolean> => {
+//   // const { camera } = await BarcodeScanner.requestPermissions();
+//   return camera === "granted" || camera === "limited";
+// };
 
 const presentAlert = async (): Promise<void> => {
   const alert = await alertController.create({
@@ -92,12 +92,12 @@ const presentAlert = async (): Promise<void> => {
     <!-- {{ materiel.map((m) => m.materiel.numero) }} -->
     <ion-content>
       <ion-list>
-        <ion-item v-for="barcode in barcodes" :key="barcode">
+        <!-- <ion-item v-for="barcode in barcodes" :key="barcode">
           <ion-label position="stacked">
             {{ barcode.format }}
           </ion-label>
           <ion-input type="text" :value="barcode.rawValue" />
-        </ion-item>
+        </ion-item> -->
       </ion-list>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
         <ion-fab-button :disabled="!isSupported" @click="scan()">

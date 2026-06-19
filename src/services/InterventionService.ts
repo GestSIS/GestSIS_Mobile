@@ -1,7 +1,7 @@
-import Api from "../http/Request";
-import type { Intervention } from "../models/intervention";
-import useGroupes from "../store/useGroupes";
-import useLocalites from "../store/useLocalites";
+import Api from "../http/Request.ts";
+import type { Intervention } from "../models/intervention.ts";
+import useGroupes from "../store/useGroupes.ts";
+import useLocalites from "../store/useLocalites.ts";
 
 export default {
   //TODO: Optionnel Nouvelle api - Récupérer les dernières interventions (n jours)
@@ -14,7 +14,7 @@ export default {
 
     const formattedInterventions = interventions.map((i) => {
       const formattedLocalite = localitesStore.state.value.find(
-        (l) => l.id == i.proprietaire?.localite_id
+        (l) => l.id == i.proprietaire?.localite_id,
       )?.designation;
 
       return {
@@ -37,10 +37,10 @@ export default {
             fin: p.date_fin,
             sapeur_id: sapeur.id,
             piquet: p.piquet,
-          }))
+          })),
         ),
         groupes: i.groupes.map((id) =>
-          groupesStore.state.value.find((g) => g.id == id)
+          groupesStore.state.value.find((g) => g.id == id),
         ),
         materiel: Object.entries(i.materiel).map(([key, value]) => ({
           materiel_id: parseInt(key),
@@ -68,8 +68,8 @@ export default {
 
     const results = await Promise.allSettled(
       formattedInterventions.map((intervention) =>
-        Api.api().post("/interventions-complet", intervention)
-      )
+        Api.api().post("/interventions-complet", intervention),
+      ),
     );
 
     // Return the localUuids that were exported successfully, so the caller
@@ -140,7 +140,7 @@ export default {
       "/interventions/" + interventionId + "/quittances",
       {
         data: { quittances: quittancesId },
-      }
+      },
     );
   },
 
@@ -148,13 +148,13 @@ export default {
   addSapeurs(interventionId: number, sapeursData: any) {
     return Api.api().post(
       "/interventions/" + interventionId + "/sapeurs",
-      sapeursData
+      sapeursData,
     );
   },
   editSapeurs(interventionId: number, sapeursData: any) {
     return Api.api().put(
       "/interventions/" + interventionId + "/sapeurs",
-      sapeursData
+      sapeursData,
     );
   },
   removeSapeurs(interventionId: number, sapeursIds: number[]) {

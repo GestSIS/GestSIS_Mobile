@@ -1,15 +1,15 @@
 import { type Ref, ref } from "vue";
-import InterventionService from "../services/InterventionService";
-import { Intervention } from "../models/intervention";
+import InterventionService from "../services/InterventionService.ts";
+import { Intervention } from "../models/intervention.ts";
 import { v4 as uuidv4 } from "uuid";
-import useBasicStore, { StoreState } from "./useBasicStore";
+import useBasicStore, { StoreState } from "./useBasicStore.ts";
 import { DateTime } from "luxon";
 
 const state: Ref<Intervention[]> = ref([]);
 const store = useBasicStore(
   state,
   InterventionService.getInterventions,
-  "interventions"
+  "interventions",
 );
 
 export default () => {
@@ -24,17 +24,17 @@ export default () => {
 
       // Export validated interventions
       const interventions: Intervention[] = state.value.filter(
-        (e) => e.localStatus == "validated"
+        (e) => e.localStatus == "validated",
       );
       const exportedUuids = new Set(
-        await InterventionService.exportInterventions(interventions)
+        await InterventionService.exportInterventions(interventions),
       );
 
       // Remove ONLY the interventions that were actually exported. Those that
       // failed stay queued for the next sync (no data loss); those that
       // succeeded are dropped so they are not re-sent and duplicated.
       state.value = state.value.filter(
-        (i) => !exportedUuids.has(i.localUuid ?? "")
+        (i) => !exportedUuids.has(i.localUuid ?? ""),
       );
 
       store.lastSync.value = DateTime.now().toSQL() ?? "";
@@ -56,7 +56,7 @@ export default () => {
     date: DateTime,
     objet: string,
     localite_id: number,
-    lieu: string
+    lieu: string,
   ): Intervention => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();

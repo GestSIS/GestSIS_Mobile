@@ -1,7 +1,7 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { Vehicule } from "../models/vehicule";
-import VehiculeService from "../services/VehiculeService";
+import useBasicStore from "./useBasicStore.ts";
+import type { Vehicule } from "../models/vehicule.ts";
+import VehiculeService from "../services/VehiculeService.ts";
 
 const state: Ref<Vehicule[]> = ref([]);
 const store = useBasicStore(state, VehiculeService.getVehicules, "vehicules");

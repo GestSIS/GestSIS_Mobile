@@ -10,11 +10,8 @@
           :disabled="intervention.localStatus == 'validated'"
           @click="addMateriel()"
         >
-          <ion-icon
-            slot="start"
-            :icon="add"
-            aria-hidden="true"
-          />Ajouter du matériel
+          <ion-icon slot="start" :icon="add" aria-hidden="true" />Ajouter du
+          matériel
         </ion-button>
       </ion-col>
     </ion-row>
@@ -25,7 +22,10 @@
       Aucun matériel
     </ion-item>
     <ion-item
-      v-for="([id, quantite], i) in (Object.entries(intervention.materiel) as [string, number][])"
+      v-for="([id, quantite], i) in Object.entries(intervention.materiel) as [
+        string,
+        number,
+      ][]"
       :key="i"
       :disabled="intervention.localStatus == 'validated'"
       @click="changeMaterielQuantity(parseInt(id), quantite)"
@@ -41,11 +41,7 @@
         color="dark"
         @click.stop="removeMateriel(parseInt(id))"
       >
-        <ion-icon
-          slot="icon-only"
-          :icon="close"
-          aria-label="fermer"
-        />
+        <ion-icon slot="icon-only" :icon="close" aria-label="fermer" />
       </ion-button>
     </ion-item>
   </ion-list>
@@ -64,8 +60,8 @@ import {
   alertController,
 } from "@ionic/vue";
 import { add, close } from "ionicons/icons";
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useMaterielsIntervention from "../../store/useMaterielsIntervention";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useMaterielsIntervention from "../../store/useMaterielsIntervention.ts";
 import ModalMaterielVue from "../modals/ModalMateriel.vue";
 
 const materielModule = useMaterielsIntervention();
@@ -145,13 +141,13 @@ const addMateriel = async () => {
 
   interventionModule.updateMaterielQuantity(
     materielId,
-    parseInt(previousQuantite || 0) + quantite
+    parseInt(previousQuantite || 0) + quantite,
   );
 };
 
 const changeMaterielQuantity = async (
   materielId: number,
-  currentQuantity: number
+  currentQuantity: number,
 ) => {
   const materiel = materiels.value.find((m) => m.id == materielId);
   const promptQuantite = await alertController.create({

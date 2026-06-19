@@ -12,9 +12,9 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useLocalites from "../../store/useLocalites";
-import useLocalitesSis from "../../store/useLocalitesSis";
-import type { Localite } from "../../models/localite";
+import useLocalites from "../../store/useLocalites.ts";
+import useLocalitesSis from "../../store/useLocalitesSis.ts";
+import type { Localite } from "../../models/localite.ts";
 
 const query = ref("");
 const localiteModule = useLocalites();
@@ -24,7 +24,7 @@ const filteredLocalite = computed(() => {
   return localiteModule.state.value
     .filter(
       (l) =>
-        localitesSis.size === 0 || localitesSis.has(l.id) || query.value !== ""
+        localitesSis.size === 0 || localitesSis.has(l.id) || query.value !== "",
     )
     .filter(
       (l) =>
@@ -33,11 +33,11 @@ const filteredLocalite = computed(() => {
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
           .indexOf(
-            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
-          ) > -1
+            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+          ) > -1,
     )
     .sort((a, b) =>
-      (a.npa + " " + a.designation).localeCompare(b.npa + " " + b.designation)
+      (a.npa + " " + a.designation).localeCompare(b.npa + " " + b.designation),
     );
 });
 
@@ -60,18 +60,13 @@ const selectLocalite = (localite: Localite) => {
       <ion-title>Sélection de la localité</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar
-      placeholder="Saisir..."
-      @ion-input="search($event)"
-    />
+    <ion-searchbar placeholder="Saisir..." @ion-input="search($event)" />
 
     <ion-list>
       <ion-item

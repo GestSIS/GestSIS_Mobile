@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { HeureExerciceType } from "../models/heureexercicetype";
+import Api from "../http/Request.ts";
+import type { HeureExerciceType } from "../models/heureexercicetype.ts";
 
 export default {
   getHeuresTypes(): Promise<HeureExerciceType[]> {

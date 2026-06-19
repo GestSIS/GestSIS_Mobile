@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { Alarme } from "../models/alarme";
+import Api from "../http/Request.ts";
+import type { Alarme } from "../models/alarme.ts";
 
 export default {
   fetchAlarmes(force = false): Promise<Alarme[]> {

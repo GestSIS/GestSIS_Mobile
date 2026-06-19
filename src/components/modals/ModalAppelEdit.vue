@@ -13,9 +13,9 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import { useNotify } from "../../tools/useToast";
-import { Appel } from "../../models/appel";
-import useActiveIntervention from "../../store/useActiveIntervention";
+import { useNotify } from "../../tools/useToast.ts";
+import { Appel } from "../../models/appel.ts";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
 const notify = useNotify();
@@ -53,18 +53,14 @@ const dismiss = () => {
       <ion-title>Modifier appel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="activeAppel.date">
-        Date
-      </base-datetime>
+      <base-datetime v-model="activeAppel.date"> Date </base-datetime>
 
       <ion-item>
         <ion-input
@@ -91,11 +87,7 @@ const dismiss = () => {
       </ion-item>
     </ion-list>
 
-    <ion-button
-      expand="full"
-      class="ion-margin-top"
-      @click="save"
-    >
+    <ion-button expand="full" class="ion-margin-top" @click="save">
       Modifier
     </ion-button>
   </ion-content>

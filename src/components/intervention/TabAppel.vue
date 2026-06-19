@@ -10,20 +10,14 @@
           :disabled="intervention.localStatus == 'validated'"
           @click="addCall()"
         >
-          <ion-icon
-            slot="start"
-            :icon="add"
-            aria-hidden="true"
-          />Nouvel appel
+          <ion-icon slot="start" :icon="add" aria-hidden="true" />Nouvel appel
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-list>
-    <ion-item v-if="!intervention.appels.length">
-      Aucun appel
-    </ion-item>
+    <ion-item v-if="!intervention.appels.length"> Aucun appel </ion-item>
     <ion-item
       v-for="appel in sortedAppels"
       :key="appel.localUuid"
@@ -33,9 +27,11 @@
     >
       <p>
         {{ appel.nom }} - {{ appel.numero }}
-        <br>
-        <span class="details">Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span>
-        <br>
+        <br />
+        <span class="details"
+          >Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span
+        >
+        <br />
         <span class="details">{{ appel.commentaire }}</span>
       </p>
       <ion-button
@@ -46,11 +42,7 @@
         aria-label="Fermer"
         @click.stop="removeCall(appel)"
       >
-        <ion-icon
-          slot="icon-only"
-          :icon="close"
-          aria-hidden="true"
-        />
+        <ion-icon slot="icon-only" :icon="close" aria-hidden="true" />
       </ion-button>
     </ion-item>
   </ion-list>
@@ -70,11 +62,11 @@ import {
 } from "@ionic/vue";
 import { add, close } from "ionicons/icons";
 
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useDateFormatter from "../../tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useDateFormatter from "../../tools/useDateFormatter.ts";
 import ModalAppelVue from "../modals/ModalAppelSelect.vue";
 import { DateTime } from "luxon";
-import type { Appel } from "../../models/appel";
+import type { Appel } from "../../models/appel.ts";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 import { computed } from "vue";
 
@@ -83,7 +75,9 @@ const { state, addAppel, removeAppel } = useActiveIntervention();
 const intervention = state;
 
 const sortedAppels = computed(() =>
-  intervention.value.appels.slice().sort((a, b) => b.date.localeCompare(a.date))
+  intervention.value.appels
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date)),
 );
 
 const addCall = async () => {

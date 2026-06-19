@@ -21,9 +21,9 @@ import {
 import { add } from "ionicons/icons";
 
 import { useRoute, useRouter } from "vue-router";
-import useActiveIntervention from "../store/useActiveIntervention";
-import useGroupes from "../store/useGroupes";
-import useSapeurs from "../store/useSapeurs";
+import useActiveIntervention from "../store/useActiveIntervention.ts";
+import useGroupes from "../store/useGroupes.ts";
+import useSapeurs from "../store/useSapeurs.ts";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
 import BaseDatetime from "../components/base/BaseDatetime.vue";
@@ -36,7 +36,7 @@ const sapeursIds = new Set(
   ((route.query?.sapeursIds as string) ?? "")
     .split(",")
     .map((e) => parseInt(e))
-    .filter((e) => e)
+    .filter((e) => e),
 );
 
 interface Presences {
@@ -80,7 +80,7 @@ if (mode == "ARRIVEE") {
 let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = new Set<number>(
   // Filter out politique
-  sapeurModule.state.value.filter((s) => s.type !== 0).map((s) => s.id)
+  sapeurModule.state.value.filter((s) => s.type !== 0).map((s) => s.id),
 );
 
 if (mode == "ARRIVEE") {
@@ -97,7 +97,7 @@ if (mode == "ARRIVEE") {
         .filter(
           (s) =>
             s.presences.filter((p) => p.date_fin == null || p.date_fin == "")
-              .length > 0
+              .length > 0,
         )
         .map((s) => s.id),
     ]);
@@ -107,10 +107,10 @@ if (mode == "ARRIVEE") {
     groupeModule.state.value
       .filter((g) => selectedGroupes.has(g.id))
       .forEach((g) =>
-        g.sapeur_ids.forEach((s) => potentialsSapeursIds.add(s.sapeur_id))
+        g.sapeur_ids.forEach((s) => potentialsSapeursIds.add(s.sapeur_id)),
       );
     potentialsSapeursIds = new Set(
-      [...potentialsSapeursIds].filter((s) => !exceptSapeursIds.has(s))
+      [...potentialsSapeursIds].filter((s) => !exceptSapeursIds.has(s)),
     );
 
     sapeurs = sapeurModule.state.value
@@ -122,13 +122,13 @@ if (mode == "ARRIVEE") {
     .filter(
       (s) =>
         s.presences.filter((p) => p.date_fin == null || p.date_fin == "")
-          .length > 0
+          .length > 0,
     )
     .map((s) => ({ ...s, selected: true }));
 }
 
 sapeurs.sort((a, b) =>
-  (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
+  (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom),
 );
 const presences: Presences = reactive({
   date: date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "",

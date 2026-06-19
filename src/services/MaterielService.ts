@@ -1,7 +1,7 @@
-import Api from "../http/Request";
-import type { Exercice } from "../models/exercice";
-import type { EventType } from "../models/event-type";
-import type { Materiel } from "../models/materiel";
+import Api from "../http/Request.ts";
+import type { Exercice } from "../models/exercice.ts";
+import type { EventType } from "../models/event-type.ts";
+import type { Materiel } from "../models/materiel.ts";
 
 export default {
   getEventsTypes(): Promise<EventType[]> {

@@ -1,7 +1,7 @@
-import type { Mission } from "./mission";
-import type { Appel } from "./appel";
+import type { Mission } from "./mission.ts";
+import type { Appel } from "./appel.ts";
 import { DateTime } from "luxon";
-import type { Alarme } from "./alarme";
+import type { Alarme } from "./alarme.ts";
 import { v4 as uuidv4 } from "uuid";
 
 export class Intervention {

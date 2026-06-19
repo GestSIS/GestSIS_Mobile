@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { PresenceExercice } from "../models/presence-exercice";
-import type { HeureExerciceType } from "../models/heureexercicetype";
+import type { PresenceExercice } from "../models/presence-exercice.ts";
+import type { HeureExerciceType } from "../models/heureexercicetype.ts";
 
-import useExerciceCategories from "../store/useExerciceCategories";
+import useExerciceCategories from "../store/useExerciceCategories.ts";
 
 import { trashOutline } from "ionicons/icons";
 
@@ -30,18 +30,18 @@ import {
   modalController,
 } from "@ionic/vue";
 import { add, refresh, checkmarkCircle } from "ionicons/icons";
-
-import useDateFormatter from "../tools/useDateFormatter";
-import useExexercices from "../store/useExercices";
-import { useRoute } from "vue-router";
-import router from "../router";
-import useExcuseTypes from "../store/useExcuseTypes";
-import useSapeurs from "../store/useSapeurs";
 import { computed, nextTick, ref } from "vue";
+import { useRoute } from "vue-router";
+
+import useDateFormatter from "../tools/useDateFormatter.ts";
+import useExexercices from "../store/useExercices.ts";
+import router from "../router/index.ts";
+import useExcuseTypes from "../store/useExcuseTypes.ts";
+import useSapeurs from "../store/useSapeurs.ts";
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
-import useHeureExerciceTypes from "../store/useHeureExerciceTypes";
-import useUnitesType from "../store/useUnitesTypes";
-import { useNotify } from "../tools/useToast";
+import useHeureExerciceTypes from "../store/useHeureExerciceTypes.ts";
+import useUnitesType from "../store/useUnitesTypes.ts";
+import { useNotify } from "../tools/useToast.ts";
 
 const { formatDate } = useDateFormatter();
 
@@ -72,7 +72,7 @@ const enhancedHeuresTypes = computed(() =>
   heuresTypes.value.map((e) => ({
     ...e,
     abreviation: indexedUnites.get(e.type_unite_id),
-  }))
+  })),
 );
 
 const formatCategorie = (categorieId: number) => {
@@ -103,7 +103,7 @@ if (!exercice.value) {
         ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)
             ?.designation || ""
         : "",
-    })
+    }),
   );
 }
 
@@ -113,7 +113,7 @@ const computedSapeurs = computed(() =>
       const nomPrenom = indexedSapeurs.get(s.sapeur_id);
       return { ...s, nomPrenom };
     })
-    .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom))
+    .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom)),
 );
 
 const validate = () => {
@@ -182,7 +182,7 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
 
 const removeExcuse = async (sapeur: PresenceExercice) => {
   const sap = exercice.value?.sapeurs.find(
-    (s) => s.sapeur_id === sapeur.sapeur_id
+    (s) => s.sapeur_id === sapeur.sapeur_id,
   );
   if (sap === undefined) return;
   sap.excuse_type = "";
@@ -199,7 +199,7 @@ const addExcuse = async (sapeur: PresenceExercice) => {
     text: excuse.designation,
     handler: () => {
       const sap = exercice.value?.sapeurs.find(
-        (s) => s.sapeur_id === sapeur.sapeur_id
+        (s) => s.sapeur_id === sapeur.sapeur_id,
       );
       if (!exercice.value || sap === undefined) return;
       sap.excuse_type_id = excuse.id;
@@ -233,7 +233,7 @@ const selectOption = async (statut: number, sapeur: PresenceExercice) => {
 
   // Save changes
   exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
-    s.sapeur_id == sapeur.sapeur_id ? sapeur : s
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
   );
   exercicesStore.updatExercice(exercice.value);
 };
@@ -241,7 +241,7 @@ const selectOption = async (statut: number, sapeur: PresenceExercice) => {
 const heureInput = (
   value: string | number,
   sapeur: PresenceExercice,
-  heureType: HeureExerciceType
+  heureType: HeureExerciceType,
 ) => {
   if (!exercice.value) return;
   if (resetting.value) {
@@ -250,7 +250,7 @@ const heureInput = (
   const quantite = parseFloat(`${value}`);
   if (quantite) {
     const heure = sapeur.heures.find(
-      (h) => h.heure_exercice_type_id == heureType.id
+      (h) => h.heure_exercice_type_id == heureType.id,
     );
     sapeur.heures = [
       ...sapeur.heures.filter((h) => h.heure_exercice_type_id != heureType.id),
@@ -258,11 +258,11 @@ const heureInput = (
     ];
   } else {
     sapeur.heures = sapeur.heures.filter(
-      (h) => h.heure_exercice_type_id != heureType.id
+      (h) => h.heure_exercice_type_id != heureType.id,
     );
   }
   exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
-    s.sapeur_id == sapeur.sapeur_id ? sapeur : s
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
   );
   exercicesStore.updatExercice(exercice.value);
 };
@@ -376,7 +376,7 @@ const sync = async () => {
                     inputmode="numeric"
                     :value="
                       sapeur?.heures.find(
-                        (h) => h.heure_exercice_type_id == heure.id
+                        (h) => h.heure_exercice_type_id == heure.id,
                       )?.quantite
                     "
                     @ion-change.stop="

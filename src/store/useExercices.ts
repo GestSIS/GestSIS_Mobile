@@ -1,10 +1,10 @@
 import { type Ref, ref } from "vue";
-import useBasicStore, { StoreState } from "./useBasicStore";
-import type { Exercice } from "../models/exercice";
-import ExerciceService from "../services/ExerciceService";
+import useBasicStore, { StoreState } from "./useBasicStore.ts";
+import type { Exercice } from "../models/exercice.ts";
+import ExerciceService from "../services/ExerciceService.ts";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
-import useAuth from "./useAuth";
+import useAuth from "./useAuth.ts";
 
 const state: Ref<Exercice[]> = ref([]);
 const store = useBasicStore(state, ExerciceService.getExercices, "exercices");

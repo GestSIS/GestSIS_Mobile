@@ -11,8 +11,8 @@ import {
   alertController,
 } from "@ionic/vue";
 import { add, checkmark, time, close } from "ionicons/icons";
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useDateFormatter from "../../tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useDateFormatter from "../../tools/useDateFormatter.ts";
 import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
 
@@ -53,10 +53,10 @@ const onlyPendingMissions = ref<boolean>(true);
 const missions = computed(() =>
   intervention.value.missions
     .filter((m) => !m.date_fin || !onlyPendingMissions.value)
-    .sort((a, b) => b.date_debut.localeCompare(a.date_debut))
+    .sort((a, b) => b.date_debut.localeCompare(a.date_debut)),
 );
 const nbMissionEnCours = computed(
-  () => intervention.value.missions.filter((m) => !m.date_fin).length
+  () => intervention.value.missions.filter((m) => !m.date_fin).length,
 );
 const nbMission = computed(() => intervention.value.missions.length);
 </script>
@@ -73,34 +73,27 @@ const nbMission = computed(() => intervention.value.missions.length);
           :disabled="intervention.localStatus == 'validated'"
           @click="addMission()"
         >
-          <ion-icon
-            slot="start"
-            :icon="add"
-            aria-hidden="true"
-          />Nouvelle mission
+          <ion-icon slot="start" :icon="add" aria-hidden="true" />Nouvelle
+          mission
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-list>
     <ion-item>
-      <ion-checkbox
-        slot="end"
-        v-model="onlyPendingMissions"
-        color="primary"
-      >
+      <ion-checkbox slot="end" v-model="onlyPendingMissions" color="primary">
         Afficher uniquement les missions en cours ({{ nbMissionEnCours }} /
         {{ nbMission }})
       </ion-checkbox>
     </ion-item>
-    <ion-item v-if="!intervention.missions.length">
-      Aucune mission
-    </ion-item>
+    <ion-item v-if="!intervention.missions.length"> Aucune mission </ion-item>
     <ion-item v-else-if="!missions.length">
       <p>
         Aucune mission en cours !
-        <br>
-        <span class="details">Désactivez le filtre pour afficher les missions terminées</span>
+        <br />
+        <span class="details"
+          >Désactivez le filtre pour afficher les missions terminées</span
+        >
       </p>
     </ion-item>
     <ion-item
@@ -117,11 +110,11 @@ const nbMission = computed(() => intervention.value.missions.length);
       />
       <p>
         {{ mission.titre }} - {{ mission.sapeur.designation }}
-        <br>
+        <br />
         <span class="details">{{
           formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy")
         }}</span>
-        <br>
+        <br />
         <span class="details">{{ mission.resume }}</span>
       </p>
       <ion-button
@@ -131,11 +124,7 @@ const nbMission = computed(() => intervention.value.missions.length);
         color="dark"
         @click.stop="deleteMission(mission)"
       >
-        <ion-icon
-          slot="icon-only"
-          :icon="close"
-          aria-label="fermer"
-        />
+        <ion-icon slot="icon-only" :icon="close" aria-label="fermer" />
       </ion-button>
     </ion-item>
   </ion-list>

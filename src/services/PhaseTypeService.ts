@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { PhaseType } from "../models/phasetype";
+import Api from "../http/Request.ts";
+import type { PhaseType } from "../models/phasetype.ts";
 
 export default {
   getPhases(): Promise<PhaseType[]> {

@@ -1,8 +1,8 @@
-import AuthService from "../services/AuthService";
+import AuthService from "../services/AuthService.ts";
 import { reactive, ref } from "vue";
-import { usePersistentStore } from "../hooks/usePersistentStore";
-import useStore from "./useStore";
-import Api from "../http/Request";
+import { usePersistentStore } from "../hooks/usePersistentStore.ts";
+import useStore from "./useStore.ts";
+import Api from "../http/Request.ts";
 import { jwtDecode } from "jwt-decode";
 
 const { persistentStore } = usePersistentStore();
@@ -81,7 +81,7 @@ export default function useAuth() {
   const setTokens = async (
     accessToken: string,
     refreshToken: string,
-    email: string | null
+    email: string | null,
   ) => {
     const { permissions, pseudo, mobiles, admin } = (
       jwtDecode(accessToken) as any
@@ -93,8 +93,8 @@ export default function useAuth() {
       .filter((sis) => transformedMobiles.includes(sis));
     const filteredPermissions = Object.fromEntries(
       Object.entries(permissions).filter(([sis]) =>
-        transformedMobiles.includes(sis)
-      )
+        transformedMobiles.includes(sis),
+      ),
     );
 
     // Throw exception if no permissions and manage the result

@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import { type Ref, ref } from "vue";
-import { usePersistentStore } from "../hooks/usePersistentStore";
+import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 
 const { persistentStore } = usePersistentStore();
 const lastSyncSuffixe = "last_sync";
@@ -15,7 +15,7 @@ export enum StoreState {
 export default function useBasicStore<Type>(
   state: Ref<Type[]>,
   loader: () => Promise<Type[]>,
-  persistKey: string
+  persistKey: string,
 ) {
   const syncStatus = ref(StoreState.NeedSync);
   const lastSync = ref<string>("");
@@ -30,8 +30,8 @@ export default function useBasicStore<Type>(
           ? [...value]
           : value instanceof Map
             ? { ...value }
-            : value
-      )
+            : value,
+      ),
     );
     await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
   };

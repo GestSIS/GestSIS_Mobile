@@ -14,10 +14,10 @@ import {
   modalController,
 } from "@ionic/vue";
 import { add, call } from "ionicons/icons";
-import useTelephones from "../../store/useTelephones";
+import useTelephones from "../../store/useTelephones.ts";
 import { alertController } from "@ionic/core";
-import { useNotify } from "../../tools/useToast";
-import type { Appel } from "../../models/appel";
+import { useNotify } from "../../tools/useToast.ts";
+import type { Appel } from "../../models/appel.ts";
 
 const notify = useNotify();
 
@@ -31,7 +31,7 @@ const filteredTelephone = computed(() => {
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "")
         .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) >
-      -1
+      -1,
   );
 });
 
@@ -101,26 +101,17 @@ const addTelephone = async () => {
       <ion-title>Nouvel appel</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar
-      placeholder="Rechercher..."
-      @ion-input="search($event)"
-    />
+    <ion-searchbar placeholder="Rechercher..." @ion-input="search($event)" />
 
     <ion-list>
       <ion-item @click="addTelephone">
-        <ion-icon
-          slot="start"
-          :icon="add"
-          aria-hidden="true"
-        />Entrer un
+        <ion-icon slot="start" :icon="add" aria-hidden="true" />Entrer un
         nouveau numéro
       </ion-item>
       <ion-item
@@ -129,11 +120,7 @@ const addTelephone = async () => {
         button
         @click="selectTelephone(telephone)"
       >
-        <ion-icon
-          slot="start"
-          :icon="call"
-          aria-hidden="true"
-        />
+        <ion-icon slot="start" :icon="call" aria-hidden="true" />
         {{ telephone.nom }}
         <span slot="end">{{ telephone.numero }}</span>
       </ion-item>

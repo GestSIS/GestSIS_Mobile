@@ -16,7 +16,7 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/vue";
-import { useNotify } from "../../tools/useToast";
+import { useNotify } from "../../tools/useToast.ts";
 import { DateTime } from "luxon";
 
 const notify = useNotify();
@@ -27,7 +27,7 @@ const activeDate = ref(
     props.date ??
     DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ??
     ""
-  ).replace(" ", "T")
+  ).replace(" ", "T"),
 );
 
 const save = async () => {
@@ -50,9 +50,7 @@ const dismiss = () => {
       <ion-title>Valider l'intervention</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -73,20 +71,12 @@ const dismiss = () => {
 
     <ion-row>
       <ion-col>
-        <ion-button
-          expand="full"
-          class="ion-margin-top"
-          @click="dismiss"
-        >
+        <ion-button expand="full" class="ion-margin-top" @click="dismiss">
           Annuler
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button
-          expand="full"
-          class="ion-margin-top"
-          @click="save"
-        >
+        <ion-button expand="full" class="ion-margin-top" @click="save">
           Valider
         </ion-button>
       </ion-col>
@@ -95,7 +85,7 @@ const dismiss = () => {
       <ion-datetime
         id="datetime"
         :value="activeDate"
-        @ion-change="(ev: any) => activeDate = ev.detail.value"
+        @ion-change="(ev: any) => (activeDate = ev.detail.value)"
       />
     </ion-modal>
   </ion-content>

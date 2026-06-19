@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { Groupe } from "../models/groupe";
+import Api from "../http/Request.ts";
+import type { Groupe } from "../models/groupe.ts";
 
 export default {
   getGroupes(): Promise<Groupe[]> {

@@ -30,22 +30,22 @@ import {
   navigate,
 } from "ionicons/icons";
 
-import useInterventions from "../store/useInterventions";
-import useAlarmes from "../store/useAlarmes";
-import useDateFormatter from "../tools/useDateFormatter";
-import useActiveIntervention from "../store/useActiveIntervention";
+import useInterventions from "../store/useInterventions.ts";
+import useAlarmes from "../store/useAlarmes.ts";
+import useDateFormatter from "../tools/useDateFormatter.ts";
+import useActiveIntervention from "../store/useActiveIntervention.ts";
 import { useRouter } from "vue-router";
-import { Intervention } from "../models/intervention";
-import type { Alarme } from "../models/alarme";
+import { Intervention } from "../models/intervention.ts";
+import type { Alarme } from "../models/alarme.ts";
 import ModalInterventionCreateVue from "../components/modals/ModalInterventionCreate.vue";
 import ModalQuittancesVue from "../components/modals/ModalQuittances.vue";
-import useSapeurs from "../store/useSapeurs";
-import useGroupes from "../store/useGroupes";
-import useAuth from "../store/useAuth";
+import useSapeurs from "../store/useSapeurs.ts";
+import useGroupes from "../store/useGroupes.ts";
+import useAuth from "../store/useAuth.ts";
 import { DateTime } from "luxon";
 // import { ref } from "vue";
 import { computed, ref } from "vue";
-import useStore from "../store/useStore";
+import useStore from "../store/useStore.ts";
 const { formatDate } = useDateFormatter();
 
 const { state: interventions } = useInterventions();
@@ -77,7 +77,7 @@ const refreshAlarmes = async () => {
 const filteredAlarmes = computed(() =>
   alarmeStore.state.value
     .filter((a) => a.couleur !== "GRIS")
-    .filter((a) => DateTime.fromISO(a.debut_alarme).diffNow("days").days >= -7)
+    .filter((a) => DateTime.fromISO(a.debut_alarme).diffNow("days").days >= -7),
 );
 
 const { updateIntervention } = useInterventions();
@@ -108,7 +108,7 @@ const create = async (alarme: Alarme | null) => {
       ...new Set(
         alarme.firefighters
           .filter((f) => f.sis == activeSisKey.value)
-          .map((f) => f.id)
+          .map((f) => f.id),
       ),
     ];
 
@@ -125,7 +125,7 @@ const create = async (alarme: Alarme | null) => {
     const groupesNumeros = new Set(
       alarme.groups
         .filter((g) => g.sis == activeSisKey.value)
-        .map((g) => g.number)
+        .map((g) => g.number),
     );
     intervention.groupes = groupesStore.state.value
       .filter((g) => g.no && groupesNumeros.has("" + g.no))
@@ -181,7 +181,7 @@ const onAlarm = async (alarme: Alarme) => {
           } else {
             window.open(
               "https://www.google.ch/maps/place/" +
-                alarme.location_wgs84.split(",").reverse().join(",")
+                alarme.location_wgs84.split(",").reverse().join(","),
             );
           }
           return true;
@@ -247,16 +247,18 @@ const displayAlarmModule = true;
           <p>
             <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> -
             <span class="details">{{ alarme.description }}</span>
-            <br>
+            <br />
             <span class="details">{{ alarme.address }}</span>
-            <br>
+            <br />
             <span>
-              <ion-badge>{{
-                alarme.firefighters.filter((f) => f.sis === activeSisKey)
-                  .length +
+              <ion-badge
+                >{{
+                  alarme.firefighters.filter((f) => f.sis === activeSisKey)
+                    .length +
                   alarme.unresolved.filter((f) => f.sis == activeSisKey).length
-              }}
-                quittances</ion-badge>
+                }}
+                quittances</ion-badge
+              >
             </span>
           </p>
         </ion-item>
@@ -264,27 +266,13 @@ const displayAlarmModule = true;
 
       <ion-row>
         <ion-col>
-          <ion-button
-            expand="full"
-            @click="create(null)"
-          >
-            <ion-icon
-              slot="start"
-              :icon="add"
-              aria-hidden="true"
-            />Nouveau
+          <ion-button expand="full" @click="create(null)">
+            <ion-icon slot="start" :icon="add" aria-hidden="true" />Nouveau
           </ion-button>
         </ion-col>
         <ion-col v-if="displayAlarmModule">
-          <ion-button
-            expand="full"
-            @click="refreshAlarmes()"
-          >
-            <ion-spinner
-              v-if="loading"
-              slot="start"
-              name="circles"
-            />
+          <ion-button expand="full" @click="refreshAlarmes()">
+            <ion-spinner v-if="loading" slot="start" name="circles" />
             <ion-icon
               v-else
               slot="start"
@@ -296,9 +284,7 @@ const displayAlarmModule = true;
       </ion-row>
 
       <ion-list>
-        <ion-item v-if="!interventions.length">
-          Aucune intervention
-        </ion-item>
+        <ion-item v-if="!interventions.length"> Aucune intervention </ion-item>
         <ion-item
           v-for="intervention in interventions"
           :key="intervention.localUuid"
@@ -320,7 +306,7 @@ const displayAlarmModule = true;
           <p>
             {{ intervention.objet }} –
             {{ formatDate(intervention.date_debut ?? "", "dd.LL.yy HH:mm") }}
-            <br>
+            <br />
             <span class="details">
               {{
                 intervention.localStatus == "in_progress"

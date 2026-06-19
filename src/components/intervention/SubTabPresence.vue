@@ -14,11 +14,11 @@ import {
 
 import { logIn, logOut, close, warning } from "ionicons/icons";
 
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useSapeurs from "../../store/useSapeurs";
-import useDateFormatter from "../../tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useSapeurs from "../../store/useSapeurs.ts";
+import useDateFormatter from "../../tools/useDateFormatter.ts";
 import { computed } from "vue";
-import router from "../../router";
+import router from "../../router.ts";
 import ModalSapeurPresenceVue from "../modals/ModalSapeurPresence.vue";
 
 const { formatDate } = useDateFormatter();
@@ -26,7 +26,7 @@ const { formatDate } = useDateFormatter();
 const { state, updatePresences } = useActiveIntervention();
 const intervention = state;
 intervention.value.sapeurs.sort((a, b) =>
-  (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
+  (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom),
 );
 
 const moduleSapeur = useSapeurs();
@@ -35,9 +35,9 @@ const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.value.sapeurs.filter(
     (sap) =>
       sap.presences.filter(
-        (pres) => pres.date_fin == null || pres.date_fin == ""
-      ).length > 0
-  )
+        (pres) => pres.date_fin == null || pres.date_fin == "",
+      ).length > 0,
+  ),
 );
 
 const sapeursManquants = computed(() => {
@@ -46,10 +46,10 @@ const sapeursManquants = computed(() => {
     intervention.value.sapeur_id,
   ]);
   const sapeursIdPotentiel = new Set(
-    intervention.value.sapeurs.map((sap) => sap.id)
+    intervention.value.sapeurs.map((sap) => sap.id),
   );
   const indexedSapeurs = new Map(
-    moduleSapeur.state.value.map((s) => [s.id, s])
+    moduleSapeur.state.value.map((s) => [s.id, s]),
   );
   return [...sapeurIdsSaisi]
     .filter((id) => id && !sapeursIdPotentiel.has(id))
@@ -70,7 +70,7 @@ const addPresenceExercice = (mode: "ARRIVEE" | "DEPART") => {
 };
 const editPresenceExercice = async (
   sapeurIndex: number,
-  presenceIndex: any
+  presenceIndex: any,
 ) => {
   const sapeur = intervention.value.sapeurs[sapeurIndex];
   if (!sapeur) {

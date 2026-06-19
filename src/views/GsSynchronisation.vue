@@ -22,10 +22,10 @@ import {
   warning,
 } from "ionicons/icons";
 
-import useDateFormatter from "../tools/useDateFormatter";
-import useStore from "../store/useStore";
-import { StoreState } from "../store/useBasicStore";
-import useAuth from "../store/useAuth";
+import useDateFormatter from "../tools/useDateFormatter.ts";
+import useStore from "../store/useStore.ts";
+import { StoreState } from "../store/useBasicStore.ts";
+import useAuth from "../store/useAuth.ts";
 const { formatDate } = useDateFormatter();
 const { modules, syncAll, syncModule } = useStore();
 const { hasPermission } = useAuth();
@@ -81,10 +81,7 @@ const online = window.navigator.onLine;
     </ion-header>
 
     <ion-content>
-      <ion-card
-        v-if="!online"
-        color="warning"
-      >
+      <ion-card v-if="!online" color="warning">
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>
@@ -92,17 +89,13 @@ const online = window.navigator.onLine;
         </ion-card-content>
       </ion-card>
 
-      <ion-button
-        expand="full"
-        color="primary"
-        @click="syncAll"
-      >
+      <ion-button expand="full" color="primary" @click="syncAll">
         Tout synchroniser
       </ion-button>
       <ion-list>
         <ion-item
           v-for="{ name, lastSync, syncStatus, sync } in modules.filter(
-            (m) => !m.permission || hasPermission(m.permission)
+            (m) => !m.permission || hasPermission(m.permission),
           )"
           :key="name"
           :button="true"
@@ -110,7 +103,7 @@ const online = window.navigator.onLine;
         >
           <div>
             {{ name }}
-            <br>
+            <br />
             <span class="details">{{
               syncStatus
                 ? formatDate(lastSync.value, "dd.MM.yyyy H:mm:ss")

@@ -1,13 +1,13 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { ExerciceComptable } from "../models/exercicecomptable";
-import ExerciceComptableService from "../services/ExerciceComptableService";
+import useBasicStore from "./useBasicStore.ts";
+import type { ExerciceComptable } from "../models/exercicecomptable.ts";
+import ExerciceComptableService from "../services/ExerciceComptableService.ts";
 
 const state: Ref<ExerciceComptable[]> = ref([]);
 const store = useBasicStore(
   state,
   ExerciceComptableService.getExercices,
-  "exercices-comptable"
+  "exercices-comptable",
 );
 
 export default function useExexercicesComptable() {

@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { ExcuseType } from "../models/excusetype";
+import Api from "../http/Request.ts";
+import type { ExcuseType } from "../models/excusetype.ts";
 
 export default {
   getExcuses(): Promise<ExcuseType[]> {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { v4 as uuidv4 } from "uuid";
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useDateFormatter from "../../tools/useDateFormatter";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useDateFormatter from "../../tools/useDateFormatter.ts";
 import {
   IonList,
   IonItem,
@@ -12,7 +12,7 @@ import {
 import { body, call, play } from "ionicons/icons";
 import { computed, ref } from "vue";
 import { DateTime } from "luxon";
-import useSapeurs from "../../store/useSapeurs";
+import useSapeurs from "../../store/useSapeurs.ts";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
 import { useRouter } from "vue-router";
 
@@ -55,10 +55,10 @@ interface Event {
 
 const evenements = computed(() => {
   const missions = intervention.value.missions.filter(
-    (m) => !m.date_fin || !onlyPendingMissions.value
+    (m) => !m.date_fin || !onlyPendingMissions.value,
   );
   const chefIntervention = sapeurStore.state.value.find(
-    (s) => s.id == intervention.value.sapeur_id
+    (s) => s.id == intervention.value.sapeur_id,
   );
   return [
     // Début intervention
@@ -109,7 +109,7 @@ const evenements = computed(() => {
   ].sort((a, b) =>
     DateTime.fromSQL(b.date ?? "")
       .diff(DateTime.fromSQL(a.date ?? ""))
-      .toMillis()
+      .toMillis(),
   ) as Event[];
 });
 
@@ -121,7 +121,7 @@ const openEvent = async (event: Event) => {
     case EventType.Appel:
       {
         const appel = intervention.value.appels.find(
-          (a) => a.localUuid == event.uuid
+          (a) => a.localUuid == event.uuid,
         );
         const modalAppel = await modalController.create({
           component: ModalAppelEditVue,

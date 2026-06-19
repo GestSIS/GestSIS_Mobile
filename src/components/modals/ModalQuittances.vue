@@ -15,8 +15,8 @@ import {
   IonItemDivider,
   IonBadge,
 } from "@ionic/vue";
-import type { Alarme } from "../../models/alarme";
-import useAuth from "../../store/useAuth";
+import type { Alarme } from "../../models/alarme.ts";
+import useAuth from "../../store/useAuth.ts";
 const { activeSisKey } = useAuth();
 const props = defineProps<{ alarme: Alarme }>();
 
@@ -38,41 +38,36 @@ const groupes = props.alarme.groups
           {{
             props.alarme.firefighters.filter((f) => f.sis === activeSisKey)
               .length +
-              props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
+            props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
           }}
         </ion-badge>
       </ion-title>
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
     <ion-list>
-      <ion-item-group
-        v-for="g in groupes"
-        :key="g.sis"
-      >
+      <ion-item-group v-for="g in groupes" :key="g.sis">
         <ion-item-divider>
           <ion-label>
             {{ g.sis.toUpperCase() }} : {{ g.number }} -
-            {{ g.name }}
-          </ion-label><ion-badge slot="end">
+            {{ g.name }} </ion-label
+          ><ion-badge slot="end">
             {{
               props.alarme.firefighters.filter((f) => f.group_name == g.name)
                 .length +
-                props.alarme.unresolved.filter((f) => f.group_name == g.name)
-                  .length
+              props.alarme.unresolved.filter((f) => f.group_name == g.name)
+                .length
             }}
             quittances
           </ion-badge>
         </ion-item-divider>
         <ion-item
           v-for="s in props.alarme.firefighters.filter(
-            (f) => f.group_name == g.name
+            (f) => f.group_name == g.name,
           )"
           :key="s.id"
         >
@@ -80,7 +75,7 @@ const groupes = props.alarme.groups
         </ion-item>
         <ion-item
           v-for="s in props.alarme.unresolved.filter(
-            (f) => f.group_name == g.name
+            (f) => f.group_name == g.name,
           )"
           :key="s.fullname"
         >

@@ -17,8 +17,8 @@ import {
   alertController,
 } from "@ionic/vue";
 import { arrowBack } from "ionicons/icons";
-import useSapeurs from "../../store/useSapeurs";
-import type { Sapeur } from "../../models/sapeur";
+import useSapeurs from "../../store/useSapeurs.ts";
+import type { Sapeur } from "../../models/sapeur.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -27,7 +27,7 @@ const props = withDefaults(
     multiSelect?: boolean;
     autre?: boolean;
   }>(),
-  { exceptSapeurIds: () => [], multiSelect: false }
+  { exceptSapeurIds: () => [], multiSelect: false },
 );
 const exceptIds = new Set(props.exceptSapeurIds ?? []);
 const preSelectionIds = new Set(props.preSelectionSapeurIds ?? []);
@@ -47,13 +47,13 @@ const filteredSapeur = computed(() => {
             .normalize("NFD")
             .replace(/\p{Diacritic}/gu, "")
             .indexOf(
-              query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
+              query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
             ) > -1
         : (preSelectionIds.size && preSelectionIds.has(s.id)) ||
-          !preSelectionIds.size
+          !preSelectionIds.size,
     )
     .sort((a, b) =>
-      (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom)
+      (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom),
     );
 });
 
@@ -112,26 +112,15 @@ const autreSapeur = async () => {
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button
-          slot="start"
-          @click="dismiss()"
-        >
-          <ion-icon
-            :icon="arrowBack"
-            aria-label="fermer"
-          />
+        <ion-button slot="start" @click="dismiss()">
+          <ion-icon :icon="arrowBack" aria-label="fermer" />
         </ion-button>
       </ion-buttons>
 
       <ion-title>Ajouter un sapeur</ion-title>
 
-      <ion-buttons
-        v-if="props.multiSelect"
-        slot="end"
-      >
-        <ion-button @click="validate()">
-          Valider
-        </ion-button>
+      <ion-buttons v-if="props.multiSelect" slot="end">
+        <ion-button @click="validate()"> Valider </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -150,15 +139,10 @@ const autreSapeur = async () => {
         button
         @click="selectSapeur(sapeur)"
       >
-        <ion-checkbox
-          v-if="props.multiSelect"
-          class="ion-margin-end"
-        >
+        <ion-checkbox v-if="props.multiSelect" class="ion-margin-end">
           {{ sapeur.nom }} {{ sapeur.prenom }}
         </ion-checkbox>
-        <ion-label v-else>
-          {{ sapeur.nom }} {{ sapeur.prenom }}
-        </ion-label>
+        <ion-label v-else> {{ sapeur.nom }} {{ sapeur.prenom }} </ion-label>
       </ion-item>
     </ion-list>
     <ion-button

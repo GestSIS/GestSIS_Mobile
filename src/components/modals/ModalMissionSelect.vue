@@ -12,8 +12,8 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import useMissionsTypes from "../../store/useMissionTypes";
-import type { MissionType } from "../../models/missiontype";
+import useMissionsTypes from "../../store/useMissionTypes.ts";
+import type { MissionType } from "../../models/missiontype.ts";
 
 const query = ref("");
 const missionModule = useMissionsTypes();
@@ -26,8 +26,8 @@ const filteredMission = computed(() => {
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
           .indexOf(
-            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")
-          ) > -1
+            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
+          ) > -1,
     )
     .sort((a, b) => a.titre.localeCompare(b.titre));
 });
@@ -51,18 +51,13 @@ const dismiss = () => {
       <ion-title>Sélection du titre de la mission</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar
-      placeholder="Saisir"
-      @ion-input="search($event)"
-    />
+    <ion-searchbar placeholder="Saisir" @ion-input="search($event)" />
 
     <ion-list>
       <ion-item

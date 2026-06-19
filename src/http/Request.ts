@@ -1,4 +1,4 @@
-import useAuth from "../store/useAuth";
+import useAuth from "../store/useAuth.ts";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
@@ -88,7 +88,7 @@ const request = {
       },
       async (error: any) => {
         return Promise.reject(error);
-      }
+      },
     );
 
     return api;
@@ -118,7 +118,7 @@ const request = {
         }
         // Do something with response error
         return Promise.reject(error.response.data);
-      }
+      },
     );
     return auth;
   },

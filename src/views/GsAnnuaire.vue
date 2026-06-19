@@ -14,7 +14,7 @@ import {
 } from "@ionic/vue";
 import { call } from "ionicons/icons";
 
-import useTelephones from "../store/useTelephones";
+import useTelephones from "../store/useTelephones.ts";
 import { computed, ref } from "vue";
 
 const query = ref("");
@@ -27,7 +27,7 @@ const filteredTelephone = computed(() => {
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "")
         .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) >
-      -1
+      -1,
   );
 });
 
@@ -48,10 +48,7 @@ const search = (event: any) => {
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-searchbar
-        placeholder="Rechercher..."
-        @ion-input="search($event)"
-      />
+      <ion-searchbar placeholder="Rechercher..." @ion-input="search($event)" />
 
       <ion-list>
         <ion-item v-if="filteredTelephone.length === 0 && query !== ''">
@@ -65,11 +62,7 @@ const search = (event: any) => {
           :key="telephone.id"
           :href="'tel:' + telephone.numero"
         >
-          <ion-icon
-            slot="start"
-            :icon="call"
-            aria-hidden="true"
-          />
+          <ion-icon slot="start" :icon="call" aria-hidden="true" />
           {{ telephone.nom }}
           <span slot="end">{{ telephone.numero }}</span>
         </ion-item>

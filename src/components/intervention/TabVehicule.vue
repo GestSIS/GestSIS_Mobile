@@ -34,8 +34,8 @@
 <script lang="ts" setup>
 import { IonList, IonGrid, IonCol, IonRow, IonItem, IonIcon } from "@ionic/vue";
 import { checkmarkCircle, radioButtonOff } from "ionicons/icons";
-import useActiveIntervention from "../../store/useActiveIntervention";
-import useVehicules from "../../store/useVehicules";
+import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useVehicules from "../../store/useVehicules.ts";
 import { computed, ref } from "vue";
 
 const { state, updateVehicules } = useActiveIntervention();

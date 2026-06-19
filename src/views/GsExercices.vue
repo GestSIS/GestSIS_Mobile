@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Exercice } from "../models/exercice";
+import type { Exercice } from "../models/exercice.ts";
 
 import {
   IonButtons,
@@ -17,13 +17,13 @@ import {
 import { create, warning, sync } from "ionicons/icons";
 
 import { computed } from "vue";
-import useExercices from "../store/useExercices";
-import useLocalites from "../store/useLocalites";
-import useExerciceCategories from "../store/useExerciceCategories";
+import useExercices from "../store/useExercices.ts";
+import useLocalites from "../store/useLocalites.ts";
+import useExerciceCategories from "../store/useExerciceCategories.ts";
+import useDateFormatter from "../tools/useDateFormatter.ts";
+import useSapeurs from "../store/useSapeurs.ts";
 import { useRouter } from "vue-router";
-import useDateFormatter from "../tools/useDateFormatter";
 import { DateTime } from "luxon";
-import useSapeurs from "../store/useSapeurs";
 
 const exercicesStore = useExercices();
 const sapeursStore = useSapeurs();
@@ -41,7 +41,7 @@ const sortExercices = (exercices: Exercice[]): Exercice[] => {
   return exercices
     .slice(0)
     .sort((a, b) =>
-      DateTime.fromSQL(a.date).diff(DateTime.fromSQL(b.date)).toMillis()
+      DateTime.fromSQL(a.date).diff(DateTime.fromSQL(b.date)).toMillis(),
     );
 };
 
@@ -84,9 +84,7 @@ const openDetails = async (exercice: Exercice) => {
 
     <ion-content class="ion-padding">
       <ion-list lines="inset">
-        <ion-item v-if="!exercices.length">
-          Aucun exercice
-        </ion-item>
+        <ion-item v-if="!exercices.length"> Aucun exercice </ion-item>
         <ion-item
           v-for="exercice in exercices"
           :key="exercice.id"
@@ -119,7 +117,7 @@ const openDetails = async (exercice: Exercice) => {
             <!-- {{ exercice.communication != '-' ? exercice.communication : exercice.categorie }} -->
             {{ formatDate(exercice.date, null) }} -
             {{ exercice.designation }}
-            <br>
+            <br />
             <span class="details statut">
               {{
                 exercice.localStatus == "empty"
@@ -131,7 +129,7 @@ const openDetails = async (exercice: Exercice) => {
                       : ""
               }}
             </span>
-            <br>
+            <br />
             <span class="details">
               {{ getFormattedLocalite(exercice.localite_id) }} -
               {{ getFormattedCategorie(exercice.exercice_categorie_id) }}

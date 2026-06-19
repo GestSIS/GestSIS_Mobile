@@ -15,15 +15,15 @@ import {
   IonBackButton,
   modalController,
 } from "@ionic/vue";
-import { Mission } from "../models/mission";
+import { Mission } from "../models/mission.ts";
 import { useRoute, useRouter } from "vue-router";
-import useActiveIntervention from "../store/useActiveIntervention";
+import useActiveIntervention from "../store/useActiveIntervention.ts";
 
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
 import ModalMissionSelectVue from "../components/modals/ModalMissionSelect.vue";
-import useSapeurs from "../store/useSapeurs";
+import useSapeurs from "../store/useSapeurs.ts";
 import { DateTime } from "luxon";
-import { useNotify } from "../tools/useToast";
+import { useNotify } from "../tools/useToast.ts";
 import BaseDatetime from "../components/base/BaseDatetime.vue";
 
 const notify = useNotify();
@@ -36,7 +36,9 @@ const interventionStore = useActiveIntervention();
 
 const loadedMission = Object.assign(
   {},
-  interventionStore.state.value.missions.find((m) => m.localUuid == missionUuid)
+  interventionStore.state.value.missions.find(
+    (m) => m.localUuid == missionUuid,
+  ),
 );
 const mission: Ref<Mission> = ref(loadedMission || new Mission());
 if (!mission.value.date_debut) {
@@ -60,7 +62,7 @@ const selectSapeur = async () => {
     componentProps: {
       exceptSapeurIds: [],
       preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(
-        (s) => s.id
+        (s) => s.id,
       ),
       autre: true,
     },

@@ -1,13 +1,13 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { Telephone } from "../models/telephone";
-import TelephoneService from "../services/TelephoneService";
+import useBasicStore from "./useBasicStore.ts";
+import type { Telephone } from "../models/telephone.ts";
+import TelephoneService from "../services/TelephoneService.ts";
 
 const state: Ref<Telephone[]> = ref([]);
 const store = useBasicStore(
   state,
   TelephoneService.getTelephones,
-  "telephones"
+  "telephones",
 );
 
 export default function useTelephones() {

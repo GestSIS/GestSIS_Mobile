@@ -13,11 +13,11 @@ import {
   IonItem,
   modalController,
 } from "@ionic/vue";
-import { useNotify } from "../../tools/useToast";
+import { useNotify } from "../../tools/useToast.ts";
 import { DateTime } from "luxon";
 
-import useInterventions from "../../store/useInterventions";
-import useLocalites from "../../store/useLocalites";
+import useInterventions from "../../store/useInterventions.ts";
+import useLocalites from "../../store/useLocalites.ts";
 import ModalLocaliteSelectVue from "./ModalLocaliteSelect.vue";
 import BaseDatetime from "../base/BaseDatetime.vue";
 
@@ -66,7 +66,7 @@ const save = async () => {
     DateTime.fromSQL(intervention.date),
     intervention.objet,
     intervention.localite_id,
-    intervention.lieu
+    intervention.lieu,
   );
   modalController.dismiss(inter);
 };
@@ -82,18 +82,14 @@ const dismiss = () => {
       <ion-title>Nouvelle intervention</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
   <ion-content class="ion-padding">
     <ion-list no-lines>
-      <base-datetime v-model="intervention.date">
-        Début
-      </base-datetime>
+      <base-datetime v-model="intervention.date"> Début </base-datetime>
 
       <ion-item>
         <ion-input
@@ -124,11 +120,7 @@ const dismiss = () => {
       </ion-item>
     </ion-list>
 
-    <ion-button
-      expand="full"
-      class="ion-margin-top"
-      @click="save"
-    >
+    <ion-button expand="full" class="ion-margin-top" @click="save">
       Créer
     </ion-button>
   </ion-content>

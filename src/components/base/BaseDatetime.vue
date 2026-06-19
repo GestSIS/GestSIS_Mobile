@@ -14,7 +14,7 @@ import {
 import { calendar } from "ionicons/icons";
 
 import { v4 as uuidv4 } from "uuid";
-import useDateFormatter from "../../tools/useDateFormatter";
+import useDateFormatter from "../../tools/useDateFormatter.ts";
 import { DateTime } from "luxon";
 import { defineProps, defineEmits, withDefaults, ref } from "vue";
 
@@ -38,7 +38,7 @@ const props = withDefaults(
     disabled: false,
     invalid: false,
     clearable: false,
-  }
+  },
 );
 
 const openModal = ref(false);
@@ -80,28 +80,15 @@ const dateTimeId = uuidv4();
     <ion-label :color="props.invalid ? 'primary' : ''">
       <slot>{{ props.label }}</slot>
     </ion-label>
-    <ion-text
-      id="open-modal"
-      slot="end"
-    >
+    <ion-text id="open-modal" slot="end">
       {{
         props.modelValue ? formatDate(props.modelValue, "dd.LL.yy HH:mm") : ""
       }}
     </ion-text>
-    <ion-button
-      slot="end"
-      fill="clear"
-    >
-      <ion-icon
-        slot="end"
-        :icon="calendar"
-        :aria-label="props.label"
-      />
+    <ion-button slot="end" fill="clear">
+      <ion-icon slot="end" :icon="calendar" :aria-label="props.label" />
     </ion-button>
-    <ion-modal
-      :id="dateTimeId"
-      :is-open="openModal"
-    >
+    <ion-modal :id="dateTimeId" :is-open="openModal">
       <ion-datetime
         ref="input"
         presentation="time-date"
@@ -113,18 +100,11 @@ const dateTimeId = uuidv4();
         @ion-change="(ev: any) => updateValue(ev.detail.value)"
       >
         <ion-buttons slot="buttons">
-          <ion-button
-            v-if="props.clearable"
-            @click.prevent="clear()"
-          >
+          <ion-button v-if="props.clearable" @click.prevent="clear()">
             Vide
           </ion-button>
-          <ion-button @click.prevent="confirm()">
-            Valider
-          </ion-button>
-          <ion-button @click.prevent="reset()">
-            Reset
-          </ion-button>
+          <ion-button @click.prevent="confirm()"> Valider </ion-button>
+          <ion-button @click.prevent="reset()"> Reset </ion-button>
         </ion-buttons>
       </ion-datetime>
     </ion-modal>

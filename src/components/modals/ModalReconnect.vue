@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import useAuth from "../../store/useAuth";
+import useAuth from "../../store/useAuth.ts";
 import {
   IonToolbar,
   IonTitle,
@@ -18,7 +18,7 @@ import {
   IonGrid,
   modalController,
 } from "@ionic/vue";
-import { useNotify } from "../../tools/useToast";
+import { useNotify } from "../../tools/useToast.ts";
 
 const notify = useNotify();
 const { reconnect, state } = useAuth();

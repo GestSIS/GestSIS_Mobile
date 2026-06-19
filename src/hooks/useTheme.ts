@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { usePersistentStore } from "../hooks/usePersistentStore";
+import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 const { persistentStore } = usePersistentStore();
 
 const themeStoreKey = "local-theme";
@@ -9,7 +9,7 @@ const switchTheme = (mode: string) => {
   persistentStore.set(themeStoreKey, mode);
   document.documentElement.classList.toggle(
     "ion-palette-dark",
-    mode === "dark"
+    mode === "dark",
   );
 };
 

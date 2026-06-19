@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { UniteType } from "../models/unitetype";
+import Api from "../http/Request.ts";
+import type { UniteType } from "../models/unitetype.ts";
 
 export default {
   getUnites(): Promise<UniteType[]> {

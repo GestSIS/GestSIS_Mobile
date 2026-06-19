@@ -1,7 +1,7 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { Localite } from "../models/localite";
-import LocaliteService from "../services/LocaliteService";
+import useBasicStore from "./useBasicStore.ts";
+import type { Localite } from "../models/localite.ts";
+import LocaliteService from "../services/LocaliteService.ts";
 
 const state: Ref<Localite[]> = ref([]);
 const store = useBasicStore(state, LocaliteService.getLocalites, "localites");

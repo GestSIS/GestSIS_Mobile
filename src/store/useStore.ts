@@ -1,25 +1,25 @@
-import useAuth from "./useAuth";
-import useExcuseTypes from "./useExcuseTypes";
-import useExerciceCategories from "./useExerciceCategories";
-import useExexercices from "./useExercices";
-import useGroupes from "./useGroupes";
-import useHeureExerciceTypes from "./useHeureExerciceTypes";
-import useInterventions from "./useInterventions";
-import useLocalites from "./useLocalites";
-import useLocalitesSis from "./useLocalitesSis";
-import useMaterielsIntervention from "./useMaterielsIntervention";
-import useMissionTypes from "./useMissionTypes";
-import usePhaseTypes from "./usePhaseTypes";
-import useSapeurs from "./useSapeurs";
-import useStatsFederal from "./useStatsFederal";
-import useTelephones from "./useTelephones";
-import useTypesIntervention from "./useTypesIntervention";
-import useUnitesType from "./useUnitesTypes";
-import useVehicules from "./useVehicules";
+import useAuth from "./useAuth.ts";
+import useExcuseTypes from "./useExcuseTypes.ts";
+import useExerciceCategories from "./useExerciceCategories.ts";
+import useExexercices from "./useExercices.ts";
+import useGroupes from "./useGroupes.ts";
+import useHeureExerciceTypes from "./useHeureExerciceTypes.ts";
+import useInterventions from "./useInterventions.ts";
+import useLocalites from "./useLocalites.ts";
+import useLocalitesSis from "./useLocalitesSis.ts";
+import useMaterielsIntervention from "./useMaterielsIntervention.ts";
+import useMissionTypes from "./useMissionTypes.ts";
+import usePhaseTypes from "./usePhaseTypes.ts";
+import useSapeurs from "./useSapeurs.ts";
+import useStatsFederal from "./useStatsFederal.ts";
+import useTelephones from "./useTelephones.ts";
+import useTypesIntervention from "./useTypesIntervention.ts";
+import useUnitesType from "./useUnitesTypes.ts";
+import useVehicules from "./useVehicules.ts";
 
 import { modalController } from "@ionic/vue";
 import ModalReconnectVue from "../components/modals/ModalReconnect.vue";
-import { useNotify } from "../tools/useToast";
+import { useNotify } from "../tools/useToast.ts";
 
 export default function useStore() {
   const modules = [

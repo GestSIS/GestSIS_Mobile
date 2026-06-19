@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import useAuth, { UserStatus } from "../store/useAuth";
+import useAuth, { UserStatus } from "../store/useAuth.ts";
 import {
   IonCard,
   IonCardContent,
@@ -17,8 +17,8 @@ import {
   loadingController,
 } from "@ionic/vue";
 import { ref, watchEffect } from "vue";
-import useStore from "../store/useStore";
-import { useNotify } from "../tools/useToast";
+import useStore from "../store/useStore.ts";
+import { useNotify } from "../tools/useToast.ts";
 
 const router = useRouter();
 const email = ref("");
@@ -78,10 +78,7 @@ const online = window.navigator.onLine;
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-card
-        v-if="!online"
-        color="warning"
-      >
+      <ion-card v-if="!online" color="warning">
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>

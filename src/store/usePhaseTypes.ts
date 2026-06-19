@@ -1,7 +1,7 @@
-import type { PhaseType } from "../models/phasetype";
-import PhaseTypeService from "../services/PhaseTypeService";
+import type { PhaseType } from "../models/phasetype.ts";
+import PhaseTypeService from "../services/PhaseTypeService.ts";
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
+import useBasicStore from "./useBasicStore.ts";
 
 const state: Ref<PhaseType[]> = ref([]);
 const store = useBasicStore(state, PhaseTypeService.getPhases, "phases-types");

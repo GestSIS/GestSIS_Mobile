@@ -1,5 +1,5 @@
-import Api from "../http/Request";
-import type { MaterielIntervention } from "../models/materiel-intervention";
+import Api from "../http/Request.ts";
+import type { MaterielIntervention } from "../models/materiel-intervention.ts";
 
 export default {
   getMateriels(): Promise<MaterielIntervention[]> {

@@ -1,7 +1,7 @@
 import { readonly, type Ref, ref } from "vue";
-import useBasicStore from "./useBasicStore";
-import type { UniteType } from "../models/unitetype";
-import UniteService from "../services/UniteService";
+import useBasicStore from "./useBasicStore.ts";
+import type { UniteType } from "../models/unitetype.ts";
+import UniteService from "../services/UniteService.ts";
 
 const state: Ref<UniteType[]> = ref([]);
 const store = useBasicStore(state, UniteService.getUnites, "unite-types");
