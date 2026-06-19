@@ -1,5 +1,5 @@
 export interface PresenceExercice {
-  id: number;
+  id: number | null;
   convoque: boolean;
   present: boolean;
   remplace: boolean;

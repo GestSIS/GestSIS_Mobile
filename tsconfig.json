@@ -2,8 +2,9 @@
   "extends": "@vue/tsconfig/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "rootDir": "./src",
+    "moduleResolution": "nodenext",
     "importHelpers": true,
     "isolatedModules": true,
     "types": [

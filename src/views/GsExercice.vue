@@ -331,7 +331,7 @@ const sync = async () => {
         <div class="sapeurs">
           <ion-radio-group
             v-for="(sapeur, i) in computedSapeurs"
-            :key="sapeur.id"
+            :key="i"
             v-model="sapeur.presenceStatut"
             @ion-change="($event) => selectOption($event.target.value, sapeur)"
           >
