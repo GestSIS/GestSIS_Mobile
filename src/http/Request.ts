@@ -7,7 +7,6 @@ const API_URL = import.meta.env.VITE_APP_API_ENDPOINT;
 const AUTH_URL = import.meta.env.VITE_APP_AUTH_ENDPOINT;
 
 const refreshTokenPromise = ref<any>("");
-const refreshTokenCountAwait = ref<any>("");
 
 const request = {
   _refreshToken: "",
@@ -37,57 +36,46 @@ const request = {
     });
 
     api.interceptors.request.use(async (req) => {
-      // Test if expired
+      // Token still valid: let the request through unchanged.
       if (Date.now() < (this._accessTokenValidity || 0) * 1000) {
         return req;
       }
 
-      // Expired !
-      let response: any;
+      // Token expired. Only one refresh request is sent at a time;
+      // concurrent requests await the same shared promise, which resolves
+      // to the fresh access token.
       const auth = useAuth();
 
-      // Check if a refreshToken request has already been sent
-      if (refreshTokenPromise.value != "") {
-        refreshTokenCountAwait.value++;
-
-        // Await the result of this request
-        try {
-          return await refreshTokenPromise.value;
-        } finally {
-          refreshTokenCountAwait.value--;
-          if (refreshTokenCountAwait.value == 0) {
-            refreshTokenPromise.value = "";
-          }
-        }
+      if (refreshTokenPromise.value === "") {
+        refreshTokenPromise.value = this.auth()
+          .post("refresh-token", { token: this._refreshToken })
+          .then((response: any) => {
+            this.setTokens(response.accessToken, response.refreshToken);
+            auth.setTokens(response.accessToken, response.refreshToken, null);
+            return response.accessToken as string;
+          });
       }
 
-      // Send a refresh token request
+      let accessToken: string;
       try {
-        refreshTokenPromise.value = this.auth().post("refresh-token", {
-          token: this._refreshToken,
-        });
-        response = await refreshTokenPromise.value;
+        accessToken = await refreshTokenPromise.value;
       } catch (e: any) {
+        // Refresh failed (expired refresh token, network error, 5xx, ...).
+        // Surface the error instead of falling through with no token.
         if (e?.status === 401) {
           auth.loginExpired();
-          return Promise.reject(e);
         }
+        return Promise.reject(e);
       } finally {
-        if (refreshTokenCountAwait.value == 0) {
-          refreshTokenPromise.value = "";
-        }
+        // Clear once settled so the next expired request triggers a new
+        // refresh. In-flight awaiters already hold the resolved promise.
+        refreshTokenPromise.value = "";
       }
 
-      // Update
-      this.setTokens(response?.accessToken, response?.refreshToken);
-      auth.setTokens(response?.accessToken, response?.refreshToken, null);
-
-      // Update axios
-      if (req.headers?.common) {
-        req.headers.Authorization = `Bearer ${response.accessToken}`;
+      // Apply the refreshed token to THIS request, then let it proceed.
+      if (req.headers) {
+        req.headers.Authorization = `Bearer ${accessToken}`;
       }
-      this._refreshToken = response.refreshToken;
-
       return req;
     });
 

@@ -47,15 +47,31 @@ export default function useBasicStore<Type>(
   /** Load data from local storage */
   const init = async () => {
     syncStatus.value = StoreState.Syncing;
-    const data = await persistentStore.get(persistKey);
-    state.value = JSON.parse(data) || [];
-    lastSync.value =
-      (await persistentStore.get(persistKey + lastSyncSuffixe)) || null;
-    syncStatus.value = StoreState.Synced;
+    try {
+      const data = await persistentStore.get(persistKey);
+      // Guard against missing / empty / corrupted cached values:
+      // JSON.parse(null/undefined/"") would throw and wedge the store.
+      state.value = data ? JSON.parse(data) : [];
+      lastSync.value =
+        (await persistentStore.get(persistKey + lastSyncSuffixe)) || "";
+      syncStatus.value = StoreState.Synced;
+    } catch (e) {
+      // Missing or corrupted local data: start empty and flag for resync.
+      state.value = [];
+      lastSync.value = "";
+      syncStatus.value = StoreState.NeedSync;
+    }
   };
+
+  // Kick off loading cached data and expose the promise so sync()/callers
+  // can await readiness instead of racing the fire-and-forget load.
+  const ready = init();
 
   /** Load data from GestSIS API */
   const sync = async (): Promise<boolean> => {
+    // Wait for the cached data to finish loading first; otherwise a late
+    // init() could resolve after the fetch and clobber the synced data.
+    await ready;
     syncStatus.value = StoreState.Syncing;
     state.value = await loader();
     lastSync.value = DateTime.now().toSQL() ?? "";
@@ -64,13 +80,12 @@ export default function useBasicStore<Type>(
     return Promise.resolve(true);
   };
 
-  init();
-
   return {
     syncStatus,
     lastSync,
     permission: "",
 
+    ready,
     reset,
     persist,
     sync,

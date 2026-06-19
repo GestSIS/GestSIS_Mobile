@@ -18,20 +18,38 @@ export default () => {
   /** Load data from GestSIS API */
   const sync = async (): Promise<boolean> => {
     store.syncStatus.value = StoreState.Syncing;
-    // Export validated interventions
-    const interventions: Intervention[] = state.value.filter(
-      (e) => e.localStatus == "validated"
-    );
-    await InterventionService.exportInterventions(interventions);
+    try {
+      // Make sure cached interventions finished loading before we touch state.
+      await store.ready;
 
-    // Manage errors and remove sync interventions
-    state.value = state.value.filter((i) => i.localStatus != "validated");
+      // Export validated interventions
+      const interventions: Intervention[] = state.value.filter(
+        (e) => e.localStatus == "validated"
+      );
+      const exportedUuids = new Set(
+        await InterventionService.exportInterventions(interventions)
+      );
 
-    // For now, we do not offer the possibility to edit intervention
-    store.lastSync.value = DateTime.now().toSQL() ?? "";
-    await store.persist();
-    store.syncStatus.value = StoreState.Synced;
-    return Promise.resolve(true);
+      // Remove ONLY the interventions that were actually exported. Those that
+      // failed stay queued for the next sync (no data loss); those that
+      // succeeded are dropped so they are not re-sent and duplicated.
+      state.value = state.value.filter(
+        (i) => !exportedUuids.has(i.localUuid ?? "")
+      );
+
+      store.lastSync.value = DateTime.now().toSQL() ?? "";
+      await store.persist();
+
+      const allExported = exportedUuids.size >= interventions.length;
+      store.syncStatus.value = allExported
+        ? StoreState.Synced
+        : StoreState.NeedSync;
+      return allExported;
+    } catch (e) {
+      // Never leave the store stuck on "Syncing" when the export throws.
+      store.syncStatus.value = StoreState.NeedSync;
+      throw e;
+    }
   };
 
   const newIntervention = (
@@ -69,9 +87,15 @@ export default () => {
 
       state.value.push(intervention);
     } else {
-      state.value = state.value.map((i) =>
-        i.localUuid == intervention.localUuid ? intervention : i
-      );
+      // Match on localUuid when present, otherwise on id. Matching on an
+      // undefined localUuid would replace every intervention lacking one
+      // (e.g. all interventions loaded from the API).
+      state.value = state.value.map((i) => {
+        const isMatch = intervention.localUuid
+          ? i.localUuid == intervention.localUuid
+          : i.id == intervention.id;
+        return isMatch ? intervention : i;
+      });
     }
     store.persist();
     return intervention;

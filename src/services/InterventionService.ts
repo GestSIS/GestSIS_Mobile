@@ -8,7 +8,7 @@ export default {
   getInterventions(): Promise<Intervention[]> {
     return Api.api().get("/interventions");
   },
-  exportInterventions(interventions: Intervention[]): Promise<any> {
+  async exportInterventions(interventions: Intervention[]): Promise<string[]> {
     const localitesStore = useLocalites();
     const groupesStore = useGroupes();
 
@@ -20,16 +20,16 @@ export default {
       return {
         ...i,
         date_debut: i.date_debut?.split(" ")[0],
-        heure_debut: i.date_debut?.split(" ")[1].slice(0, 5),
-        date_fin: i.date_fin.split(" ")[0],
-        heure_fin: i.date_fin.split(" ")[1],
+        heure_debut: i.date_debut?.split(" ")[1]?.slice(0, 5),
+        date_fin: i.date_fin?.split(" ")[0],
+        heure_fin: i.date_fin?.split(" ")[1],
         proprietaire:
-          `${i.proprietaire.nom ?? ""} ${i.proprietaire.prenom ?? ""}\n` +
+          `${i.proprietaire?.nom ?? ""} ${i.proprietaire?.prenom ?? ""}\n` +
           `${
-            i.proprietaire.adresse ? (i.proprietaire.adresse ?? "") + ", " : ""
+            i.proprietaire?.adresse ? (i.proprietaire.adresse ?? "") + ", " : ""
           }${formattedLocalite ?? ""}\n` +
-          `${i.proprietaire.email ? i.proprietaire.email ?? "" + ", " : ""}${
-            i.proprietaire.telephone ?? ""
+          `${i.proprietaire?.email ? (i.proprietaire.email ?? "") + ", " : ""}${
+            i.proprietaire?.telephone ?? ""
           }`,
         sapeurs: i.sapeurs.flatMap((sapeur) =>
           sapeur.presences.map((p) => ({
@@ -66,11 +66,20 @@ export default {
       };
     });
 
-    return Promise.all(
+    const results = await Promise.allSettled(
       formattedInterventions.map((intervention) =>
         Api.api().post("/interventions-complet", intervention)
       )
     );
+
+    // Return the localUuids that were exported successfully, so the caller
+    // removes only those. Failed ones stay queued for the next sync instead
+    // of being lost, and successful ones are not re-sent (which duplicated
+    // them server-side on a partial failure).
+    return formattedInterventions
+      .filter((_, index) => results[index].status === "fulfilled")
+      .map((i) => i.localUuid)
+      .filter((uuid): uuid is string => !!uuid);
   },
   createIntervention(interventionData: any) {
     return Api.api().post("/interventions", interventionData);
