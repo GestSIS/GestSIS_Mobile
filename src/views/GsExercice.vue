@@ -113,7 +113,7 @@ const computedSapeurs = computed(() =>
       const nomPrenom = indexedSapeurs.get(s.sapeur_id);
       return { ...s, nomPrenom };
     })
-    .sort((a, b) => a.nomPrenom.localeCompare(b.nomPrenom)),
+    .sort((a, b) => (a.nomPrenom ?? "").localeCompare(b.nomPrenom ?? "")),
 );
 
 const validate = () => {
@@ -164,6 +164,8 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.present = true;
   sapeur.excuse = false;
   sapeur.remplace = false;
+  // On conserve volontairement l'excuse (excuse_type_id) : un sapeur qui
+  // s'était excusé mais qui vient finalement garde la trace de son excuse.
 };
 
 const selectAbsent = async (sapeur: PresenceExercice) => {
@@ -178,6 +180,7 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   sapeur.absent = false;
   sapeur.present = false;
   sapeur.remplace = true;
+  // On conserve volontairement l'excuse (excuse_type_id) : cf. selectPresent.
 };
 
 const removeExcuse = async (sapeur: PresenceExercice) => {
@@ -195,6 +198,9 @@ const addExcuse = async (sapeur: PresenceExercice) => {
   sapeur.present = false;
   sapeur.absent = true;
   sapeur.remplace = false;
+  // Refléter immédiatement l'état "Absent" sur la radio (statut 2), sinon
+  // l'affichage diffère avant/après rechargement (recalculé depuis `absent`).
+  sapeur.presenceStatut = 2;
 
   const buttons = excusesTypes.value.map((excuse) => ({
     text: excuse.designation,
@@ -234,7 +240,9 @@ const selectOption = async (statut: number, sapeur: PresenceExercice) => {
     return;
   }
   const actions = [selectPresent, selectAbsent, selectRemplace];
-  await actions[statut - 1](sapeur);
+  const action = actions[statut - 1];
+  if (!action) return;
+  await action(sapeur);
 
   // Save changes
   exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
@@ -319,7 +327,7 @@ const sync = async () => {
             ? exercice?.designation
             : formatCategorie(exercice?.exercice_categorie_id)
         }}
-        - {{ formatDate(exercice?.date || "", "DD.MM.yy") }}
+        - {{ formatDate(exercice?.date || "", "dd.MM.yy") }}
       </h3>
       <ion-list>
         <ion-row class="sap-item list-header">
