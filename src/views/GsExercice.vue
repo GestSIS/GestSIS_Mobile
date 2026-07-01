@@ -267,7 +267,14 @@ const heureInput = (
     );
     sapeur.heures = [
       ...sapeur.heures.filter((h) => h.heure_exercice_type_id != heureType.id),
-      { ...heure, quantite, heure_exercice_type_id: heureType.id, id: null },
+      // Conserver l'id existant : modifier une quantité = update côté API, pas
+      // suppression + recréation. `id` reste null pour une nouvelle heure.
+      {
+        ...heure,
+        quantite,
+        heure_exercice_type_id: heureType.id,
+        id: heure?.id ?? null,
+      },
     ];
   } else {
     sapeur.heures = sapeur.heures.filter(
@@ -386,7 +393,7 @@ const sync = async () => {
                   <!-- {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }} -->
                   <ion-input
                     type="number"
-                    inputmode="numeric"
+                    inputmode="decimal"
                     :value="
                       sapeur?.heures.find(
                         (h) => h.heure_exercice_type_id == heure.id,

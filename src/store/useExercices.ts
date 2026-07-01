@@ -1,6 +1,7 @@
 import { type Ref, ref } from "vue";
 import useBasicStore, { StoreState } from "./useBasicStore.ts";
 import type { Exercice } from "../models/exercice.ts";
+import type { PresenceExercice } from "../models/presence-exercice.ts";
 import ExerciceService from "../services/ExerciceService.ts";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +9,30 @@ import useAuth from "./useAuth.ts";
 
 const state: Ref<Exercice[]> = ref([]);
 const store = useBasicStore(state, ExerciceService.getExercices, "exercices");
+
+// Un sapeur est considéré "saisi" dès qu'une présence a été renseignée
+// (présent / absent / remplacé / excusé / heures). Sert à ne pas écraser une
+// saisie locale lors de la résolution de conflits.
+const isPresenceSaisie = (s: PresenceExercice): boolean =>
+  Boolean(s.present || s.absent || s.remplace || s.excuse_type_id) ||
+  (s.heures?.length ?? 0) > 0;
+
+// Compare deux listes d'heures par type + quantité (quantité normalisée en
+// nombre car l'API peut la renvoyer en chaîne). true = elles diffèrent.
+const heuresDiffer = (
+  a: PresenceExercice["heures"] | undefined,
+  b: PresenceExercice["heures"] | undefined,
+): boolean => {
+  const listA = a ?? [];
+  const listB = b ?? [];
+  if (listA.length !== listB.length) return true;
+  const byType = new Map(
+    listA.map((h) => [h.heure_exercice_type_id, Number(h.quantite)]),
+  );
+  return listB.some(
+    (h) => byType.get(h.heure_exercice_type_id) !== Number(h.quantite),
+  );
+};
 
 export default function useExercices() {
   const name = "Exercices";
@@ -67,9 +92,8 @@ export default function useExercices() {
     const conflictResolvedExercices = newExercices
       .filter((e) => e.statut != 0) // Filter out canceled exercices
       .filter((e) => e.statut != 4) // Filter out imputed exercices
-      .filter(
-        (e) => (e.statut == 3 && !hasValidationPermission) || e.statut != 3,
-      ) // Filter out validated if no rights
+      // Filter out validated (statut 3) exercices for users without validation rights
+      .filter((e) => e.statut != 3 || hasValidationPermission)
       .map((e) => {
         const conflicting = indexedInProgressExercices.has(e.id);
         if (!conflicting) {
@@ -97,13 +121,8 @@ export default function useExercices() {
           const sapeur = inProgressExercice?.sapeurs.find(
             (e) => e.sapeur_id == s.sapeur_id,
           );
-          if (
-            sapeur?.absent ||
-            sapeur?.excuse_type_id ||
-            sapeur?.heures?.length ||
-            sapeur?.remplace
-          ) {
-            // Sapeur local modifié
+          if (sapeur && isPresenceSaisie(sapeur)) {
+            // Sapeur local modifié (présent inclus)
             return sapeur;
           }
           // Sapeur non saisi
@@ -129,9 +148,8 @@ export default function useExercices() {
               referenceSapeur?.excuse_type_id != s.excuse_type_id ||
               referenceSapeur?.remplace != s.remplace ||
               referenceSapeur?.present != s.present ||
-              referenceSapeur?.heures.length != s.heures.length
+              heuresDiffer(referenceSapeur?.heures, s.heures)
             ) {
-              // TODO: Heure comparaison could be improved
               return s;
             }
 
@@ -147,7 +165,7 @@ export default function useExercices() {
           (s) => !remoteSapeursIds.has(s.sapeur_id),
         );
         const removedSapeursToKeep =
-          removedSapeurs?.filter((s) => s.present || s.heures.length > 0) || [];
+          removedSapeurs?.filter((s) => isPresenceSaisie(s)) || [];
 
         e.initialSapeurs = e.sapeurs;
         e.localStatus = inProgressExercice?.localStatus ?? "empty";
