@@ -1,4 +1,5 @@
 import AuthService from "../services/AuthService.ts";
+import type { Sis } from "../models/sis.ts";
 import { reactive, ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 import useStore from "./useStore.ts";
@@ -49,6 +50,8 @@ const state = reactive<{ data: User }>({ data: { ...emptyState } });
 const activeSisKey = ref<string>("");
 const activePermissions = ref<string[]>([]);
 const lastSync = ref<Date | null>(null);
+// Liste complète des SIS (chargée à la demande pour les admins).
+const allSis = ref<Sis[]>([]);
 
 const persistKey = "auth";
 const persistActiveSisKey = "auth-siskey";
@@ -84,17 +87,36 @@ init();
 
 export default function useAuth() {
   const selectSis = async (sisKey: string): Promise<boolean> => {
-    if (!sisKey || !(sisKey in state.data.permissions)) {
+    const isKnownSis = sisKey in state.data.permissions;
+    // Un admin peut basculer sur n'importe quel SIS, même sans entrée de
+    // permission locale : le backend l'autorise via le flag `admin` du JWT
+    // (cf. JwtTokenValidatorRole) et hasPermission() lui accorde déjà tous
+    // les droits.
+    if (!sisKey || (!isKnownSis && !state.data.admin)) {
       console.error("Invalid key :" + sisKey);
       return false;
     }
 
-    activePermissions.value = state.data.permissions[sisKey];
+    activePermissions.value = state.data.permissions[sisKey] ?? [];
     activeSisKey.value = sisKey;
 
     Api.setSisKey(sisKey);
     await persist();
     return true;
+  };
+
+  // Charge la liste complète des SIS (réservé aux admins) pour permettre de
+  // basculer sur n'importe quel SIS depuis l'écran Paramètres.
+  const loadAllSis = async (): Promise<void> => {
+    if (!state.data.admin) return;
+    try {
+      const res = (await AuthService.sisListe()) as unknown;
+      allSis.value = Array.isArray(res)
+        ? (res as Sis[])
+        : ((res as { data?: Sis[] })?.data ?? []);
+    } catch {
+      // Hors ligne / erreur : le sélecteur retombe sur les SIS de l'utilisateur.
+    }
   };
 
   const setTokens = async (
@@ -241,5 +263,7 @@ export default function useAuth() {
     persist,
     hasPermission,
     activeSisKey,
+    allSis,
+    loadAllSis,
   };
 }

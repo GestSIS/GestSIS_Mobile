@@ -26,12 +26,30 @@ import {
 } from "@ionic/vue";
 import { personOutline, flame, contrastOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
+import { computed, onMounted } from "vue";
 
 const { switchTheme, activeTheme } = useTheme();
 const router = useRouter();
 const notify = useNotify();
 
-const { state, activeSisKey, logout, selectSis } = useAuth();
+const { state, activeSisKey, logout, selectSis, allSis, loadAllSis } =
+  useAuth();
+
+// Pour un admin : tous les SIS du système (chargés via /sis).
+// Sinon : uniquement les SIS de l'utilisateur (clés api_key déjà locales).
+const sisOptions = computed(() => {
+  if (state.data.admin && allSis.value.length > 0) {
+    return allSis.value
+      .map((s) => ({ key: s.api_key, label: s.nom }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }
+  return state.data.sis.map((key) => ({ key, label: key }));
+});
+
+onMounted(() => {
+  // Charge la liste complète des SIS pour les admins (no-op sinon).
+  loadAllSis();
+});
 
 const wrappedLogout = () => {
   logout();
@@ -115,15 +133,19 @@ const onSelectSis = async (sis: string) => {
     </ion-header>
     <ion-content>
       <ion-list lines="none">
-        <ion-item v-if="state.data.sis.length > 1">
+        <ion-item v-if="sisOptions.length > 1">
           <ion-icon slot="start" :icon="flame" aria-hidden="true" />
           <ion-select
             label="Sis"
             :value="activeSisKey"
             @ion-change="onSelectSis($event.target.value)"
           >
-            <ion-select-option v-for="sis in state.data.sis" :key="sis">
-              {{ sis }}
+            <ion-select-option
+              v-for="opt in sisOptions"
+              :key="opt.key"
+              :value="opt.key"
+            >
+              {{ opt.label }}
             </ion-select-option>
           </ion-select>
         </ion-item>
