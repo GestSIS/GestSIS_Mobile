@@ -80,22 +80,25 @@ export default () => {
   };
 
   const updateIntervention = (intervention: Intervention): Intervention => {
-    if (!intervention.localUuid && !intervention.id) {
-      // Create intervention if no localUuid
-      intervention.localUuid = uuidv4();
-      intervention.localStatus = "in_progress";
+    // Match on localUuid when present, otherwise on id. Matching on an
+    // undefined localUuid would replace every intervention lacking one
+    // (e.g. all interventions loaded from the API).
+    const matches = (i: Intervention) =>
+      intervention.localUuid
+        ? i.localUuid == intervention.localUuid
+        : i.id == intervention.id;
 
-      state.value.push(intervention);
+    if (state.value.some(matches)) {
+      state.value = state.value.map((i) => (matches(i) ? intervention : i));
     } else {
-      // Match on localUuid when present, otherwise on id. Matching on an
-      // undefined localUuid would replace every intervention lacking one
-      // (e.g. all interventions loaded from the API).
-      state.value = state.value.map((i) => {
-        const isMatch = intervention.localUuid
-          ? i.localUuid == intervention.localUuid
-          : i.id == intervention.id;
-        return isMatch ? intervention : i;
-      });
+      // Brand-new intervention not yet in the store: insert it. Notably covers
+      // interventions created from an alarm report, which build a
+      // `new Intervention()` (already carrying a localUuid from the model) and
+      // call updateIntervention directly. Without inserting here it would only
+      // live in the active-intervention ref and be lost on reload — never
+      // persisted nor exported on sync.
+      if (!intervention.localUuid) intervention.localUuid = uuidv4();
+      state.value.push(intervention);
     }
     store.persist();
     return intervention;
