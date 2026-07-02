@@ -2477,7 +2477,6 @@ __metadata:
     ionicons: "npm:^8.0.13"
     jest: "npm:^30.4.2"
     jwt-decode: "npm:^4.0.0"
-    localforage-cordovasqlitedriver: "npm:^1.8.0"
     luxon: "npm:^3.7.2"
     sass: "npm:^1.101.0"
     sass-loader: "npm:^17.0.0"
@@ -5521,16 +5520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"localforage-cordovasqlitedriver@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "localforage-cordovasqlitedriver@npm:1.8.0"
-  dependencies:
-    localforage: "npm:>=1.5.0"
-  checksum: 10/5c08608706b13b41dcfe8c706b3fdf914b8ebdc364ac5199bcb40361b619a3053d6eede479b1c81a55ce61e4f31dd9dce02f3d0faa453dc6b4c32a046f7a1a23
-  languageName: node
-  linkType: hard
-
-"localforage@npm:>=1.5.0, localforage@npm:^1.9.0":
+"localforage@npm:^1.9.0":
   version: 1.10.0
   resolution: "localforage@npm:1.10.0"
   dependencies:
