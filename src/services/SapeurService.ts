@@ -3,6 +3,6 @@ import type { Sapeur } from "../models/sapeur.ts";
 
 export default {
   getSapeurs(): Promise<Sapeur[]> {
-    return Api.api().get("/sapeurs?actif=true");
+    return Api.api().get("/sapeurs");
   },
 };

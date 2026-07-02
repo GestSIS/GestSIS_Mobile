@@ -183,7 +183,7 @@ const onSelectSis = async (sis: string) => {
 
     <ion-footer>
       <div class="ion-padding copyright">
-        Version 2.6.7
+        Version 2.6.8
         <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
         <br />
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
