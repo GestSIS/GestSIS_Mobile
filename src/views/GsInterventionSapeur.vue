@@ -137,10 +137,14 @@ const presences: Presences = reactive({
 });
 
 const addSapeurs = async () => {
+  // Les sapeurs déjà présents dans la liste (pré-remplis par groupe ou
+  // ajoutés lors d'un précédent appel) ne doivent pas pouvoir être
+  // re-sélectionnés, sous peine de doublons.
+  const alreadyPresentIds = new Set(presences.sapeurs.map((s) => s.id));
   const modalSapeurSelect = await modalController.create({
     component: ModalSapeurSelectVue,
     componentProps: {
-      exceptSapeurIds: [...exceptSapeursIds],
+      exceptSapeurIds: [...exceptSapeursIds, ...alreadyPresentIds],
       multiSelect: true,
     },
   });
@@ -153,7 +157,9 @@ const addSapeurs = async () => {
   }
 
   const ids = new Set<number>(data);
-  const sapeurs = sapeurModule.state.value.filter((s) => ids.has(s.id));
+  const sapeurs = sapeurModule.state.value.filter(
+    (s) => ids.has(s.id) && !alreadyPresentIds.has(s.id),
+  );
   presences.sapeurs = [
     ...presences.sapeurs,
     ...sapeurs.map((s) => ({

@@ -5,7 +5,7 @@ import { checkmarkCircle, radioButtonOff } from "ionicons/icons";
 
 import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useGroupes from "../../store/useGroupes.ts";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const { state, updateGroupes } = useActiveIntervention();
 const intervention = state;
@@ -21,15 +21,16 @@ const filteredGroupes = computed(() =>
     .filter((g) => g.type == 1)
     .sort((a, b) => parseInt(`${a.no || 99}`) - parseInt(`${b.no || 99}`)),
 );
-const groupesIntervention = ref(new Set(intervention.value.groupes));
+const groupesIntervention = computed(() => new Set(intervention.value.groupes));
 
 const changeGroupeStatus = (groupeId: number) => {
-  if (groupesIntervention.value.has(groupeId)) {
-    groupesIntervention.value.delete(groupeId);
+  const updated = new Set(groupesIntervention.value);
+  if (updated.has(groupeId)) {
+    updated.delete(groupeId);
   } else {
-    groupesIntervention.value.add(groupeId);
+    updated.add(groupeId);
   }
-  updateGroupes([...groupesIntervention.value]);
+  updateGroupes([...updated]);
 };
 </script>
 

@@ -177,7 +177,7 @@ export default function useAuth() {
 
     // Load data
     const store = useStore();
-    store.syncAll();
+    await store.syncAll();
 
     return Promise.resolve();
   };
@@ -206,7 +206,7 @@ export default function useAuth() {
 
     // Load data
     const store = useStore();
-    store.syncAll();
+    await store.syncAll();
 
     return Promise.resolve();
   };
@@ -227,6 +227,7 @@ export default function useAuth() {
   const logout = () => {
     store.reset();
     state.data = { ...emptyState };
+    Api.clearTokens();
     Api.setSisKey("");
     activePermissions.value = [];
     activeSisKey.value = "";

@@ -4,9 +4,9 @@ const { persistentStore, storageReady } = usePersistentStore();
 
 const themeStoreKey = "local-theme";
 
-const switchTheme = (mode: string) => {
+const switchTheme = async (mode: string) => {
   activeTheme.value = mode;
-  persistentStore.set(themeStoreKey, mode);
+  await persistentStore.set(themeStoreKey, mode);
   document.documentElement.classList.toggle(
     "ion-palette-dark",
     mode === "dark",

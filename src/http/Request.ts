@@ -21,6 +21,13 @@ const request = {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   },
 
+  clearTokens() {
+    this._accessTokenValidity = null;
+    this._refreshToken = "";
+    refreshTokenPromise.value = "";
+    delete axios.defaults.headers.common["Authorization"];
+  },
+
   setSisKey: (sis_key: string) => {
     axios.defaults.headers.common["Sis-Key"] = sis_key;
   },
@@ -88,9 +95,21 @@ const request = {
         if (response.data.error !== undefined) {
           throw response.data.error;
         }
-        return response.data?.data || response.data;
+        // Use `in` rather than a truthy check so a falsy-but-valid payload
+        // (false, 0, "", null) isn't discarded in favor of the envelope.
+        return response.data && "data" in response.data
+          ? response.data.data
+          : response.data;
       },
       async (error: AxiosError) => {
+        // A 401 here means the server rejected the token even though it
+        // looked valid client-side (revocation, clock drift, ...). The
+        // proactive refresh in the request interceptor won't catch this
+        // since it only fires when the client-side expiry has passed.
+        if (error.response?.status === 401) {
+          const auth = useAuth();
+          auth.loginExpired();
+        }
         return Promise.reject(error);
       },
     );

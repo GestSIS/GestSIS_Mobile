@@ -17,7 +17,6 @@ import {
   loadingController,
 } from "@ionic/vue";
 import { ref, watchEffect } from "vue";
-import useStore from "../store/useStore.ts";
 import { useNotify } from "../tools/useToast.ts";
 
 const router = useRouter();
@@ -42,28 +41,23 @@ const wrappedLogin = async () => {
     return notify.error("Aucune connexion internet !");
   }
 
+  // Afficher loading
+  const loading = await loadingController.create({
+    cssClass: "my-custom-class",
+    message: "Chargement...",
+  });
+  await loading.present();
+
   try {
+    // login() attend aussi la synchronisation initiale
     await login(email.value, password.value);
-
-    // Afficher loading
-    const loading = await loadingController.create({
-      cssClass: "my-custom-class",
-      message: "Chargement...",
-    });
-
-    await loading.present();
-
-    // Load data
-    const store = useStore();
-    await store.syncAll();
-
-    // Hide loading
-    await loading.dismiss();
 
     router.push({ name: "accueil" });
   } catch (error: unknown) {
     notify.error((error as { message?: string })?.message ?? "Identifiants incorrect");
     // errorMessage.value = error?.message ?? "Identifiants incorrect";
+  } finally {
+    await loading.dismiss();
   }
 };
 

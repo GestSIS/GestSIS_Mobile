@@ -49,7 +49,7 @@ const groupes = props.alarme.groups
 
   <ion-content>
     <ion-list>
-      <ion-item-group v-for="g in groupes" :key="g.sis">
+      <ion-item-group v-for="g in groupes" :key="g.sis + '-' + g.number">
         <ion-item-divider>
           <ion-label>
             {{ g.sis.toUpperCase() }} : {{ g.number }} -
