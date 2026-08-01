@@ -1622,7 +1622,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencil/core@npm:4.43.5, @stencil/core@npm:^4.35.3":
+"@stencil/core@npm:4.43.5, @stencil/core@npm:^4.35.3, @stencil/core@npm:^4.43.5":
   version: 4.43.5
   resolution: "@stencil/core@npm:4.43.5"
   dependencies:
@@ -2453,7 +2453,7 @@ __metadata:
     cypress: "npm:^15.19.0"
     eslint: "npm:^10.8.0"
     eslint-plugin-vue: "npm:^10.10.0"
-    ionicons: "npm:^8.0.13"
+    ionicons: "npm:^8.1.0"
     jest: "npm:^30.4.2"
     jwt-decode: "npm:^4.0.0"
     luxon: "npm:^3.7.2"
@@ -4520,6 +4520,15 @@ __metadata:
   dependencies:
     "@stencil/core": "npm:^4.35.3"
   checksum: 10/8d507c41ce2bd3a635cf25fcb05c7fabb7c75c27802a8476548f85cedf3366251eee4a0306b95f9a71870cb509ef6ac317c7d84ffd6898dd0218d100e5c640fe
+  languageName: node
+  linkType: hard
+
+"ionicons@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "ionicons@npm:8.1.0"
+  dependencies:
+    "@stencil/core": "npm:^4.43.5"
+  checksum: 10/66bbffce989568b442341f332304916d6b91322274a7b66c3efc2799f0769cdef97b426f0d06ff9f2788541f1a62856b33673187a9ffddd36f81eca616d9ab2d
   languageName: node
   linkType: hard
 
