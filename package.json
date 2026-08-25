@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "An Ionic project",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
