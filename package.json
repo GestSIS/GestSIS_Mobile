@@ -3,7 +3,7 @@
   "version": "2.6.10",
   "private": true,
   "type": "module",
-  "description": "An Ionic project",
+  "description": "Application Mobile pour GestSIS",
   "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "vite",
