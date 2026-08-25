@@ -2784,7 +2784,6 @@ __metadata:
     ts-jest: "npm:^29.4.12"
     typescript: "npm:^7.0.2"
     typescript-eslint: "npm:^8.68.0"
-    uuid: "npm:^14.0.2"
     vite: "npm:^8.2.2"
     vue: "npm:^3.5.41"
     vue-router: "npm:^5.2.0"
@@ -7955,15 +7954,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 10/474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^14.0.2":
-  version: 14.0.2
-  resolution: "uuid@npm:14.0.2"
-  bin:
-    uuid: dist-node/bin/uuid
-  checksum: 10/e8263a76ad7b2d1f246df5a48a5bdf30d886eedbb1d3d74c75356d02b2966f5fffd7790b85afdb3682e4e732d13fca7974626419814f45de6847f78ce03c745e
   languageName: node
   linkType: hard
 
