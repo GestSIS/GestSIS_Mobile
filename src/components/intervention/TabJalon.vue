@@ -28,9 +28,13 @@
       <p>
         {{ jalon.titre }}
         <br />
-        <span class="details">{{
-          formatDate(jalon.date_time, "HH:mm 'le' dd.MM.yyyy")
-        }}</span>
+        <span class="details"
+          >{{ formatDate(jalon.date_time, "HH:mm 'le' dd.MM.yyyy") }}<template
+            v-if="jalon.sapeur?.designation"
+          >
+            - {{ jalon.sapeur.designation }}</template
+          ></span
+        >
         <br />
         <span class="details">{{ jalon.description }}</span>
       </p>

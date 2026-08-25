@@ -64,6 +64,23 @@ export default {
             }
             return entry;
           }),
+        jalons: i.jalons
+          .map((j) => ({
+            titre: j.titre,
+            description: j.description,
+            date_time: j.date_time,
+            sapeur_id: j.sapeur?.id ?? null,
+            sapeur: j.sapeur?.designation ?? null,
+          }))
+          .map((j) => {
+            const entry = j as { titre: string; description: string; date_time: string; sapeur_id?: number | null; sapeur?: string | null };
+            if (entry.sapeur_id) {
+              delete entry.sapeur;
+            } else {
+              delete entry.sapeur_id;
+            }
+            return entry;
+          }),
       };
     });
 

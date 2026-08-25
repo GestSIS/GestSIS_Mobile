@@ -1,6 +1,6 @@
 import useAuth from "../store/useAuth.ts";
 import { createRouter, createWebHistory } from "@ionic/vue-router";
-import type { RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from "vue-router";
+import type { RouteRecordRaw, RouteLocationNormalized } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -78,7 +78,7 @@ const router = createRouter({
 
 // Auth Navigation guard
 const { isLoggedIn } = useAuth();
-router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized) => {
   if (to.name !== "login" && !isLoggedIn()) {
     // Redirect to login if not logged in
     return { name: "login" };

@@ -95,7 +95,7 @@ const evenements = computed(() => {
       type: EventType.Jalon,
       titre: j.titre,
       description: j.description,
-      auteur: null,
+      auteur: j.sapeur?.designation,
     })),
 
     // Début de mission

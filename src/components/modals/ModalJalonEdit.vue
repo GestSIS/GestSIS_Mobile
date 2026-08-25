@@ -10,20 +10,59 @@ import {
   IonInput,
   IonContent,
   IonButton,
+  IonIcon,
   IonItem,
   modalController,
 } from "@ionic/vue";
+import { close } from "ionicons/icons";
 import { useNotify } from "../../tools/useToast.ts";
 import { Jalon } from "../../models/jalon.ts";
 import useActiveIntervention from "../../store/useActiveIntervention.ts";
+import useSapeurs from "../../store/useSapeurs.ts";
 import BaseDatetime from "../base/BaseDatetime.vue";
+import ModalSapeurSelectVue from "./ModalSapeurSelect.vue";
 
 const notify = useNotify();
+const sapeurModule = useSapeurs();
 
 const { addJalon, updateJalon } = useActiveIntervention();
 const props = defineProps<{ jalon?: Jalon }>();
 
 const activeJalon = ref(props.jalon || new Jalon());
+
+const selectSapeur = async () => {
+  const modalSapeurSelect = await modalController.create({
+    component: ModalSapeurSelectVue,
+    componentProps: {
+      exceptSapeurIds: [],
+      autre: true,
+    },
+  });
+
+  await modalSapeurSelect.present();
+  const { data } = await modalSapeurSelect.onDidDismiss();
+
+  if (!data) {
+    return;
+  }
+
+  if (typeof data == "object") {
+    activeJalon.value.sapeur = {
+      id: null,
+      designation: data?.designation,
+    };
+  } else {
+    const sapeur = sapeurModule.state.value.find((s) => s.id == data);
+    activeJalon.value.sapeur = {
+      id: data,
+      designation: `${sapeur?.nom} ${sapeur?.prenom}` || "",
+    };
+  }
+};
+
+const clearSapeur = () => {
+  activeJalon.value.sapeur = { id: null, designation: null };
+};
 
 const save = async () => {
   if (
@@ -77,7 +116,30 @@ const dismiss = () => {
           v-model="activeJalon.description"
           label="Description"
           label-placement="fixed"
+          :rows="10"
+          :auto-grow="true"
         />
+      </ion-item>
+
+      <ion-item>
+        <ion-input
+          type="text"
+          label="Sapeur"
+          label-placement="fixed"
+          :readonly="true"
+          :value="activeJalon.sapeur?.designation"
+          @click="selectSapeur()"
+        />
+        <ion-button
+          v-if="activeJalon.sapeur?.designation"
+          slot="end"
+          fill="clear"
+          color="dark"
+          aria-label="Effacer le sapeur"
+          @click.stop="clearSapeur()"
+        >
+          <ion-icon slot="icon-only" :icon="close" aria-hidden="true" />
+        </ion-button>
       </ion-item>
     </ion-list>
 
