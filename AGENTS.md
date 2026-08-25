@@ -18,18 +18,18 @@ quand une connexion est disponible.
 
 ## Stack technique
 
-| Domaine | Choix |
-|---|---|
-| UI | Vue 3 (Composition API), Ionic Vue 8, Ionicons |
-| Routing | `@ionic/vue-router` (Vue Router 5) |
-| Natif | Capacitor 8 (`@capacitor/android`) |
-| Build | Vite 8 |
-| Langage | TypeScript 6 (`moduleResolution: nodenext`) |
-| HTTP | axios (via `src/http/Request.ts`) |
-| Persistance locale | `@ionic/storage` (localforage → IndexedDB dans la WebView) |
-| Dates | Luxon (format SQL) |
-| Auth | JWT (`jwt-decode`) + refresh token |
-| Gestionnaire de paquets | **Yarn 4.9.2** (champ `packageManager`) |
+| Domaine                 | Choix                                                      |
+| ----------------------- | ---------------------------------------------------------- |
+| UI                      | Vue 3 (Composition API), Ionic Vue 8, Ionicons             |
+| Routing                 | `@ionic/vue-router` (Vue Router 5)                         |
+| Natif                   | Capacitor 8 (`@capacitor/android`)                         |
+| Build                   | Vite 8                                                     |
+| Langage                 | TypeScript 6 (`moduleResolution: nodenext`)                |
+| HTTP                    | axios (via `src/http/Request.ts`)                          |
+| Persistance locale      | `@ionic/storage` (localforage → IndexedDB dans la WebView) |
+| Dates                   | Luxon (format SQL)                                         |
+| Auth                    | JWT (`jwt-decode`) + refresh token                         |
+| Gestionnaire de paquets | **Yarn 4.9.2** (champ `packageManager`)                    |
 
 > ⚠️ `vuex` figure dans les dépendances mais **n'est pas utilisé** : l'état est géré par un
 > pattern maison de composables (voir « Stores »). Ne pas introduire de Vuex.
@@ -144,9 +144,7 @@ reset, persist, sync }`. Le store de domaine l'étend avec ses méthodes métier
 - Multi-tenant : chaque **SIS** est identifié par sa clé `api_key`, envoyée dans l'en-tête
   **`Sis-Key`**. `activeSisKey` sélectionne le SIS courant.
 - **Permissions** : `activePermissions` (par SIS) ; `hasPermission(p)` renvoie vrai si la
-  permission est présente **ou** si l'utilisateur est admin (`state.data.admin`).
-- Un **admin** contourne les vérifications de permission et peut basculer sur n'importe quel
-  SIS (le backend l'autorise via le flag `admin` du JWT).
+  permission est présente.
 
 ## À éviter
 

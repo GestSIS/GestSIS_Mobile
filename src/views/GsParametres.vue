@@ -26,30 +26,16 @@ import {
 } from "@ionic/vue";
 import { personOutline, flame, contrastOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 
 const { switchTheme, activeTheme } = useTheme();
 const router = useRouter();
 const notify = useNotify();
 
-const { state, activeSisKey, logout, selectSis, allSis, loadAllSis } =
+const { state, activeSisKey, logout, selectSis } =
   useAuth();
 
-// Pour un admin : tous les SIS du système (chargés via /sis).
-// Sinon : uniquement les SIS de l'utilisateur (clés api_key déjà locales).
-const sisOptions = computed(() => {
-  if (state.data.admin && allSis.value.length > 0) {
-    return allSis.value
-      .map((s) => ({ key: s.api_key, label: s.nom }))
-      .sort((a, b) => a.label.localeCompare(b.label));
-  }
-  return state.data.sis.map((key) => ({ key, label: key }));
-});
-
-onMounted(() => {
-  // Charge la liste complète des SIS pour les admins (no-op sinon).
-  loadAllSis();
-});
+const sisOptions = computed(() => state.data.sis.map((key) => ({ key, label: key })));
 
 const wrappedLogout = () => {
   logout();

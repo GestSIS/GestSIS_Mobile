@@ -1,5 +1,4 @@
 import AuthService from "../services/AuthService.ts";
-import type { Sis } from "../models/sis.ts";
 import { reactive, ref } from "vue";
 import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 import useStore from "./useStore.ts";
@@ -11,7 +10,6 @@ interface JwtAuthPayload {
     permissions: Record<string, string[]>;
     pseudo: string;
     mobiles: (number | string)[];
-    admin: boolean;
   };
 }
 
@@ -31,7 +29,6 @@ export interface User {
   refreshToken: string;
   statut: UserStatus;
   permissions: Record<string, string[]>;
-  admin: boolean;
   sis: string[];
 }
 
@@ -42,7 +39,6 @@ const emptyState = {
   refreshToken: "",
   statut: UserStatus.disconnected,
   permissions: {},
-  admin: false,
   sis: [],
 };
 
@@ -50,8 +46,6 @@ const state = reactive<{ data: User }>({ data: { ...emptyState } });
 const activeSisKey = ref<string>("");
 const activePermissions = ref<string[]>([]);
 const lastSync = ref<Date | null>(null);
-// Liste complète des SIS (chargée à la demande pour les admins).
-const allSis = ref<Sis[]>([]);
 
 const persistKey = "auth";
 const persistActiveSisKey = "auth-siskey";
@@ -88,11 +82,7 @@ init();
 export default function useAuth() {
   const selectSis = async (sisKey: string): Promise<boolean> => {
     const isKnownSis = sisKey in state.data.permissions;
-    // Un admin peut basculer sur n'importe quel SIS, même sans entrée de
-    // permission locale : le backend l'autorise via le flag `admin` du JWT
-    // (cf. JwtTokenValidatorRole) et hasPermission() lui accorde déjà tous
-    // les droits.
-    if (!sisKey || (!isKnownSis && !state.data.admin)) {
+    if (!sisKey || !isKnownSis) {
       console.error("Invalid key :" + sisKey);
       return false;
     }
@@ -105,26 +95,12 @@ export default function useAuth() {
     return true;
   };
 
-  // Charge la liste complète des SIS (réservé aux admins) pour permettre de
-  // basculer sur n'importe quel SIS depuis l'écran Paramètres.
-  const loadAllSis = async (): Promise<void> => {
-    if (!state.data.admin) return;
-    try {
-      const res = (await AuthService.sisListe()) as unknown;
-      allSis.value = Array.isArray(res)
-        ? (res as Sis[])
-        : ((res as { data?: Sis[] })?.data ?? []);
-    } catch {
-      // Hors ligne / erreur : le sélecteur retombe sur les SIS de l'utilisateur.
-    }
-  };
-
   const setTokens = async (
     accessToken: string,
     refreshToken: string,
     email: string | null,
   ) => {
-    const { permissions, pseudo, mobiles, admin } =
+    const { permissions, pseudo, mobiles } =
       jwtDecode<JwtAuthPayload>(accessToken).data;
     const transformedMobiles = mobiles.map((sis) => String(sis));
 
@@ -149,7 +125,6 @@ export default function useAuth() {
     state.data.refreshToken = refreshToken;
     state.data.sis = availableSis;
     state.data.permissions = filteredPermissions;
-    state.data.admin = admin;
     state.data.statut = UserStatus.connected;
 
     await persist();
@@ -247,7 +222,7 @@ export default function useAuth() {
 
   const hasPermission = (permission: string) => {
     return (
-      activePermissions.value?.includes(permission) || state.data.admin === true
+      activePermissions.value?.includes(permission)
     );
   };
 
@@ -264,7 +239,5 @@ export default function useAuth() {
     persist,
     hasPermission,
     activeSisKey,
-    allSis,
-    loadAllSis,
   };
 }
