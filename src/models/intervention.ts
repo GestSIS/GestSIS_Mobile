@@ -1,5 +1,6 @@
 import type { Mission } from "./mission.ts";
 import type { Appel } from "./appel.ts";
+import type { Jalon } from "./jalon.ts";
 import { DateTime } from "luxon";
 import type { Alarme } from "./alarme.ts";
 import { v4 as uuidv4 } from "uuid";
@@ -64,6 +65,7 @@ export class Intervention {
   quittances: number[] = [];
   missions: Mission[] = [];
   appels: Appel[] = [];
+  jalons: Jalon[] = [];
   materiel: Record<number, number> = {}; // id_materiel : quantite
   vehicules: number[] = [];
   groupes: number[] = [];

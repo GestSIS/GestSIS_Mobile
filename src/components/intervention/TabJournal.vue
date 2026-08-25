@@ -9,11 +9,12 @@ import {
   IonIcon,
   modalController,
 } from "@ionic/vue";
-import { body, call, play } from "ionicons/icons";
+import { body, call, flag, play } from "ionicons/icons";
 import { computed, ref } from "vue";
 import { DateTime } from "luxon";
 import useSapeurs from "../../store/useSapeurs.ts";
 import ModalAppelEditVue from "../modals/ModalAppelEdit.vue";
+import ModalJalonEditVue from "../modals/ModalJalonEdit.vue";
 import { useRouter } from "vue-router";
 
 const onlyPendingMissions = ref<boolean>(true);
@@ -23,6 +24,7 @@ enum EventType {
   OngoingMission,
   EndedMission,
   Appel,
+  Jalon,
   Info,
 }
 
@@ -30,12 +32,14 @@ const colorMapping = {
   [EventType.OngoingMission]: "orange",
   [EventType.EndedMission]: "green",
   [EventType.Appel]: "blue",
+  [EventType.Jalon]: "purple",
   [EventType.Info]: "grey",
 };
 const iconMapping = {
   [EventType.OngoingMission]: body,
   [EventType.EndedMission]: body,
   [EventType.Appel]: call,
+  [EventType.Jalon]: flag,
   [EventType.Info]: play,
 };
 
@@ -80,6 +84,17 @@ const evenements = computed(() => {
       type: EventType.Appel,
       titre: a.nom + " (" + a.numero + ")",
       description: a.commentaire,
+      auteur: null,
+    })),
+
+    // Jalons
+    ...intervention.value.jalons.map((j) => ({
+      ...j,
+      uuid: j.localUuid,
+      date: j.date_time,
+      type: EventType.Jalon,
+      titre: j.titre,
+      description: j.description,
       auteur: null,
     })),
 
@@ -134,6 +149,22 @@ const openEvent = async (event: Event) => {
     case EventType.EndedMission:
     case EventType.OngoingMission:
       router.push({ name: "mission", params: { uuid: event.uuid } });
+      break;
+
+    case EventType.Jalon:
+      {
+        const jalon = intervention.value.jalons.find(
+          (j) => j.localUuid == event.uuid,
+        );
+        const modalJalon = await modalController.create({
+          component: ModalJalonEditVue,
+          componentProps: {
+            jalon: { ...jalon },
+          },
+        });
+
+        await modalJalon.present();
+      }
       break;
 
     case EventType.Info:
@@ -205,6 +236,18 @@ textarea {
 
 .grey .cd-timeline-content {
   background: #efefef;
+}
+
+.purple .positive {
+  border-color: #8a2be2;
+}
+
+.purple .positive ion-icon {
+  color: #8a2be2;
+}
+
+.purple .cd-timeline-content {
+  background: #ecdcf9;
 }
 
 .green .positive {

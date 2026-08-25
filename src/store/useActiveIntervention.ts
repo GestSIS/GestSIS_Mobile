@@ -6,6 +6,7 @@ import { Intervention } from "../models/intervention.ts";
 import useInterventions from "./useInterventions.ts";
 import type { Mission } from "../models/mission.ts";
 import type { Appel } from "../models/appel.ts";
+import type { Jalon } from "../models/jalon.ts";
 
 const state: Ref<Intervention> = ref({ ...new Intervention() });
 
@@ -75,6 +76,26 @@ export default function useActiveIntervention() {
   const removeAppel = (appel: Appel) => {
     state.value.appels = state.value.appels.filter(
       (a) => a.localUuid != appel.localUuid,
+    );
+    persist();
+  };
+
+  const addJalon = (jalon: Jalon) => {
+    jalon.localUuid = uuidv4();
+    state.value.jalons.push(jalon);
+    persist();
+  };
+
+  const updateJalon = (jalon: Jalon) => {
+    state.value.jalons = state.value.jalons.map((j) =>
+      j.localUuid == jalon.localUuid ? jalon : j,
+    );
+    persist();
+  };
+
+  const removeJalon = (jalon: Jalon) => {
+    state.value.jalons = state.value.jalons.filter(
+      (j) => j.localUuid != jalon.localUuid,
     );
     persist();
   };
@@ -184,6 +205,9 @@ export default function useActiveIntervention() {
     addAppel,
     updateAppel,
     removeAppel,
+    addJalon,
+    updateJalon,
+    removeJalon,
     updateGroupes,
 
     // Sapeurs

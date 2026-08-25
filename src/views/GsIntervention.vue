@@ -5,6 +5,7 @@ import TabMateriel from "../components/intervention/TabMateriel.vue";
 import TabVehicule from "../components/intervention/TabVehicule.vue";
 import TabMission from "../components/intervention/TabMission.vue";
 import TabAppel from "../components/intervention/TabAppel.vue";
+import TabJalon from "../components/intervention/TabJalon.vue";
 import TabPresence from "../components/intervention/TabPresence.vue";
 import TabInfo from "../components/intervention/TabInfo.vue";
 import TabJournal from "../components/intervention/TabJournal.vue";
@@ -29,6 +30,7 @@ import {
   construct,
   time,
   informationCircle,
+  flag,
 } from "ionicons/icons";
 
 // Define tabs
@@ -36,6 +38,7 @@ const enum Tab {
   Journal = "Journal",
   Mission = "Mission",
   Appel = "Appel",
+  Jalon = "Jalon",
   Vehicule = "Vehicule",
   Materiel = "Materiel",
   Presence = "Presence",
@@ -69,6 +72,12 @@ const activeTab = ref(Tab.Journal);
         <ion-icon
           :icon="body"
           aria-label="Missions"
+        />
+      </ion-segment-button>
+      <ion-segment-button :value="Tab.Jalon">
+        <ion-icon
+          :icon="flag"
+          aria-label="Jalons"
         />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Appel">
@@ -113,6 +122,9 @@ const activeTab = ref(Tab.Journal);
         </div>
         <div v-if="activeTab == Tab.Appel">
           <tab-appel />
+        </div>
+        <div v-if="activeTab == Tab.Jalon">
+          <tab-jalon />
         </div>
         <div v-if="activeTab == Tab.Vehicule">
           <tab-vehicule />
