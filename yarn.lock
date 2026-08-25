@@ -737,14 +737,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/core@npm:8.8.19":
-  version: 8.8.19
-  resolution: "@ionic/core@npm:8.8.19"
+"@ionic/core@npm:9.0.0":
+  version: 9.0.0
+  resolution: "@ionic/core@npm:9.0.0"
   dependencies:
-    "@stencil/core": "npm:4.43.5"
-    ionicons: "npm:^8.0.13"
+    "@stencil/core": "npm:^4.43.5"
+    ionicons: "npm:^8.1.0"
     tslib: "npm:^2.1.0"
-  checksum: 10/0326768affae4e7c172890d82c7e3d1a4f9aeded555adcef702d3ccaf540f81a2340e22ad8c035baa18b31a535bb586ecfe972e88208d635d1e17afad10abd0a
+  checksum: 10/6094368f9151b6aef344c5fe1e9b5618a2a76fa1395af401501e74ef06decad0a68fc87e30e95f16eb59683d7d19a733da49de1649f8fd2de08bd47ba62ffee6
   languageName: node
   linkType: hard
 
@@ -846,23 +846,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic/vue-router@npm:^8.8.19":
-  version: 8.8.19
-  resolution: "@ionic/vue-router@npm:8.8.19"
+"@ionic/vue-router@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@ionic/vue-router@npm:9.0.0"
   dependencies:
-    "@ionic/vue": "npm:8.8.19"
-  checksum: 10/a7666bb5bb129d559f0d60f5b230367b4891854ee30fdcdcfda30da29ed50f08002af34e14260a2a8e4de11d747cd90f0b749afc239969433e5ceb0956f3edd8
+    "@ionic/vue": "npm:9.0.0"
+  checksum: 10/7f586763a0370e57750dc8aa537e246a7aa4bb58d9a76c4d5757180b7f57aea1b512a071327451569e6e8d3e9bec85325ebc364fceb06f4c8c7bbfa9f5e49c0b
   languageName: node
   linkType: hard
 
-"@ionic/vue@npm:8.8.19, @ionic/vue@npm:^8.8.19":
-  version: 8.8.19
-  resolution: "@ionic/vue@npm:8.8.19"
+"@ionic/vue@npm:9.0.0, @ionic/vue@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@ionic/vue@npm:9.0.0"
   dependencies:
-    "@ionic/core": "npm:8.8.19"
-    "@stencil/vue-output-target": "npm:0.10.7"
+    "@ionic/core": "npm:9.0.0"
+    "@stencil/vue-output-target": "npm:0.14.1"
     ionicons: "npm:^8.0.13"
-  checksum: 10/a6449378ade777de45649c40961c7a1c6500429477f2ed07cbe9f76636dc85212dc66ce622945d23c435ec7fa07bdf250cf7b3ce8b21cdeac93a26e690c6d40a
+  checksum: 10/42fbaa1e61bc1a89c566f916981846e339ca0cd4af9ff6af164422d5152ddbdfd9156e2a21ccc16dacedccdf1f1b745b168455395fbf1449cdb05565326aeeac
   languageName: node
   linkType: hard
 
@@ -1612,7 +1612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencil/core@npm:4.43.5, @stencil/core@npm:^4.35.3, @stencil/core@npm:^4.43.5":
+"@stencil/core@npm:^4.35.3, @stencil/core@npm:^4.43.5":
   version: 4.43.5
   resolution: "@stencil/core@npm:4.43.5"
   dependencies:
@@ -1647,13 +1647,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stencil/vue-output-target@npm:0.10.7":
-  version: 0.10.7
-  resolution: "@stencil/vue-output-target@npm:0.10.7"
+"@stencil/vue-output-target@npm:0.14.1":
+  version: 0.14.1
+  resolution: "@stencil/vue-output-target@npm:0.14.1"
   peerDependencies:
-    "@stencil/core": ">=2.0.0 || >=3 || >= 4.0.0-beta.0 || >= 4.0.0"
+    "@stencil/core": ">=2.0.0 || >=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0"
     vue: ^3.4.38
-    vue-router: ^4.5.0
+    vue-router: ^4.5.0 || ^5.0.0
   peerDependenciesMeta:
     "@stencil/core":
       optional: true
@@ -1661,7 +1661,7 @@ __metadata:
       optional: false
     vue-router:
       optional: true
-  checksum: 10/1c6b1c9074ae40a214d6f6b2f9e8017a378bd5173df0f189fe3251d7bf147b882fd5175d7513ae70f79a62a584182ccc5816c64830ace11e91a5691523463a0a
+  checksum: 10/4e9ff8c1b431fa26395d7537073f450842785632b6656e81954acc5be514e3c492b974acac78d37c264780021fdd2b24561ab5cd847f7a336cc15486cafbb1a7
   languageName: node
   linkType: hard
 
@@ -2620,8 +2620,8 @@ __metadata:
     "@capawesome/capacitor-android-edge-to-edge-support": "npm:^8.0.8"
     "@eslint/js": "npm:^10.0.1"
     "@ionic/storage": "npm:^4.0.0"
-    "@ionic/vue": "npm:^8.8.19"
-    "@ionic/vue-router": "npm:^8.8.19"
+    "@ionic/vue": "npm:^9.0.0"
+    "@ionic/vue-router": "npm:^9.0.0"
     "@types/jest": "npm:^30.0.0"
     "@types/luxon": "npm:^3.7.5"
     "@typescript-eslint/eslint-plugin": "npm:^8.68.0"

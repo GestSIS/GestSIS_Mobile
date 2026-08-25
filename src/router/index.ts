@@ -81,16 +81,11 @@ const { isLoggedIn } = useAuth();
 router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
   if (to.name !== "login" && !isLoggedIn()) {
     // Redirect to login if not logged in
-    return next({
-      name: "login",
-    });
+    return { name: "login" };
   } else if (to.name === "login" && isLoggedIn()) {
     // Redirect to accueil if logged in
-    return next({
-      name: "accueil",
-    });
+    return { name: "accueil" };
   }
-  next();
 });
 
 export default router;
