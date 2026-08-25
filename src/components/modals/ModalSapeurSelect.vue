@@ -36,6 +36,7 @@ const preSelectionIds = new Set(props.preSelectionSapeurIds ?? []);
 const selectedSapeurId = ref(new Set<number>());
 
 const query = ref("");
+const rawQuery = ref("");
 const sapeurModule = useSapeurs();
 const filteredSapeur = computed(() => {
   return sapeurModule.state.value
@@ -59,7 +60,8 @@ const filteredSapeur = computed(() => {
 });
 
 const search = (event: SearchbarCustomEvent) => {
-  query.value = event.target.value?.toLowerCase() ?? "";
+  rawQuery.value = event.target.value ?? "";
+  query.value = rawQuery.value.toLowerCase();
 };
 
 const dismiss = () => {
@@ -91,6 +93,7 @@ const autreSapeur = async () => {
         name: "designation",
         placeholder: "Désignation",
         type: "text",
+        value: rawQuery.value,
       },
     ],
     buttons: [
@@ -106,6 +109,7 @@ const autreSapeur = async () => {
     ],
   });
   await prompt.present();
+  prompt.querySelector("input")?.focus();
 };
 </script>
 
