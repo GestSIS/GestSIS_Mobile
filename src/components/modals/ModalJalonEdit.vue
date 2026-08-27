@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { DateTime } from "luxon";
 import {
   IonToolbar,
   IonTitle,
@@ -28,7 +29,11 @@ const sapeurModule = useSapeurs();
 const { addJalon, updateJalon } = useActiveIntervention();
 const props = defineProps<{ jalon?: Jalon }>();
 
-const activeJalon = ref(props.jalon || new Jalon());
+const newJalon = new Jalon();
+newJalon.date_time =
+  DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
+
+const activeJalon = ref(props.jalon || newJalon);
 
 const selectSapeur = async () => {
   const modalSapeurSelect = await modalController.create({
