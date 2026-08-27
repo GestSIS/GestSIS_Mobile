@@ -201,7 +201,7 @@ const save = () => {
         <base-datetime
           v-model="presences.date"
           :per-quarter="true"
-          :clearable="true"
+          :clearable="mode == 'DEPART'"
         >
           Heure
           {{ mode == "ARRIVEE" ? "d'arrivée" : "de départ" }}

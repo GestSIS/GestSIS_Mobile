@@ -133,7 +133,7 @@ const validate = async () => {
   // Check toutes les présences sont complètes
   if (
     !intervention.value.sapeurs.every((s) =>
-      s.presences.every((p) => p.date_fin),
+      s.presences.every((p) => p.date_debut && p.date_fin),
     )
   ) {
     notify.error(

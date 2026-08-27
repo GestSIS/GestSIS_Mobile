@@ -33,7 +33,7 @@ export default {
           }`,
         sapeurs: i.sapeurs.flatMap((sapeur) =>
           sapeur.presences.map((p) => ({
-            debut: p.date_debut,
+            debut: p.date_debut || i.date_debut,
             fin: p.date_fin,
             sapeur_id: sapeur.id,
             piquet: p.piquet,
