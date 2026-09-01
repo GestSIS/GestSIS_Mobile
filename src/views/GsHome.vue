@@ -3,6 +3,7 @@ import useAuth from "../store/useAuth.ts";
 import useExercices from "../store/useExercices.ts";
 import useInterventions from "../store/useInterventions.ts";
 import useStore from "../store/useStore.ts";
+import { useAppUpdate } from "../hooks/useAppUpdate.ts";
 import { useNotify } from "../tools/useToast.ts";
 import {
   IonButtons,
@@ -29,6 +30,7 @@ import {
   sync as syncIcon,
   syncOutline,
   settings,
+  logoGooglePlaystore,
   // shirt,
 } from "ionicons/icons";
 
@@ -38,6 +40,13 @@ import { useRouter } from "vue-router";
 const exerciceStore = useExercices();
 const interventionStore = useInterventions();
 const notify = useNotify();
+
+const { updateAvailable, latestVersion, checkForUpdate } = useAppUpdate();
+checkForUpdate();
+
+const openPlayStore = () => {
+  window.open("https://play.google.com/store/apps/details?id=ch.gestsis.app");
+};
 
 const router = useRouter();
 const navigateTo = async (name: string) => {
@@ -101,6 +110,37 @@ const hasExercicePresencePermission = computed(() =>
     </ion-header>
 
     <ion-content :fullscreen="true">
+      <ion-card v-if="updateAvailable" color="tertiary">
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col col-12>
+                <h2>
+                  📦 Une nouvelle version de l'application est disponible
+                  ({{ latestVersion }}).
+                </h2>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-12>
+                <ion-button
+                  color="light"
+                  block
+                  icon-start
+                  @click="openPlayStore"
+                >
+                  <ion-icon
+                    slot="start"
+                    :icon="logoGooglePlaystore"
+                    aria-hidden="true"
+                  />Mettre à jour
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+
       <ion-card v-if="needSync" color="warning">
         <ion-card-content>
           <ion-grid>

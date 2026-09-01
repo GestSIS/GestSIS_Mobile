@@ -4,6 +4,7 @@ import useExercices from "../store/useExercices.ts";
 import useInterventions from "../store/useInterventions.ts";
 import useStore from "../store/useStore.ts";
 import { useTheme } from "../hooks/useTheme.ts";
+import { useAppUpdate } from "../hooks/useAppUpdate.ts";
 import { useNotify } from "../tools/useToast.ts";
 import {
   IonButtons,
@@ -29,6 +30,8 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 
 const { switchTheme, activeTheme } = useTheme();
+const { currentVersion, loadCurrentVersion } = useAppUpdate();
+loadCurrentVersion();
 const router = useRouter();
 const notify = useNotify();
 
@@ -169,7 +172,7 @@ const onSelectSis = async (sis: string) => {
 
     <ion-footer>
       <div class="ion-padding copyright">
-        Version 2.6.10
+        Version {{ currentVersion ?? "…" }}
         <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
         <br />
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
