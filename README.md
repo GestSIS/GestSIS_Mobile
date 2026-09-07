@@ -14,7 +14,7 @@ docker compose up -d
 
 Commencer par mettre à jour le numéro de version dans `android/app/build.gradle` et incrémenter `versionCode` ainsi que `versionName`.
 
-Mettre `gestsis-release-key.jks` dans le dossier './keys'.
+Mettre `gestsis-release-key.p12` dans le dossier './keys'.
 
 Finalement lancer :
 
@@ -23,7 +23,7 @@ docker build -t mobile-build ./android
 docker run --rm -it -v /app/node_modules -v $(pwd):/app mobile-build
 ```
 
-Le script qui sera lancé vous demandera de saisir la clé de déchiffrement du fichier `.jks` pour signer l'apk.
+Le script qui sera lancé vous demandera de saisir la clé de déchiffrement du fichier `.p12` pour signer l'apk.
 
 L'apk généré se trouve ici `./app/build/outputs/bundle/release/gestsis-2.0.x.aab`.
 
@@ -51,5 +51,5 @@ Source:
 ## Signing the bundle
 
 ```sh
-jarsigner -keystore gestsis-release-key.jks ./app/build/outputs/bundle/release/app-release.aab gestsis-ks
+jarsigner -keystore gestsis-release-key.p12 ./app/build/outputs/bundle/release/app-release.aab gestsis-ks
 ```
