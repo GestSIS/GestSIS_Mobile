@@ -4,8 +4,6 @@ import type { HeureExerciceType } from "../models/heureexercicetype.ts";
 
 import useExerciceCategories from "../store/useExerciceCategories.ts";
 
-import { trashOutline } from "ionicons/icons";
-
 import {
   IonButtons,
   IonBadge,
@@ -18,18 +16,27 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonList,
   IonIcon,
-  IonGrid,
   IonButton,
-  IonRadioGroup,
-  IonRadio,
-  IonCol,
-  IonRow,
+  IonCard,
+  IonCardContent,
+  IonChip,
+  IonFooter,
+  IonNote,
+  IonSegment,
+  IonSegmentButton,
   actionSheetController,
+  alertController,
   modalController,
 } from "@ionic/vue";
-import { add, refresh, checkmarkCircle } from "ionicons/icons";
+import {
+  add,
+  closeCircle,
+  personAdd,
+  refresh,
+  checkmarkCircle,
+  sync as syncIcon,
+} from "ionicons/icons";
 import { computed, nextTick, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -59,23 +66,23 @@ const sapeurs = sapeursStore.state;
 const heuresTypes = heuresStore.state;
 const unites = unitesStore.state;
 
-const indexedSapeurs = new Map();
+const indexedSapeurs = new Map<number, string>();
 sapeurs.value.forEach((e) => {
   indexedSapeurs.set(e.id, e.nom + " " + e.prenom);
 });
 
-const indexedUnites = new Map();
+const indexedUnites = new Map<number, string>();
 unites.value.forEach((e) => {
   indexedUnites.set(e.id, e?.abreviation);
 });
 const enhancedHeuresTypes = computed(() =>
   heuresTypes.value.map((e) => ({
     ...e,
-    abreviation: indexedUnites.get(e.type_unite_id),
+    abreviation: indexedUnites.get(e.type_unite_id) ?? "",
   })),
 );
 
-const formatCategorie = (categorieId: number) => {
+const formatCategorie = (categorieId: number | undefined) => {
   return categories.value.find((c) => c.id == categorieId)?.designation;
 };
 
@@ -110,11 +117,57 @@ if (!exercice.value) {
 const computedSapeurs = computed(() =>
   exercice.value?.sapeurs
     .map((s) => {
-      const nomPrenom = indexedSapeurs.get(s.sapeur_id);
+      const nomPrenom = indexedSapeurs.get(s.sapeur_id ?? 0);
       return { ...s, nomPrenom };
     })
     .sort((a, b) => (a.nomPrenom ?? "").localeCompare(b.nomPrenom ?? "")),
 );
+
+// En-tête : titre (désignation ou catégorie) et statut de saisie
+const titre = computed(() =>
+  exercice.value?.designation && exercice.value.designation != "-"
+    ? exercice.value.designation
+    : formatCategorie(exercice.value?.exercice_categorie_id) ?? "Exercice",
+);
+
+const statutLabel = computed(() => {
+  switch (exercice.value?.localStatus) {
+    case "in_progress":
+      return "En cours d'édition";
+    case "validated":
+      return "Validé, en attente de synchronisation";
+    default:
+      return "A saisir";
+  }
+});
+
+// Totaux affichés en chips au-dessus de la liste
+const totaux = computed(() => {
+  const liste = computedSapeurs.value ?? [];
+  return [
+    { label: "Total", value: liste.length, color: "medium" },
+    {
+      label: "Présents",
+      value: liste.filter((s) => s.presenceStatut === 1).length,
+      color: "success",
+    },
+    {
+      label: "Absents",
+      value: liste.filter((s) => s.presenceStatut === 2).length,
+      color: "danger",
+    },
+    {
+      label: "Remplacés",
+      value: liste.filter((s) => s.presenceStatut === 3).length,
+      color: "warning",
+    },
+    {
+      label: "Excusés",
+      value: liste.filter((s) => s.excuse_type_id !== null).length,
+      color: "medium",
+    },
+  ];
+});
 
 const validate = () => {
   // Validate an exercice
@@ -145,11 +198,14 @@ const addSapeur = async () => {
     id: null,
     sapeur_id: sapeurId,
     excuse_type_id: null,
+    // Un sapeur ajouté manuellement (donc absent de la liste des convoqués)
+    // l'est généralement parce qu'il est présent sans avoir été convoqué :
+    // le marquer présent par défaut évite une étape de saisie superflue.
     convoque: false,
-    present: false,
+    present: true,
     amende: false,
     remplace: false,
-    presenceStatut: 0,
+    presenceStatut: 1,
     excuse_type: "",
     absent: false,
     excuse: false,
@@ -164,6 +220,7 @@ const selectPresent = async (sapeur: PresenceExercice) => {
   sapeur.present = true;
   sapeur.excuse = false;
   sapeur.remplace = false;
+  sapeur.presenceStatut = 1;
   // On conserve volontairement l'excuse (excuse_type_id) : un sapeur qui
   // s'était excusé mais qui vient finalement garde la trace de son excuse.
 };
@@ -173,6 +230,7 @@ const selectAbsent = async (sapeur: PresenceExercice) => {
   sapeur.present = false;
   sapeur.absent = true;
   sapeur.remplace = false;
+  sapeur.presenceStatut = 2;
 };
 
 const selectRemplace = async (sapeur: PresenceExercice) => {
@@ -180,7 +238,16 @@ const selectRemplace = async (sapeur: PresenceExercice) => {
   sapeur.absent = false;
   sapeur.present = false;
   sapeur.remplace = true;
+  sapeur.presenceStatut = 3;
   // On conserve volontairement l'excuse (excuse_type_id) : cf. selectPresent.
+};
+
+const persistSapeur = (sapeur: PresenceExercice) => {
+  if (!exercice.value) return;
+  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
+    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
+  );
+  exercicesStore.updatExercice(exercice.value);
 };
 
 const removeExcuse = async (sapeur: PresenceExercice) => {
@@ -198,7 +265,7 @@ const addExcuse = async (sapeur: PresenceExercice) => {
   sapeur.present = false;
   sapeur.absent = true;
   sapeur.remplace = false;
-  // Refléter immédiatement l'état "Absent" sur la radio (statut 2), sinon
+  // Refléter immédiatement l'état "Absent" sur le segment (statut 2), sinon
   // l'affichage diffère avant/après rechargement (recalculé depuis `absent`).
   sapeur.presenceStatut = 2;
 
@@ -212,7 +279,7 @@ const addExcuse = async (sapeur: PresenceExercice) => {
 
   const actionSheet = await actionSheetController.create({
     header: "Excuses",
-    buttons: buttons,
+    buttons: [...buttons, { text: "Annuler", role: "cancel" }],
   });
 
   await actionSheet.present();
@@ -224,35 +291,31 @@ const addExcuse = async (sapeur: PresenceExercice) => {
   // Persist the change (also flips localStatus to in_progress), like the
   // other handlers. Without this the edits stay on the displayed copy and
   // are lost on the next render/sync.
-  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
-    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
-  );
-  exercicesStore.updatExercice(exercice.value);
+  persistSapeur(sapeur);
 };
 
 const resetting = ref(false);
-const selectOption = async (statut: number, sapeur: PresenceExercice) => {
+const selectOption = async (
+  value: string | number | undefined,
+  sapeur: PresenceExercice,
+) => {
   if (!exercice.value) return;
-  if (statut == null) {
-    // Unselect
-  }
   if (resetting.value) {
     return;
   }
+  const statut = Number(value);
+  if (!statut || statut === sapeur.presenceStatut) return;
   const actions = [selectPresent, selectAbsent, selectRemplace];
   const action = actions[statut - 1];
   if (!action) return;
   await action(sapeur);
 
   // Save changes
-  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
-    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
-  );
-  exercicesStore.updatExercice(exercice.value);
+  persistSapeur(sapeur);
 };
 
 const heureInput = (
-  value: string | number,
+  value: string | number | null | undefined,
   sapeur: PresenceExercice,
   heureType: HeureExerciceType,
 ) => {
@@ -260,7 +323,7 @@ const heureInput = (
   if (resetting.value) {
     return;
   }
-  const quantite = parseFloat(`${value}`);
+  const quantite = parseFloat(`${value ?? ""}`.replace(",", "."));
   if (quantite) {
     const heure = sapeur.heures.find(
       (h) => h.heure_exercice_type_id == heureType.id,
@@ -281,11 +344,11 @@ const heureInput = (
       (h) => h.heure_exercice_type_id != heureType.id,
     );
   }
-  exercice.value.sapeurs = exercice.value.sapeurs.map((s) =>
-    s.sapeur_id == sapeur.sapeur_id ? sapeur : s,
-  );
-  exercicesStore.updatExercice(exercice.value);
+  persistSapeur(sapeur);
 };
+
+const getQuantite = (sapeur: PresenceExercice, heureTypeId: number) =>
+  sapeur.heures.find((h) => h.heure_exercice_type_id == heureTypeId)?.quantite;
 
 // Reset les saisies effectuées
 const reset = () => {
@@ -301,6 +364,20 @@ const reset = () => {
   nextTick(() => {
     resetting.value = false;
   });
+};
+
+// Demande confirmation avant de perdre les saisies locales
+const confirmReset = async () => {
+  const confirm = await alertController.create({
+    header: "Réinitialiser",
+    message:
+      "Toutes les saisies locales de cet exercice seront perdues. Continuer ?",
+    buttons: [
+      { text: "Annuler", role: "cancel" },
+      { text: "Réinitialiser", role: "destructive", handler: () => reset() },
+    ],
+  });
+  await confirm.present();
 };
 
 const sync = async () => {
@@ -323,216 +400,255 @@ const sync = async () => {
         <ion-buttons slot="start">
           <ion-back-button :default-href="{ name: 'exercices' }" />
         </ion-buttons>
-        <ion-title>Exercices</ion-title>
+        <ion-title>{{ titre }}</ion-title>
+      </ion-toolbar>
+      <ion-toolbar class="sous-titre">
+        <ion-note class="ion-padding-horizontal">
+          {{ formatDate(exercice?.date || "", "dd.MM.yyyy") }}
+          <template v-if="exercice?.lieu">
+            – {{ exercice.lieu }}
+          </template>
+          · {{ statutLabel }}
+        </ion-note>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">
-      <h3>
-        {{
-          exercice?.designation != "-"
-            ? exercice?.designation
-            : formatCategorie(exercice?.exercice_categorie_id)
-        }}
-        - {{ formatDate(exercice?.date || "", "dd.MM.yy") }}
-      </h3>
-      <ion-list>
-        <ion-row class="sap-item list-header">
-          <ion-col>Sapeur</ion-col>
-          <ion-col class="col-radio"> Présent </ion-col>
-          <ion-col class="col-radio"> Absent </ion-col>
-          <ion-col class="col-radio"> Remplacé </ion-col>
-          <ion-col class="col-radio"> Excuse </ion-col>
-          <ion-col v-for="heure in heuresTypes" :key="heure.id">
-            {{ heure.designation }}
-          </ion-col>
-        </ion-row>
+      <div class="totaux">
+        <ion-chip
+          v-for="t in totaux"
+          :key="t.label"
+          :outline="true"
+        >
+          <ion-badge :color="t.color">
+            {{ t.value }}
+          </ion-badge>
+          <ion-label>{{ t.label }}</ion-label>
+        </ion-chip>
+      </div>
 
-        <div class="sapeurs">
-          <ion-radio-group
-            v-for="(sapeur, i) in computedSapeurs"
-            :key="i"
-            v-model="sapeur.presenceStatut"
-            @ion-change="($event) => selectOption($event.target.value, sapeur)"
+      <ion-item
+        v-if="!computedSapeurs?.length"
+        lines="none"
+      >
+        Aucun sapeur convoqué
+      </ion-item>
+
+      <ion-card
+        v-for="sapeur in computedSapeurs"
+        :key="sapeur.sapeur_id ?? 0"
+        class="carte-sapeur"
+      >
+        <ion-card-content>
+          <div class="entete">
+            <h2 class="nom">
+              {{ sapeur.nomPrenom }}
+            </h2>
+            <ion-chip
+              v-if="sapeur.excuse_type_id"
+              color="medium"
+              @click="removeExcuse(sapeur)"
+            >
+              <ion-label>{{ sapeur.excuse_type }}</ion-label>
+              <ion-icon
+                :icon="closeCircle"
+                aria-label="Retirer l'excuse"
+              />
+            </ion-chip>
+            <ion-chip
+              v-else
+              :outline="true"
+              @click="addExcuse(sapeur)"
+            >
+              <ion-icon
+                :icon="add"
+                aria-hidden="true"
+              />
+              <ion-label>Excuse</ion-label>
+            </ion-chip>
+          </div>
+
+          <ion-segment
+            mode="ios"
+            :value="sapeur.presenceStatut || undefined"
+            @ion-change="selectOption($event.detail.value, sapeur)"
           >
-            <ion-row class="sap-item" :class="i % 2 ? 'even-row' : 'odd-row'">
-              <ion-col>
-                {{ sapeur?.nomPrenom }}
-                <br />
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio mode="md" :value="1" />
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio mode="md" :value="2" />
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-radio mode="md" :value="3" />
-              </ion-col>
-              <ion-col class="col-radio">
-                <ion-badge v-if="sapeur.excuse_type">
-                  {{ sapeur.excuse_type }}
-                </ion-badge>
-                <ion-button
-                  v-if="sapeur.excuse_type_id"
-                  size="small"
-                  @click="removeExcuse(sapeur)"
-                >
-                  <ion-icon
-                    :icon="trashOutline"
-                    size=""
-                    color="white"
-                  ></ion-icon>
-                </ion-button>
-                <ion-badge v-else size="small" @click="addExcuse(sapeur)">
-                  +
-                </ion-badge>
-              </ion-col>
-              <ion-col v-for="heure in enhancedHeuresTypes" :key="heure.id">
-                <ion-item lines="none">
-                  <!-- {{ sapeur?.heures.length > 0 ? sapeur?.heures[0].heure_exercice_type_id : '' }} -->
-                  <ion-input
-                    type="number"
-                    inputmode="decimal"
-                    :value="
-                      sapeur?.heures.find(
-                        (h) => h.heure_exercice_type_id == heure.id,
-                      )?.quantite
-                    "
-                    @ion-change.stop="
-                      heureInput($event.target.value ?? '', sapeur, heure)
-                    "
-                  />
-                  <ion-label slot="end">
-                    {{ heure.abreviation }}
-                  </ion-label>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-radio-group>
-          <ion-row>
-            <ion-col>Total : {{ computedSapeurs?.length }}</ion-col>
-            <ion-col class="col-radio">
-              {{
-                computedSapeurs?.filter((s) => s.presenceStatut === 1)?.length
-              }}
-            </ion-col>
-            <ion-col class="col-radio">
-              {{
-                computedSapeurs?.filter((s) => s.presenceStatut === 2)?.length
-              }}
-            </ion-col>
-            <ion-col class="col-radio">
-              {{
-                computedSapeurs?.filter((s) => s.presenceStatut === 3)?.length
-              }}
-            </ion-col>
-            <ion-col class="col-radio">
-              {{
-                computedSapeurs?.filter((s) => s.excuse_type_id !== null)
-                  ?.length
-              }}
-            </ion-col>
-          </ion-row>
-        </div>
-      </ion-list>
+            <ion-segment-button :value="1">
+              <ion-label>Présent</ion-label>
+            </ion-segment-button>
+            <ion-segment-button :value="2">
+              <ion-label>Absent</ion-label>
+            </ion-segment-button>
+            <ion-segment-button :value="3">
+              <ion-label>Remplacé</ion-label>
+            </ion-segment-button>
+          </ion-segment>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-button expand="block" @click="addSapeur">
-              <ion-icon slot="start" :icon="add" aria-hidden="true" />Ajouter
-              une présence
-            </ion-button>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-button
-              expand="block"
-              color="light"
-              :disabled="exercice?.localStatus == 'empty'"
-              @click="reset"
+          <div
+            v-if="enhancedHeuresTypes.length"
+            class="heures"
+          >
+            <ion-input
+              v-for="heure in enhancedHeuresTypes"
+              :key="heure.id"
+              type="number"
+              inputmode="decimal"
+              fill="outline"
+              label-placement="stacked"
+              :label="heure.designation"
+              :value="getQuantite(sapeur, heure.id)"
+              @ion-change="heureInput($event.detail.value, sapeur, heure)"
             >
-              <ion-icon
-                slot="start"
-                :icon="refresh"
-                aria-hidden="true"
-              />Réinitialiser
-            </ion-button>
-          </ion-col>
-          <ion-col>
-            <ion-button
-              v-if="exercice?.localStatus != 'validated'"
-              expand="block"
-              :disabled="exercice?.localStatus == 'empty'"
-              @click="validate"
-            >
-              <ion-icon
-                slot="start"
-                :icon="checkmarkCircle"
-                aria-hidden="true"
-              />Valider
-            </ion-button>
-            <ion-button
-              v-if="exercice?.localStatus == 'validated'"
-              expand="block"
-              @click="sync"
-            >
-              <ion-icon
-                slot="start"
-                :icon="checkmarkCircle"
-                aria-hidden="true"
-              />Synchroniser
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+              <ion-note slot="end">
+                {{ heure.abreviation }}
+              </ion-note>
+            </ion-input>
+          </div>
+
+          <ion-note
+            v-if="sapeur.convoque"
+            class="convoque"
+          >
+            Convoqué
+          </ion-note>
+        </ion-card-content>
+      </ion-card>
     </ion-content>
+
+    <ion-footer>
+      <ion-toolbar>
+        <div class="actions">
+          <ion-button
+            fill="outline"
+            size="small"
+            @click="addSapeur"
+          >
+            <ion-icon
+              slot="start"
+              :icon="personAdd"
+              aria-hidden="true"
+            />
+            Ajouter
+          </ion-button>
+          <ion-button
+            fill="outline"
+            size="small"
+            :disabled="exercice?.localStatus == 'empty'"
+            @click="confirmReset"
+          >
+            <ion-icon
+              slot="start"
+              :icon="refresh"
+              aria-hidden="true"
+            />
+            Réinitialiser
+          </ion-button>
+          <ion-button
+            v-if="exercice?.localStatus != 'validated'"
+            size="small"
+            :disabled="exercice?.localStatus == 'empty'"
+            @click="validate"
+          >
+            <ion-icon
+              slot="start"
+              :icon="checkmarkCircle"
+              aria-hidden="true"
+            />
+            Valider
+          </ion-button>
+          <ion-button
+            v-else
+            size="small"
+            @click="sync"
+          >
+            <ion-icon
+              slot="start"
+              :icon="syncIcon"
+              aria-hidden="true"
+            />
+            Synchroniser
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <style scoped>
-.sapeur {
-  font-size: 1.6rem;
-  padding-left: 16px;
-  min-height: 4rem;
+.sous-titre {
+  --min-height: 28px;
+  font-size: 0.85rem;
 }
 
-.sap-item {
-  border-bottom: 1px solid #dedede;
-  min-height: 3.2rem;
+.totaux {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
-.col-radio {
-  justify-content: center;
+.totaux ion-chip {
+  margin: 0;
 }
 
-.sap-item ion-col {
+.totaux ion-badge {
+  margin-right: 6px;
+  min-width: 1.6em;
+}
+
+.carte-sapeur {
+  margin: 0 0 10px 0;
+}
+
+.carte-sapeur ion-card-content {
+  padding: 10px 12px 12px;
+}
+
+.entete {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.row {
-  align-items: center;
+.entete .nom {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
 }
 
-.details {
-  color: #555;
+.entete ion-chip {
+  margin: 0;
+  flex-shrink: 0;
 }
 
-.radio-md .radio-icon {
+.heures {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
 }
 
-.list-header {
-  font-weight: bold;
-  min-height: 2.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: var(--ion-color-light-shade);
+.heures ion-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.convoque {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+}
+
+.actions ion-button {
+  flex: 1;
+  margin: 0;
 }
 </style>
