@@ -129,11 +129,11 @@ const request = {
 
     auth.interceptors.response.use(
       function (response: AxiosResponse) {
-        if (response.status === 401) {
-          console.log("Should never happen");
-          return Promise.reject(response);
-        }
-        return Promise.resolve(response.data);
+        // Use `in` rather than a truthy check so a falsy-but-valid payload
+        // (false, 0, "", null) isn't discarded in favor of the envelope.
+        return response.data && "data" in response.data
+          ? response.data.data
+          : response.data;
       },
       function (error: AxiosError) {
         if (error.response?.status === 401) {
