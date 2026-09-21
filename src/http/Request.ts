@@ -92,9 +92,6 @@ const request = {
 
     api.interceptors.response.use(
       (response: AxiosResponse) => {
-        if (response.data.error !== undefined) {
-          throw response.data.error;
-        }
         // Use `in` rather than a truthy check so a falsy-but-valid payload
         // (false, 0, "", null) isn't discarded in favor of the envelope.
         return response.data && "data" in response.data
@@ -110,7 +107,10 @@ const request = {
           const auth = useAuth();
           auth.loginExpired();
         }
-        return Promise.reject(error);
+        // Unwrap the backend's {message, errors?} body so callers reading
+        // err.message/err.errors get it directly, instead of the raw Axios
+        // error (whose .message is a generic "Request failed with status...").
+        return Promise.reject(error.response?.data ?? error);
       },
     );
 

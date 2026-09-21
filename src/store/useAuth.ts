@@ -144,7 +144,9 @@ export default function useAuth() {
     // Select first sis;
     const res = await selectSis(state.data.sis[0]);
     if (!res) {
-      throw "Vous n'avez pas les droits requis pour utiliser cette application";
+      throw {
+        message: "Vous n'avez pas les droits requis pour utiliser cette application",
+      };
     }
 
     // Set access token
@@ -172,7 +174,9 @@ export default function useAuth() {
     if (!state.data.sis.includes(activeSisKey.value)) {
       const res = await selectSis(state.data.sis[0]);
       if (!res) {
-        throw "Vous n'avez plus les droits requis pour utiliser cette application";
+        throw {
+          message: "Vous n'avez plus les droits requis pour utiliser cette application",
+        };
       }
     }
 
