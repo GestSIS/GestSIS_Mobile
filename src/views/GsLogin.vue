@@ -18,6 +18,7 @@ import {
 } from "@ionic/vue";
 import { ref, watchEffect } from "vue";
 import { useNotify } from "../tools/useToast.ts";
+import TwoFactorChallenge from "../components/auth/TwoFactorChallenge.vue";
 
 const router = useRouter();
 const email = ref("");
@@ -35,6 +36,11 @@ watchEffect(() => {
   }
 });
 
+// 'credentials' -> 'challenge' (compte déjà protégé par 2FA), voir
+// TwoFactorChallenge.vue. Pas de flux de configuration ici : un compte dont la
+// configuration est obligatoire est refusé par login() (voir useAuth.ts).
+const step = ref<"credentials" | "challenge">("credentials");
+
 const wrappedLogin = async () => {
   const notify = useNotify();
   if (!window.navigator.onLine) {
@@ -50,7 +56,12 @@ const wrappedLogin = async () => {
 
   try {
     // login() attend aussi la synchronisation initiale
-    await login(email.value, password.value);
+    const result = await login(email.value, password.value);
+
+    if (result.requiresTwoFactor) {
+      step.value = "challenge";
+      return;
+    }
 
     router.push({ name: "accueil" });
   } catch (error: unknown) {
@@ -58,6 +69,13 @@ const wrappedLogin = async () => {
     // errorMessage.value = error?.message ?? "Identifiants incorrect";
   } finally {
     await loading.dismiss();
+  }
+};
+
+const onChallengeCancel = (message?: string) => {
+  step.value = "credentials";
+  if (message) {
+    useNotify().error(message);
   }
 };
 
@@ -72,14 +90,20 @@ const online = window.navigator.onLine;
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-card v-if="!online" color="warning">
+      <ion-card
+        v-if="!online"
+        color="warning"
+      >
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>
           </ion-grid>
         </ion-card-content>
       </ion-card>
-      <form @submit.prevent="wrappedLogin">
+      <form
+        v-if="step === 'credentials'"
+        @submit.prevent="wrappedLogin"
+      >
         <ion-list class="ion-padding">
           <ion-item>
             <ion-input
@@ -110,6 +134,12 @@ const online = window.navigator.onLine;
           </ion-button>
         </ion-list>
       </form>
+
+      <two-factor-challenge
+        v-else
+        @done="router.push({ name: 'accueil' })"
+        @cancel="onChallengeCancel"
+      />
     </ion-content>
   </ion-page>
 </template>

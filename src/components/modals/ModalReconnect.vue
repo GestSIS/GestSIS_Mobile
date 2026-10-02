@@ -19,28 +19,48 @@ import {
   modalController,
 } from "@ionic/vue";
 import { useNotify } from "../../tools/useToast.ts";
+import TwoFactorChallenge from "../auth/TwoFactorChallenge.vue";
 
 const notify = useNotify();
-const { reconnect, state } = useAuth();
+const { reconnect, cancelTwoFactorChallenge, state } = useAuth();
 
 const email = ref(state.data.email ?? "");
 const password = ref("");
 
-const wrappedReconnect = () => {
+// 'credentials' -> 'challenge' (compte déjà protégé par 2FA), voir
+// TwoFactorChallenge.vue.
+const step = ref<"credentials" | "challenge">("credentials");
+
+const wrappedReconnect = async () => {
   if (!window.navigator.onLine) {
     return notify.error("Aucune connexion internet !");
   }
-  reconnect(email.value, password.value)
-    .then(() => {
-      modalController.dismiss();
-      notify.success("Reconnexion réussi avec succès");
-    })
-    .catch((error) => {
-      notify.error(error?.message ?? "Identifiants incorrect");
-    });
+  try {
+    const result = await reconnect(email.value, password.value);
+    if (result.requiresTwoFactor) {
+      step.value = "challenge";
+      return;
+    }
+    onReconnected();
+  } catch (error: unknown) {
+    notify.error((error as { message?: string })?.message ?? "Identifiants incorrect");
+  }
+};
+
+const onReconnected = () => {
+  modalController.dismiss();
+  notify.success("Reconnexion réussi avec succès");
+};
+
+const onChallengeCancel = (message?: string) => {
+  step.value = "credentials";
+  if (message) {
+    notify.error(message);
+  }
 };
 
 const dismiss = () => {
+  cancelTwoFactorChallenge();
   modalController.dismiss();
 };
 </script>
@@ -51,7 +71,9 @@ const dismiss = () => {
       <ion-title>Reconnexion</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()"> Annuler </ion-button>
+        <ion-button @click="dismiss()">
+          Annuler
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -68,7 +90,10 @@ const dismiss = () => {
       </ion-card-content>
     </ion-card>
 
-    <form @submit.prevent="wrappedReconnect">
+    <form
+      v-if="step === 'credentials'"
+      @submit.prevent="wrappedReconnect"
+    >
       <ion-list class="ion-padding">
         <ion-item>
           <ion-input
@@ -113,5 +138,11 @@ const dismiss = () => {
         </ion-row>
       </ion-list>
     </form>
+
+    <two-factor-challenge
+      v-else
+      @done="onReconnected"
+      @cancel="onChallengeCancel"
+    />
   </ion-content>
 </template>

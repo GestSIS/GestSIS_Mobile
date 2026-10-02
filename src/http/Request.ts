@@ -56,13 +56,24 @@ const request = {
       if (refreshTokenPromise.value === "") {
         refreshTokenPromise.value = this.auth()
           .post("refresh-token", { token: this._refreshToken })
-          .then((res) => {
+          .then(async (res) => {
             const response = res as unknown as {
               accessToken: string;
               refreshToken: string;
             };
+            // Persister avant d'utiliser les nouveaux jetons : le refresh token
+            // précédent n'est plus valable côté serveur, et le représenter (app
+            // tuée avant l'écriture) serait pris pour un rejeu, qui révoque la
+            // session.
+            try {
+              await auth.setTokens(response.accessToken, response.refreshToken, null);
+            } catch (e: unknown) {
+              // Ex. plus aucun SIS disponible sur mobile : session inutilisable,
+              // l'utilisateur doit se reconnecter.
+              auth.loginExpired();
+              throw e;
+            }
             this.setTokens(response.accessToken, response.refreshToken);
-            auth.setTokens(response.accessToken, response.refreshToken, null);
             return response.accessToken;
           });
       }
@@ -141,6 +152,40 @@ const request = {
         }
         // Do something with response error
         return Promise.reject(error.response?.data);
+      },
+    );
+    return auth;
+  },
+
+  // Same auth service, but carrying an explicit bearer token instead of the
+  // session's default header — used for 2FA calls (preAuthToken) so they
+  // never disturb the main session's Authorization header.
+  authWithToken: (token: string) => {
+    const auth = axios.create({
+      baseURL: AUTH_URL,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    auth.interceptors.response.use(
+      (response: AxiosResponse) => {
+        return response.data && "data" in response.data
+          ? response.data.data
+          : response.data;
+      },
+      (error: AxiosError) => {
+        // Statut joint au corps {message} : un 401 (preAuthToken expiré) se
+        // distingue ainsi d'un code refusé (422).
+        if (error.response) {
+          return Promise.reject({
+            ...(error.response.data as object),
+            status: error.response.status,
+          });
+        }
+        return Promise.reject(error);
       },
     );
     return auth;

@@ -145,6 +145,14 @@ reset, persist, sync }`. Le store de domaine l'étend avec ses méthodes métier
   **`Sis-Key`**. `activeSisKey` sélectionne le SIS courant.
 - **Permissions** : `activePermissions` (par SIS) ; `hasPermission(p)` renvoie vrai si la
   permission est présente.
+- **2FA** : login et reconnexion uniquement (pas de configuration dans l'app) : code TOTP,
+  code de secours, ou passkey / clé de sécurité. L'étape de vérification est le composant
+  partagé `src/components/auth/TwoFactorChallenge.vue` (login et `ModalReconnect`). La
+  WebView n'exposant pas WebAuthn, la passkey passe par `@capawesome/capacitor-passkeys`
+  (Credential Manager en natif, API web dans le navigateur). Prérequis : `assetlinks.json`
+  (package `ch.gestsis.app`, empreinte SHA-256 de la clé de signature Play) servi sur le
+  domaine du RP ID, et l'origine `android:apk-key-hash:…` acceptée par GestSIS_Auth
+  (`GESTSIS_WEBAUTHN_ALLOWED_ORIGINS`).
 
 ## À éviter
 

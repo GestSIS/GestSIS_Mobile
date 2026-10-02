@@ -21,6 +21,11 @@ import { modalController } from "@ionic/vue";
 import ModalReconnectVue from "../components/modals/ModalReconnect.vue";
 import { useNotify } from "../tools/useToast.ts";
 
+// Un seul modal de reconnexion à la fois : plusieurs synchronisations peuvent
+// constater l'expiration en même temps (ou l'utilisateur relancer la synchro),
+// et des modals empilés partageraient la même vérification 2FA en cours.
+let reconnectModalOpen = false;
+
 export default function useStore() {
   const modules = [
     useExexercices(),
@@ -53,11 +58,22 @@ export default function useStore() {
   };
 
   const showReconnectModal = async () => {
-    const modalReconnect = await modalController.create({
-      component: ModalReconnectVue,
-    });
-
-    await modalReconnect.present();
+    if (reconnectModalOpen) {
+      return;
+    }
+    reconnectModalOpen = true;
+    try {
+      const modalReconnect = await modalController.create({
+        component: ModalReconnectVue,
+      });
+      modalReconnect.onDidDismiss().then(() => {
+        reconnectModalOpen = false;
+      });
+      await modalReconnect.present();
+    } catch (error) {
+      reconnectModalOpen = false;
+      throw error;
+    }
   };
 
   /** Load all modules */

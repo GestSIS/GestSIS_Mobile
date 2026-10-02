@@ -4,6 +4,8 @@ import { usePersistentStore } from "../hooks/usePersistentStore.ts";
 import useStore from "./useStore.ts";
 import Api from "../http/Request.ts";
 import { jwtDecode } from "jwt-decode";
+import { Passkeys, type GetPasskeyOptions } from "@capawesome/capacitor-passkeys";
+import { translateWebauthnError } from "../tools/webauthnErrors.ts";
 
 interface JwtAuthPayload {
   data: {
@@ -46,6 +48,15 @@ const state = reactive<{ data: User }>({ data: { ...emptyState } });
 const activeSisKey = ref<string>("");
 const activePermissions = ref<string[]>([]);
 const lastSync = ref<Date | null>(null);
+
+// 2FA — pas de flux de configuration côté mobile (voir GestSIS_APP pour ça) :
+// uniquement la vérification d'un compte déjà protégé, au login comme à la
+// reconnexion. `twoFactorChallenge` porte le pre-auth token le temps de la
+// vérification ; `pendingEmail` mémorise l'email du login en cours (les
+// écrans de vérification ne le redemandent pas).
+const twoFactorChallenge = ref<string | null>(null);
+const twoFactorAvailableMethods = ref<string[]>([]);
+const pendingEmail = ref<string | null>(null);
 
 const persistKey = "auth";
 const persistActiveSisKey = "auth-siskey";
@@ -130,65 +141,148 @@ export default function useAuth() {
     await persist();
   };
 
-  /** Log in */
-  const login = async (email: string, password: string) => {
-    // Login request
-    const { accessToken, refreshToken } = await AuthService.login({
-      email,
-      password,
-    });
-
-    // const userId = user.id;
+  // Termine une authentification réussie (login direct, ou après vérification
+  // 2FA) : pose la session, resélectionne le SIS actif si besoin, puis
+  // resynchronise. Partagé par login/reconnect/verifyTwoFactor/verifyWebauthnLogin.
+  const finishAuthentication = async (
+    accessToken: string,
+    refreshToken: string,
+    email: string | null,
+  ) => {
     await setTokens(accessToken, refreshToken, email);
 
-    // Select first sis;
-    const res = await selectSis(state.data.sis[0]);
-    if (!res) {
-      throw {
-        message: "Vous n'avez pas les droits requis pour utiliser cette application",
-      };
-    }
-
-    // Set access token
-    Api.setTokens(accessToken, refreshToken);
-
-    // Load data
-    const store = useStore();
-    await store.syncAll();
-
-    return Promise.resolve();
-  };
-
-  /** Log in */
-  const reconnect = async (email: string, password: string) => {
-    // Login request
-    const { accessToken, refreshToken } = await AuthService.login({
-      email: state.data.email ?? email,
-      password,
-    });
-
-    // const userId = user.id;
-    await setTokens(accessToken, refreshToken, state.data.email ?? email);
-
-    // Check si l'utilisateur à toujours les droits pour ce SIS
     if (!state.data.sis.includes(activeSisKey.value)) {
       const res = await selectSis(state.data.sis[0]);
       if (!res) {
         throw {
-          message: "Vous n'avez plus les droits requis pour utiliser cette application",
+          message: "Vous n'avez pas les droits requis pour utiliser cette application",
         };
       }
     }
 
-    // Set access token
     Api.setTokens(accessToken, refreshToken);
 
-    // Load data
     const store = useStore();
     await store.syncAll();
-
-    return Promise.resolve();
   };
+
+  /** Abandonne une vérification 2FA en cours (retour à l'écran de login). */
+  const cancelTwoFactorChallenge = () => {
+    twoFactorChallenge.value = null;
+    twoFactorAvailableMethods.value = [];
+    pendingEmail.value = null;
+  };
+
+  /**
+   * Réponse de POST /login, commune à login() et reconnect() : session
+   * immédiate (`{}`), ou `{ requiresTwoFactor: true }` si le compte est
+   * protégé — l'appelant affiche alors l'étape de vérification (voir
+   * verifyTwoFactor / verifyWebauthnLogin). Pas de flux de configuration 2FA
+   * côté mobile : un compte dont la configuration est obligatoire est refusé
+   * avec un message renvoyant vers l'application web.
+   */
+  const handleLoginResponse = async (
+    response: unknown,
+    email: string,
+  ): Promise<{ requiresTwoFactor?: boolean }> => {
+    const data = response as {
+      accessToken?: string;
+      refreshToken?: string;
+      requiresTwoFactor?: boolean;
+      requiresTwoFactorSetup?: boolean;
+      preAuthToken?: string;
+      availableMethods?: string[];
+    };
+
+    if (data.requiresTwoFactorSetup) {
+      throw {
+        message:
+          "La double authentification est obligatoire sur ce compte. Configurez-la depuis l'application web GestSIS, puis reconnectez-vous ici.",
+      };
+    }
+
+    if (data.requiresTwoFactor) {
+      twoFactorChallenge.value = data.preAuthToken ?? null;
+      twoFactorAvailableMethods.value = data.availableMethods ?? ["totp"];
+      pendingEmail.value = email;
+      return { requiresTwoFactor: true };
+    }
+
+    cancelTwoFactorChallenge();
+    await finishAuthentication(data.accessToken as string, data.refreshToken as string, email);
+    return {};
+  };
+
+  /** Log in, voir handleLoginResponse(). */
+  const login = async (email: string, password: string) =>
+    handleLoginResponse(await AuthService.login({ email, password }), email);
+
+  /** Reconnexion (session expirée), même contrat que login(). */
+  const reconnect = async (email: string, password: string) => {
+    const loginEmail = state.data.email ?? email;
+    return handleLoginResponse(
+      await AuthService.login({ email: loginEmail, password }),
+      loginEmail,
+    );
+  };
+
+  /**
+   * Termine une vérification 2FA. Une erreur portant `restart: true` signifie
+   * que la vérification ne peut pas être retentée (preAuthToken expiré ou
+   * consommé) : l'appelant revient à la saisie du mot de passe.
+   */
+  const completeTwoFactor = async (
+    verify: (preAuthToken: string) => Promise<unknown>,
+  ) => {
+    const preAuthToken = twoFactorChallenge.value;
+    if (!preAuthToken) {
+      throw { message: "La vérification a expiré, veuillez vous reconnecter.", restart: true };
+    }
+
+    let tokens: { accessToken: string; refreshToken: string };
+    try {
+      tokens = (await verify(preAuthToken)) as typeof tokens;
+    } catch (error: unknown) {
+      // preAuthToken valable 5 minutes : au-delà, recommencer le login.
+      if ((error as { status?: number })?.status === 401) {
+        cancelTwoFactorChallenge();
+        throw { message: "La vérification a expiré, veuillez vous reconnecter.", restart: true };
+      }
+      throw error;
+    }
+
+    const email = pendingEmail.value;
+    cancelTwoFactorChallenge();
+    try {
+      await finishAuthentication(tokens.accessToken, tokens.refreshToken, email);
+    } catch (error: unknown) {
+      // Session ouverte côté serveur mais pas adoptée ici (ex. aucun SIS
+      // disponible sur mobile) : la révoquer plutôt que la laisser active.
+      if (state.data.refreshToken !== tokens.refreshToken) {
+        AuthService.logout(tokens.refreshToken).catch(() => {});
+      }
+      throw { ...(error as object), restart: true };
+    }
+  };
+
+  /** Termine le login/reconnect avec un code TOTP ou un code de secours. */
+  const verifyTwoFactor = (code: string) =>
+    completeTwoFactor((preAuthToken) => AuthService.verifyTwoFactor(preAuthToken, code));
+
+  /** Termine le login/reconnect via une clé de sécurité / biométrie. */
+  const verifyWebauthnLogin = () =>
+    completeTwoFactor(async (preAuthToken) => {
+      const options = await AuthService.getWebauthnLoginChallenge(preAuthToken);
+      let response;
+      try {
+        // La WebView n'expose pas WebAuthn : dans l'app Android, le plugin passe
+        // par Credential Manager ; dans un navigateur (`yarn dev`), par l'API web.
+        response = await Passkeys.getPasskey(options as GetPasskeyOptions);
+      } catch (err) {
+        throw { message: translateWebauthnError(err) };
+      }
+      return AuthService.verifyWebauthnLogin(preAuthToken, response);
+    });
 
   const loginExpired = async () => {
     state.data.statut = UserStatus.isExpired;
@@ -204,6 +298,11 @@ export default function useAuth() {
 
   /** Logout */
   const logout = () => {
+    // Révocation serveur du refresh token, best-effort : un échec (hors-ligne,
+    // token déjà expiré) ne doit pas empêcher le nettoyage local.
+    if (state.data.refreshToken) {
+      AuthService.logout(state.data.refreshToken).catch(() => {});
+    }
     store.reset();
     state.data = { ...emptyState };
     Api.clearTokens();
@@ -236,6 +335,11 @@ export default function useAuth() {
     isLoggedInExpired,
     login,
     reconnect,
+    verifyTwoFactor,
+    verifyWebauthnLogin,
+    cancelTwoFactorChallenge,
+    twoFactorChallenge,
+    twoFactorAvailableMethods,
     logout,
     loginExpired,
     selectSis,
