@@ -10,9 +10,4 @@ export interface PresenceExercice {
   sapeur_id: number | null;
   excuse_type_id: number | null;
   presenceStatut: number;
-  heures: {
-    id: number | null;
-    heure_exercice_type_id: number;
-    quantite: number;
-  }[];
 }

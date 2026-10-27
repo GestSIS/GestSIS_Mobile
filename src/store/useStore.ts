@@ -3,7 +3,6 @@ import useExcuseTypes from "./useExcuseTypes.ts";
 import useExerciceCategories from "./useExerciceCategories.ts";
 import useExexercices from "./useExercices.ts";
 import useGroupes from "./useGroupes.ts";
-import useHeureExerciceTypes from "./useHeureExerciceTypes.ts";
 import useInterventions from "./useInterventions.ts";
 import useLocalites from "./useLocalites.ts";
 import useLocalitesSis from "./useLocalitesSis.ts";
@@ -37,7 +36,6 @@ export default function useStore() {
     useUnitesType(),
     useExerciceCategories(),
     useExcuseTypes(),
-    useHeureExerciceTypes(),
     useMissionTypes(),
     useTelephones(),
     useStatsFederal(),

@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import type { PresenceExercice } from "../models/presence-exercice.ts";
-import type { HeureExerciceType } from "../models/heureexercicetype.ts";
 
 import useExerciceCategories from "../store/useExerciceCategories.ts";
 
 import {
   IonButtons,
   IonBadge,
-  IonInput,
   IonLabel,
   IonItem,
   IonContent,
@@ -46,8 +44,6 @@ import router from "../router/index.ts";
 import useExcuseTypes from "../store/useExcuseTypes.ts";
 import useSapeurs from "../store/useSapeurs.ts";
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
-import useHeureExerciceTypes from "../store/useHeureExerciceTypes.ts";
-import useUnitesType from "../store/useUnitesTypes.ts";
 import { useNotify } from "../tools/useToast.ts";
 
 const { formatDate } = useDateFormatter();
@@ -56,31 +52,16 @@ const exercicesStore = useExexercices();
 const categoriesStore = useExerciceCategories();
 const excuseTypesStore = useExcuseTypes();
 const sapeursStore = useSapeurs();
-const heuresStore = useHeureExerciceTypes();
-const unitesStore = useUnitesType();
 
 const exercices = exercicesStore.state;
 const categories = categoriesStore.state;
 const excusesTypes = excuseTypesStore.state;
 const sapeurs = sapeursStore.state;
-const heuresTypes = heuresStore.state;
-const unites = unitesStore.state;
 
 const indexedSapeurs = new Map<number, string>();
 sapeurs.value.forEach((e) => {
   indexedSapeurs.set(e.id, e.nom + " " + e.prenom);
 });
-
-const indexedUnites = new Map<number, string>();
-unites.value.forEach((e) => {
-  indexedUnites.set(e.id, e?.abreviation);
-});
-const enhancedHeuresTypes = computed(() =>
-  heuresTypes.value.map((e) => ({
-    ...e,
-    abreviation: indexedUnites.get(e.type_unite_id) ?? "",
-  })),
-);
 
 const formatCategorie = (categorieId: number | undefined) => {
   return categories.value.find((c) => c.id == categorieId)?.designation;
@@ -209,7 +190,6 @@ const addSapeur = async () => {
     excuse_type: "",
     absent: false,
     excuse: false,
-    heures: [],
   });
   exercicesStore.updatExercice(exercice.value);
 };
@@ -313,42 +293,6 @@ const selectOption = async (
   // Save changes
   persistSapeur(sapeur);
 };
-
-const heureInput = (
-  value: string | number | null | undefined,
-  sapeur: PresenceExercice,
-  heureType: HeureExerciceType,
-) => {
-  if (!exercice.value) return;
-  if (resetting.value) {
-    return;
-  }
-  const quantite = parseFloat(`${value ?? ""}`.replace(",", "."));
-  if (quantite) {
-    const heure = sapeur.heures.find(
-      (h) => h.heure_exercice_type_id == heureType.id,
-    );
-    sapeur.heures = [
-      ...sapeur.heures.filter((h) => h.heure_exercice_type_id != heureType.id),
-      // Conserver l'id existant : modifier une quantité = update côté API, pas
-      // suppression + recréation. `id` reste null pour une nouvelle heure.
-      {
-        ...heure,
-        quantite,
-        heure_exercice_type_id: heureType.id,
-        id: heure?.id ?? null,
-      },
-    ];
-  } else {
-    sapeur.heures = sapeur.heures.filter(
-      (h) => h.heure_exercice_type_id != heureType.id,
-    );
-  }
-  persistSapeur(sapeur);
-};
-
-const getQuantite = (sapeur: PresenceExercice, heureTypeId: number) =>
-  sapeur.heures.find((h) => h.heure_exercice_type_id == heureTypeId)?.quantite;
 
 // Reset les saisies effectuées
 const reset = () => {
@@ -484,27 +428,6 @@ const sync = async () => {
             </ion-segment-button>
           </ion-segment>
 
-          <div
-            v-if="enhancedHeuresTypes.length"
-            class="heures"
-          >
-            <ion-input
-              v-for="heure in enhancedHeuresTypes"
-              :key="heure.id"
-              type="number"
-              inputmode="decimal"
-              fill="outline"
-              label-placement="stacked"
-              :label="heure.designation"
-              :value="getQuantite(sapeur, heure.id)"
-              @ion-change="heureInput($event.detail.value, sapeur, heure)"
-            >
-              <ion-note slot="end">
-                {{ heure.abreviation }}
-              </ion-note>
-            </ion-input>
-          </div>
-
           <ion-note
             v-if="sapeur.convoque"
             class="convoque"
@@ -622,17 +545,6 @@ const sync = async () => {
 .entete ion-chip {
   margin: 0;
   flex-shrink: 0;
-}
-
-.heures {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.heures ion-input {
-  flex: 1;
-  min-width: 0;
 }
 
 .convoque {

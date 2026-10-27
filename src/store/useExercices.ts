@@ -11,28 +11,10 @@ const state: Ref<Exercice[]> = ref([]);
 const store = useBasicStore(state, ExerciceService.getExercices, "exercices");
 
 // Un sapeur est considéré "saisi" dès qu'une présence a été renseignée
-// (présent / absent / remplacé / excusé / heures). Sert à ne pas écraser une
+// (présent / absent / remplacé / excusé). Sert à ne pas écraser une
 // saisie locale lors de la résolution de conflits.
 const isPresenceSaisie = (s: PresenceExercice): boolean =>
-  Boolean(s.present || s.absent || s.remplace || s.excuse_type_id) ||
-  (s.heures?.length ?? 0) > 0;
-
-// Compare deux listes d'heures par type + quantité (quantité normalisée en
-// nombre car l'API peut la renvoyer en chaîne). true = elles diffèrent.
-const heuresDiffer = (
-  a: PresenceExercice["heures"] | undefined,
-  b: PresenceExercice["heures"] | undefined,
-): boolean => {
-  const listA = a ?? [];
-  const listB = b ?? [];
-  if (listA.length !== listB.length) return true;
-  const byType = new Map(
-    listA.map((h) => [h.heure_exercice_type_id, Number(h.quantite)]),
-  );
-  return listB.some(
-    (h) => byType.get(h.heure_exercice_type_id) !== Number(h.quantite),
-  );
-};
+  Boolean(s.present || s.absent || s.remplace || s.excuse_type_id);
 
 export default function useExercices() {
   const name = "Exercices";
@@ -147,8 +129,7 @@ export default function useExercices() {
               referenceSapeur?.absent != s.absent ||
               referenceSapeur?.excuse_type_id != s.excuse_type_id ||
               referenceSapeur?.remplace != s.remplace ||
-              referenceSapeur?.present != s.present ||
-              heuresDiffer(referenceSapeur?.heures, s.heures)
+              referenceSapeur?.present != s.present
             ) {
               return s;
             }
