@@ -111,26 +111,34 @@ export default function useStore() {
     return results;
   };
 
-  const syncModule = async (module: { sync: () => Promise<unknown> }) => {
-    const online = window.navigator.onLine;
-    if (online) {
-      const { isLoggedInExpired } = useAuth();
-
-      if (isLoggedInExpired()) {
-        showReconnectModal();
-        return;
-      }
-      try {
-        const res = await module.sync();
-        return res;
-      } catch {
-        if (isLoggedInExpired()) {
-          showReconnectModal();
-        }
-      }
-    } else {
-      const { error } = useNotify();
+  /**
+   * Synchronise un module. Renvoie true si la synchronisation a réussi : hors ligne, session
+   * expirée (la modale de reconnexion s'ouvre) ou erreur, l'appelant reste sur sa page.
+   */
+  const syncModule = async (module: { sync: () => Promise<unknown> }): Promise<boolean> => {
+    const { error } = useNotify();
+    if (!window.navigator.onLine) {
       error("Pas de connexion internet");
+      return false;
+    }
+
+    const { isLoggedInExpired } = useAuth();
+    if (isLoggedInExpired()) {
+      void showReconnectModal();
+      return false;
+    }
+
+    try {
+      await module.sync();
+      return true;
+    } catch {
+      // Un refresh token expiré peut apparaître pendant la synchronisation.
+      if (isLoggedInExpired()) {
+        void showReconnectModal();
+      } else {
+        error("La synchronisation a échoué, veuillez réessayer.");
+      }
+      return false;
     }
   };
 

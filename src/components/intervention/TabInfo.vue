@@ -89,8 +89,10 @@ const edit = async () => {
 };
 
 const sync = async () => {
-  // Sync les interventions
-  await syncModule(interventionStore);
+  // Sync les interventions ; en cas d'échec (hors ligne, reconnexion, erreur), on reste sur la page
+  if (!(await syncModule(interventionStore))) {
+    return;
+  }
   router.push({ name: "accueil" });
   const { success } = useNotify();
   success("Intervention synchronisée");

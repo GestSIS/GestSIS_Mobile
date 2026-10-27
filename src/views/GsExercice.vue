@@ -43,6 +43,7 @@ import useExexercices from "../store/useExercices.ts";
 import router from "../router/index.ts";
 import useExcuseTypes from "../store/useExcuseTypes.ts";
 import useSapeurs from "../store/useSapeurs.ts";
+import useStore from "../store/useStore.ts";
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
 import { useNotify } from "../tools/useToast.ts";
 
@@ -314,14 +315,15 @@ const confirmReset = async () => {
 
 const sync = async () => {
   if (!exercice.value) return;
-  const { success, error } = useNotify();
-  try {
-    await exercicesStore.sync();
-    router.push({ name: "accueil" });
-    success("Exercices synchronisés");
-  } catch {
-    error("Erreur lors des la synchronisation des exercices");
+  // Comme sur l'accueil : hors ligne, session expirée (modale de reconnexion) ou erreur,
+  // on reste sur la page
+  const { syncModule } = useStore();
+  if (!(await syncModule(exercicesStore))) {
+    return;
   }
+  router.push({ name: "accueil" });
+  const { success } = useNotify();
+  success("Exercices synchronisés");
 };
 </script>
 

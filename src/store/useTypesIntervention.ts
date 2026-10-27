@@ -7,7 +7,7 @@ const state: Ref<TypeIntervention[]> = ref([]);
 const store = useBasicStore(state, TypeInterventionService.getTypes, "types-interventions");
 
 export default function useTypesIntervention() {
-  const name = "TypeInterventions";
+  const name = "Type d'interventions";
 
   return {
     ...store,
