@@ -7,10 +7,7 @@ const themeStoreKey = "local-theme";
 const switchTheme = async (mode: string) => {
   activeTheme.value = mode;
   await persistentStore.set(themeStoreKey, mode);
-  document.documentElement.classList.toggle(
-    "ion-palette-dark",
-    mode === "dark",
-  );
+  document.documentElement.classList.toggle("ion-palette-dark", mode === "dark");
 };
 
 const activeTheme = ref("light");

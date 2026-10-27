@@ -46,9 +46,7 @@ const changeGroupeStatus = (groupeId: number) => {
       {{ (groupe.no ? groupe.no + " - " : "") + groupe.designation }}
       <ion-icon
         slot="end"
-        :icon="
-          groupesIntervention.has(groupe.id) ? checkmarkCircle : radioButtonOff
-        "
+        :icon="groupesIntervention.has(groupe.id) ? checkmarkCircle : radioButtonOff"
         aria-hidden="true"
       />
     </ion-item>

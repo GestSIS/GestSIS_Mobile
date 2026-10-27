@@ -51,8 +51,7 @@ interface Presences {
 }
 
 // Load needed data from active Intervention
-const { state, addSapeursArrival, addSapeursDeparture } =
-  useActiveIntervention();
+const { state, addSapeursArrival, addSapeursDeparture } = useActiveIntervention();
 const groupeModule = useGroupes();
 const sapeurModule = useSapeurs();
 
@@ -94,11 +93,7 @@ if (mode == "ARRIVEE") {
     exceptSapeursIds = new Set([
       ...exceptSapeursIds,
       ...state.value.sapeurs
-        .filter(
-          (s) =>
-            s.presences.filter((p) => p.date_fin == null || p.date_fin == "")
-              .length > 0,
-        )
+        .filter((s) => s.presences.filter((p) => p.date_fin == null || p.date_fin == "").length > 0)
         .map((s) => s.id),
     ]);
 
@@ -106,9 +101,7 @@ if (mode == "ARRIVEE") {
     let potentialsSapeursIds = new Set<number>();
     groupeModule.state.value
       .filter((g) => selectedGroupes.has(g.id))
-      .forEach((g) =>
-        g.sapeur_ids.forEach((s) => potentialsSapeursIds.add(s.sapeur_id)),
-      );
+      .forEach((g) => g.sapeur_ids.forEach((s) => potentialsSapeursIds.add(s.sapeur_id)));
     potentialsSapeursIds = new Set(
       [...potentialsSapeursIds].filter((s) => !exceptSapeursIds.has(s)),
     );
@@ -119,17 +112,11 @@ if (mode == "ARRIVEE") {
   }
 } else if (mode == "DEPART") {
   sapeurs = state.value.sapeurs
-    .filter(
-      (s) =>
-        s.presences.filter((p) => p.date_fin == null || p.date_fin == "")
-          .length > 0,
-    )
+    .filter((s) => s.presences.filter((p) => p.date_fin == null || p.date_fin == "").length > 0)
     .map((s) => ({ ...s, selected: true }));
 }
 
-sapeurs.sort((a, b) =>
-  (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom),
-);
+sapeurs.sort((a, b) => (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom));
 const presences: Presences = reactive({
   date: date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "",
   sapeurs,
@@ -198,11 +185,7 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime
-          v-model="presences.date"
-          :per-quarter="true"
-          :clearable="mode == 'DEPART'"
-        >
+        <base-datetime v-model="presences.date" :per-quarter="true" :clearable="mode == 'DEPART'">
           Heure
           {{ mode == "ARRIVEE" ? "d'arrivée" : "de départ" }}
         </base-datetime>

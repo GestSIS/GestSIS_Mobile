@@ -40,9 +40,7 @@ if (online) {
 const sortExercices = (exercices: Exercice[]): Exercice[] => {
   return exercices
     .slice(0)
-    .sort((a, b) =>
-      DateTime.fromSQL(a.date).diff(DateTime.fromSQL(b.date)).toMillis(),
-    );
+    .sort((a, b) => DateTime.fromSQL(a.date).diff(DateTime.fromSQL(b.date)).toMillis());
 };
 
 const exercices = computed(() => sortExercices(exercicesStore.state.value));
@@ -63,11 +61,9 @@ const openDetails = async (exercice: Exercice) => {
   });
 
   await loading.present();
-  router
-    .push({ name: "exercice", params: { uuid: exercice.localUuid } })
-    .then(() => {
-      loading.dismiss();
-    });
+  router.push({ name: "exercice", params: { uuid: exercice.localUuid } }).then(() => {
+    loading.dismiss();
+  });
 };
 </script>
 

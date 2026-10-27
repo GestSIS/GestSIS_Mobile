@@ -8,8 +8,8 @@ export interface Materiel {
   materiel_type_id: string;
   materiel_id: number;
   materiel: {
-    id: number,
-    uuid: string|undefined,
-    numero: string|undefined,
+    id: number;
+    uuid: string | undefined;
+    numero: string | undefined;
   };
 }

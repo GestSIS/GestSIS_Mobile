@@ -6,11 +6,7 @@ import useBasicStore, { StoreState } from "./useBasicStore.ts";
 import { DateTime } from "luxon";
 
 const state: Ref<Intervention[]> = ref([]);
-const store = useBasicStore(
-  state,
-  InterventionService.getInterventions,
-  "interventions",
-);
+const store = useBasicStore(state, InterventionService.getInterventions, "interventions");
 
 export default () => {
   const name = "Interventions";
@@ -23,27 +19,19 @@ export default () => {
       await store.ready;
 
       // Export validated interventions
-      const interventions: Intervention[] = state.value.filter(
-        (e) => e.localStatus == "validated",
-      );
-      const exportedUuids = new Set(
-        await InterventionService.exportInterventions(interventions),
-      );
+      const interventions: Intervention[] = state.value.filter((e) => e.localStatus == "validated");
+      const exportedUuids = new Set(await InterventionService.exportInterventions(interventions));
 
       // Remove ONLY the interventions that were actually exported. Those that
       // failed stay queued for the next sync (no data loss); those that
       // succeeded are dropped so they are not re-sent and duplicated.
-      state.value = state.value.filter(
-        (i) => !exportedUuids.has(i.localUuid ?? ""),
-      );
+      state.value = state.value.filter((i) => !exportedUuids.has(i.localUuid ?? ""));
 
       store.lastSync.value = DateTime.now().toSQL() ?? "";
       await store.persist();
 
       const allExported = exportedUuids.size >= interventions.length;
-      store.syncStatus.value = allExported
-        ? StoreState.Synced
-        : StoreState.NeedSync;
+      store.syncStatus.value = allExported ? StoreState.Synced : StoreState.NeedSync;
       return allExported;
     } catch (e) {
       // Never leave the store stuck on "Syncing" when the export throws.
@@ -61,8 +49,7 @@ export default () => {
     const intervention = new Intervention();
     intervention.localUuid = uuidv4();
     intervention.localStatus = "in_progress";
-    intervention.date_debut =
-      date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
+    intervention.date_debut = date.toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
     intervention.lieu = lieu;
     intervention.objet = objet;
 
@@ -84,9 +71,7 @@ export default () => {
     // undefined localUuid would replace every intervention lacking one
     // (e.g. all interventions loaded from the API).
     const matches = (i: Intervention) =>
-      intervention.localUuid
-        ? i.localUuid == intervention.localUuid
-        : i.id == intervention.id;
+      intervention.localUuid ? i.localUuid == intervention.localUuid : i.id == intervention.id;
 
     if (state.value.some(matches)) {
       state.value = state.value.map((i) => (matches(i) ? intervention : i));

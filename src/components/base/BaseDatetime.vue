@@ -81,9 +81,7 @@ const dateTimeId = uuidv4();
       <slot>{{ props.label }}</slot>
     </ion-label>
     <ion-text id="open-modal" slot="end">
-      {{
-        props.modelValue ? formatDate(props.modelValue, "dd.LL.yy HH:mm") : ""
-      }}
+      {{ props.modelValue ? formatDate(props.modelValue, "dd.LL.yy HH:mm") : "" }}
     </ion-text>
     <ion-button slot="end" fill="clear">
       <ion-icon slot="end" :icon="calendar" :aria-label="props.label" />
@@ -100,9 +98,7 @@ const dateTimeId = uuidv4();
         @ion-change="(ev: any) => updateValue(ev.detail.value)"
       >
         <ion-buttons slot="buttons">
-          <ion-button v-if="props.clearable" @click.prevent="clear()">
-            Vide
-          </ion-button>
+          <ion-button v-if="props.clearable" @click.prevent="clear()"> Vide </ion-button>
           <ion-button @click.prevent="confirm()"> Valider </ion-button>
           <ion-button @click.prevent="reset()"> Reset </ion-button>
         </ion-buttons>

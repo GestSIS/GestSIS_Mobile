@@ -105,15 +105,13 @@ const validate = async () => {
   if (!intervention.value.objet) errors.value.objet = "A saisir";
   if (!intervention.value.lieu) errors.value.lieu = "A saisir";
   if (!intervention.value.sapeur_id) errors.value.sapeur_id = "A saisir";
-  if (!intervention.value.stat_federal_id)
-    errors.value.stat_federal_id = "A saisir";
+  if (!intervention.value.stat_federal_id) errors.value.stat_federal_id = "A saisir";
   if (
     intervention.value.stat_nb < 0 ||
     (intervention.value.stat_nb != 0 && !intervention.value.stat_nb)
   )
     errors.value.stat_nb = "A saisir";
-  if (!intervention.value.type_intervention_id)
-    errors.value.type_intervention_id = "A saisir";
+  if (!intervention.value.type_intervention_id) errors.value.type_intervention_id = "A saisir";
 
   const notify = useNotify();
   if (Object.keys(errors.value).length > 0) {
@@ -132,9 +130,7 @@ const validate = async () => {
 
   // Check toutes les présences sont complètes
   if (
-    !intervention.value.sapeurs.every((s) =>
-      s.presences.every((p) => p.date_debut && p.date_fin),
-    )
+    !intervention.value.sapeurs.every((s) => s.presences.every((p) => p.date_debut && p.date_fin))
   ) {
     notify.error(
       "Certaines présences sont incomplètes ! Veillez à compléter toutes les présences afin de pouvoir valider cette intervention.",
@@ -151,9 +147,7 @@ const validate = async () => {
         ?.filter((id) => id !== null),
     ),
   ];
-  const sapeursIdPotentiel = new Set<number>(
-    intervention.value.sapeurs.map((sap) => sap.id),
-  );
+  const sapeursIdPotentiel = new Set<number>(intervention.value.sapeurs.map((sap) => sap.id));
   const sapeursExistant = new Set<number>(sapeurs.value.map((sap) => sap.id));
   const sapeursSansPresenceExercices = sapeursSaisi.filter(
     (s) => s && !sapeursIdPotentiel.has(s) && sapeursExistant.has(s),
@@ -255,9 +249,7 @@ const roundDateToQuarter = (date: string) => {
   return datetime?.toSQL()?.slice(0, 16) || "";
 };
 
-const startDate = ref<string>(
-  roundDateToQuarter(intervention.value.date_debut ?? ""),
-);
+const startDate = ref<string>(roundDateToQuarter(intervention.value.date_debut ?? ""));
 const dateDebutChanged = (date: string) => {
   // Change date de début pour sapeurs saisies
   const roundedDate = roundDateToQuarter(date);
@@ -265,10 +257,7 @@ const dateDebutChanged = (date: string) => {
     ...s,
     presences: s.presences.map((p) => ({
       ...p,
-      date_debut:
-        p.date_debut.slice(0, 16) === startDate.value
-          ? roundedDate
-          : p.date_debut,
+      date_debut: p.date_debut.slice(0, 16) === startDate.value ? roundedDate : p.date_debut,
     })),
   }));
 
@@ -276,15 +265,11 @@ const dateDebutChanged = (date: string) => {
 };
 
 const navigate = () => {
-  if (
-    !intervention.value.wgs84 ||
-    intervention.value.wgs84.split(",").length !== 2
-  ) {
+  if (!intervention.value.wgs84 || intervention.value.wgs84.split(",").length !== 2) {
     window.open("https://www.google.ch/maps");
   } else {
     window.open(
-      "https://www.google.ch/maps/place/" +
-        intervention.value.wgs84.split(",").reverse().join(","),
+      "https://www.google.ch/maps/place/" + intervention.value.wgs84.split(",").reverse().join(","),
     );
   }
 };
@@ -298,29 +283,17 @@ const navigate = () => {
       </ion-col>
       <ion-col v-if="intervention.localStatus == 'validated'" size="4">
         <ion-button expand="block" @click="edit()">
-          <ion-icon
-            slot="start"
-            :icon="createOutline"
-            aria-hidden="true"
-          />Modifier
+          <ion-icon slot="start" :icon="createOutline" aria-hidden="true" />Modifier
         </ion-button>
       </ion-col>
       <ion-col v-if="intervention.localStatus == 'validated'" size="4">
         <ion-button expand="block" @click="sync()">
-          <ion-icon
-            slot="start"
-            :icon="syncIcon"
-            aria-hidden="true"
-          />Synchroniser
+          <ion-icon slot="start" :icon="syncIcon" aria-hidden="true" />Synchroniser
         </ion-button>
       </ion-col>
       <ion-col v-if="intervention.localStatus != 'validated'" size="4">
         <ion-button expand="block" @click="validate()">
-          <ion-icon
-            slot="start"
-            :icon="checkmarkCircle"
-            aria-hidden="true"
-          />Valider
+          <ion-icon slot="start" :icon="checkmarkCircle" aria-hidden="true" />Valider
         </ion-button>
       </ion-col>
     </ion-row>
@@ -446,11 +419,7 @@ const navigate = () => {
             cancel-text="Annuler"
             :disabled="intervention.localStatus == 'validated'"
           >
-            <ion-select-option
-              v-for="t in typeInterventions"
-              :key="t.id"
-              :value="t.id"
-            >
+            <ion-select-option v-for="t in typeInterventions" :key="t.id" :value="t.id">
               {{ t.designation }}
             </ion-select-option>
           </ion-select>
@@ -491,11 +460,7 @@ const navigate = () => {
             cancel-text="Annuler"
             :disabled="intervention.localStatus == 'validated'"
           >
-            <ion-select-option
-              v-for="stat in statsFederales"
-              :key="stat.id"
-              :value="stat.id"
-            >
+            <ion-select-option v-for="stat in statsFederales" :key="stat.id" :value="stat.id">
               {{ stat.designation }}
             </ion-select-option>
           </ion-select>
@@ -512,9 +477,7 @@ const navigate = () => {
             :min="0"
             :value="intervention.stat_nb"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="
-              (ev: any) => (intervention.stat_nb = parseInt(ev.target.value))
-            "
+            @ion-change="(ev: any) => (intervention.stat_nb = parseInt(ev.target.value))"
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>
@@ -527,10 +490,7 @@ const navigate = () => {
             :min="0"
             :value="intervention.sauve_personne"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="
-              (ev: any) =>
-                (intervention.sauve_personne = parseInt(ev.target.value))
-            "
+            @ion-change="(ev: any) => (intervention.sauve_personne = parseInt(ev.target.value))"
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>
@@ -543,10 +503,7 @@ const navigate = () => {
             :min="0"
             :value="intervention.sauve_animaux"
             :disabled="intervention.localStatus == 'validated'"
-            @ion-change="
-              (ev: any) =>
-                (intervention.sauve_animaux = parseInt(ev.target.value))
-            "
+            @ion-change="(ev: any) => (intervention.sauve_animaux = parseInt(ev.target.value))"
             @keypress="ensureNumericKey($event)"
           />
         </ion-item>
@@ -605,9 +562,7 @@ const navigate = () => {
               label="NPA / Localité"
               type="text"
               readonly
-              :value="
-                getLocaliteFormattedValue(intervention.proprietaire.localite_id)
-              "
+              :value="getLocaliteFormattedValue(intervention.proprietaire.localite_id)"
               :disabled="intervention.localStatus == 'validated'"
               @click="selectLocaliteProprietaire()"
             />
@@ -642,9 +597,7 @@ const navigate = () => {
             :rows="8"
             :disabled="intervention.localStatus == 'validated'"
           />
-          <ion-button expand="full" @click="supprimerRapport">
-            Supprimer ce rapport
-          </ion-button>
+          <ion-button expand="full" @click="supprimerRapport"> Supprimer ce rapport </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

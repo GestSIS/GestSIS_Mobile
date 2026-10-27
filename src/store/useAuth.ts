@@ -106,22 +106,15 @@ export default function useAuth() {
     return true;
   };
 
-  const setTokens = async (
-    accessToken: string,
-    refreshToken: string,
-    email: string | null,
-  ) => {
-    const { permissions, pseudo, mobiles } =
-      jwtDecode<JwtAuthPayload>(accessToken).data;
+  const setTokens = async (accessToken: string, refreshToken: string, email: string | null) => {
+    const { permissions, pseudo, mobiles } = jwtDecode<JwtAuthPayload>(accessToken).data;
     const transformedMobiles = mobiles.map((sis) => String(sis));
 
     const availableSis = Object.keys(permissions)
       .map((sis) => sis.toString())
       .filter((sis) => transformedMobiles.includes(sis));
     const filteredPermissions = Object.fromEntries(
-      Object.entries(permissions).filter(([sis]) =>
-        transformedMobiles.includes(sis),
-      ),
+      Object.entries(permissions).filter(([sis]) => transformedMobiles.includes(sis)),
     );
 
     // Throw exception if no permissions and manage the result
@@ -231,9 +224,7 @@ export default function useAuth() {
    * que la vérification ne peut pas être retentée (preAuthToken expiré ou
    * consommé) : l'appelant revient à la saisie du mot de passe.
    */
-  const completeTwoFactor = async (
-    verify: (preAuthToken: string) => Promise<unknown>,
-  ) => {
+  const completeTwoFactor = async (verify: (preAuthToken: string) => Promise<unknown>) => {
     const preAuthToken = twoFactorChallenge.value;
     if (!preAuthToken) {
       throw { message: "La vérification a expiré, veuillez vous reconnecter.", restart: true };
@@ -313,10 +304,7 @@ export default function useAuth() {
   };
 
   const isLoggedIn = () => {
-    return (
-      state.data.statut === UserStatus.connected ||
-      state.data.statut === UserStatus.isExpired
-    );
+    return state.data.statut === UserStatus.connected || state.data.statut === UserStatus.isExpired;
   };
 
   const isLoggedInExpired = () => {
@@ -324,9 +312,7 @@ export default function useAuth() {
   };
 
   const hasPermission = (permission: string) => {
-    return (
-      activePermissions.value?.includes(permission)
-    );
+    return activePermissions.value?.includes(permission);
   };
 
   return {

@@ -34,9 +34,7 @@ const route = useRoute();
 const missionUuid = route.params.uuid;
 const interventionStore = useActiveIntervention();
 
-const foundMission = interventionStore.state.value.missions.find(
-  (m) => m.localUuid == missionUuid,
-);
+const foundMission = interventionStore.state.value.missions.find((m) => m.localUuid == missionUuid);
 // Start from a full Mission (with all model defaults), overlaying the existing
 // mission's values when editing. We must NOT do `Object.assign({}, found)`:
 // when `found` is undefined (new mission) it returns a truthy `{}`, so the
@@ -45,18 +43,13 @@ const mission: Ref<Mission> = ref(
   foundMission ? Object.assign(new Mission(), foundMission) : new Mission(),
 );
 if (!mission.value.date_debut) {
-  mission.value.date_debut =
-    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
+  mission.value.date_debut = DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
 }
 
 const title = foundMission ? "Détail mission" : "Nouvelle mission";
 
 const isInputComplete = () => {
-  return (
-    mission.value.date_debut &&
-    mission.value.titre &&
-    mission.value.sapeur?.designation
-  );
+  return mission.value.date_debut && mission.value.titre && mission.value.sapeur?.designation;
 };
 
 const selectSapeur = async () => {
@@ -64,9 +57,7 @@ const selectSapeur = async () => {
     component: ModalSapeurSelectVue,
     componentProps: {
       exceptSapeurIds: [],
-      preSelectionSapeurIds: interventionStore.state.value.sapeurs.map(
-        (s) => s.id,
-      ),
+      preSelectionSapeurIds: interventionStore.state.value.sapeurs.map((s) => s.id),
       autre: true,
     },
   });
@@ -137,9 +128,7 @@ const save = () => {
 
     <ion-content class="ion-padding">
       <ion-list>
-        <base-datetime v-model="mission.date_debut" :max="mission.date_fin">
-          Début
-        </base-datetime>
+        <base-datetime v-model="mission.date_debut" :max="mission.date_fin"> Début </base-datetime>
 
         <ion-item>
           <ion-input
@@ -172,11 +161,7 @@ const save = () => {
           />
         </ion-item>
 
-        <base-datetime
-          v-model="mission.date_fin"
-          :min="mission.date_debut"
-          :clearable="true"
-        >
+        <base-datetime v-model="mission.date_fin" :min="mission.date_debut" :clearable="true">
           Quittancer
         </base-datetime>
       </ion-list>

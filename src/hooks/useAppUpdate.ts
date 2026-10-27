@@ -45,8 +45,7 @@ const checkForUpdate = async () => {
   }
   latestVersion.value = latest;
 
-  updateAvailable.value =
-    !!latest && isNewerVersion(currentVersion.value as string, latest);
+  updateAvailable.value = !!latest && isNewerVersion(currentVersion.value as string, latest);
 };
 
 export function useAppUpdate() {

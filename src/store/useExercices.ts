@@ -38,9 +38,7 @@ export default function useExercices() {
 
     // Exercice validé directly exported for sync
     // We assume that they are sure of their modifications
-    const exercices: Exercice[] = state.value.filter(
-      (e) => e.localStatus == "validated",
-    );
+    const exercices: Exercice[] = state.value.filter((e) => e.localStatus == "validated");
     await Promise.all(
       exercices.map(async (e) => {
         await ExerciceService.updateExercicePresences(e);
@@ -49,18 +47,14 @@ export default function useExercices() {
     );
 
     // Resolve conflicts to avoid overriding in progress exercices
-    const newExercices = (await ExerciceService.getExercices()).map(
-      (e): Exercice => ({
-        ...e,
-        initialSapeurs: e.sapeurs,
-        localUuid: uuidv4(),
-        localStatus: "empty",
-      }),
-    );
+    const newExercices = (await ExerciceService.getExercices()).map((e): Exercice => ({
+      ...e,
+      initialSapeurs: e.sapeurs,
+      localUuid: uuidv4(),
+      localStatus: "empty",
+    }));
 
-    const inProgressExercices = state.value.filter(
-      (e) => e.localStatus == "in_progress",
-    );
+    const inProgressExercices = state.value.filter((e) => e.localStatus == "in_progress");
     const indexedInProgressExercices = inProgressExercices.reduce((acc, e) => {
       acc.set(e.id, e);
       return acc;
@@ -87,9 +81,7 @@ export default function useExercices() {
         const inProgressReferenceSapeursIds = new Set(
           inProgressExercice?.initialSapeurs.map((s) => s.sapeur_id),
         );
-        const inProgressSapeursIds = new Set(
-          inProgressExercice?.sapeurs.map((s) => s.sapeur_id),
-        );
+        const inProgressSapeursIds = new Set(inProgressExercice?.sapeurs.map((s) => s.sapeur_id));
         const remoteSapeursIds = new Set(e?.sapeurs.map((s) => s.sapeur_id));
 
         const addedSapeurs = e.sapeurs.filter(
@@ -100,9 +92,7 @@ export default function useExercices() {
           if (!inProgressSapeursIds.has(s.sapeur_id)) {
             return s;
           }
-          const sapeur = inProgressExercice?.sapeurs.find(
-            (e) => e.sapeur_id == s.sapeur_id,
-          );
+          const sapeur = inProgressExercice?.sapeurs.find((e) => e.sapeur_id == s.sapeur_id);
           if (sapeur && isPresenceSaisie(sapeur)) {
             // Sapeur local modifié (présent inclus)
             return sapeur;
@@ -115,8 +105,7 @@ export default function useExercices() {
         // Sapeurs modifiés
         const updatedSapeurs = inProgressExercice?.sapeurs.filter(
           (e) =>
-            inProgressReferenceSapeursIds.has(e.sapeur_id) &&
-            remoteSapeursIds.has(e.sapeur_id),
+            inProgressReferenceSapeursIds.has(e.sapeur_id) && remoteSapeursIds.has(e.sapeur_id),
         );
         const updatedSapeursToKeep =
           updatedSapeurs?.map((s) => {
@@ -135,8 +124,7 @@ export default function useExercices() {
             }
 
             // Si non, alors on garde la version locale
-            const remoteSapeur =
-              e.sapeurs?.find((e) => e.sapeur_id == s.sapeur_id) || null;
+            const remoteSapeur = e.sapeurs?.find((e) => e.sapeur_id == s.sapeur_id) || null;
             return remoteSapeur ?? s;
           }) || [];
 
@@ -145,16 +133,11 @@ export default function useExercices() {
         const removedSapeurs = inProgressExercice?.sapeurs.filter(
           (s) => !remoteSapeursIds.has(s.sapeur_id),
         );
-        const removedSapeursToKeep =
-          removedSapeurs?.filter((s) => isPresenceSaisie(s)) || [];
+        const removedSapeursToKeep = removedSapeurs?.filter((s) => isPresenceSaisie(s)) || [];
 
         e.initialSapeurs = e.sapeurs;
         e.localStatus = inProgressExercice?.localStatus ?? "empty";
-        e.sapeurs = [
-          ...addedSapeursToKeep,
-          ...updatedSapeursToKeep,
-          ...removedSapeursToKeep,
-        ];
+        e.sapeurs = [...addedSapeursToKeep, ...updatedSapeursToKeep, ...removedSapeursToKeep];
         return e;
         // Garder la saisie actuelle si saisie sinon récupérer les nouvelles modifs
       });
@@ -169,12 +152,9 @@ export default function useExercices() {
 
   const updatExercice = (exercice: Exercice, reset = false) => {
     if (!reset) {
-      exercice.localStatus =
-        exercice.localStatus == "validated" ? "validated" : "in_progress";
+      exercice.localStatus = exercice.localStatus == "validated" ? "validated" : "in_progress";
     }
-    state.value = state.value.map((e) =>
-      e.localUuid == exercice.localUuid ? exercice : e,
-    );
+    state.value = state.value.map((e) => (e.localUuid == exercice.localUuid ? exercice : e));
     store.persist();
   };
 

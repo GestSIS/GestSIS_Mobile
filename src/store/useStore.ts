@@ -93,9 +93,7 @@ export default function useStore() {
     // allSettled (not all): one failing module must not abort the others,
     // which would otherwise hide successful syncs and give no feedback.
     const results = await Promise.allSettled(
-      modules
-        .filter((m) => !m.permission || hasPermission(m.permission))
-        .map(({ sync }) => sync()),
+      modules.filter((m) => !m.permission || hasPermission(m.permission)).map(({ sync }) => sync()),
     );
 
     // A refresh-token expiry can surface mid-sync.
@@ -107,9 +105,7 @@ export default function useStore() {
     const failures = results.filter((r) => r.status === "rejected").length;
     if (failures > 0) {
       const { error } = useNotify();
-      error(
-        `La synchronisation de ${failures} élément(s) a échoué, veuillez réessayer.`,
-      );
+      error(`La synchronisation de ${failures} élément(s) a échoué, veuillez réessayer.`);
     }
 
     return results;

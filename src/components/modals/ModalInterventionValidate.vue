@@ -23,11 +23,10 @@ const notify = useNotify();
 
 const props = defineProps<{ date: string }>();
 const activeDate = ref(
-  (
-    props.date ||
-    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ||
-    ""
-  ).replace(" ", "T"),
+  (props.date || DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) || "").replace(
+    " ",
+    "T",
+  ),
 );
 
 const save = async () => {
@@ -58,9 +57,8 @@ const dismiss = () => {
   <ion-content class="ion-padding">
     <ion-item>
       <ion-label class="ion-padding ion-text-wrap">
-        ⚠️ Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Les
-        rapports d'interventions seront supprimés de la tablette une fois
-        synchronisés.
+        ⚠️ Êtes-vous sûr de vouloir valider ce rapport d'intervention ? Les rapports d'interventions
+        seront supprimés de la tablette une fois synchronisés.
       </ion-label>
     </ion-item>
 
@@ -71,14 +69,10 @@ const dismiss = () => {
 
     <ion-row>
       <ion-col>
-        <ion-button expand="full" class="ion-margin-top" @click="dismiss">
-          Annuler
-        </ion-button>
+        <ion-button expand="full" class="ion-margin-top" @click="dismiss"> Annuler </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="full" class="ion-margin-top" @click="save">
-          Valider
-        </ion-button>
+        <ion-button expand="full" class="ion-margin-top" @click="save"> Valider </ion-button>
       </ion-col>
     </ion-row>
     <ion-modal :keep-contents-mounted="true">

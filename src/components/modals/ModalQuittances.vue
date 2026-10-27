@@ -35,8 +35,7 @@ const groupes = props.alarme.groups
         Quittances
         <ion-badge>
           {{
-            props.alarme.firefighters.filter((f) => f.sis === activeSisKey)
-              .length +
+            props.alarme.firefighters.filter((f) => f.sis === activeSisKey).length +
             props.alarme.unresolved.filter((f) => f.sis == activeSisKey).length
           }}
         </ion-badge>
@@ -51,31 +50,23 @@ const groupes = props.alarme.groups
     <ion-list>
       <ion-item-group v-for="g in groupes" :key="g.sis + '-' + g.number">
         <ion-item-divider>
-          <ion-label>
-            {{ g.sis.toUpperCase() }} : {{ g.number }} -
-            {{ g.name }} </ion-label
+          <ion-label> {{ g.sis.toUpperCase() }} : {{ g.number }} - {{ g.name }} </ion-label
           ><ion-badge slot="end">
             {{
-              props.alarme.firefighters.filter((f) => f.group_name == g.name)
-                .length +
-              props.alarme.unresolved.filter((f) => f.group_name == g.name)
-                .length
+              props.alarme.firefighters.filter((f) => f.group_name == g.name).length +
+              props.alarme.unresolved.filter((f) => f.group_name == g.name).length
             }}
             quittances
           </ion-badge>
         </ion-item-divider>
         <ion-item
-          v-for="s in props.alarme.firefighters.filter(
-            (f) => f.group_name == g.name,
-          )"
+          v-for="s in props.alarme.firefighters.filter((f) => f.group_name == g.name)"
           :key="s.id"
         >
           {{ s.fullname }}
         </ion-item>
         <ion-item
-          v-for="s in props.alarme.unresolved.filter(
-            (f) => f.group_name == g.name,
-          )"
+          v-for="s in props.alarme.unresolved.filter((f) => f.group_name == g.name)"
           :key="s.fullname"
         >
           {{ s.fullname }}

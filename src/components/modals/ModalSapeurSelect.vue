@@ -48,15 +48,10 @@ const filteredSapeur = computed(() => {
             .toLowerCase()
             .normalize("NFD")
             .replace(/\p{Diacritic}/gu, "")
-            .indexOf(
-              query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
-            ) > -1
-        : (preSelectionIds.size && preSelectionIds.has(s.id)) ||
-          !preSelectionIds.size,
+            .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1
+        : (preSelectionIds.size && preSelectionIds.has(s.id)) || !preSelectionIds.size,
     )
-    .sort((a, b) =>
-      (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom),
-    );
+    .sort((a, b) => (a.nom + " " + a.prenom).localeCompare(b.nom + " " + b.prenom));
 });
 
 const search = (event: SearchbarCustomEvent) => {
@@ -131,11 +126,7 @@ const autreSapeur = async () => {
   </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-searchbar
-      ref="searchbar"
-      placeholder="Rechercher..."
-      @ion-input="search($event)"
-    />
+    <ion-searchbar ref="searchbar" placeholder="Rechercher..." @ion-input="search($event)" />
 
     <ion-list>
       <ion-item
@@ -154,11 +145,7 @@ const autreSapeur = async () => {
         <ion-label v-else> {{ sapeur.nom }} {{ sapeur.prenom }} </ion-label>
       </ion-item>
     </ion-list>
-    <ion-button
-      v-if="autre && !multiSelect"
-      expand="block"
-      @click="autreSapeur"
-    >
+    <ion-button v-if="autre && !multiSelect" expand="block" @click="autreSapeur">
       Autre
     </ion-button>
   </ion-content>

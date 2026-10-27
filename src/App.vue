@@ -7,11 +7,7 @@
             <ion-list-header>Menu</ion-list-header>
             <!-- <ion-note>hi@ionicframework.com</ion-note> -->
 
-            <ion-menu-toggle
-              v-for="(p, i) in appPages"
-              :key="i"
-              :auto-hide="false"
-            >
+            <ion-menu-toggle v-for="(p, i) in appPages" :key="i" :auto-hide="false">
               <ion-item
                 router-direction="root"
                 :router-link="p.url"
@@ -99,8 +95,7 @@ const appPages = computed(() =>
     },
   ].filter(
     (p) =>
-      ((p.connectedOnly && isLoggedIn()) ||
-        (p.disconnectedOnly && !isLoggedIn())) &&
+      ((p.connectedOnly && isLoggedIn()) || (p.disconnectedOnly && !isLoggedIn())) &&
       (!p.permission || hasPermission(p.permission)),
   ),
 );

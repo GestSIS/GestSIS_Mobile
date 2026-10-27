@@ -4,11 +4,7 @@ import type { ExerciceCategorie } from "../models/exercicecategorie.ts";
 import ExerciceCategorieService from "../services/ExerciceCategorieService.ts";
 
 const state: Ref<ExerciceCategorie[]> = ref([]);
-const store = useBasicStore(
-  state,
-  ExerciceCategorieService.getCategories,
-  "exerciceCategorie",
-);
+const store = useBasicStore(state, ExerciceCategorieService.getCategories, "exerciceCategorie");
 
 export default function useExerciceCategories() {
   const name = "Catégories d'exercices";

@@ -39,9 +39,7 @@ export default function useActiveIntervention() {
   };
 
   const removeMission = (mission: Mission) => {
-    state.value.missions = state.value.missions.filter(
-      (m) => m.localUuid != mission.localUuid,
-    );
+    state.value.missions = state.value.missions.filter((m) => m.localUuid != mission.localUuid);
     persist();
   };
 
@@ -74,9 +72,7 @@ export default function useActiveIntervention() {
   };
 
   const removeAppel = (appel: Appel) => {
-    state.value.appels = state.value.appels.filter(
-      (a) => a.localUuid != appel.localUuid,
-    );
+    state.value.appels = state.value.appels.filter((a) => a.localUuid != appel.localUuid);
     persist();
   };
 
@@ -94,9 +90,7 @@ export default function useActiveIntervention() {
   };
 
   const removeJalon = (jalon: Jalon) => {
-    state.value.jalons = state.value.jalons.filter(
-      (j) => j.localUuid != jalon.localUuid,
-    );
+    state.value.jalons = state.value.jalons.filter((j) => j.localUuid != jalon.localUuid);
     persist();
   };
 
@@ -174,9 +168,7 @@ export default function useActiveIntervention() {
           }));
           sapeursMapping.set(s.id, presence);
         } else {
-          console.error(
-            "Hum seems like we are trying to remove a sapeur which is not there",
-          );
+          console.error("Hum seems like we are trying to remove a sapeur which is not there");
         }
       });
 

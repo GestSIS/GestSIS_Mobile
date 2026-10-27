@@ -29,9 +29,8 @@
         {{ jalon.titre }}
         <br />
         <span class="details"
-          >{{ formatDate(jalon.date_time, "HH:mm 'le' dd.MM.yyyy") }}<template
-            v-if="jalon.sapeur?.designation"
-          >
+          >{{ formatDate(jalon.date_time, "HH:mm 'le' dd.MM.yyyy")
+          }}<template v-if="jalon.sapeur?.designation">
             - {{ jalon.sapeur.designation }}</template
           ></span
         >
@@ -77,9 +76,7 @@ const { state, removeJalon } = useActiveIntervention();
 const intervention = state;
 
 const sortedJalons = computed(() =>
-  intervention.value.jalons
-    .slice()
-    .sort((a, b) => b.date_time.localeCompare(a.date_time)),
+  intervention.value.jalons.slice().sort((a, b) => b.date_time.localeCompare(a.date_time)),
 );
 
 const addJalonEntry = async () => {
@@ -104,8 +101,7 @@ const editJalonEntry = async (jalon: Jalon) => {
 const removeJalonEntry = async (jalon: Jalon) => {
   const confirm = await alertController.create({
     header: "Supprimer jalon",
-    message:
-      "Êtes-vous sûr de vouloir supprimer le jalon [" + jalon.titre + "] ?",
+    message: "Êtes-vous sûr de vouloir supprimer le jalon [" + jalon.titre + "] ?",
     buttons: [
       {
         text: "Non",

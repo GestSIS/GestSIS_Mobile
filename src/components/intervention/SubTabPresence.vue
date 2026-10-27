@@ -35,9 +35,7 @@ const moduleSapeur = useSapeurs();
 const sapeursAvecPresenceExercicesIncompletes = computed(() =>
   intervention.value.sapeurs.filter(
     (sap) =>
-      sap.presences.filter(
-        (pres) => pres.date_fin == null || pres.date_fin == "",
-      ).length > 0,
+      sap.presences.filter((pres) => pres.date_fin == null || pres.date_fin == "").length > 0,
   ),
 );
 
@@ -46,12 +44,8 @@ const sapeursManquants = computed(() => {
     ...intervention.value.missions.map((mission) => mission.sapeur.id),
     intervention.value.sapeur_id,
   ]);
-  const sapeursIdPotentiel = new Set(
-    intervention.value.sapeurs.map((sap) => sap.id),
-  );
-  const indexedSapeurs = new Map(
-    moduleSapeur.state.value.map((s) => [s.id, s]),
-  );
+  const sapeursIdPotentiel = new Set(intervention.value.sapeurs.map((sap) => sap.id));
+  const indexedSapeurs = new Map(moduleSapeur.state.value.map((s) => [s.id, s]));
   return [...sapeurIdsSaisi]
     .filter((id) => id && !sapeursIdPotentiel.has(id))
     .map((id) => indexedSapeurs.get(id ?? 0) ?? null)
@@ -69,10 +63,7 @@ const addMissingSapeur = (sapeurId: number) => {
 const addPresenceExercice = (mode: "ARRIVEE" | "DEPART") => {
   router.push({ name: "sapeurs", params: { mode } });
 };
-const editPresenceExercice = async (
-  sapeurIndex: number,
-  presenceIndex: number,
-) => {
+const editPresenceExercice = async (sapeurIndex: number, presenceIndex: number) => {
   const sapeur = intervention.value.sapeurs[sapeurIndex];
   if (!sapeur) {
     return;
@@ -173,12 +164,7 @@ const removePresenceExercice = async (sapeurIndex: number, presenceIndex: number
       :disabled="intervention.localStatus == 'validated'"
       @click="addMissingSapeur(sapeur.id ?? 0)"
     >
-      <ion-icon
-        slot="start"
-        color="warning"
-        :icon="warning"
-        aria-label="Attention"
-      />
+      <ion-icon slot="start" color="warning" :icon="warning" aria-label="Attention" />
       <ion-text color="warning">
         {{ sapeur.nom }} {{ sapeur.prenom }} - Présence manquante
       </ion-text>
@@ -187,9 +173,7 @@ const removePresenceExercice = async (sapeurIndex: number, presenceIndex: number
 
   <!-- Présences des sapeurs -->
   <ion-item-group v-for="(sapeur, i) in intervention.sapeurs" :key="i">
-    <ion-item-divider color="light">
-      {{ sapeur.nom }} {{ sapeur.prenom }}
-    </ion-item-divider>
+    <ion-item-divider color="light"> {{ sapeur.nom }} {{ sapeur.prenom }} </ion-item-divider>
     <ion-item
       v-for="(presence, j) in sapeur.presences"
       :key="j"

@@ -26,11 +26,7 @@ export default function useBasicStore<Type>(
     await persistentStore.set(
       persistKey,
       JSON.stringify(state.value, (_key, value) =>
-        value instanceof Set
-          ? [...value]
-          : value instanceof Map
-            ? { ...value }
-            : value,
+        value instanceof Set ? [...value] : value instanceof Map ? { ...value } : value,
       ),
     );
     await persistentStore.set(persistKey + lastSyncSuffixe, lastSync.value);
@@ -53,8 +49,7 @@ export default function useBasicStore<Type>(
       // Guard against missing / empty / corrupted cached values:
       // JSON.parse(null/undefined/"") would throw and wedge the store.
       state.value = data ? JSON.parse(data) : [];
-      lastSync.value =
-        (await persistentStore.get(persistKey + lastSyncSuffixe)) || "";
+      lastSync.value = (await persistentStore.get(persistKey + lastSyncSuffixe)) || "";
       syncStatus.value = StoreState.Synced;
     } catch {
       // Missing or corrupted local data: start empty and flag for resync.

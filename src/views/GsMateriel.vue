@@ -32,8 +32,7 @@ const materiel = ref<Materiel[]>([]);
 const types = ref<EventType[]>([]);
 
 MaterielService.getMateriel().then(
-  (data) =>
-    (materiel.value = data.filter((m) => m.materiel.uuid !== undefined)),
+  (data) => (materiel.value = data.filter((m) => m.materiel.uuid !== undefined)),
 );
 MaterielService.getEventsTypes().then((data) => (types.value = [...data]));
 

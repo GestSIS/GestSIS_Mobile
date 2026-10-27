@@ -27,8 +27,7 @@ const filteredTelephone = computed(() => {
         .toLowerCase()
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "")
-        .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) >
-      -1,
+        .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1,
   );
 });
 

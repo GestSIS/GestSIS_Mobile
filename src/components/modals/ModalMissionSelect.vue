@@ -64,10 +64,7 @@ const dismiss = () => {
     <ion-searchbar placeholder="Saisir" @ion-input="search($event)" />
 
     <ion-list>
-      <ion-item
-        v-if="query.length > 0"
-        @click="selectMission({ titre: query, id: 0 })"
-      >
+      <ion-item v-if="query.length > 0" @click="selectMission({ titre: query, id: 0 })">
         {{ query }}
       </ion-item>
       <ion-item

@@ -79,20 +79,16 @@ if (!exercice.value) {
     ...p,
     presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
     excuse_type: p.excuse_type_id
-      ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)?.designation ||
-        ""
+      ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)?.designation || ""
       : "",
   }));
-  exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map(
-    (p) => ({
-      ...p,
-      presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
-      excuse_type: p.excuse_type_id
-        ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)
-            ?.designation || ""
-        : "",
-    }),
-  );
+  exercice.value.initialSapeurs = exercice.value?.initialSapeurs.map((p) => ({
+    ...p,
+    presenceStatut: p.present ? 1 : p.absent ? 2 : p.remplace ? 3 : 0,
+    excuse_type: p.excuse_type_id
+      ? excusesTypes.value.find((e) => e.id == p.excuse_type_id)?.designation || ""
+      : "",
+  }));
 }
 
 const computedSapeurs = computed(() =>
@@ -108,7 +104,7 @@ const computedSapeurs = computed(() =>
 const titre = computed(() =>
   exercice.value?.designation && exercice.value.designation != "-"
     ? exercice.value.designation
-    : formatCategorie(exercice.value?.exercice_categorie_id) ?? "Exercice",
+    : (formatCategorie(exercice.value?.exercice_categorie_id) ?? "Exercice"),
 );
 
 const statutLabel = computed(() => {
@@ -231,9 +227,7 @@ const persistSapeur = (sapeur: PresenceExercice) => {
 };
 
 const removeExcuse = async (sapeur: PresenceExercice) => {
-  const sap = exercice.value?.sapeurs.find(
-    (s) => s.sapeur_id === sapeur.sapeur_id,
-  );
+  const sap = exercice.value?.sapeurs.find((s) => s.sapeur_id === sapeur.sapeur_id);
   if (sap === undefined || !exercice.value) return;
   sap.excuse_type = "";
   sap.excuse_type_id = null;
@@ -275,10 +269,7 @@ const addExcuse = async (sapeur: PresenceExercice) => {
 };
 
 const resetting = ref(false);
-const selectOption = async (
-  value: string | number | undefined,
-  sapeur: PresenceExercice,
-) => {
+const selectOption = async (value: string | number | undefined, sapeur: PresenceExercice) => {
   if (!exercice.value) return;
   if (resetting.value) {
     return;
@@ -298,9 +289,7 @@ const selectOption = async (
 const reset = () => {
   if (!exercice.value) return;
   resetting.value = true;
-  exercice.value.sapeurs = [
-    ...exercice.value.initialSapeurs.map((e) => ({ ...e })),
-  ];
+  exercice.value.sapeurs = [...exercice.value.initialSapeurs.map((e) => ({ ...e }))];
   exercice.value.localStatus = "empty";
 
   // Save changes
@@ -314,8 +303,7 @@ const reset = () => {
 const confirmReset = async () => {
   const confirm = await alertController.create({
     header: "Réinitialiser",
-    message:
-      "Toutes les saisies locales de cet exercice seront perdues. Continuer ?",
+    message: "Toutes les saisies locales de cet exercice seront perdues. Continuer ?",
     buttons: [
       { text: "Annuler", role: "cancel" },
       { text: "Réinitialiser", role: "destructive", handler: () => reset() },
@@ -349,9 +337,7 @@ const sync = async () => {
       <ion-toolbar class="sous-titre">
         <ion-note class="ion-padding-horizontal">
           {{ formatDate(exercice?.date || "", "dd.MM.yyyy") }}
-          <template v-if="exercice?.lieu">
-            – {{ exercice.lieu }}
-          </template>
+          <template v-if="exercice?.lieu"> – {{ exercice.lieu }} </template>
           · {{ statutLabel }}
         </ion-note>
       </ion-toolbar>
@@ -359,11 +345,7 @@ const sync = async () => {
 
     <ion-content class="ion-padding">
       <div class="totaux">
-        <ion-chip
-          v-for="t in totaux"
-          :key="t.label"
-          :outline="true"
-        >
+        <ion-chip v-for="t in totaux" :key="t.label" :outline="true">
           <ion-badge :color="t.color">
             {{ t.value }}
           </ion-badge>
@@ -371,43 +353,20 @@ const sync = async () => {
         </ion-chip>
       </div>
 
-      <ion-item
-        v-if="!computedSapeurs?.length"
-        lines="none"
-      >
-        Aucun sapeur convoqué
-      </ion-item>
+      <ion-item v-if="!computedSapeurs?.length" lines="none"> Aucun sapeur convoqué </ion-item>
 
-      <ion-card
-        v-for="sapeur in computedSapeurs"
-        :key="sapeur.sapeur_id ?? 0"
-        class="carte-sapeur"
-      >
+      <ion-card v-for="sapeur in computedSapeurs" :key="sapeur.sapeur_id ?? 0" class="carte-sapeur">
         <ion-card-content>
           <div class="entete">
             <h2 class="nom">
               {{ sapeur.nomPrenom }}
             </h2>
-            <ion-chip
-              v-if="sapeur.excuse_type_id"
-              color="medium"
-              @click="removeExcuse(sapeur)"
-            >
+            <ion-chip v-if="sapeur.excuse_type_id" color="medium" @click="removeExcuse(sapeur)">
               <ion-label>{{ sapeur.excuse_type }}</ion-label>
-              <ion-icon
-                :icon="closeCircle"
-                aria-label="Retirer l'excuse"
-              />
+              <ion-icon :icon="closeCircle" aria-label="Retirer l'excuse" />
             </ion-chip>
-            <ion-chip
-              v-else
-              :outline="true"
-              @click="addExcuse(sapeur)"
-            >
-              <ion-icon
-                :icon="add"
-                aria-hidden="true"
-              />
+            <ion-chip v-else :outline="true" @click="addExcuse(sapeur)">
+              <ion-icon :icon="add" aria-hidden="true" />
               <ion-label>Excuse</ion-label>
             </ion-chip>
           </div>
@@ -428,12 +387,7 @@ const sync = async () => {
             </ion-segment-button>
           </ion-segment>
 
-          <ion-note
-            v-if="sapeur.convoque"
-            class="convoque"
-          >
-            Convoqué
-          </ion-note>
+          <ion-note v-if="sapeur.convoque" class="convoque"> Convoqué </ion-note>
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -441,16 +395,8 @@ const sync = async () => {
     <ion-footer>
       <ion-toolbar>
         <div class="actions">
-          <ion-button
-            fill="outline"
-            size="small"
-            @click="addSapeur"
-          >
-            <ion-icon
-              slot="start"
-              :icon="personAdd"
-              aria-hidden="true"
-            />
+          <ion-button fill="outline" size="small" @click="addSapeur">
+            <ion-icon slot="start" :icon="personAdd" aria-hidden="true" />
             Ajouter
           </ion-button>
           <ion-button
@@ -459,11 +405,7 @@ const sync = async () => {
             :disabled="exercice?.localStatus == 'empty'"
             @click="confirmReset"
           >
-            <ion-icon
-              slot="start"
-              :icon="refresh"
-              aria-hidden="true"
-            />
+            <ion-icon slot="start" :icon="refresh" aria-hidden="true" />
             Réinitialiser
           </ion-button>
           <ion-button
@@ -472,23 +414,11 @@ const sync = async () => {
             :disabled="exercice?.localStatus == 'empty'"
             @click="validate"
           >
-            <ion-icon
-              slot="start"
-              :icon="checkmarkCircle"
-              aria-hidden="true"
-            />
+            <ion-icon slot="start" :icon="checkmarkCircle" aria-hidden="true" />
             Valider
           </ion-button>
-          <ion-button
-            v-else
-            size="small"
-            @click="sync"
-          >
-            <ion-icon
-              slot="start"
-              :icon="syncIcon"
-              aria-hidden="true"
-            />
+          <ion-button v-else size="small" @click="sync">
+            <ion-icon slot="start" :icon="syncIcon" aria-hidden="true" />
             Synchroniser
           </ion-button>
         </div>

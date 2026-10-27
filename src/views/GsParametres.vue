@@ -35,8 +35,7 @@ loadCurrentVersion();
 const router = useRouter();
 const notify = useNotify();
 
-const { state, activeSisKey, logout, selectSis } =
-  useAuth();
+const { state, activeSisKey, logout, selectSis } = useAuth();
 
 const sisOptions = computed(() => state.data.sis.map((key) => ({ key, label: key })));
 
@@ -129,11 +128,7 @@ const onSelectSis = async (sis: string) => {
             :value="activeSisKey"
             @ion-change="onSelectSis($event.target.value)"
           >
-            <ion-select-option
-              v-for="opt in sisOptions"
-              :key="opt.key"
-              :value="opt.key"
-            >
+            <ion-select-option v-for="opt in sisOptions" :key="opt.key" :value="opt.key">
               {{ opt.label }}
             </ion-select-option>
           </ion-select>
@@ -156,24 +151,18 @@ const onSelectSis = async (sis: string) => {
             :value="activeTheme"
             @ion-change="switchTheme($event.target.value)"
           >
-            <ion-select-option key="dark" value="dark">
-              Sombre
-            </ion-select-option>
-            <ion-select-option key="light" value="light">
-              Clair
-            </ion-select-option>
+            <ion-select-option key="dark" value="dark"> Sombre </ion-select-option>
+            <ion-select-option key="light" value="light"> Clair </ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-button expand="full" @click="wrappedLogout">
-          Déconnexion
-        </ion-button>
+        <ion-button expand="full" @click="wrappedLogout"> Déconnexion </ion-button>
       </ion-list>
     </ion-content>
 
     <ion-footer>
       <div class="ion-padding copyright">
-        Version {{ currentVersion ?? "…" }}
-        <br />Application créée par Bastien Wermeille <br />support@gestsis.ch
+        Version {{ currentVersion ?? "…" }} <br />Application créée par Bastien Wermeille
+        <br />support@gestsis.ch
         <br />
         {{ new Date().getFullYear() }} © GestSIS, Tous droits réservés
       </div>

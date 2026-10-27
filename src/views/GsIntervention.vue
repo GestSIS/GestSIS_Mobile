@@ -22,16 +22,7 @@ import {
   IonSegment,
   IonSegmentButton,
 } from "@ionic/vue";
-import {
-  list,
-  body,
-  call,
-  car,
-  construct,
-  time,
-  informationCircle,
-  flag,
-} from "ionicons/icons";
+import { list, body, call, car, construct, time, informationCircle, flag } from "ionicons/icons";
 
 // Define tabs
 const enum Tab {
@@ -58,57 +49,30 @@ const activeTab = ref(Tab.Journal);
       </ion-toolbar>
     </ion-header>
 
-    <ion-segment
-      v-model="activeTab"
-      :scrollable="true"
-    >
+    <ion-segment v-model="activeTab" :scrollable="true">
       <ion-segment-button :value="Tab.Journal">
-        <ion-icon
-          :icon="list"
-          aria-label="Journal d'intervention"
-        />
+        <ion-icon :icon="list" aria-label="Journal d'intervention" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Mission">
-        <ion-icon
-          :icon="body"
-          aria-label="Missions"
-        />
+        <ion-icon :icon="body" aria-label="Missions" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Jalon">
-        <ion-icon
-          :icon="flag"
-          aria-label="Jalons"
-        />
+        <ion-icon :icon="flag" aria-label="Jalons" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Appel">
-        <ion-icon
-          :icon="call"
-          aria-label="Appels"
-        />
+        <ion-icon :icon="call" aria-label="Appels" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Vehicule">
-        <ion-icon
-          :icon="car"
-          aria-label="Véhicules"
-        />
+        <ion-icon :icon="car" aria-label="Véhicules" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Materiel">
-        <ion-icon
-          :icon="construct"
-          aria-label="Matériels"
-        />
+        <ion-icon :icon="construct" aria-label="Matériels" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Presence">
-        <ion-icon
-          :icon="time"
-          aria-label="Présences"
-        />
+        <ion-icon :icon="time" aria-label="Présences" />
       </ion-segment-button>
       <ion-segment-button :value="Tab.Info">
-        <ion-icon
-          :icon="informationCircle"
-          aria-label="Informations"
-        />
+        <ion-icon :icon="informationCircle" aria-label="Informations" />
       </ion-segment-button>
     </ion-segment>
 

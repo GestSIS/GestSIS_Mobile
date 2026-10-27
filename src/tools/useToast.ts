@@ -9,7 +9,7 @@ export function useNotify() {
     message: string,
     position: "top" | "bottom" | "middle" = "top",
     duration = 5000,
-    showCloseButton = false
+    showCloseButton = false,
   ) => {
     if (toast) {
       toast?.dismiss();

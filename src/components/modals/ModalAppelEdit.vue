@@ -63,19 +63,11 @@ const dismiss = () => {
       <base-datetime v-model="activeAppel.date"> Date </base-datetime>
 
       <ion-item>
-        <ion-input
-          v-model="activeAppel.numero"
-          label="Numéro"
-          label-placement="fixed"
-        />
+        <ion-input v-model="activeAppel.numero" label="Numéro" label-placement="fixed" />
       </ion-item>
 
       <ion-item>
-        <ion-input
-          v-model="activeAppel.nom"
-          label="Nom"
-          label-placement="fixed"
-        />
+        <ion-input v-model="activeAppel.nom" label="Nom" label-placement="fixed" />
       </ion-item>
 
       <ion-item>
@@ -87,9 +79,7 @@ const dismiss = () => {
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" class="ion-margin-top" @click="save">
-      Modifier
-    </ion-button>
+    <ion-button expand="full" class="ion-margin-top" @click="save"> Modifier </ion-button>
   </ion-content>
 </template>
 

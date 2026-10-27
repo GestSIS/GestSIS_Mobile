@@ -56,11 +56,7 @@ const groupesStore = useGroupes();
 
 const online = window.navigator.onLine;
 if (online) {
-  Promise.all([
-    sapeursStore.sync(),
-    groupesStore.sync(),
-    alarmeStore.sync(),
-  ]).catch(() => {
+  Promise.all([sapeursStore.sync(), groupesStore.sync(), alarmeStore.sync()]).catch(() => {
     // Caught exception
   });
 }
@@ -105,11 +101,7 @@ const create = async (alarme: Alarme | null) => {
     intervention.alarme = alarme;
     intervention.wgs84 = alarme.location_wgs84;
     intervention.quittances = [
-      ...new Set(
-        alarme.firefighters
-          .filter((f) => f.sis == activeSisKey.value)
-          .map((f) => f.id),
-      ),
+      ...new Set(alarme.firefighters.filter((f) => f.sis == activeSisKey.value).map((f) => f.id)),
     ];
 
     const start = DateTime.fromISO(alarme.debut_alarme);
@@ -123,9 +115,7 @@ const create = async (alarme: Alarme | null) => {
     // intervention.localite_id = alarme.address; // TODO: parse localité
     intervention.quittances = alarme.firefighters.map((s) => s.id);
     const groupesNumeros = new Set(
-      alarme.groups
-        .filter((g) => g.sis == activeSisKey.value)
-        .map((g) => g.number),
+      alarme.groups.filter((g) => g.sis == activeSisKey.value).map((g) => g.number),
     );
     intervention.groupes = groupesStore.state.value
       .filter((g) => g.no && groupesNumeros.has("" + g.no))
@@ -133,8 +123,7 @@ const create = async (alarme: Alarme | null) => {
 
     // intervention.stat_federal_id = "TODO";
     // intervention.type_intervention_id = "TODO";
-    intervention.degre =
-      { BLEU: 2, JAUNE: 3, ROUGE: 4 }[alarme.couleur] ?? null;
+    intervention.degre = { BLEU: 2, JAUNE: 3, ROUGE: 4 }[alarme.couleur] ?? null;
     setActiveIntervention(updateIntervention(intervention));
   } else {
     const modalIntervention = await modalController.create({
@@ -173,10 +162,7 @@ const onAlarm = async (alarme: Alarme) => {
         text: "Ouvrir google maps",
         role: "",
         handler: () => {
-          if (
-            !alarme.location_wgs84 ||
-            alarme.location_wgs84.split(",").length !== 2
-          ) {
+          if (!alarme.location_wgs84 || alarme.location_wgs84.split(",").length !== 2) {
             window.open("https://www.google.ch/maps");
           } else {
             window.open(
@@ -223,27 +209,15 @@ const displayAlarmModule = true;
           <ion-label>Chargement des alarmes</ion-label>
           <ion-spinner name="circles" />
         </ion-item>
-        <ion-item v-if="!loading && !filteredAlarmes.length">
-          Aucune alarme
-        </ion-item>
+        <ion-item v-if="!loading && !filteredAlarmes.length"> Aucune alarme </ion-item>
         <ion-item
           v-for="alarme in filteredAlarmes"
           :key="alarme.id"
           :button="true"
           @click.prevent="onAlarm(alarme)"
         >
-          <ion-icon
-            slot="start"
-            :icon="warningSharp"
-            color="warning"
-            aria-label="Attention"
-          />
-          <ion-icon
-            slot="end"
-            :icon="warningSharp"
-            color="warning"
-            aria-hidden="true"
-          />
+          <ion-icon slot="start" :icon="warningSharp" color="warning" aria-label="Attention" />
+          <ion-icon slot="end" :icon="warningSharp" color="warning" aria-hidden="true" />
           <p>
             <span>{{ alarme.couleur }}</span> <span>{{ alarme.code }}</span> -
             <span class="details">{{ alarme.description }}</span>
@@ -253,8 +227,7 @@ const displayAlarmModule = true;
             <span>
               <ion-badge
                 >{{
-                  alarme.firefighters.filter((f) => f.sis === activeSisKey)
-                    .length +
+                  alarme.firefighters.filter((f) => f.sis === activeSisKey).length +
                   alarme.unresolved.filter((f) => f.sis == activeSisKey).length
                 }}
                 quittances</ion-badge
@@ -273,12 +246,7 @@ const displayAlarmModule = true;
         <ion-col v-if="displayAlarmModule">
           <ion-button expand="full" @click="refreshAlarmes()">
             <ion-spinner v-if="loading" slot="start" name="circles" />
-            <ion-icon
-              v-else
-              slot="start"
-              :icon="sync"
-              aria-hidden="true"
-            />Rafraîchir
+            <ion-icon v-else slot="start" :icon="sync" aria-hidden="true" />Rafraîchir
           </ion-button>
         </ion-col>
       </ion-row>
@@ -294,14 +262,8 @@ const displayAlarmModule = true;
         >
           <ion-icon
             slot="start"
-            :icon="
-              intervention.localStatus == 'in_progress' ? createIcon : sync
-            "
-            :aria-label="
-              intervention.localStatus == 'in_progress'
-                ? 'Créer'
-                : 'Synchroniser'
-            "
+            :icon="intervention.localStatus == 'in_progress' ? createIcon : sync"
+            :aria-label="intervention.localStatus == 'in_progress' ? 'Créer' : 'Synchroniser'"
           />
           <p>
             {{ intervention.objet }} –

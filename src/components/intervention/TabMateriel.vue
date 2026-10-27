@@ -10,22 +10,16 @@
           :disabled="intervention.localStatus == 'validated'"
           @click="addMateriel()"
         >
-          <ion-icon slot="start" :icon="add" aria-hidden="true" />Ajouter du
-          matériel
+          <ion-icon slot="start" :icon="add" aria-hidden="true" />Ajouter du matériel
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-list>
-    <ion-item v-if="!Object.entries(intervention.materiel).length">
-      Aucun matériel
-    </ion-item>
+    <ion-item v-if="!Object.entries(intervention.materiel).length"> Aucun matériel </ion-item>
     <ion-item
-      v-for="([id, quantite], i) in Object.entries(intervention.materiel) as [
-        string,
-        number,
-      ][]"
+      v-for="([id, quantite], i) in Object.entries(intervention.materiel) as [string, number][]"
       :key="i"
       :disabled="intervention.localStatus == 'validated'"
       @click="changeMaterielQuantity(parseInt(id), quantite)"
@@ -73,10 +67,7 @@ const removeMateriel = async (materielId: number) => {
   const materiel = materiels.value.find((m) => m.id == materielId);
   const confirm = await alertController.create({
     header: "Supprimer matériel",
-    message:
-      "Êtes-vous sûr de vouloir supprimer le matériel [" +
-      materiel?.designation +
-      "] ?",
+    message: "Êtes-vous sûr de vouloir supprimer le matériel [" + materiel?.designation + "] ?",
     buttons: [
       {
         text: "Non",
@@ -107,8 +98,7 @@ const addMateriel = async () => {
 
   const promptQuantite = await alertController.create({
     header: "Ajout matériel",
-    message:
-      "Veuillez entrer la quantité utilisée pour [" + data?.designation + "]",
+    message: "Veuillez entrer la quantité utilisée pour [" + data?.designation + "]",
     inputs: [
       {
         name: "quantite",
@@ -139,23 +129,14 @@ const addMateriel = async () => {
   // Ajout du materiel
   const previousQuantite = intervention.value.materiel[materielId] || 0;
 
-  interventionModule.updateMaterielQuantity(
-    materielId,
-    parseInt(previousQuantite || 0) + quantite,
-  );
+  interventionModule.updateMaterielQuantity(materielId, parseInt(previousQuantite || 0) + quantite);
 };
 
-const changeMaterielQuantity = async (
-  materielId: number,
-  currentQuantity: number,
-) => {
+const changeMaterielQuantity = async (materielId: number, currentQuantity: number) => {
   const materiel = materiels.value.find((m) => m.id == materielId);
   const promptQuantite = await alertController.create({
     header: "Ajout matériel",
-    message:
-      "Veuillez entrer la quantité utilisée pour [" +
-      materiel?.designation +
-      "]",
+    message: "Veuillez entrer la quantité utilisée pour [" + materiel?.designation + "]",
     inputs: [
       {
         name: "quantite",

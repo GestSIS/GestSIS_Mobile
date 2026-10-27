@@ -31,10 +31,7 @@ const editMission = (mission: Mission) => {
 const deleteMission = async (mission: Mission) => {
   const confirm = await alertController.create({
     header: "Supprimer mission",
-    message:
-      "Êtes-vous sûr de vouloir supprimer la mission [" +
-      mission?.titre +
-      "] ?",
+    message: "Êtes-vous sûr de vouloir supprimer la mission [" + mission?.titre + "] ?",
     buttons: [
       {
         text: "Non",
@@ -74,8 +71,7 @@ const nbMission = computed(() => intervention.value.missions.length);
           :disabled="intervention.localStatus == 'validated'"
           @click="addMission()"
         >
-          <ion-icon slot="start" :icon="add" aria-hidden="true" />Nouvelle
-          mission
+          <ion-icon slot="start" :icon="add" aria-hidden="true" />Nouvelle mission
         </ion-button>
       </ion-col>
     </ion-row>
@@ -83,8 +79,7 @@ const nbMission = computed(() => intervention.value.missions.length);
   <ion-list>
     <ion-item>
       <ion-checkbox slot="end" v-model="onlyPendingMissions" color="primary">
-        Afficher uniquement les missions en cours ({{ nbMissionEnCours }} /
-        {{ nbMission }})
+        Afficher uniquement les missions en cours ({{ nbMissionEnCours }} / {{ nbMission }})
       </ion-checkbox>
     </ion-item>
     <ion-item v-if="!intervention.missions.length"> Aucune mission </ion-item>
@@ -92,9 +87,7 @@ const nbMission = computed(() => intervention.value.missions.length);
       <p>
         Aucune mission en cours !
         <br />
-        <span class="details"
-          >Désactivez le filtre pour afficher les missions terminées</span
-        >
+        <span class="details">Désactivez le filtre pour afficher les missions terminées</span>
       </p>
     </ion-item>
     <ion-item
@@ -104,17 +97,11 @@ const nbMission = computed(() => intervention.value.missions.length);
       :disabled="intervention.localStatus == 'validated'"
       @click="editMission(mission)"
     >
-      <ion-icon
-        slot="start"
-        :icon="mission.date_fin ? checkmark : time"
-        aria-hidden="true"
-      />
+      <ion-icon slot="start" :icon="mission.date_fin ? checkmark : time" aria-hidden="true" />
       <p>
         {{ mission.titre }} - {{ mission.sapeur.designation }}
         <br />
-        <span class="details">{{
-          formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy")
-        }}</span>
+        <span class="details">{{ formatDate(mission.date_debut, "HH:mm 'le' dd.MM.yyyy") }}</span>
         <br />
         <span class="details">{{ mission.resume }}</span>
       </p>

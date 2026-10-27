@@ -18,14 +18,8 @@
       {{ vehicule.designation }}
       <ion-icon
         slot="end"
-        :icon="
-          vehiculesIntervention.has(vehicule.id)
-            ? checkmarkCircle
-            : radioButtonOff
-        "
-        :aria-label="
-          vehiculesIntervention.has(vehicule.id) ? 'engagé' : 'non engagé'
-        "
+        :icon="vehiculesIntervention.has(vehicule.id) ? checkmarkCircle : radioButtonOff"
+        :aria-label="vehiculesIntervention.has(vehicule.id) ? 'engagé' : 'non engagé'"
       />
     </ion-item>
   </ion-list>

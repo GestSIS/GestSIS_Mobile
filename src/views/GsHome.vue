@@ -55,9 +55,7 @@ const navigateTo = async (name: string) => {
 
 const needSync = computed((): boolean => {
   return (
-    interventionStore.state.value
-      .map((i) => i.localStatus)
-      .includes("validated") ||
+    interventionStore.state.value.map((i) => i.localStatus).includes("validated") ||
     exerciceStore.state.value.map((e) => e.localStatus).includes("validated")
   );
 });
@@ -87,12 +85,8 @@ const sync = async () => {
 
 // Permissions checks
 const { hasPermission } = useAuth();
-const hasInterventionEditPermission = computed(() =>
-  hasPermission("intervention.modification"),
-);
-const hasExercicePresencePermission = computed(() =>
-  hasPermission("exercice.presence"),
-);
+const hasInterventionEditPermission = computed(() => hasPermission("intervention.modification"));
+const hasExercicePresencePermission = computed(() => hasPermission("exercice.presence"));
 // const hasMaterielEditPermission = computed(() =>
 //   hasPermission("mat_perso.modification")
 // );
@@ -116,24 +110,15 @@ const hasExercicePresencePermission = computed(() =>
             <ion-row>
               <ion-col col-12>
                 <h2>
-                  📦 Une nouvelle version de l'application est disponible
-                  ({{ latestVersion }}).
+                  📦 Une nouvelle version de l'application est disponible ({{ latestVersion }}).
                 </h2>
               </ion-col>
             </ion-row>
             <ion-row>
               <ion-col col-12>
-                <ion-button
-                  color="light"
-                  block
-                  icon-start
-                  @click="openPlayStore"
-                >
-                  <ion-icon
-                    slot="start"
-                    :icon="logoGooglePlaystore"
-                    aria-hidden="true"
-                  />Mettre à jour
+                <ion-button color="light" block icon-start @click="openPlayStore">
+                  <ion-icon slot="start" :icon="logoGooglePlaystore" aria-hidden="true" />Mettre à
+                  jour
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -149,18 +134,9 @@ const hasExercicePresencePermission = computed(() =>
                 <h2>⚠️ Certains éléments ne sont pas synchronisés.</h2>
               </ion-col>
               <ion-col col-12 col-md-4>
-                <ion-button
-                  ion-button
-                  color="light"
-                  block
-                  icon-start
-                  @click="sync"
-                >
-                  <ion-icon
-                    slot="start"
-                    :icon="syncOutline"
-                    aria-hidden="true"
-                  />Synchroniser maintenant
+                <ion-button ion-button color="light" block icon-start @click="sync">
+                  <ion-icon slot="start" :icon="syncOutline" aria-hidden="true" />Synchroniser
+                  maintenant
                 </ion-button>
               </ion-col>
             </ion-row>
@@ -171,11 +147,7 @@ const hasExercicePresencePermission = computed(() =>
       <ion-grid>
         <ion-row>
           <ion-col v-if="hasInterventionEditPermission" size="6">
-            <ion-button
-              class="tile"
-              expand="full"
-              @click="navigateTo('interventions')"
-            >
+            <ion-button class="tile" expand="full" @click="navigateTo('interventions')">
               <div class="icon">
                 <ion-icon :icon="flame" color="white" aria-hidden="true" />
                 <p class="label">Rapports d'intervention</p>
@@ -183,11 +155,7 @@ const hasExercicePresencePermission = computed(() =>
             </ion-button>
           </ion-col>
           <ion-col v-if="hasExercicePresencePermission" size="6">
-            <ion-button
-              class="tile"
-              expand="full"
-              @click="navigateTo('exercices')"
-            >
+            <ion-button class="tile" expand="full" @click="navigateTo('exercices')">
               <div class="icon">
                 <ion-icon :icon="checkbox" color="white" aria-hidden="true" />
                 <p class="label">Présences exercices</p>
@@ -195,11 +163,7 @@ const hasExercicePresencePermission = computed(() =>
             </ion-button>
           </ion-col>
           <ion-col v-if="hasInterventionEditPermission" size="6">
-            <ion-button
-              class="tile"
-              expand="full"
-              @click="navigateTo('annuaire')"
-            >
+            <ion-button class="tile" expand="full" @click="navigateTo('annuaire')">
               <div class="icon">
                 <ion-icon :icon="call" color="white" aria-hidden="true" />
                 <p class="label">Annuaire</p>
@@ -223,11 +187,7 @@ const hasExercicePresencePermission = computed(() =>
             </ion-button>
           </ion-col> -->
           <ion-col size="6">
-            <ion-button
-              class="tile"
-              expand="full"
-              @click="navigateTo('synchronisation')"
-            >
+            <ion-button class="tile" expand="full" @click="navigateTo('synchronisation')">
               <div class="icon">
                 <ion-icon :icon="syncIcon" color="white" aria-hidden="true" />
                 <p class="label">Synchronisation</p>
@@ -235,11 +195,7 @@ const hasExercicePresencePermission = computed(() =>
             </ion-button>
           </ion-col>
           <ion-col size="6">
-            <ion-button
-              class="tile"
-              expand="full"
-              @click="navigateTo('parametres')"
-            >
+            <ion-button class="tile" expand="full" @click="navigateTo('parametres')">
               <div class="icon">
                 <ion-icon :icon="settings" color="white" aria-hidden="true" />
                 <p class="label">Paramètres</p>

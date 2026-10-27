@@ -12,8 +12,7 @@ export class Intervention {
   id: number | null = null;
   // SQL format ("yyyy-MM-dd HH:mm") to stay consistent with the rest of the
   // app (useDateFormatter/BaseDatetime use fromSQL, and export splits on " ").
-  date_debut =
-    DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
+  date_debut = DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
   date_fin: string = "";
   objet: string = "";
   lieu: string = "";

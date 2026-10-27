@@ -30,8 +30,7 @@ const filteredTelephone = computed(() => {
         .toLowerCase()
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "")
-        .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) >
-      -1,
+        .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1,
   );
 });
 
@@ -46,7 +45,9 @@ const isPhoneNumber = (str: string): boolean => {
 const dismiss = () => {
   modalController.dismiss(null);
 };
-const selectTelephone = (telephone: Telephone | { nom: string; numero: string; nouveau_numero: true }) => {
+const selectTelephone = (
+  telephone: Telephone | { nom: string; numero: string; nouveau_numero: true },
+) => {
   modalController.dismiss(telephone);
 };
 
@@ -111,8 +112,7 @@ const addTelephone = async () => {
 
     <ion-list>
       <ion-item @click="addTelephone">
-        <ion-icon slot="start" :icon="add" aria-hidden="true" />Entrer un
-        nouveau numéro
+        <ion-icon slot="start" :icon="add" aria-hidden="true" />Entrer un nouveau numéro
       </ion-item>
       <ion-item
         v-for="telephone of filteredTelephone"

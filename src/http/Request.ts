@@ -105,9 +105,7 @@ const request = {
       (response: AxiosResponse) => {
         // Use `in` rather than a truthy check so a falsy-but-valid payload
         // (false, 0, "", null) isn't discarded in favor of the envelope.
-        return response.data && "data" in response.data
-          ? response.data.data
-          : response.data;
+        return response.data && "data" in response.data ? response.data.data : response.data;
       },
       async (error: AxiosError) => {
         // A 401 here means the server rejected the token even though it
@@ -142,9 +140,7 @@ const request = {
       function (response: AxiosResponse) {
         // Use `in` rather than a truthy check so a falsy-but-valid payload
         // (false, 0, "", null) isn't discarded in favor of the envelope.
-        return response.data && "data" in response.data
-          ? response.data.data
-          : response.data;
+        return response.data && "data" in response.data ? response.data.data : response.data;
       },
       function (error: AxiosError) {
         if (error.response?.status === 401) {
@@ -172,9 +168,7 @@ const request = {
 
     auth.interceptors.response.use(
       (response: AxiosResponse) => {
-        return response.data && "data" in response.data
-          ? response.data.data
-          : response.data;
+        return response.data && "data" in response.data ? response.data.data : response.data;
       },
       (error: AxiosError) => {
         // Statut joint au corps {message} : un 401 (preAuthToken expiré) se

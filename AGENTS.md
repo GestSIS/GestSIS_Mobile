@@ -23,7 +23,7 @@ quand une connexion est disponible.
 | UI                      | Vue 3 (Composition API), Ionic Vue 8, Ionicons             |
 | Routing                 | `@ionic/vue-router` (Vue Router 5)                         |
 | Natif                   | Capacitor 8 (`@capacitor/android`)                         |
-| Build                   | Vite 8                                                     |
+| Build, lint, format     | Vite+ (`vp` : Vite 8, Oxlint, Oxfmt), comme GestSIS_APP    |
 | Langage                 | TypeScript 6 (`moduleResolution: nodenext`)                |
 | HTTP                    | axios (via `src/http/Request.ts`)                          |
 | Persistance locale      | `@ionic/storage` (localforage → IndexedDB dans la WebView) |
@@ -38,10 +38,12 @@ quand une connexion est disponible.
 
 ```sh
 yarn install         # installer les dépendances (Yarn 4 / berry)
-yarn dev             # serveur de dev Vite
+yarn dev             # serveur de dev (vp dev)
 yarn ionic:serve     # idem, sur --port 8100 --host (pour appareil/émulateur)
-yarn build           # build de production (sortie dans dist/)
-yarn lint            # ESLint (flat config)
+yarn build           # build de production (vp build, sortie dans dist/)
+yarn lint            # Oxlint avec vérification des types (vp lint)
+yarn fmt             # formatage Oxfmt (vp fmt)
+yarn check           # format + lint (vp check)
 ```
 
 - **Variables d'environnement requises** (dans `.env.local` / `.env.production`) :
@@ -52,12 +54,9 @@ yarn lint            # ESLint (flat config)
 
 ### Tests
 
-Il n'existe **pas** de script de test fonctionnel. Un `jest.config.js` hérité et un
-`tests/unit/example.spec.ts` subsistent, mais le preset Jest (`@vue/cli-plugin-unit-jest`)
-n'est pas installé, donc les tests ne s'exécutent pas en l'état. Cypress est présent en
-devDependency mais sans fichier de configuration. **Vérifier les changements via
-`yarn lint`, `yarn build` et un test manuel** (parcours dans l'app), pas via une suite de
-tests automatisés.
+Il n'existe **pas** de suite de tests automatisés. **Vérifier les changements via
+`yarn check`, `yarn build` et un test manuel** (parcours dans l'app). Si des tests sont
+ajoutés un jour, passer par `vp test` (Vitest, inclus dans Vite+).
 
 ## Conventions de code
 
@@ -68,9 +67,9 @@ tests automatisés.
 - **Composition API** partout ; composables nommés `useXxx`, un par fichier.
 - **Services** : objet littéral en export par défaut, une méthode par endpoint, retournant
   directement `Api.api().get/post/...` (voir `src/services/ExerciceService.ts`).
-- **Style** : 2 espaces d'indentation, guillemets doubles, points-virgules, virgules
-  finales. ESLint flat config dans `eslint.config.js` (`vue/flat/recommended` +
-  `vueTsConfigs.recommended`). Pas de Prettier configuré — s'aligner sur le code existant.
+- **Style** : appliqué par Oxfmt (`yarn fmt`). Lint par Oxlint, configuré dans
+  `vite.config.js` (sections `fmt` et `lint`, même règles que GestSIS_APP, avec
+  vérification des types).
 - Composants de page dans `src/views/Gs*.vue` ; composants réutilisables dans
   `src/components/` (`base/`, `intervention/`, `modals/`).
 

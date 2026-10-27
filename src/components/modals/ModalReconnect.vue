@@ -71,9 +71,7 @@ const dismiss = () => {
       <ion-title>Reconnexion</ion-title>
 
       <ion-buttons slot="primary">
-        <ion-button @click="dismiss()">
-          Annuler
-        </ion-button>
+        <ion-button @click="dismiss()"> Annuler </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -83,17 +81,14 @@ const dismiss = () => {
       <ion-card-content>
         <ion-grid>
           <h2>
-            ⚠️ Votre connexion a expirée, veuillez vous reconnecter pour pouvoir
-            synchroniser votre travail.
+            ⚠️ Votre connexion a expirée, veuillez vous reconnecter pour pouvoir synchroniser votre
+            travail.
           </h2>
         </ion-grid>
       </ion-card-content>
     </ion-card>
 
-    <form
-      v-if="step === 'credentials'"
-      @submit.prevent="wrappedReconnect"
-    >
+    <form v-if="step === 'credentials'" @submit.prevent="wrappedReconnect">
       <ion-list class="ion-padding">
         <ion-item>
           <ion-input
@@ -116,22 +111,12 @@ const dismiss = () => {
         </ion-item>
         <ion-row>
           <ion-col col="6">
-            <ion-button
-              type="submit"
-              color="primary"
-              expand="block"
-              class="ion-margin-top"
-            >
+            <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">
               Connexion
             </ion-button>
           </ion-col>
           <ion-col col="6">
-            <ion-button
-              color="secondary"
-              expand="block"
-              class="ion-margin-top"
-              @click="dismiss"
-            >
+            <ion-button color="secondary" expand="block" class="ion-margin-top" @click="dismiss">
               Continuer en mode hors-ligne
             </ion-button>
           </ion-col>
@@ -139,10 +124,6 @@ const dismiss = () => {
       </ion-list>
     </form>
 
-    <two-factor-challenge
-      v-else
-      @done="onReconnected"
-      @cancel="onChallengeCancel"
-    />
+    <two-factor-challenge v-else @done="onReconnected" @cancel="onChallengeCancel" />
   </ion-content>
 </template>

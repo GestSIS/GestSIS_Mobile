@@ -39,9 +39,7 @@ export default {
             piquet: p.piquet,
           })),
         ),
-        groupes: i.groupes.map((id) =>
-          groupesStore.state.value.find((g) => g.id == id),
-        ),
+        groupes: i.groupes.map((id) => groupesStore.state.value.find((g) => g.id == id)),
         materiel: Object.entries(i.materiel).map(([key, value]) => ({
           materiel_id: parseInt(key),
           quantite: value,
@@ -56,7 +54,14 @@ export default {
             sapeur: m.sapeur.designation,
           }))
           .map((m) => {
-            const entry = m as { titre: string; resume: string; debut: string; fin: string; sapeur_id?: number | null; sapeur?: string | null };
+            const entry = m as {
+              titre: string;
+              resume: string;
+              debut: string;
+              fin: string;
+              sapeur_id?: number | null;
+              sapeur?: string | null;
+            };
             if (entry.sapeur_id) {
               delete entry.sapeur;
             } else {
@@ -73,7 +78,13 @@ export default {
             sapeur: j.sapeur?.designation ?? null,
           }))
           .map((j) => {
-            const entry = j as { titre: string; description: string; date_time: string; sapeur_id?: number | null; sapeur?: string | null };
+            const entry = j as {
+              titre: string;
+              description: string;
+              date_time: string;
+              sapeur_id?: number | null;
+              sapeur?: string | null;
+            };
             if (entry.sapeur_id) {
               delete entry.sapeur;
             } else {
@@ -154,26 +165,17 @@ export default {
     });
   },
   removeQuittances(interventionId: number, quittancesId: number) {
-    return Api.api().delete(
-      "/interventions/" + interventionId + "/quittances",
-      {
-        data: { quittances: quittancesId },
-      },
-    );
+    return Api.api().delete("/interventions/" + interventionId + "/quittances", {
+      data: { quittances: quittancesId },
+    });
   },
 
   //Sapeurs
   addSapeurs(interventionId: number, sapeursData: object) {
-    return Api.api().post(
-      "/interventions/" + interventionId + "/sapeurs",
-      sapeursData,
-    );
+    return Api.api().post("/interventions/" + interventionId + "/sapeurs", sapeursData);
   },
   editSapeurs(interventionId: number, sapeursData: object) {
-    return Api.api().put(
-      "/interventions/" + interventionId + "/sapeurs",
-      sapeursData,
-    );
+    return Api.api().put("/interventions/" + interventionId + "/sapeurs", sapeursData);
   },
   removeSapeurs(interventionId: number, sapeursIds: number[]) {
     return Api.api().delete("/interventions/" + interventionId + "/sapeurs", {

@@ -70,11 +70,7 @@ const save = () => {
         />
       </ion-item>
 
-      <base-datetime
-        v-model="presence.date_debut"
-        :per-quarter="true"
-        :max="presence.date_fin"
-      >
+      <base-datetime v-model="presence.date_debut" :per-quarter="true" :max="presence.date_fin">
         Heure d'arrivée
       </base-datetime>
 

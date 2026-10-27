@@ -2,13 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import useActiveIntervention from "../../store/useActiveIntervention.ts";
 import useDateFormatter from "../../tools/useDateFormatter.ts";
-import {
-  IonList,
-  IonItem,
-  IonCheckbox,
-  IonIcon,
-  modalController,
-} from "@ionic/vue";
+import { IonList, IonItem, IonCheckbox, IonIcon, modalController } from "@ionic/vue";
 import { body, call, flag, play } from "ionicons/icons";
 import { computed, ref } from "vue";
 import { DateTime } from "luxon";
@@ -72,9 +66,7 @@ const evenements = computed(() => {
       type: EventType.Info,
       titre: "Début de l'intervention",
       description: intervention.value.objet,
-      auteur: chefIntervention
-        ? chefIntervention?.nom + " " + chefIntervention?.prenom
-        : null,
+      auteur: chefIntervention ? chefIntervention?.nom + " " + chefIntervention?.prenom : null,
     },
 
     // Appels
@@ -132,9 +124,7 @@ const openEvent = async (event: Event) => {
   switch (event.type) {
     case EventType.Appel:
       {
-        const appel = intervention.value.appels.find(
-          (a) => a.localUuid == event.uuid,
-        );
+        const appel = intervention.value.appels.find((a) => a.localUuid == event.uuid);
         const modalAppel = await modalController.create({
           component: ModalAppelEditVue,
           componentProps: {
@@ -153,9 +143,7 @@ const openEvent = async (event: Event) => {
 
     case EventType.Jalon:
       {
-        const jalon = intervention.value.jalons.find(
-          (j) => j.localUuid == event.uuid,
-        );
+        const jalon = intervention.value.jalons.find((j) => j.localUuid == event.uuid);
         const modalJalon = await modalController.create({
           component: ModalJalonEditVue,
           componentProps: {
@@ -190,10 +178,7 @@ const openEvent = async (event: Event) => {
       <div class="cd-timeline-icon positive text-center">
         <ion-icon :icon="iconMapping[event.type]" aria-hidden="true" />
       </div>
-      <div
-        class="cd-timeline-content timeline-text positive"
-        @click="openEvent(event)"
-      >
+      <div class="cd-timeline-content timeline-text positive" @click="openEvent(event)">
         <h4 class="title">
           {{ event.titre }}
         </h4>

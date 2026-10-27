@@ -7,27 +7,8 @@
     "moduleResolution": "nodenext",
     "importHelpers": true,
     "isolatedModules": true,
-    "types": [
-      "vite/client",
-      "node"
-    ],
-    "typeRoots": [
-      "./node_modules/@types/",
-      "./types",
-      "./node_modules"
-    ],
+    "types": ["vite-plus/client", "node"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "android",
-    "Android",
-    "dist"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "android", "Android", "dist"]
 }

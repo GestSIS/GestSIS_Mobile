@@ -30,8 +30,7 @@ const { addJalon, updateJalon } = useActiveIntervention();
 const props = defineProps<{ jalon?: Jalon }>();
 
 const newJalon = new Jalon();
-newJalon.date_time =
-  DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
+newJalon.date_time = DateTime.now().toSQL({ includeOffset: false })?.slice(0, 16) ?? "";
 
 const activeJalon = ref(props.jalon || newJalon);
 
@@ -70,10 +69,7 @@ const clearSapeur = () => {
 };
 
 const save = async () => {
-  if (
-    activeJalon.value.titre == "" ||
-    activeJalon.value.date_time == ""
-  ) {
+  if (activeJalon.value.titre == "" || activeJalon.value.date_time == "") {
     notify.error("Veuillez remplir tous les champs");
     return;
   }
@@ -94,9 +90,7 @@ const dismiss = () => {
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title>{{
-        activeJalon.localUuid == "" ? "Nouveau jalon" : "Modifier jalon"
-      }}</ion-title>
+      <ion-title>{{ activeJalon.localUuid == "" ? "Nouveau jalon" : "Modifier jalon" }}</ion-title>
 
       <ion-buttons slot="primary">
         <ion-button @click="dismiss()"> Annuler </ion-button>
@@ -109,11 +103,7 @@ const dismiss = () => {
       <base-datetime v-model="activeJalon.date_time"> Date </base-datetime>
 
       <ion-item>
-        <ion-input
-          v-model="activeJalon.titre"
-          label="Titre"
-          label-placement="fixed"
-        />
+        <ion-input v-model="activeJalon.titre" label="Titre" label-placement="fixed" />
       </ion-item>
 
       <ion-item>

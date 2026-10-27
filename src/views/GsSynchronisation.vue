@@ -15,12 +15,7 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/vue";
-import {
-  sync,
-  alert as alertIcon,
-  checkmarkCircle,
-  warning,
-} from "ionicons/icons";
+import { sync, alert as alertIcon, checkmarkCircle, warning } from "ionicons/icons";
 
 import useDateFormatter from "../tools/useDateFormatter.ts";
 import useStore from "../store/useStore.ts";
@@ -89,9 +84,7 @@ const online = window.navigator.onLine;
         </ion-card-content>
       </ion-card>
 
-      <ion-button expand="full" color="primary" @click="syncAll">
-        Tout synchroniser
-      </ion-button>
+      <ion-button expand="full" color="primary" @click="syncAll"> Tout synchroniser </ion-button>
       <ion-list>
         <ion-item
           v-for="{ name, lastSync, syncStatus, sync } in modules.filter(

@@ -4,11 +4,7 @@ import type { Telephone } from "../models/telephone.ts";
 import TelephoneService from "../services/TelephoneService.ts";
 
 const state: Ref<Telephone[]> = ref([]);
-const store = useBasicStore(
-  state,
-  TelephoneService.getTelephones,
-  "telephones",
-);
+const store = useBasicStore(state, TelephoneService.getTelephones, "telephones");
 
 export default function useTelephones() {
   const name = "Téléphones";

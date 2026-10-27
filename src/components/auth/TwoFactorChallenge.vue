@@ -21,8 +21,12 @@ const emit = defineEmits<{
   cancel: [message?: string];
 }>();
 
-const { verifyTwoFactor, verifyWebauthnLogin, cancelTwoFactorChallenge, twoFactorAvailableMethods } =
-  useAuth();
+const {
+  verifyTwoFactor,
+  verifyWebauthnLogin,
+  cancelTwoFactorChallenge,
+  twoFactorAvailableMethods,
+} = useAuth();
 
 type Method = "totp" | "recovery" | "webauthn";
 const methods = twoFactorAvailableMethods.value;
@@ -132,26 +136,15 @@ onMounted(() => {
       >
         Clé de sécurité / biométrie
       </ion-button>
-      <ion-button
-        expand="block"
-        fill="clear"
-        @click="back"
-      >
-        Retour
-      </ion-button>
+      <ion-button expand="block" fill="clear" @click="back"> Retour </ion-button>
     </template>
 
-    <form
-      v-else-if="method === 'totp' || method === 'recovery'"
-      @submit.prevent="verifyCode"
-    >
+    <form v-else-if="method === 'totp' || method === 'recovery'" @submit.prevent="verifyCode">
       <p v-if="method === 'totp'">
         Entrez le code généré par votre application d'authentification, ou un de vos codes de
         secours.
       </p>
-      <p v-else>
-        Entrez un de vos codes de secours.
-      </p>
+      <p v-else>Entrez un de vos codes de secours.</p>
       <ion-list class="ion-no-padding">
         <ion-item>
           <ion-input
@@ -165,10 +158,7 @@ onMounted(() => {
           />
         </ion-item>
       </ion-list>
-      <p
-        v-if="codeError"
-        class="error-text"
-      >
+      <p v-if="codeError" class="error-text">
         {{ codeError }}
       </p>
       <ion-button
@@ -188,31 +178,15 @@ onMounted(() => {
       >
         Autre méthode
       </ion-button>
-      <ion-button
-        v-if="method === 'recovery'"
-        expand="block"
-        fill="clear"
-        @click="verifyWebauthn"
-      >
+      <ion-button v-if="method === 'recovery'" expand="block" fill="clear" @click="verifyWebauthn">
         Utiliser ma clé de sécurité
       </ion-button>
-      <ion-button
-        expand="block"
-        fill="clear"
-        @click="back"
-      >
-        Retour
-      </ion-button>
+      <ion-button expand="block" fill="clear" @click="back"> Retour </ion-button>
     </form>
 
     <template v-else>
-      <p v-if="busy">
-        Vérification en cours… Suivez les instructions de votre appareil.
-      </p>
-      <ion-card
-        v-if="webauthnError"
-        color="danger"
-      >
+      <p v-if="busy">Vérification en cours… Suivez les instructions de votre appareil.</p>
+      <ion-card v-if="webauthnError" color="danger">
         <ion-card-content>{{ webauthnError }}</ion-card-content>
       </ion-card>
       <ion-button
@@ -233,22 +207,10 @@ onMounted(() => {
       >
         Autre méthode
       </ion-button>
-      <ion-button
-        expand="block"
-        fill="clear"
-        :disabled="busy"
-        @click="choose('recovery')"
-      >
+      <ion-button expand="block" fill="clear" :disabled="busy" @click="choose('recovery')">
         Je n'ai plus accès à ma clé de sécurité
       </ion-button>
-      <ion-button
-        expand="block"
-        fill="clear"
-        :disabled="busy"
-        @click="back"
-      >
-        Retour
-      </ion-button>
+      <ion-button expand="block" fill="clear" :disabled="busy" @click="back"> Retour </ion-button>
     </template>
   </div>
 </template>

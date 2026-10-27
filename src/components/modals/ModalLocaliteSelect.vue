@@ -23,23 +23,16 @@ const localiteSisModule = useLocalitesSis();
 const filteredLocalite = computed(() => {
   const localitesSis = new Set(localiteSisModule.state.value);
   return localiteModule.state.value
-    .filter(
-      (l) =>
-        localitesSis.size === 0 || localitesSis.has(l.id) || query.value !== "",
-    )
+    .filter((l) => localitesSis.size === 0 || localitesSis.has(l.id) || query.value !== "")
     .filter(
       (l) =>
         (l.npa + "" + l.designation)
           .toLowerCase()
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
-          .indexOf(
-            query.value.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
-          ) > -1,
+          .indexOf(query.value.normalize("NFD").replace(/\p{Diacritic}/gu, "")) > -1,
     )
-    .sort((a, b) =>
-      (a.npa + " " + a.designation).localeCompare(b.npa + " " + b.designation),
-    );
+    .sort((a, b) => (a.npa + " " + a.designation).localeCompare(b.npa + " " + b.designation));
 });
 
 const search = (event: SearchbarCustomEvent) => {

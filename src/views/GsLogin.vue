@@ -28,10 +28,7 @@ const { login, state } = useAuth();
 
 // If connected redirect to home page
 watchEffect(() => {
-  if (
-    state.data.statut == UserStatus.connected &&
-    router.currentRoute.value.name == "login"
-  ) {
+  if (state.data.statut == UserStatus.connected && router.currentRoute.value.name == "login") {
     router.push({ name: "accueil" });
   }
 });
@@ -90,20 +87,14 @@ const online = window.navigator.onLine;
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-card
-        v-if="!online"
-        color="warning"
-      >
+      <ion-card v-if="!online" color="warning">
         <ion-card-content>
           <ion-grid>
             <h2>⚠️ Aucune connexion internet détectée</h2>
           </ion-grid>
         </ion-card-content>
       </ion-card>
-      <form
-        v-if="step === 'credentials'"
-        @submit.prevent="wrappedLogin"
-      >
+      <form v-if="step === 'credentials'" @submit.prevent="wrappedLogin">
         <ion-list class="ion-padding">
           <ion-item>
             <ion-input
@@ -124,12 +115,7 @@ const online = window.navigator.onLine;
               name="password"
             />
           </ion-item>
-          <ion-button
-            type="submit"
-            color="primary"
-            expand="block"
-            class="ion-margin-top"
-          >
+          <ion-button type="submit" color="primary" expand="block" class="ion-margin-top">
             Connexion
           </ion-button>
         </ion-list>

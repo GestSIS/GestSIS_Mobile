@@ -28,9 +28,7 @@
       <p>
         {{ appel.nom }} - {{ appel.numero }}
         <br />
-        <span class="details"
-          >Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span
-        >
+        <span class="details">Appelé à {{ formatDate(appel.date, "HH:mm 'le' dd.MM.yyyy") }}</span>
         <br />
         <span class="details">{{ appel.commentaire }}</span>
       </p>
@@ -75,9 +73,7 @@ const { state, addAppel, removeAppel } = useActiveIntervention();
 const intervention = state;
 
 const sortedAppels = computed(() =>
-  intervention.value.appels
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date)),
+  intervention.value.appels.slice().sort((a, b) => b.date.localeCompare(a.date)),
 );
 
 const addCall = async () => {
