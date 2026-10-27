@@ -41,7 +41,7 @@
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
     "sass": "^1.106.1",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
