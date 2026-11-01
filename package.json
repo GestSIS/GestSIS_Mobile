@@ -16,18 +16,18 @@
     "ionic:serve": "vp dev --port 8100 --host"
   },
   "dependencies": {
-    "@capacitor/android": "^8.5.3",
+    "@capacitor/android": "^8.6.0",
     "@capacitor/app": "^8.1.2",
-    "@capacitor/core": "^8.5.3",
+    "@capacitor/core": "^8.6.0",
     "@capacitor/haptics": "^8.0.2",
     "@capacitor/keyboard": "^8.0.6",
     "@capawesome/capacitor-android-edge-to-edge-support": "^8.0.8",
     "@capawesome/capacitor-passkeys": "^0.1.2",
     "@ionic/storage": "^4.0.0",
-    "@ionic/vue": "^9.0.9",
-    "@ionic/vue-router": "^9.0.9",
+    "@ionic/vue": "^9.0.10",
+    "@ionic/vue-router": "^9.0.10",
     "@types/luxon": "^3.7.6",
-    "axios": "1.20.0",
+    "axios": "1.21.0",
     "ionicons": "^8.1.0",
     "jwt-decode": "^4.0.0",
     "luxon": "^3.7.2",
@@ -37,11 +37,11 @@
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.5.3",
+    "@capacitor/cli": "^8.6.0",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
-    "sass": "^1.106.1",
-    "typescript": "^6.0.3",
+    "sass": "^1.107.0",
+    "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
