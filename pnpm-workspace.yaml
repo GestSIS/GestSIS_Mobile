@@ -14,3 +14,7 @@ trustPolicy: no-downgrade
 # diff avec 8.0.1 vérifié le 2026-11-17 : documentation uniquement.
 trustPolicyExclude:
   - "@capacitor/haptics@8.0.2"
+
+update:
+  ignoreDeps:
+    - node
