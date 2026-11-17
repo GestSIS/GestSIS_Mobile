@@ -1,6 +1,6 @@
 FROM openjdk:26-ea-33-oraclelinux9
 
-RUN microdnf module enable nodejs:24
+RUN microdnf module enable nodejs:26
 RUN microdnf install npm wget unzip curl
 
 RUN npm install -g pnpm@12
