@@ -18,3 +18,4 @@ trustPolicyExclude:
 update:
   ignoreDeps:
     - node
+    - "@types/node"
