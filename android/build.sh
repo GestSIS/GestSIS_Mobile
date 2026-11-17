@@ -2,9 +2,9 @@
 
 cd /app
 rm -rf dist
-yarn install
-yarn build
-yarn cap sync
+pnpm install
+pnpm build
+pnpm exec cap sync
 cd /app/android
 chmod 777 gradlew
 ./gradlew assemble

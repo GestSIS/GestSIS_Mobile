@@ -37,13 +37,13 @@ quand une connexion est disponible.
 ## Commandes
 
 ```sh
-yarn install         # installer les dépendances (Yarn 4 / berry)
-yarn dev             # serveur de dev (vp dev)
-yarn ionic:serve     # idem, sur --port 8100 --host (pour appareil/émulateur)
-yarn build           # build de production (vp build, sortie dans dist/)
-yarn lint            # Oxlint avec vérification des types (vp lint)
-yarn fmt             # formatage Oxfmt (vp fmt)
-yarn check           # format + lint (vp check)
+pnpm install         # installer les dépendances (pnpm 12)
+pnpm dev             # serveur de dev (vp dev)
+pnpm ionic:serve     # idem, sur --port 8100 --host (pour appareil/émulateur)
+pnpm build           # build de production (vp build, sortie dans dist/)
+pnpm lint            # Oxlint avec vérification des types (vp lint)
+pnpm fmt             # formatage Oxfmt (vp fmt)
+pnpm check           # format + lint (vp check)
 ```
 
 - **Variables d'environnement requises** (dans `.env.local` / `.env.production`) :
@@ -55,7 +55,7 @@ yarn check           # format + lint (vp check)
 ### Tests
 
 Il n'existe **pas** de suite de tests automatisés. **Vérifier les changements via
-`yarn check`, `yarn build` et un test manuel** (parcours dans l'app). Si des tests sont
+`pnpm check`, `pnpm build` et un test manuel** (parcours dans l'app). Si des tests sont
 ajoutés un jour, passer par `vp test` (Vitest, inclus dans Vite+).
 
 ## Conventions de code
@@ -67,7 +67,7 @@ ajoutés un jour, passer par `vp test` (Vitest, inclus dans Vite+).
 - **Composition API** partout ; composables nommés `useXxx`, un par fichier.
 - **Services** : objet littéral en export par défaut, une méthode par endpoint, retournant
   directement `Api.api().get/post/...` (voir `src/services/ExerciceService.ts`).
-- **Style** : appliqué par Oxfmt (`yarn fmt`). Lint par Oxlint, configuré dans
+- **Style** : appliqué par Oxfmt (`pnpm fmt`). Lint par Oxlint, configuré dans
   `vite.config.js` (sections `fmt` et `lint`, même règles que GestSIS_APP, avec
   vérification des types).
 - Composants de page dans `src/views/Gs*.vue` ; composants réutilisables dans

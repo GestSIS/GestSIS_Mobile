@@ -13,4 +13,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "cd /app && yarn install && ionic serve --port=8100"
+      - pnpm-cache:/pnpm-store
+    command: sh -c "pnpm install --store-dir /pnpm-store && ionic serve --port=8100"
+
+volumes:
+  pnpm-cache:

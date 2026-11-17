@@ -94,3 +94,7 @@ capacitor-cordova-android-plugins
 
 # Copied web assets
 app/src/main/assets/public
+
+# Générés par "cap sync" (chemins dépendants de node_modules/.pnpm)
+capacitor.settings.gradle
+app/capacitor.build.gradle

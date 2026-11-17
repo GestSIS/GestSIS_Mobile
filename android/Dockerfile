@@ -3,7 +3,7 @@ FROM openjdk:26-ea-33-oraclelinux9
 RUN microdnf module enable nodejs:24
 RUN microdnf install npm wget unzip curl
 
-RUN npm add -g yarn
+RUN npm install -g pnpm@12
 
 ENV ANDROID_SDK_ROOT=/usr/local/openjdk-26
 WORKDIR $ANDROID_SDK_ROOT
