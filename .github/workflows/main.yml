@@ -1,0 +1,32 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # Installe pnpm (packageManager) et Node (devEngines.runtime), puis lance pnpm install
+      - uses: pnpm/setup@v3
+        with:
+          cache: true
+
+      - name: Check (format, lint, types)
+        run: pnpm check
+
+      - name: Build web
+        run: pnpm build

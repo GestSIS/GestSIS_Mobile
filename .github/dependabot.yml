@@ -9,8 +9,18 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "monthly"
+    # Délai avant de proposer une nouvelle version (équivalent du minimumReleaseAge de pnpm)
+    cooldown:
+      default-days: 3
     groups:
       dependencies:
         applies-to: "version-updates"
         patterns:
           - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Délai avant de proposer une nouvelle version (équivalent du minimumReleaseAge de pnpm)
+    cooldown:
+      default-days: 3
