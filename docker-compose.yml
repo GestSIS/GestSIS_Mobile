@@ -18,3 +18,5 @@ services:
 
 volumes:
   pnpm-cache:
+    name: pnpm-store
+    external: true

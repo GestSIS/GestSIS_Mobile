@@ -5,6 +5,7 @@
 Just run :
 
 ```sh
+docker volume create pnpm-store
 docker compose up -d
 ```
 
