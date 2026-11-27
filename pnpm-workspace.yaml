@@ -1,10 +1,10 @@
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@1.6.0
-  vite-plus: 1.6.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8001
+  vite-plus: 1.8.0
 
 # Remplace l'ancien "resolutions" de Yarn : force vite vers le cœur de Vite+
 overrides:
-  vite: npm:@voidzero-dev/vite-plus-core@1.6.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8001
 
 allowBuilds:
   "@parcel/watcher": false
@@ -12,8 +12,11 @@ allowBuilds:
 trustPolicy: no-downgrade
 # 8.0.2 publiée à la main sans provenance (8.0.0/8.0.1 via trusted publisher) ;
 # diff avec 8.0.1 vérifié le 2026-11-17 : documentation uniquement.
+# tsrs 7.1.0-beta.tsrs4 (requis par vite-plus 1.8.0) : signalé à tort comme downgrade ;
+# vérifié le 2026-11-28 : même trusted publisher (oxc-project/tsrs) + provenance que les versions précédentes.
 trustPolicyExclude:
   - "@capacitor/haptics@8.0.2"
+  - "tsrs@7.1.0-beta.tsrs4"
 
 update:
   ignoreDeps:
