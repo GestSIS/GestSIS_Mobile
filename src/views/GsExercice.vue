@@ -33,6 +33,9 @@ import {
   personAdd,
   refresh,
   checkmarkCircle,
+  checkmark,
+  close,
+  swapHorizontal,
   sync as syncIcon,
 } from "ionicons/icons";
 import { computed, nextTick, ref } from "vue";
@@ -124,6 +127,11 @@ const totaux = computed(() => {
   const liste = computedSapeurs.value ?? [];
   return [
     { label: "Total", value: liste.length, color: "medium" },
+    {
+      label: "À traiter",
+      value: liste.filter((s) => !s.presenceStatut).length,
+      color: "primary",
+    },
     {
       label: "Présents",
       value: liste.filter((s) => s.presenceStatut === 1).length,
@@ -375,16 +383,21 @@ const sync = async () => {
 
           <ion-segment
             mode="ios"
+            :swipe-gesture="false"
+            :class="`statut-${sapeur.presenceStatut}`"
             :value="sapeur.presenceStatut || undefined"
             @ion-change="selectOption($event.detail.value, sapeur)"
           >
-            <ion-segment-button :value="1">
+            <ion-segment-button :value="1" layout="icon-start">
+              <ion-icon :icon="checkmark" aria-hidden="true" />
               <ion-label>Présent</ion-label>
             </ion-segment-button>
-            <ion-segment-button :value="2">
+            <ion-segment-button :value="2" layout="icon-start">
+              <ion-icon :icon="close" aria-hidden="true" />
               <ion-label>Absent</ion-label>
             </ion-segment-button>
-            <ion-segment-button :value="3">
+            <ion-segment-button :value="3" layout="icon-start">
+              <ion-icon :icon="swapHorizontal" aria-hidden="true" />
               <ion-label>Remplacé</ion-label>
             </ion-segment-button>
           </ion-segment>
@@ -477,6 +490,30 @@ const sync = async () => {
 .entete ion-chip {
   margin: 0;
   flex-shrink: 0;
+}
+
+/* Le bouton choisi prend la couleur de son statut pour être lisible d'un coup d'œil */
+ion-segment-button {
+  --color-checked: #fff;
+  font-weight: 600;
+}
+
+.statut-1 {
+  --statut-color: var(--ion-color-success);
+}
+
+.statut-2 {
+  --statut-color: var(--ion-color-danger);
+}
+
+.statut-3 {
+  --statut-color: var(--ion-color-warning);
+}
+
+.statut-1 ion-segment-button,
+.statut-2 ion-segment-button,
+.statut-3 ion-segment-button {
+  --indicator-color: var(--statut-color);
 }
 
 .convoque {
