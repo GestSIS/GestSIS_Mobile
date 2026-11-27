@@ -19,7 +19,7 @@ import {
 } from "@ionic/vue";
 import { arrowBack } from "ionicons/icons";
 import useSapeurs from "../../store/useSapeurs.ts";
-import type { Sapeur } from "../../models/sapeur.ts";
+import { STATUT_ACTIF, type Sapeur } from "../../models/sapeur.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -40,7 +40,7 @@ const rawQuery = ref("");
 const sapeurModule = useSapeurs();
 const filteredSapeur = computed(() => {
   return sapeurModule.state.value
-    .filter((s) => s.actif)
+    .filter((s) => s.statut_sapeur === STATUT_ACTIF)
     .filter((s) => !exceptIds.has(s.id))
     .filter((s) =>
       query.value !== ""

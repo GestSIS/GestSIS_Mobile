@@ -27,6 +27,7 @@ import useSapeurs from "../store/useSapeurs.ts";
 import { DateTime } from "luxon";
 import ModalSapeurSelectVue from "../components/modals/ModalSapeurSelect.vue";
 import BaseDatetime from "../components/base/BaseDatetime.vue";
+import { STATUT_ACTIF } from "../models/sapeur.ts";
 
 const router = useRouter();
 const route = useRoute();
@@ -78,8 +79,8 @@ if (mode == "ARRIVEE") {
 // load presences that fit ARRIVEE or DEPART
 let sapeurs: Presences["sapeurs"] = [];
 let exceptSapeursIds = new Set<number>(
-  // Filter out politique
-  sapeurModule.state.value.filter((s) => s.type !== 0).map((s) => s.id),
+  // Uniquement les sapeurs en service : pas les civils, ni un ancien sapeur resté civil
+  sapeurModule.state.value.filter((s) => s.statut_sapeur !== STATUT_ACTIF).map((s) => s.id),
 );
 
 if (mode == "ARRIVEE") {
